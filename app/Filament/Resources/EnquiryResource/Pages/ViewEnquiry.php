@@ -13,7 +13,7 @@ class ViewEnquiry extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\DeleteAction::make(), // Allow deletion of spam/unwanted enquiries
         ];
     }
 }
