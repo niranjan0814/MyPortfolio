@@ -1,3 +1,4 @@
+@props(['aboutContent'])
 <!-- resources/views/components/about.blade.php -->
 <section id="about"
     class="section-full bg-gradient-to-br from-white via-blue-50 to-purple-50 relative overflow-hidden py-16">
@@ -18,7 +19,7 @@
         <div class="text-center mb-12">
             <h2
                 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                About Me
+                {{ $aboutContent['about_heading'] ?? 'About Me' }}
             </h2>
             <div class="h-1 w-32 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
         </div>
@@ -52,26 +53,22 @@
                             </div>
 
                             <!-- Profile Image -->
-                            <img src="/images/profile.png" alt="Niranjan Sivarasa"
-                                class="absolute inset-0 w-full h-full object-cover object-center mix-blend-normal" />
+                            <img src="{{ $aboutContent['profile_image'] ?? '/images/profile.png' }}" 
+                                 alt="{{ $aboutContent['profile_name'] ?? 'Niranjan Sivarasa' }}"
+                                 class="absolute inset-0 w-full h-full object-cover object-center mix-blend-normal" />
 
                             <!-- Top Tag (GPA) -->
                             <div
                                 class="absolute -top-4 right-0 bg-blue-600 text-white text-sm font-semibold px-4 py-1 rounded-full shadow-md rotate-12">
-                                GPA 3.79
+                                {{ $aboutContent['profile_gpa_badge'] ?? 'GPA 3.79' }}
                             </div>
-
-                            <!-- Bottom Tag (Stack) -->
-                            
                         </div>
-
 
                         <!-- Floating badges -->
                         <div
                             class="absolute -top-2 -right-2 md:-top-4 md:-right-4 bg-gradient-to-r from-green-500 to-blue-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                            <span class="font-bold text-sm md:text-lg">BSc(Hons)SE</span>
+                            <span class="font-bold text-sm md:text-lg">{{ $aboutContent['profile_degree_badge'] ?? 'BSc(Hons)SE' }}</span>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -86,18 +83,14 @@
                                 class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center shadow-lg">
                                 <i class="fas fa-user text-white text-lg md:text-xl"></i>
                             </div>
-                            <h3 class="text-2xl md:text-3xl font-bold text-gray-800">Hi, I'm Niranjan!</h3>
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-800">
+                                {{ $aboutContent['about_greeting'] ?? "Hi, I'm Niranjan!" }}
+                            </h3>
                         </div>
 
                         <p class="text-base md:text-lg text-gray-700 leading-relaxed">
-                            Driven and innovative undergraduate at <span
-                                class="font-semibold text-blue-600">SLIIT</span> specializing in
-                            <span class="font-semibold text-purple-600">Software Engineering</span>, with a strong
-                            academic record and hands-on
-                            experience in full-stack development.
+                            {!! $aboutContent['about_description'] ?? 'Driven and innovative undergraduate specializing in Software Engineering.' !!}
                         </p>
-
-                        
                     </div>
 
                     <!-- Quick Stats -->
@@ -110,8 +103,12 @@
                                     <i class="fas fa-laptop-code text-white text-lg md:text-xl"></i>
                                 </div>
                             </div>
-                            <h4 class="text-xl md:text-2xl font-bold text-blue-600 mb-1">5+</h4>
-                            <p class="text-gray-600 font-medium text-sm md:text-base">Projects Completed</p>
+                            <h4 class="text-xl md:text-2xl font-bold text-blue-600 mb-1">
+                                {{ $aboutContent['stat_projects_count'] ?? '5+' }}
+                            </h4>
+                            <p class="text-gray-600 font-medium text-sm md:text-base">
+                                {{ $aboutContent['stat_projects_label'] ?? 'Projects Completed' }}
+                            </p>
                         </div>
 
                         <div
@@ -122,8 +119,12 @@
                                     <i class="fas fa-code text-white text-lg md:text-xl"></i>
                                 </div>
                             </div>
-                            <h4 class="text-xl md:text-2xl font-bold text-purple-600 mb-1">10+</h4>
-                            <p class="text-gray-600 font-medium text-sm md:text-base">Technologies</p>
+                            <h4 class="text-xl md:text-2xl font-bold text-purple-600 mb-1">
+                                {{ $aboutContent['stat_technologies_count'] ?? '10+' }}
+                            </h4>
+                            <p class="text-gray-600 font-medium text-sm md:text-base">
+                                {{ $aboutContent['stat_technologies_label'] ?? 'Technologies' }}
+                            </p>
                         </div>
 
                         <div
@@ -134,8 +135,12 @@
                                     <i class="fas fa-users text-white text-lg md:text-xl"></i>
                                 </div>
                             </div>
-                            <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-1">Team</h4>
-                            <p class="text-gray-600 font-medium text-sm md:text-base">Leadership Skills</p>
+                            <h4 class="text-xl md:text-2xl font-bold text-pink-600 mb-1">
+                                {{ $aboutContent['stat_team_count'] ?? 'Team' }}
+                            </h4>
+                            <p class="text-gray-600 font-medium text-sm md:text-base">
+                                {{ $aboutContent['stat_team_label'] ?? 'Leadership Skills' }}
+                            </p>
                         </div>
 
                         <div
@@ -146,8 +151,12 @@
                                     <i class="fas fa-puzzle-piece text-white text-lg md:text-xl"></i>
                                 </div>
                             </div>
-                            <h4 class="text-xl md:text-2xl font-bold text-green-600 mb-1">Problem</h4>
-                            <p class="text-gray-600 font-medium text-sm md:text-base">Solving Expert</p>
+                            <h4 class="text-xl md:text-2xl font-bold text-green-600 mb-1">
+                                {{ $aboutContent['stat_problem_count'] ?? 'Problem' }}
+                            </h4>
+                            <p class="text-gray-600 font-medium text-sm md:text-base">
+                                {{ $aboutContent['stat_problem_label'] ?? 'Solving Expert' }}
+                            </p>
                         </div>
                     </div>
 
@@ -155,7 +164,7 @@
                     <div class="pt-6">
                         <a href="#contact"
                             class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group">
-                            <span>Let's Work Together</span>
+                            <span>{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
                             <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                         </a>
                     </div>
@@ -167,44 +176,18 @@
 
 <style>
     @keyframes blob {
-
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-        }
-
-        33% {
-            transform: translate(30px, -50px) scale(1.1);
-        }
-
-        66% {
-            transform: translate(-20px, 20px) scale(0.9);
-        }
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
     }
 
     @keyframes spin-slow {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
-
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
-
-    .animation-delay-4000 {
-        animation-delay: 4s;
-    }
-
-    .animate-spin-slow {
-        animation: spin-slow 8s linear infinite;
-    }
+    .animate-blob { animation: blob 7s infinite; }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-4000 { animation-delay: 4s; }
+    .animate-spin-slow { animation: spin-slow 8s linear infinite; }
 </style>

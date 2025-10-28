@@ -224,7 +224,7 @@
     <!-- Main Content -->
     <x-header />
     <x-hero />
-    <x-about />
+    <x-about :aboutContent="$aboutContent" />
     <x-projects :projects="$projects" />
 
     <x-skills :skills="$skills" />
