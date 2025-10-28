@@ -10,9 +10,33 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        /* Custom styles to enhance the white background design */
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Subtle section dividers */
+        section {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        section:last-of-type {
+            border-bottom: none;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-white text-gray-800 font-sans">
     <x-header />
     <x-hero />
     <x-about />

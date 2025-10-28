@@ -1,11 +1,42 @@
-<header class="w-full fixed top-0 bg-gray-800/60 backdrop-blur-md shadow-md z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-    <h1 class="text-2xl font-bold text-blue-400">Niru<span class="text-white">.Portfolio</span></h1>
-    <nav class="space-x-6 text-sm">
-      <a href="#about" class="hover:text-blue-400">About</a>
-      <a href="#projects" class="hover:text-blue-400">Projects</a>
-      <a href="#skills" class="hover:text-blue-400">Skills</a>
-      <a href="#contact" class="hover:text-blue-400">Contact</a>
+<!-- resources/views/components/header.blade.php -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <nav class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            <a href="#hero" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors">NS</a>
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#about" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">About</a></li>
+                <li><a href="#projects" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Projects</a></li>
+                <li><a href="#skills" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Skills</a></li>
+                <li><a href="#experience" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Experience</a></li>
+                <li><a href="#education" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Education</a></li>
+                <li><a href="#contact" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Contact</a></li>
+            </ul>
+            <button id="mobile-menu-btn" class="md:hidden text-2xl text-gray-700 hover:text-blue-600 transition-colors">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 bg-white rounded-lg p-4 shadow-lg">
+            <a href="#about" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">About</a>
+            <a href="#projects" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">Projects</a>
+            <a href="#skills" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">Skills</a>
+            <a href="#experience" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">Experience</a>
+            <a href="#education" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">Education</a>
+            <a href="#contact" class="block py-2 text-gray-600 hover:text-blue-600 transition-colors font-medium mobile-menu-link">Contact</a>
+        </div>
     </nav>
-  </div>
 </header>
+
+<script>
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when link is clicked
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+        link.addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        });
+    });
+</script>
