@@ -1,3 +1,4 @@
+@props(['experiences'])
 <!-- resources/views/components/experience.blade.php -->
 <section id="experience" class="section-full bg-white relative overflow-hidden">
     <!-- Background decoration -->
@@ -14,150 +15,111 @@
             <p class="text-gray-600 text-lg">Professional experience & career milestones</p>
         </div>
         
-        <!-- Roadmap Timeline -->
-        <div class="relative">
-            <!-- Central vertical line -->
-            <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 via-purple-400 to-green-400"></div>
-            
-            <!-- Current Position - SE Intern at Detect -->
-            <div class="relative mb-16 md:mb-24">
-                <div class="flex flex-col md:flex-row items-center">
-                    <!-- Left side (desktop) -->
-                    <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0">
-                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl border-2 border-green-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
-                                    CURRENT
-                                </div>
-                                <span class="text-gray-600 font-medium">Present</span>
-                            </div>
-                            <h3 class="text-3xl font-bold text-green-600 mb-3 flex items-center gap-3">
-                                <i class="fas fa-briefcase"></i>
-                                Software Engineering Intern
-                            </h3>
-                            <p class="text-xl text-gray-700 font-semibold mb-2">Detect Technologies</p>
-                            <div class="flex flex-wrap gap-2 mt-4">
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-300">
-                                    Full-Stack
-                                </span>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-300">
-                                    Real-time Systems
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Center node -->
-                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
-                        <i class="fas fa-rocket text-white text-2xl"></i>
-                    </div>
-                    
-                    <!-- Right side (desktop) - empty for alignment -->
-                    <div class="md:w-1/2"></div>
+        @if($experiences->isEmpty())
+            <!-- Empty State -->
+            <div class="text-center py-12">
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 mb-4">
+                    <i class="fas fa-briefcase text-4xl text-gray-400"></i>
                 </div>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">No Experience Added Yet</h3>
+                <p class="text-gray-500">Work experience will appear here once added through the admin panel.</p>
             </div>
-            
-            <!-- Experience 1 - Arotac Food Ordering System -->
-            <div class="relative mb-16 md:mb-24">
-                <div class="flex flex-col md:flex-row items-center">
-                    <!-- Left side (desktop) - empty -->
-                    <div class="md:w-1/2"></div>
-                    
-                    <!-- Center node -->
-                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
-                        <i class="fas fa-pizza-slice text-white text-2xl"></i>
-                    </div>
-                    
-                    <!-- Right side content -->
-                    <div class="md:w-1/2 md:pl-12">
-                        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl border-2 border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="flex items-center gap-4 mb-4">
-                                <span class="text-gray-600 font-medium">Feb 2025 - May 2025</span>
-                            </div>
-                            <h3 class="text-3xl font-bold text-blue-600 mb-3 flex items-center gap-3">
-                                <i class="fas fa-code"></i>
-                                Full-Stack Developer & Team Lead
-                            </h3>
-                            <p class="text-xl text-gray-700 font-semibold mb-4">Arotac Food Ordering System</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium border border-blue-300">MERN Stack</span>
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium border border-blue-300">Socket.IO</span>
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium border border-blue-300">Real-time</span>
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium border border-blue-300">Maps API</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Experience 2 - Employee Management System -->
-            <div class="relative mb-16 md:mb-24">
-                <div class="flex flex-col md:flex-row items-center">
-                    <!-- Left side content -->
-                    <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0">
-                        <div class="bg-gradient-to-br from-green-50 to-teal-50 p-8 rounded-2xl border-2 border-green-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="flex items-center gap-4 mb-4">
-                                <span class="text-gray-600 font-medium">July 2024 - Nov 2024</span>
-                            </div>
-                            <h3 class="text-3xl font-bold text-green-600 mb-3 flex items-center gap-3">
-                                <i class="fas fa-laptop-code"></i>
-                                Java Developer
-                            </h3>
-                            <p class="text-xl text-gray-700 font-semibold mb-4">Employee Management System</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-300">Java</span>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-300">OOP</span>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-300">JSP</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Center node -->
-                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-green-400 to-teal-500 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
-                        <i class="fas fa-users-cog text-white text-2xl"></i>
-                    </div>
-                    
-                    <!-- Right side (desktop) - empty -->
-                    <div class="md:w-1/2"></div>
-                </div>
-            </div>
-            
-            <!-- Experience 3 - Online Voting System -->
+        @else
+            <!-- Roadmap Timeline -->
             <div class="relative">
-                <div class="flex flex-col md:flex-row items-center">
-                    <!-- Left side (desktop) - empty -->
-                    <div class="md:w-1/2"></div>
+                <!-- Central vertical line -->
+                <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-400 via-purple-400 to-green-400"></div>
+                
+                @foreach($experiences as $index => $experience)
+                    @php
+                        $isEven = $index % 2 === 0;
+                        $colors = [
+                            ['from' => 'blue', 'to' => 'cyan'],
+                            ['from' => 'green', 'to' => 'teal'],
+                            ['from' => 'purple', 'to' => 'pink'],
+                            ['from' => 'orange', 'to' => 'red'],
+                        ];
+                        $colorSet = $colors[$index % count($colors)];
+                    @endphp
                     
-                    <!-- Center node -->
-                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
-                        <i class="fas fa-vote-yea text-white text-2xl"></i>
-                    </div>
-                    
-                    <!-- Right side content -->
-                    <div class="md:w-1/2 md:pl-12">
-                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl border-2 border-purple-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="flex items-center gap-4 mb-4">
-                                <span class="text-gray-600 font-medium">Feb 2024 - May 2024</span>
-                            </div>
-                            <h3 class="text-3xl font-bold text-purple-600 mb-3 flex items-center gap-3">
-                                <i class="fas fa-desktop"></i>
-                                Web Developer
-                            </h3>
-                            <p class="text-xl text-gray-700 font-semibold mb-4">Online Voting System</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium border border-purple-300">PHP</span>
-                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium border border-purple-300">MySQL</span>
-                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium border border-purple-300">JavaScript</span>
-                            </div>
+                    <div class="relative mb-16 md:mb-24">
+                        <div class="flex flex-col md:flex-row items-center">
+                            @if($isEven)
+                                <!-- Left side content (even indexes) -->
+                                <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0">
+                                    <div class="bg-gradient-to-br from-{{ $colorSet['from'] }}-50 to-{{ $colorSet['to'] }}-50 p-8 rounded-2xl border-2 border-{{ $colorSet['from'] }}-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                                        @if($index === 0)
+                                            <div class="flex items-center gap-4 mb-4">
+                                                <div class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
+                                                    CURRENT
+                                                </div>
+                                            </div>
+                                        @endif
+                                        
+                                        @if($experience->duration)
+                                            <div class="flex items-center gap-4 mb-4">
+                                                <span class="text-gray-600 font-medium">{{ $experience->duration }}</span>
+                                            </div>
+                                        @endif
+                                        
+                                        <h3 class="text-3xl font-bold text-{{ $colorSet['from'] }}-600 mb-3 flex items-center gap-3">
+                                            <i class="fas fa-briefcase"></i>
+                                            {{ $experience->role }}
+                                        </h3>
+                                        <p class="text-xl text-gray-700 font-semibold mb-4">{{ $experience->company }}</p>
+                                        
+                                        @if($experience->details)
+                                            <p class="text-gray-600 leading-relaxed">{{ $experience->details }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <!-- Center node -->
+                                <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-{{ $colorSet['from'] }}-400 to-{{ $colorSet['to'] }}-500 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
+                                    <i class="fas fa-{{ $index === 0 ? 'rocket' : 'code' }} text-white text-2xl"></i>
+                                </div>
+                                
+                                <!-- Right side (empty for alignment) -->
+                                <div class="md:w-1/2"></div>
+                            @else
+                                <!-- Left side (empty for alignment) -->
+                                <div class="md:w-1/2"></div>
+                                
+                                <!-- Center node -->
+                                <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-{{ $colorSet['from'] }}-400 to-{{ $colorSet['to'] }}-600 rounded-full items-center justify-center shadow-lg border-4 border-white z-10">
+                                    <i class="fas fa-laptop-code text-white text-2xl"></i>
+                                </div>
+                                
+                                <!-- Right side content (odd indexes) -->
+                                <div class="md:w-1/2 md:pl-12">
+                                    <div class="bg-gradient-to-br from-{{ $colorSet['from'] }}-50 to-{{ $colorSet['to'] }}-50 p-8 rounded-2xl border-2 border-{{ $colorSet['from'] }}-200 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                                        @if($experience->duration)
+                                            <div class="flex items-center gap-4 mb-4">
+                                                <span class="text-gray-600 font-medium">{{ $experience->duration }}</span>
+                                            </div>
+                                        @endif
+                                        
+                                        <h3 class="text-3xl font-bold text-{{ $colorSet['from'] }}-600 mb-3 flex items-center gap-3">
+                                            <i class="fas fa-code"></i>
+                                            {{ $experience->role }}
+                                        </h3>
+                                        <p class="text-xl text-gray-700 font-semibold mb-4">{{ $experience->company }}</p>
+                                        
+                                        @if($experience->details)
+                                            <p class="text-gray-600 leading-relaxed">{{ $experience->details }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
+                @endforeach
+                
+                <!-- Starting point -->
+                <div class="hidden md:flex absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full items-center justify-center shadow-lg border-4 border-white z-10 mt-16">
+                    <i class="fas fa-flag-checkered text-white text-lg"></i>
                 </div>
             </div>
-            
-            <!-- Starting point -->
-            <div class="hidden md:flex absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full items-center justify-center shadow-lg border-4 border-white z-10 mt-16">
-                <i class="fas fa-flag-checkered text-white text-lg"></i>
-            </div>
-        </div>
+        @endif
     </div>
 </section>

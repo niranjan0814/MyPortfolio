@@ -14,9 +14,9 @@ class PortfolioController extends Controller
     {
         return view('welcome', [
             'projects'    => Project::latest()->get(),
-            'skills'      => Skill::all(),
-            'experiences' => Experience::latest()->get(),
-            'educations'  => Education::latest()->get(),
+            'skills'      => Skill::orderBy('name')->get(),
+            'experiences' => Experience::orderBy('created_at', 'desc')->get(),
+            'educations'  => Education::orderBy('created_at', 'desc')->get(),
         ]);
     }
 }
