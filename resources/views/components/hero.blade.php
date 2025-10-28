@@ -10,15 +10,9 @@
     <!-- Grid background -->
     <div class="absolute inset-0 grid-bg opacity-30"></div>
     
-    <div class="container mx-auto text-center fade-in relative z-10">
+    <div class="container mx-auto text-center fade-in relative z-10 px-4">
         <!-- Greeting badge -->
-        <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-gray-200 mb-8 hover:scale-105 transition-transform">
-            <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span class="text-gray-700 font-medium">Available for opportunities</span>
-        </div>
+        
         
         <!-- Main heading with animated gradient -->
         <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-gray-800">
@@ -46,14 +40,18 @@
             <a href="#contact"
                 class="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                 <span class="relative z-10">Get In Touch</span>
-                <i class="fas fa-paper-plane relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                <svg class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                </svg>
                 <div class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </a>
             
             <a href="#projects"
                 class="group inline-flex items-center gap-3 bg-white text-gray-700 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-2 border-gray-200 hover:border-blue-300">
                 <span>View My Work</span>
-                <i class="fas fa-arrow-down group-hover:translate-y-1 transition-transform"></i>
+                <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
             </a>
         </div>
         
@@ -61,45 +59,62 @@
         <div class="flex justify-center gap-6 mb-12">
             <a href="https://github.com/niranjan0814" target="_blank"
                 class="group relative w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-gray-100 hover:border-gray-300">
-                <i class="fab fa-github text-2xl text-gray-700 group-hover:scale-110 transition-transform"></i>
-                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="w-7 h-7 group-hover:scale-110 transition-transform" />
+                <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     GitHub
                 </span>
             </a>
             
             <a href="https://linkedin.com/in/niranjan-sivarasa-56ba57366" target="_blank"
                 class="group relative w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-gray-100 hover:border-blue-300">
-                <i class="fab fa-linkedin text-2xl text-blue-600 group-hover:scale-110 transition-transform"></i>
-                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" class="w-7 h-7 group-hover:scale-110 transition-transform" />
+                <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     LinkedIn
                 </span>
             </a>
             
             <a href="mailto:niranjansivarajah35@gmail.com"
                 class="group relative w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-gray-100 hover:border-red-300">
-                <i class="fas fa-envelope text-2xl text-red-600 group-hover:scale-110 transition-transform"></i>
-                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <svg class="w-7 h-7 text-red-600 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     Email
                 </span>
             </a>
         </div>
         
         <!-- Tech Stack Preview -->
-        <div class="inline-flex items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200">
+        <div class="inline-flex items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200 mb-12">
             <span class="text-gray-600 font-medium">Tech Stack:</span>
             <div class="flex items-center gap-4">
-                <i class="fab fa-react text-3xl text-blue-500 hover:scale-125 transition-transform" title="React"></i>
-                <i class="fab fa-node-js text-3xl text-green-600 hover:scale-125 transition-transform" title="Node.js"></i>
-                <i class="fas fa-leaf text-3xl text-green-500 hover:scale-125 transition-transform" title="MongoDB"></i>
-                <i class="fab fa-js text-3xl text-yellow-500 hover:scale-125 transition-transform" title="JavaScript"></i>
+                <div class="group relative">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer" />
+                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">React</span>
+                </div>
+                <div class="group relative">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer" />
+                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Node.js</span>
+                </div>
+                <div class="group relative">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer" />
+                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">MongoDB</span>
+                </div>
+                <div class="group relative">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer" />
+                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">JavaScript</span>
+                </div>
             </div>
         </div>
         
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <!-- Scroll indicator - Now positioned below the tech stack -->
+        <div class="animate-bounce">
             <a href="#about" class="flex flex-col items-center gap-2 text-gray-400 hover:text-blue-600 transition-colors">
                 <span class="text-sm font-medium">Scroll to explore</span>
-                <i class="fas fa-chevron-down text-xl"></i>
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
             </a>
         </div>
     </div>

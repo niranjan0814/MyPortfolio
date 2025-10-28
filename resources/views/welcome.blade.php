@@ -204,7 +204,7 @@
     <x-header />
     <x-hero />
     <x-about />
-    <x-projects />
+    <x-projects :projects="$projects" />
     <x-skills />
     <x-experience />
     <x-education />
