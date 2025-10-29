@@ -25,37 +25,32 @@
             @else
                 @php
                     $categories = [
-    'frontend' => [
-        'title' => 'Frontend Development',
-        'icon' => 'fa-laptop-code',
-        'gradient' => 'from-blue-500 to-cyan-500',
-        'bg' => 'from-blue-50 to-cyan-50',
-        'image' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
-    ],
-    'backend' => [
-        'title' => 'Backend Development',
-        'icon' => 'fa-server',
-        'gradient' => 'from-green-500 to-emerald-500',
-        'bg' => 'from-green-50 to-emerald-50',
-        'image' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
-    ],
-    'database' => [
-        'title' => 'Database & Storage',
-        'icon' => 'fa-database',
-        'gradient' => 'from-orange-500 to-red-500',
-        'bg' => 'from-orange-50 to-red-50',
-        'image' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
-    ],
-    'tools' => [
-        'title' => 'Tools & Technologies',
-        'icon' => 'fa-tools',
-        'gradient' => 'from-purple-500 to-pink-500',
-        'bg' => 'from-purple-50 to-pink-50',
-        'image' => 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
-    ],
-];
+                        'frontend' => [
+                            'title' => 'Frontend Development',
+                            'icon' => 'fa-laptop-code',
+                            'gradient' => 'from-blue-500 to-cyan-500',
+                            'bg' => 'from-blue-50 to-cyan-50',
+                        ],
+                        'backend' => [
+                            'title' => 'Backend Development',
+                            'icon' => 'fa-server',
+                            'gradient' => 'from-green-500 to-emerald-500',
+                            'bg' => 'from-green-50 to-emerald-50',
+                        ],
+                        'database' => [
+                            'title' => 'Database & Storage',
+                            'icon' => 'fa-database',
+                            'gradient' => 'from-orange-500 to-red-500',
+                            'bg' => 'from-orange-50 to-red-50',
+                        ],
+                        'tools' => [
+                            'title' => 'Tools & Technologies',
+                            'icon' => 'fa-tools',
+                            'gradient' => 'from-purple-500 to-pink-500',
+                            'bg' => 'from-purple-50 to-pink-50',
+                        ],
+                    ];
 
-                    
                     $groupedSkills = $skills->groupBy('category');
                 @endphp
 
@@ -72,7 +67,10 @@
                                         <h3 class="text-3xl font-bold bg-gradient-to-r {{ $categoryData['gradient'] }} bg-clip-text text-transparent">
                                             {{ $categoryData['title'] }}
                                         </h3>
-                                        <p class="text-gray-600">{{ $groupedSkills[$categoryKey]->count() }} {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}</p>
+                                        <p class="text-gray-600">
+                                            {{ $groupedSkills[$categoryKey]->count() }} 
+                                            {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -82,88 +80,26 @@
                                         <div class="group/skill relative">
                                             <div class="absolute inset-0 bg-gradient-to-r {{ $categoryData['gradient'] }} rounded-2xl blur opacity-25 group-hover/skill:opacity-75 transition duration-300"></div>
                                             <div class="relative flex flex-col items-center justify-center p-8 bg-white rounded-2xl border-2 border-gray-100 hover:border-transparent transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+
                                                 @php
-                                                    $skillLower = strtolower($skill->name);
-                                                    $iconMap = [
-                                                        'react' => 'react/react-original.svg',
-                                                        'react native' => 'react/react-original.svg',
-                                                        'node' => 'nodejs/nodejs-original.svg',
-                                                        'nodejs' => 'nodejs/nodejs-original.svg',
-                                                        'node.js' => 'nodejs/nodejs-original.svg',
-                                                        'javascript' => 'javascript/javascript-original.svg',
-                                                        'js' => 'javascript/javascript-original.svg',
-                                                        'html' => 'html5/html5-original.svg',
-                                                        'html5' => 'html5/html5-original.svg',
-                                                        'css' => 'css3/css3-original.svg',
-                                                        'css3' => 'css3/css3-original.svg',
-                                                        'php' => 'php/php-original.svg',
-                                                        'java' => 'java/java-original.svg',
-                                                        'python' => 'python/python-original.svg',
-                                                        'mongodb' => 'mongodb/mongodb-original.svg',
-                                                        'mysql' => 'mysql/mysql-original.svg',
-                                                        'postgresql' => 'postgresql/postgresql-original.svg',
-                                                        'git' => 'git/git-original.svg',
-                                                        'github' => 'github/github-original.svg',
-                                                        'docker' => 'docker/docker-original.svg',
-                                                        'laravel' => 'laravel/laravel-original.svg',
-                                                        'vue' => 'vuejs/vuejs-original.svg',
-                                                        'angular' => 'angularjs/angularjs-original.svg',
-                                                        'typescript' => 'typescript/typescript-original.svg',
-                                                        'tailwind' => 'tailwindcss/tailwindcss-original.svg',
-                                                        'tailwindcss' => 'tailwindcss/tailwindcss-original.svg',
-                                                        'bootstrap' => 'bootstrap/bootstrap-original.svg',
-                                                        'express' => 'express/express-original.svg',
-                                                        'express.js' => 'express/express-original.svg',
-                                                        'redux' => 'redux/redux-original.svg',
-                                                        'nextjs' => 'nextjs/nextjs-original.svg',
-                                                        'next.js' => 'nextjs/nextjs-original.svg',
-                                                        'sass' => 'sass/sass-original.svg',
-                                                        'scss' => 'sass/sass-original.svg',
-                                                        'webpack' => 'webpack/webpack-original.svg',
-                                                        'vite' => 'vitejs/vitejs-original.svg',
-                                                        'firebase' => 'firebase/firebase-plain.svg',
-                                                        'aws' => 'amazonwebservices/amazonwebservices-original.svg',
-                                                        'heroku' => 'heroku/heroku-original.svg',
-                                                        'vercel' => 'vercel/vercel-original.svg',
-                                                        'figma' => 'figma/figma-original.svg',
-                                                        'postman' => 'postman/postman-original.svg',
-                                                        'vscode' => 'vscode/vscode-original.svg',
-                                                        'npm' => 'npm/npm-original-wordmark.svg',
-                                                        'yarn' => 'yarn/yarn-original.svg',
-                                                        'jest' => 'jest/jest-plain.svg',
-                                                        'jquery' => 'jquery/jquery-original.svg',
-                                                        'material-ui' => 'materialui/materialui-original.svg',
-                                                        'redis' => 'redis/redis-original.svg',
-                                                        'graphql' => 'graphql/graphql-plain.svg',
-                                                        'wordpress' => 'wordpress/wordpress-original.svg',
-                                                        'nginx' => 'nginx/nginx-original.svg',
-                                                        'apache' => 'apache/apache-original.svg',
-                                                        'linux' => 'linux/linux-original.svg',
-                                                        'ubuntu' => 'ubuntu/ubuntu-plain.svg',
-                                                        'slack' => 'slack/slack-original.svg',
-                                                        'trello' => 'trello/trello-plain.svg',
-                                                        'mapbox' => 'mapbox/mapbox-original.svg',
-                                                        'socketio' => 'socketio/socketio-original.svg',
-                                                    ];
-                                                    
-                                                    $iconUrl = null;
-                                                    foreach ($iconMap as $key => $path) {
-                                                        if (str_contains($skillLower, $key)) {
-                                                            $iconUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/{$path}";
-                                                            break;
-                                                        }
-                                                    }
+                                                    $iconUrl = $skill->url;
+                                                    $hasValidUrl = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
                                                 @endphp
-                                                
-                                                @if($iconUrl)
-                                                    <img src="{{ $iconUrl }}" alt="{{ $skill->name }}" class="w-16 h-16 mb-3 group-hover/skill:scale-110 transition-transform duration-300" />
-                                                @else
-                                                    <!-- Default icon if no match -->
-                                                    <div class="w-16 h-16 mb-3 flex items-center justify-center bg-gradient-to-br {{ $categoryData['gradient'] }} rounded-xl group-hover/skill:scale-110 transition-transform duration-300">
-                                                        <i class="fas fa-code text-3xl text-white"></i>
-                                                    </div>
+
+                                                @if($hasValidUrl)
+                                                    <img 
+                                                        src="{{ $iconUrl }}" 
+                                                        alt="{{ $skill->name }}" 
+                                                        class="w-16 h-16 mb-3 group-hover/skill:scale-110 transition-transform duration-300"
+                                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                                    />
                                                 @endif
-                                                
+
+                                                <!-- Fallback Icon -->
+                                                <div class="{{ $hasValidUrl ? 'hidden' : '' }} w-16 h-16 mb-3 flex items-center justify-center bg-gradient-to-br {{ $categoryData['gradient'] }} rounded-xl group-hover/skill:scale-110 transition-transform duration-300">
+                                                    <i class="fas fa-code text-3xl text-white"></i>
+                                                </div>
+
                                                 <span class="font-semibold text-gray-700 text-center text-sm">{{ $skill->name }}</span>
                                                 
                                                 @if($skill->level)

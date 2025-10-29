@@ -15,14 +15,32 @@ class ProjectResource extends Resource
     protected static ?string $navigationGroup = 'Portfolio';
 
     public static function form(Forms\Form $form): Forms\Form
-    {
-        return $form->schema([
-            Forms\Components\TextInput::make('title')->required(),
-            Forms\Components\Textarea::make('description')->rows(3),
-            Forms\Components\TextInput::make('link')->label('Project URL'),
-            Forms\Components\FileUpload::make('image')->image(),
-        ]);
-    }
+{
+    return $form->schema([
+        Forms\Components\TextInput::make('title')
+            ->required()
+            ->label('Project Title'),
+        
+        Forms\Components\Textarea::make('description')
+            ->rows(3)
+            ->label('Project Description'),
+        
+        Forms\Components\TextInput::make('link')
+            ->label('GitHub/Source URL')
+            ->url()
+            ->placeholder('https://github.com/username/project'),
+        
+        Forms\Components\TextInput::make('depurl')
+            ->label('Deployment URL (Live Demo)')
+            ->url()
+            ->placeholder('https://myproject.vercel.app')
+            ->helperText('Enter the live deployment URL if the project is deployed'),
+        
+        Forms\Components\FileUpload::make('image')
+            ->image()
+            ->label('Project Image'),
+    ]);
+}
 
     public static function table(Tables\Table $table): Tables\Table
     {

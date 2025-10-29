@@ -14,6 +14,7 @@ class Project extends Model
         'description',
         'image',
         'link',
+        'depurl',
         'tags',       
         'created_at', 
     ];

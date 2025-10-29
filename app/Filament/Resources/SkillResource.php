@@ -21,7 +21,13 @@ class SkillResource extends Resource
                 ->required()
                 ->label('Skill Name')
                 ->placeholder('e.g., React, Node.js, MongoDB'),
-            
+            Forms\Components\TextInput::make('url')
+                ->label('Icon URL')
+                ->placeholder('e.g., https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg')
+                ->helperText('Enter the full URL to the skill icon image')
+                ->url(),
+
+
             Forms\Components\Select::make('category')
                 ->required()
                 ->options([
@@ -33,7 +39,7 @@ class SkillResource extends Resource
                 ->default('frontend')
                 ->label('Category')
                 ->helperText('Select the category this skill belongs to'),
-            
+
             Forms\Components\TextInput::make('level')
                 ->label('Proficiency (e.g. 80%)')
                 ->placeholder('Optional: e.g., Expert, 90%, Advanced'),
@@ -48,7 +54,7 @@ class SkillResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->weight('bold'),
-                
+
                 Tables\Columns\BadgeColumn::make('category')
                     ->colors([
                         'primary' => 'frontend',
@@ -56,9 +62,9 @@ class SkillResource extends Resource
                         'warning' => 'database',
                         'danger' => 'tools',
                     ])
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
                     ->sortable(),
-                
+
                 Tables\Columns\TextColumn::make('level')
                     ->sortable(),
             ])
