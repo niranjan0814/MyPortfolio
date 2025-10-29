@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PasswordResetController; // ✅ ADD THIS LINE
 
 Route::get('/', function () {
     return view('welcome');
