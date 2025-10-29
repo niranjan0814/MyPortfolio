@@ -1,7 +1,6 @@
 @props(['aboutContent'])
 <!-- resources/views/components/about.blade.php -->
-<section id="about"
-    class="section-full bg-gradient-to-br from-white via-blue-50 to-purple-50 relative overflow-hidden py-16">
+<section id="about" class="section-full bg-gradient-to-br from-white via-blue-50 to-purple-50 relative overflow-hidden pt-12 pb-16">
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
         <div

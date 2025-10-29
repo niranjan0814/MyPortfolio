@@ -20,7 +20,7 @@
 
         <!-- Popup Container -->
         <div id="contactPopup"
-             class="fixed inset-0 flex bg-black bg-opacity-50 hidden items-center justify-center z-50">
+             class="fixed inset-0 flex bg-transparent hidden items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4 md:mx-auto border border-gray-200">
                 <div class="flex justify-end">
                     <button id="closePopup" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
