@@ -4,12 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageContentResource\Pages;
 use App\Models\PageContent;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 
 class PageContentResource extends Resource
 {
@@ -18,28 +17,22 @@ class PageContentResource extends Resource
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?string $navigationLabel = 'Page Content';
 
-    public static function form(Forms\Form $form): Forms\Form
+    public static function form(Form $form): Form
     {
         return $form->schema([
             Forms\Components\Section::make('Content Information')
                 ->schema([
-                    // User Selection (for admin) - Hidden for regular users
-                    Forms\Components\Select::make('user_id')
-                        ->label('User')
-                        ->options(User::pluck('name', 'id'))
-                        ->default(fn() => Auth::id())
-                        ->required()
-                        ->searchable()
-                        ->visible(fn() => Auth::user()?->email === 'admin@example.com')
-                        ->dehydrated(true) // ✅ Ensure it's saved
-                        ->columnSpanFull(),
+                    // Hidden field for user_id - automatically set to logged-in user
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => auth()->id())
+                        ->required(),
                     
                     Forms\Components\TextInput::make('key')
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->label('Key')
-                        ->helperText('Unique identifier for this content (e.g., hero_name)')
-                        ->placeholder('hero_name')
+                        ->helperText('Unique identifier for this content (e.g., hero_greeting)')
+                        ->placeholder('hero_greeting')
                         ->columnSpanFull(),
                     
                     Forms\Components\Select::make('section')
@@ -100,17 +93,12 @@ class PageContentResource extends Resource
         ]);
     }
 
-    public static function table(Tables\Table $table): Tables\Table
+    public static function table(Table $table): Table
     {
         return $table
+            // CRITICAL: Only show content for the logged-in user
+            ->modifyQueryUsing(fn ($query) => $query->where('user_id', auth()->id()))
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('User')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'),
-                
                 Tables\Columns\TextColumn::make('key')
                     ->searchable()
                     ->sortable()
@@ -151,11 +139,6 @@ class PageContentResource extends Resource
             ])
             ->defaultSort('section', 'asc')
             ->filters([
-                Tables\Filters\SelectFilter::make('user_id')
-                    ->label('Filter by User')
-                    ->options(User::pluck('name', 'id'))
-                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'),
-                
                 Tables\Filters\SelectFilter::make('section')
                     ->options([
                         'hero' => 'Hero Section',
@@ -194,26 +177,5 @@ class PageContentResource extends Resource
             'create' => Pages\CreatePageContent::route('/create'),
             'edit' => Pages\EditPageContent::route('/{record}/edit'),
         ];
-    }
-
-    // ✅ Filter content based on user (unless admin)
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
-        
-        // If not logged in or not admin, show first user's content (for public view)
-        if (!Auth::check()) {
-            $firstUserId = User::first()?->id;
-            if ($firstUserId) {
-                $query->where('user_id', $firstUserId);
-            }
-        } 
-        // If logged in but not admin, show current user's content
-        elseif (Auth::user()?->email !== 'admin@example.com') {
-            $query->where('user_id', Auth::id());
-        }
-        // Admin sees all content
-        
-        return $query;
     }
 }
