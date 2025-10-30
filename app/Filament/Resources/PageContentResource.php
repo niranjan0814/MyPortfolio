@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class PageContentResource extends Resource
 {
@@ -26,10 +27,11 @@ class PageContentResource extends Resource
                     Forms\Components\Select::make('user_id')
                         ->label('User')
                         ->options(User::pluck('name', 'id'))
-                        ->default(Auth::id())
+                        ->default(fn() => Auth::id())
                         ->required()
                         ->searchable()
-                        ->visible(fn() => Auth::user()?->email === 'admin@example.com') // Only show for admin
+                        ->visible(fn() => Auth::user()?->email === 'admin@example.com')
+                        ->dehydrated(true) // ✅ Ensure it's saved
                         ->columnSpanFull(),
                     
                     Forms\Components\TextInput::make('key')
@@ -107,7 +109,7 @@ class PageContentResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable()
-                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'), // Only show for admin
+                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'),
                 
                 Tables\Columns\TextColumn::make('key')
                     ->searchable()
@@ -185,17 +187,6 @@ class PageContentResource extends Resource
             ]);
     }
 
-    // Automatically set user_id when creating new content
-    protected static function mutateFormDataBeforeCreate(array $data): array
-    {
-        // If user_id is not set (non-admin users), set it to current user
-        if (!isset($data['user_id'])) {
-            $data['user_id'] = Auth::id();
-        }
-        
-        return $data;
-    }
-
     public static function getPages(): array
     {
         return [
@@ -205,15 +196,23 @@ class PageContentResource extends Resource
         ];
     }
 
-    // Only show user's own content (unless admin)
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    // ✅ Filter content based on user (unless admin)
+    public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         
-        // If not admin, only show current user's content
-        if (Auth::user()?->email !== 'admin@example.com') {
+        // If not logged in or not admin, show first user's content (for public view)
+        if (!Auth::check()) {
+            $firstUserId = User::first()?->id;
+            if ($firstUserId) {
+                $query->where('user_id', $firstUserId);
+            }
+        } 
+        // If logged in but not admin, show current user's content
+        elseif (Auth::user()?->email !== 'admin@example.com') {
             $query->where('user_id', Auth::id());
         }
+        // Admin sees all content
         
         return $query;
     }
