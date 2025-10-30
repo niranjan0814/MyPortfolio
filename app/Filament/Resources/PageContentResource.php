@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageContentResource\Pages;
 use App\Models\PageContent;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
 
 class PageContentResource extends Resource
 {
@@ -20,19 +22,29 @@ class PageContentResource extends Resource
         return $form->schema([
             Forms\Components\Section::make('Content Information')
                 ->schema([
+                    // User Selection (for admin) - Hidden for regular users
+                    Forms\Components\Select::make('user_id')
+                        ->label('User')
+                        ->options(User::pluck('name', 'id'))
+                        ->default(Auth::id())
+                        ->required()
+                        ->searchable()
+                        ->visible(fn() => Auth::user()?->email === 'admin@example.com') // Only show for admin
+                        ->columnSpanFull(),
+                    
                     Forms\Components\TextInput::make('key')
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->label('Key')
-                        ->helperText('Unique identifier for this content (e.g., about_heading)')
-                        ->placeholder('about_heading')
+                        ->helperText('Unique identifier for this content (e.g., hero_name)')
+                        ->placeholder('hero_name')
                         ->columnSpanFull(),
                     
                     Forms\Components\Select::make('section')
                         ->required()
                         ->options([
-                            'about' => 'About Section',
                             'hero' => 'Hero Section',
+                            'about' => 'About Section',
                             'contact' => 'Contact Section',
                             'footer' => 'Footer Section',
                             'general' => 'General',
@@ -90,6 +102,13 @@ class PageContentResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'), // Only show for admin
+                
                 Tables\Columns\TextColumn::make('key')
                     ->searchable()
                     ->sortable()
@@ -98,8 +117,8 @@ class PageContentResource extends Resource
                 
                 Tables\Columns\BadgeColumn::make('section')
                     ->colors([
-                        'primary' => 'about',
                         'success' => 'hero',
+                        'primary' => 'about',
                         'warning' => 'contact',
                         'danger' => 'footer',
                         'secondary' => 'general',
@@ -130,10 +149,15 @@ class PageContentResource extends Resource
             ])
             ->defaultSort('section', 'asc')
             ->filters([
+                Tables\Filters\SelectFilter::make('user_id')
+                    ->label('Filter by User')
+                    ->options(User::pluck('name', 'id'))
+                    ->visible(fn() => Auth::user()?->email === 'admin@example.com'),
+                
                 Tables\Filters\SelectFilter::make('section')
                     ->options([
-                        'about' => 'About Section',
                         'hero' => 'Hero Section',
+                        'about' => 'About Section',
                         'contact' => 'Contact Section',
                         'footer' => 'Footer Section',
                         'general' => 'General',
@@ -161,6 +185,17 @@ class PageContentResource extends Resource
             ]);
     }
 
+    // Automatically set user_id when creating new content
+    protected static function mutateFormDataBeforeCreate(array $data): array
+    {
+        // If user_id is not set (non-admin users), set it to current user
+        if (!isset($data['user_id'])) {
+            $data['user_id'] = Auth::id();
+        }
+        
+        return $data;
+    }
+
     public static function getPages(): array
     {
         return [
@@ -168,5 +203,18 @@ class PageContentResource extends Resource
             'create' => Pages\CreatePageContent::route('/create'),
             'edit' => Pages\EditPageContent::route('/{record}/edit'),
         ];
+    }
+
+    // Only show user's own content (unless admin)
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        
+        // If not admin, only show current user's content
+        if (Auth::user()?->email !== 'admin@example.com') {
+            $query->where('user_id', Auth::id());
+        }
+        
+        return $query;
     }
 }

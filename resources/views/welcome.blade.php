@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niranjan Sivarasa | Full-Stack Developer Portfolio</title>
-    <meta name="description"
-        content="Full-Stack Developer specializing in MERN Stack. Building scalable web applications with modern technologies.">
+    <title>{{ $heroContent['hero_name'] ?? 'Portfolio' }} | Full-Stack Developer Portfolio</title>
+    <meta name="description" content="{{ $heroContent['hero_description'] ?? 'Full-Stack Developer Portfolio' }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-D1xDxkGKfQ3FtA4iO7QdZq6r8N2IoT2EKHFXPhprYyLq4zHTGv7Ew2AZZT1jK8ZCKy9v6gRXH8tK2+gFqM6PlQ=="
@@ -18,9 +17,7 @@
         /* Enhanced Custom Styles */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        * {
-            scroll-behavior: smooth;
-        }
+        * { scroll-behavior: smooth; }
 
         body {
             background-color: #ffffff;
@@ -31,41 +28,22 @@
         }
 
         /* Smooth fade-in animation */
-        .fade-in {
-            animation: fadeIn 0.8s ease-in;
-        }
+        .fade-in { animation: fadeIn 0.8s ease-in; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Card hover effects */
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px) scale(1.02); }
 
         /* Section styling */
-        .section-full {
-            min-height: auto;
-            padding: 6rem 1.5rem;
-        }
+        .section-full { min-height: auto; padding: 6rem 1.5rem; }
 
         @media (max-width: 768px) {
-            .section-full {
-                padding: 4rem 1.5rem;
-            }
+            .section-full { padding: 4rem 1.5rem; }
         }
 
         /* Gradient text */
@@ -77,19 +55,12 @@
         }
 
         /* Enhanced scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%);
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, #2563eb 0%, #7c3aed 100%);
         }
@@ -102,46 +73,21 @@
         }
 
         @keyframes loading {
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Floating animation */
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
-        .float {
-            animation: float 3s ease-in-out infinite;
-        }
+        .float { animation: float 3s ease-in-out infinite; }
 
         /* Glowing effect */
-        .glow {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-        }
-
-        .glow:hover {
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
-        }
-
-        /* Smooth section transitions */
-        section {
-            position: relative;
-            transition: all 0.3s ease;
-        }
+        .glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .glow:hover { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
 
         /* Enhanced button styles */
         .btn-primary {
@@ -164,35 +110,6 @@
             pointer-events: none;
             z-index: 9999;
             transition: transform 0.1s ease;
-        }
-
-        /* Parallax effect helper */
-        .parallax {
-            transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        /* Enhanced section dividers */
-        .section-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-            margin: 4rem 0;
-        }
-
-        /* Pulse animation for important elements */
-        @keyframes pulse-subtle {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        .pulse-subtle {
-            animation: pulse-subtle 2s ease-in-out infinite;
         }
 
         /* Grid background pattern */
@@ -223,10 +140,9 @@
 
     <!-- Main Content -->
     <x-header />
-    <x-hero />
+    <x-hero :heroContent="$heroContent" />
     <x-about :aboutContent="$aboutContent" />
     <x-projects :projects="$projects" />
-
     <x-skills :skills="$skills" />
     <x-experience :experiences="$experiences" />
     <x-education :educations="$educations" />
@@ -235,17 +151,16 @@
 
     <!-- Back to top button -->
     <button id="backToTop"
-    class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50">
-    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
-    </svg>
-</button>
+        class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
+        </svg>
+    </button>
 
     <script>
         // Smooth scroll reveal animation
         function reveal() {
             const reveals = document.querySelectorAll('.fade-in');
-
             reveals.forEach(element => {
                 const windowHeight = window.innerHeight;
                 const elementTop = element.getBoundingClientRect().top;
@@ -282,10 +197,7 @@
         });
 
         backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         // Smooth scroll for anchor links
@@ -294,22 +206,8 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            });
-        });
-
-        // Add parallax effect to sections
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.parallax');
-
-            parallaxElements.forEach(element => {
-                const speed = element.dataset.speed || 0.5;
-                element.style.transform = `translateY(${scrolled * speed}px)`;
             });
         });
     </script>

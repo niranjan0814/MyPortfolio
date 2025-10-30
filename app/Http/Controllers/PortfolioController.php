@@ -13,12 +13,16 @@ class PortfolioController extends Controller
 {
     public function index()
     {
+        
+        $userId = \App\Models\User::first()->id ?? null;
+        
         return view('welcome', [
-            'projects'    => Project::latest()->get(),
-            'skills'      => Skill::orderBy('category', 'asc')->orderBy('name', 'asc')->get(),
-            'experiences' => Experience::orderBy('created_at', 'desc')->get(),
-            'educations'  => Education::orderBy('created_at', 'desc')->get(),
-            'aboutContent' => PageContent::getSection('about'),
+            'projects'      => Project::latest()->get(),
+            'skills'        => Skill::orderBy('category', 'asc')->orderBy('name', 'asc')->get(),
+            'experiences'   => Experience::orderBy('created_at', 'desc')->get(),
+            'educations'    => Education::orderBy('created_at', 'desc')->get(),
+            'aboutContent'  => PageContent::getSection('about', $userId),
+            'heroContent'   => PageContent::getSection('hero', $userId), // Add hero content
         ]);
     }
 }

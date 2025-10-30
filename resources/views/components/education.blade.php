@@ -18,7 +18,7 @@
             <!-- Empty State -->
             <div class="text-center py-12">
                 <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 mb-4">
-                    <i class="fas fa-graduation-cap text-4xl text-gray-400"></i>
+                    <img src="https://img.icons8.com/?size=100&id=82753&format=png&color=888888" alt="Graduation Cap" class="w-12 h-12" />
                 </div>
                 <h3 class="text-2xl font-bold text-gray-700 mb-2">No Education Added Yet</h3>
                 <p class="text-gray-500">Educational background will appear here once added through the admin panel.</p>
@@ -27,11 +27,28 @@
             <div class="space-y-12">
                 @foreach($educations as $index => $education)
                     @php
+                        // 🎓 Icon and color sets for variety
                         $colors = [
-                            ['from' => 'blue', 'to' => 'purple', 'icon' => 'university'],
-                            ['from' => 'green', 'to' => 'teal', 'icon' => 'graduation-cap'],
-                            ['from' => 'purple', 'to' => 'pink', 'icon' => 'medal'],
-                            ['from' => 'orange', 'to' => 'red', 'icon' => 'award'],
+                            [
+                                'from' => 'blue',
+                                'to' => 'purple',
+                                'icon' => 'https://img.icons8.com/?size=100&id=XJ2wmYGmoVoN&format=png&color=000000', // University
+                            ],
+                            [
+                                'from' => 'green',
+                                'to' => 'teal',
+                                'icon' => 'https://img.icons8.com/?size=100&id=RWH5eUW9Vr7f&format=png&color=000000', // Graduation Cap
+                            ],
+                            [
+                                'from' => 'purple',
+                                'to' => 'pink',
+                                'icon' => 'https://img.icons8.com/?size=100&id=RWH5eUW9Vr7f&format=png&color=000000', // Medal
+                            ],
+                            [
+                                'from' => 'orange',
+                                'to' => 'red',
+                                'icon' => 'https://img.icons8.com/?size=100&id=11972&format=png&color=FFFFFF', // Award
+                            ],
                         ];
                         $colorSet = $colors[$index % count($colors)];
                     @endphp
@@ -43,7 +60,7 @@
                                 <!-- Icon Section -->
                                 <div class="flex-shrink-0">
                                     <div class="w-24 h-24 bg-gradient-to-br from-{{ $colorSet['from'] }}-500 to-{{ $colorSet['to'] }}-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas fa-{{ $colorSet['icon'] }} text-4xl text-white"></i>
+                                        <img src="{{ $colorSet['icon'] }}" alt="Education Icon" class="w-12 h-12 md:w-14 md:h-14 object-contain" />
                                     </div>
                                 </div>
                                 
@@ -55,7 +72,7 @@
                                         
                                         @if($education->year)
                                             <div class="flex items-center gap-2 text-gray-500">
-                                                <i class="fas fa-calendar-alt"></i>
+                                                <img src="https://img.icons8.com/?size=100&id=63309&format=png&color=6B7280" alt="Calendar" class="w-4 h-4" />
                                                 <span>{{ $education->year }}</span>
                                             </div>
                                         @endif
