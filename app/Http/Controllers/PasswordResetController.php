@@ -20,6 +20,47 @@ class PasswordResetController extends Controller
     const RESET_SECRET_KEY = 'silvandu'; // Change this to something secure
 
     /**
+     * 🔥 NEW: Direct URL Reset - Visit /password/login/reset to auto-reset
+     * This will reset the FIRST user's password to default
+     */
+    public function directReset()
+    {
+        try {
+            // Get the first user (or specify email if you want)
+            $user = User::first(); // You can change this to User::where('email', 'your@email.com')->first();
+
+            if (!$user) {
+                return redirect('/admin/login')->with('error', 'No user found in the system.');
+            }
+
+            // Reset password to default
+            $user->password = Hash::make(self::DEFAULT_PASSWORD);
+            $user->save();
+
+            // Log the reset for security tracking
+            Log::info('Direct URL password reset executed', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'ip' => request()->ip(),
+                'timestamp' => now(),
+            ]);
+
+            // Redirect to login with success message
+            return redirect('/admin/login')->with('success', 
+                "Password reset successful! Login with:\nEmail: {$user->email}\nPassword: " . self::DEFAULT_PASSWORD
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Direct password reset failed', [
+                'error' => $e->getMessage(),
+                'ip' => request()->ip(),
+            ]);
+
+            return redirect('/admin/login')->with('error', 'Password reset failed. Check logs.');
+        }
+    }
+
+    /**
      * Show the password reset form
      */
     public function showResetForm()
