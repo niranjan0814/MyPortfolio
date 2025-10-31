@@ -22,71 +22,80 @@ class PortfolioController extends Controller
             abort(404, 'No user found.');
         }
 
-        // Load About content from the new `abouts` table (linked to user)
+        // Load About content
         $about = $user->about ?? About::firstOrCreate(
             ['user_id' => $user->id],
             [
-                'about_greeting' => "Hi, I'm {$user->full_name}!",
-                'about_description' => $user->description ?? 'Driven and innovative developer.',
-                'profile_name' => $user->full_name,
-                'profile_gpa_badge' => 'GPA 3.79',
+                'about_greeting'       => "Hi, I'm {$user->full_name}!",
+                'about_description'    => $user->description ?? 'Driven and innovative developer.',
+                'profile_name'         => $user->full_name,
+                'profile_gpa_badge'    => 'GPA 3.79',
                 'profile_degree_badge' => 'BSc(Hons)SE',
-                'cta_button_text' => "Let's Work Together",
+                'cta_button_text'      => "Let's Work Together",
             ]
         );
 
-        // Merge user profile image into about data
         $aboutContent = $about->toArray();
         $aboutContent['user'] = $user;
         $aboutContent['profile_image'] = $user->profile_image;
 
+        // Hero content from DB (same system as header/footer)
+        $heroContent = PageContent::getSection('hero', $user->id);
+
+        // Tech stack count from hero section (fallback to 4)
+        $techStackCount = $heroContent['tech_stack_count'] ?? 4;
+
+        // Random tech stack skills
+        $techStackSkills = Skill::where('url', '!=', '')
+            ->whereNotNull('url')
+            ->inRandomOrder()
+            ->limit($techStackCount)
+            ->get();
+
         return view('welcome', [
-            // ✅ CHANGED: Eager load overview relationship
+            // Projects
             'projects' => Project::with('overview')->latest()->get(),
 
             // Skills
             'skills' => Skill::orderBy('category', 'asc')
-                            ->orderBy('name', 'asc')
-                            ->get(),
+                ->orderBy('name', 'asc')
+                ->get(),
 
-            // Experiences
+            // Experiences & Education
             'experiences' => Experience::orderBy('created_at', 'desc')->get(),
+            'educations'  => Education::orderBy('year', 'desc')->get(),
 
-            // Educations
-            'educations' => Education::orderBy('year', 'desc')->get(),
-
-            // About Section
-            'aboutContent' => $aboutContent,
-
-            // Other Sections
-            'heroContent'    => PageContent::getSection('hero', $user->id),
+            // Sections
+            'aboutContent'   => $aboutContent,
+            'heroContent'    => $heroContent,
             'headerContent'  => PageContent::getSection('header', $user->id),
             'footerContent'  => PageContent::getSection('footer', $user->id),
             'contactContent' => PageContent::getSection('contact', $user->id),
+
+            // Bonus: Pass tech stack to blade if needed
+            'techStackSkills' => $techStackSkills,
         ]);
     }
 
     public function showProjectOverview($id)
     {
-        // Get the authenticated user (or first user as fallback)
         $user = Auth::user() ?? \App\Models\User::first();
 
         $project = Project::with('overview')->findOrFail($id);
-        
+
         if (!$project->overview) {
             abort(404, 'Project overview not found');
         }
-        
-        
+
         $overview = $project->overview;
         $techStackSkills = $overview->getTechStackSkills();
-        
+
         return view('project-overview', [
-            'project' => $project,
-            'overview' => $overview,
+            'project'         => $project,
+            'overview'        => $overview,
             'techStackSkills' => $techStackSkills,
-            'headerContent'  => PageContent::getSection('header', $user->id),
-            'footerContent'  => PageContent::getSection('footer', $user->id),
+            'headerContent'   => PageContent::getSection('header', $user->id),
+            'footerContent'   => PageContent::getSection('footer', $user->id),
         ]);
     }
 }

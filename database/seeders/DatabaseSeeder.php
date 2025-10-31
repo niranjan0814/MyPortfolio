@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ✅ Add this line to run your PageContentSeeder
-        $this->call(PageContentSeeder::class);
+        
+        $this->call(HeroContentSeeder::class);
     }
 }
