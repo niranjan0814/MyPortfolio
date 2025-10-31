@@ -8,7 +8,7 @@ use App\Http\Controllers\PasswordResetController; // ✅ ADD THIS LINE
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/', [PortfolioController::class, 'index']);
+Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Password Reset Routes (Protected by a secret key)

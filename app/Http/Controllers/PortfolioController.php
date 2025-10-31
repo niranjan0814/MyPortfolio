@@ -68,15 +68,25 @@ class PortfolioController extends Controller
 
     public function showProjectOverview($id)
     {
+        // Get the authenticated user (or first user as fallback)
+        $user = Auth::user() ?? \App\Models\User::first();
+
         $project = Project::with('overview')->findOrFail($id);
         
         if (!$project->overview) {
             abort(404, 'Project overview not found');
         }
         
+        
         $overview = $project->overview;
         $techStackSkills = $overview->getTechStackSkills();
         
-        return view('project-overview', compact('project', 'overview', 'techStackSkills'));
+        return view('project-overview', [
+            'project' => $project,
+            'overview' => $overview,
+            'techStackSkills' => $techStackSkills,
+            'headerContent'  => PageContent::getSection('header', $user->id),
+            'footerContent'  => PageContent::getSection('footer', $user->id),
+        ]);
     }
 }

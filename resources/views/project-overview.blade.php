@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -71,27 +73,7 @@
     <!-- Header -->
     <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="/#projects" class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-all group">
-                    <div class="p-2 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-all group-hover:-translate-x-1">
-                        <i class="fas fa-arrow-left text-sm"></i>
-                    </div>
-                    <span class="font-medium">Back to Projects</span>
-                </a>
-                
-                <div class="flex items-center gap-3">
-                    @if($project->link)
-                        <a href="{{ $project->link }}" class="p-2 rounded-lg bg-white shadow-sm hover:shadow-md transition-all hover:scale-105" target="_blank">
-                            <i class="fab fa-github text-gray-700"></i>
-                        </a>
-                    @endif
-                    @if($project->depurl)
-                        <a href="{{ $project->depurl }}" class="p-2 rounded-lg bg-white shadow-sm hover:shadow-md transition-all hover:scale-105" target="_blank">
-                            <i class="fas fa-external-link-alt text-gray-700"></i>
-                        </a>
-                    @endif
-                </div>
-            </div>
+            
         </div>
     </header>
 
@@ -199,27 +181,7 @@
                                 {!! $overview->overview_description !!}
                             </div>
                             
-                            <div class="grid md:grid-cols-2 gap-6 mt-8">
-                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 card-hover">
-                                    <h3 class="font-bold text-blue-900 mb-3 text-xl flex items-center gap-2">
-                                        <i class="fas fa-palette"></i>
-                                        Design Philosophy
-                                    </h3>
-                                    <p class="text-blue-700">
-                                        Focused on creating an intuitive, user-friendly interface that delivers exceptional user experience.
-                                    </p>
-                                </div>
-                                
-                                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 card-hover">
-                                    <h3 class="font-bold text-purple-900 mb-3 text-xl flex items-center gap-2">
-                                        <i class="fas fa-rocket"></i>
-                                        Performance
-                                    </h3>
-                                    <p class="text-purple-700">
-                                        Optimized for speed with efficient data handling for a seamless experience.
-                                    </p>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -368,3 +330,4 @@
     </script>
 </body>
 </html>
+@endsection

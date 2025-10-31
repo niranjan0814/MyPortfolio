@@ -4,12 +4,12 @@
         <div class="flex items-center justify-between">
             <a href="#hero" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors">NS</a>
             <ul class="hidden md:flex space-x-8">
-                <li><a href="#about" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">About</a></li>
-                <li><a href="#projects" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Projects</a></li>
-                <li><a href="#skills" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Skills</a></li>
-                <li><a href="#experience" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Experience</a></li>
-                <li><a href="#education" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Education</a></li>
-                <li><a href="#contact" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Contact</a></li>
+                <li><a href="{{ route('portfolio.index') }}#about" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">About</a></li>
+                <li><a href="{{ route('portfolio.index') }}#projects" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Projects</a></li>
+                <li><a href="{{ route('portfolio.index') }}#skills" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Skills</a></li>
+                <li><a href="{{ route('portfolio.index') }}#experience" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Experience</a></li>
+                <li><a href="{{ route('portfolio.index') }}#education" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Education</a></li>
+                <li><a href="{{ route('portfolio.index') }}#contact" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Contact</a></li>
             </ul>
             <button id="mobile-menu-btn" class="md:hidden text-2xl text-gray-700 hover:text-blue-600 transition-colors">
                 <i class="fas fa-bars"></i>
