@@ -11,7 +11,7 @@
     <div class="container mx-auto max-w-6xl fade-in relative z-10 px-4">
         <div class="text-center mb-12">
             <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                {{ $aboutContent['about_heading'] ?? 'About Me' }}
+                About Me
             </h2>
             <div class="h-1 w-32 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
         </div>
@@ -30,7 +30,7 @@
 
                         <div class="relative w-64 h-64 md:w-72 md:h-72 rounded-full overflow-hidden shadow-2xl border-[10px] border-white group hover:scale-105 transition-transform duration-500 mx-auto">
                             <div class="absolute inset-0 bg-gradient-to-br from-orange-400 via-pink-400 to-red-500"></div>
-                            <img src="{{ $aboutContent['profile_image'] ?? '/images/profile.png' }}" 
+                            <img src="{{ $aboutContent['user']->profile_image ?? '/images/profile.png' }}"
                                  alt="{{ $aboutContent['profile_name'] ?? 'Niranjan Sivarasa' }}"
                                  class="absolute inset-0 w-full h-full object-cover object-center mix-blend-normal" />
 
@@ -52,7 +52,7 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 mb-4">
                             <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center shadow-lg">
-                                <img src="https://img.icons8.com/?size=100&id=dOldVYrPJBSo&format=png&color=000000" alt="User" class="w-6 h-6" />
+                                <img src="{{ $aboutContent['stats_icon_urls']['user'] ?? 'https://img.icons8.com/?size=100&id=dOldVYrPJBSo&format=png&color=000000' }}" alt="User" class="w-6 h-6" />
                             </div>
                             <h3 class="text-2xl md:text-3xl font-bold text-gray-800">
                                 {{ $aboutContent['about_greeting'] ?? "Hi, I'm Niranjan!" }}
@@ -67,56 +67,49 @@
                     <!-- Quick Stats -->
                     <div class="grid grid-cols-2 gap-4 pt-6">
                         @php
-                            $categories = [
-                                [
-                                    'icon' => 'https://img.icons8.com/?size=100&id=M7COJD1KT27d&format=png&color=000000',
-                                    'gradient' => 'from-blue-400 to-blue-600',
-                                    'count' => $aboutContent['stat_projects_count'] ?? '5+',
-                                    'label' => $aboutContent['stat_projects_label'] ?? 'Projects Completed',
-                                    'text' => 'text-blue-600'
-                                ],
-                                [
-                                    'icon' => 'https://img.icons8.com/?size=100&id=lSXsn9erua8J&format=png&color=000000',
-                                    'gradient' => 'from-purple-400 to-purple-600',
-                                    'count' => $aboutContent['stat_technologies_count'] ?? '10+',
-                                    'label' => $aboutContent['stat_technologies_label'] ?? 'Technologies',
-                                    'text' => 'text-purple-600'
-                                ],
-                                [
-                                    'icon' => 'https://img.icons8.com/?size=100&id=3d61gRYnju4B&format=png&color=000000',
-                                    'gradient' => 'from-pink-400 to-pink-600',
-                                    'count' => $aboutContent['stat_team_count'] ?? 'Team',
-                                    'label' => $aboutContent['stat_team_label'] ?? 'Leadership Skills',
-                                    'text' => 'text-pink-600'
-                                ],
-                                [
-                                    'icon' => 'https://img.icons8.com/?size=100&id=43227&format=png&color=000000',
-                                    'gradient' => 'from-green-400 to-green-600',
-                                    'count' => $aboutContent['stat_problem_count'] ?? 'Problem',
-                                    'label' => $aboutContent['stat_problem_label'] ?? 'Solving Expert',
-                                    'text' => 'text-green-600'
-                                ],
+                            $stats = [
+                                'projects' => ['count' => $aboutContent['stat_projects_count'], 'label' => $aboutContent['stat_projects_label'], 'text' => 'text-blue-600'],
+                                'technologies' => ['count' => $aboutContent['stat_technologies_count'], 'label' => $aboutContent['stat_technologies_label'], 'text' => 'text-purple-600'],
+                                'team' => ['count' => $aboutContent['stat_team_count'], 'label' => $aboutContent['stat_team_label'], 'text' => 'text-pink-600'],
+                                'problem' => ['count' => $aboutContent['stat_problem_count'], 'label' => $aboutContent['stat_problem_label'], 'text' => 'text-green-600'],
                             ];
                         @endphp
 
-                        @foreach($categories as $cat)
-                            <div class="bg-white/80 backdrop-blur-sm p-4 md:p-6 rounded-2xl border-2 border-gray-100 hover:border-transparent transition-all duration-300 hover:shadow-lg group">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r {{ $cat['gradient'] }} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <img src="{{ $cat['icon'] }}" alt="Icon" class="w-6 h-6" />
+                        @foreach($stats as $key => $stat)
+                            @if($stat['count'] && $stat['label'])
+                                <div class="bg-white/80 backdrop-blur-sm p-4 md:p-6 rounded-2xl border-2 border-gray-100 hover:border-transparent transition-all duration-300 hover:shadow-lg group">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r {{ $stat['text'] === 'text-blue-600' ? 'from-blue-400 to-blue-600' : ($stat['text'] === 'text-purple-600' ? 'from-purple-400 to-purple-600' : ($stat['text'] === 'text-pink-600' ? 'from-pink-400 to-pink-600' : 'from-green-400 to-green-600')) }} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <img src="{{ $aboutContent['stats_icon_urls'][$key] ?? 'https://img.icons8.com/?size=100&id=000000&format=png&color=000000' }}" alt="{{ $stat['label'] }} Icon" class="w-6 h-6" />
+                                        </div>
                                     </div>
+                                    <h4 class="text-xl md:text-2xl font-bold {{ $stat['text'] }} mb-1">{{ $stat['count'] }}</h4>
+                                    <p class="text-gray-600 font-medium text-sm md:text-base">{{ $stat['label'] }}</p>
                                 </div>
-                                <h4 class="text-xl md:text-2xl font-bold {{ $cat['text'] }} mb-1">{{ $cat['count'] }}</h4>
-                                <p class="text-gray-600 font-medium text-sm md:text-base">{{ $cat['label'] }}</p>
-                            </div>
+                            @endif
                         @endforeach
                     </div>
+
+                    <!-- Soft Skills -->
+                    @if(!empty($aboutContent['soft_skills']))
+                        <div class="pt-6">
+                            <h4 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">Soft Skills</h4>
+                            <div class="flex flex-wrap gap-4">
+                                @foreach($aboutContent['soft_skills'] as $skill => $iconUrl)
+                                    <div class="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full hover:bg-gray-200 transition-all">
+                                        <img src="{{ $iconUrl }}" alt="{{ $skill }} Icon" class="w-6 h-6" />
+                                        <span class="text-sm md:text-base text-gray-700">{{ $skill }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     <!-- CTA Button -->
                     <div class="pt-6">
                         <a href="#contact" class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group">
                             <span>{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
-                            <img src="https://img.icons8.com/?size=100&id=62vgtZLAw1gl&format=png&color=000000" class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                            <img src="{{ $aboutContent['stats_icon_urls']['cta'] ?? 'https://img.icons8.com/?size=100&id=62vgtZLAw1gl&format=png&color=000000' }}" class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                         </a>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
     <!-- Background decoration -->
     <div class="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
     <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-    
+
     <div class="container mx-auto max-w-6xl fade-in relative z-10">
         <div class="text-center mb-16">
             <h2 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -13,7 +13,7 @@
             <p class="text-gray-600 text-lg">Academic excellence and continuous learning</p>
             <div class="h-1 w-32 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full mt-4"></div>
         </div>
-        
+
         @if($educations->isEmpty())
             <!-- Empty State -->
             <div class="text-center py-12">
@@ -27,32 +27,18 @@
             <div class="space-y-12">
                 @foreach($educations as $index => $education)
                     @php
-                        // 🎓 Icon and color sets for variety
+                        // Use the icon_url from the database, fall back to a default if empty
+                        $iconUrl = $education->icon_url ?: 'https://img.icons8.com/?size=100&id=XJ2wmYGmoVoN&format=png&color=000000';
+                        // Color sets for variety (based on index)
                         $colors = [
-                            [
-                                'from' => 'blue',
-                                'to' => 'purple',
-                                'icon' => 'https://img.icons8.com/?size=100&id=XJ2wmYGmoVoN&format=png&color=000000', // University
-                            ],
-                            [
-                                'from' => 'green',
-                                'to' => 'teal',
-                                'icon' => 'https://img.icons8.com/?size=100&id=RWH5eUW9Vr7f&format=png&color=000000', // Graduation Cap
-                            ],
-                            [
-                                'from' => 'purple',
-                                'to' => 'pink',
-                                'icon' => 'https://img.icons8.com/?size=100&id=RWH5eUW9Vr7f&format=png&color=000000', // Medal
-                            ],
-                            [
-                                'from' => 'orange',
-                                'to' => 'red',
-                                'icon' => 'https://img.icons8.com/?size=100&id=11972&format=png&color=FFFFFF', // Award
-                            ],
+                            ['from' => 'blue', 'to' => 'purple'],
+                            ['from' => 'green', 'to' => 'teal'],
+                            ['from' => 'purple', 'to' => 'pink'],
+                            ['from' => 'orange', 'to' => 'red'],
                         ];
                         $colorSet = $colors[$index % count($colors)];
                     @endphp
-                    
+
                     <div class="group relative">
                         <div class="absolute inset-0 bg-gradient-to-r from-{{ $colorSet['from'] }}-400 to-{{ $colorSet['to'] }}-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
                         <div class="relative bg-white p-8 rounded-3xl shadow-lg border-2 border-{{ $colorSet['from'] }}-100 hover:border-{{ $colorSet['from'] }}-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
@@ -60,16 +46,16 @@
                                 <!-- Icon Section -->
                                 <div class="flex-shrink-0">
                                     <div class="w-24 h-24 bg-gradient-to-br from-{{ $colorSet['from'] }}-500 to-{{ $colorSet['to'] }}-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <img src="{{ $colorSet['icon'] }}" alt="Education Icon" class="w-12 h-12 md:w-14 md:h-14 object-contain" />
+                                        <img src="{{ $iconUrl }}" alt="Education Icon" class="w-12 h-12 md:w-14 md:h-14 object-contain" />
                                     </div>
                                 </div>
-                                
+
                                 <!-- Content Section -->
                                 <div class="flex-1">
                                     <div class="mb-4">
                                         <h3 class="text-3xl font-bold text-{{ $colorSet['from'] }}-600 mb-2">{{ $education->degree }}</h3>
                                         <p class="text-gray-600 font-medium mb-1">{{ $education->institution }}</p>
-                                        
+
                                         @if($education->year)
                                             <div class="flex items-center gap-2 text-gray-500">
                                                 <img src="https://img.icons8.com/?size=100&id=63309&format=png&color=6B7280" alt="Calendar" class="w-4 h-4" />
@@ -77,7 +63,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                    
+
                                     @if($education->details)
                                         <div class="bg-{{ $colorSet['from'] }}-50 p-4 rounded-xl border border-{{ $colorSet['from'] }}-200 mt-4">
                                             <p class="text-gray-700 leading-relaxed">{{ $education->details }}</p>

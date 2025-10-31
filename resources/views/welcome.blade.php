@@ -139,15 +139,15 @@
     <div class="cursor-dot hidden md:block" id="cursorDot"></div>
 
     <!-- Main Content -->
-    <x-header />
+    <x-header :headerContent="$headerContent" />
     <x-hero :heroContent="$heroContent" />
     <x-about :aboutContent="$aboutContent" />
     <x-projects :projects="$projects" />
     <x-skills :skills="$skills" />
     <x-experience :experiences="$experiences" />
     <x-education :educations="$educations" />
-    <x-contact />
-    <x-footer />
+    <x-contact :contactContent="$contactContent" />
+    <x-footer :footerContent="$footerContent" />
 
     <!-- Back to top button -->
     <button id="backToTop"

@@ -21,6 +21,11 @@ class EducationResource extends Resource
             Forms\Components\TextInput::make('degree')->required(),
             Forms\Components\TextInput::make('year'),
             Forms\Components\Textarea::make('details')->rows(3),
+            Forms\Components\TextInput::make('icon_url') // New field for icon URL
+                ->label('Icon URL')
+                ->url()
+                ->placeholder('https://example.com/icon.png')
+                ->helperText('Enter a URL for the education icon (e.g., from Icons8)'),
         ]);
     }
 
@@ -30,6 +35,7 @@ class EducationResource extends Resource
             Tables\Columns\TextColumn::make('institution'),
             Tables\Columns\TextColumn::make('degree'),
             Tables\Columns\TextColumn::make('year'),
+            Tables\Columns\TextColumn::make('icon_url')->label('Icon URL'), // New column
         ])->actions([Tables\Actions\EditAction::make()]);
     }
 
