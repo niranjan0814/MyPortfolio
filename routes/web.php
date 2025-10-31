@@ -14,6 +14,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Password Reset Routes (Protected by a secret key)
 Route::get('/admin/reset-password', [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
 Route::post('/admin/reset-password', [PasswordResetController::class, 'resetToDefault'])->name('password.reset.default');
+Route::get('/project/{id}/overview', [PortfolioController::class, 'showProjectOverview'])->name('project.overview');
 
 // ✅ DIRECT URL RESET - Simply visit this URL to reset password
 Route::get('/password/login/reset', [PasswordResetController::class, 'directReset'])->name('password.direct.reset');

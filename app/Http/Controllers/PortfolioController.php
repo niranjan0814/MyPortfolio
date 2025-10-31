@@ -37,32 +37,46 @@ class PortfolioController extends Controller
 
         // Merge user profile image into about data
         $aboutContent = $about->toArray();
-        $aboutContent['user'] = $user; // Attach user for profile_image
+        $aboutContent['user'] = $user;
         $aboutContent['profile_image'] = $user->profile_image;
 
         return view('welcome', [
-            // Projects
-            'projects' => Project::latest()->get(),
+            // ✅ CHANGED: Eager load overview relationship
+            'projects' => Project::with('overview')->latest()->get(),
 
             // Skills
             'skills' => Skill::orderBy('category', 'asc')
                             ->orderBy('name', 'asc')
                             ->get(),
 
-            // Experiences - FIXED: Use created_at instead of start_date
+            // Experiences
             'experiences' => Experience::orderBy('created_at', 'desc')->get(),
 
-            // Educations - FIXED: Use year instead of created_at
+            // Educations
             'educations' => Education::orderBy('year', 'desc')->get(),
 
-            // About Section – Dynamic from `About` model + User
+            // About Section
             'aboutContent' => $aboutContent,
 
-            // Other Sections – Still using PageContent
+            // Other Sections
             'heroContent'    => PageContent::getSection('hero', $user->id),
             'headerContent'  => PageContent::getSection('header', $user->id),
             'footerContent'  => PageContent::getSection('footer', $user->id),
             'contactContent' => PageContent::getSection('contact', $user->id),
         ]);
+    }
+
+    public function showProjectOverview($id)
+    {
+        $project = Project::with('overview')->findOrFail($id);
+        
+        if (!$project->overview) {
+            abort(404, 'Project overview not found');
+        }
+        
+        $overview = $project->overview;
+        $techStackSkills = $overview->getTechStackSkills();
+        
+        return view('project-overview', compact('project', 'overview', 'techStackSkills'));
     }
 }
