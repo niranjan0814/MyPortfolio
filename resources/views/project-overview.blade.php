@@ -3,553 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RevoMart - Project Overview</title>
-    <meta name="description" content="A second hand good selling and swapping system with realtime chat">
-    
+    <title>{{ $project->title }} - Project Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary: #10b981;
-            --accent: #8b5cf6;
-            --light: #f8fafc;
-            --dark: #1a202c;
-            --gray: #6b7280;
-            --border: #e5e7eb;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            color: var(--dark);
-            line-height: 1.5;
-            min-height: 100vh;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Layout */
-        .layout-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-top: 5rem;
-            margin-bottom: 2rem;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
-        @media (min-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 2fr 1fr;
-            }
+        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+        .float { animation: float 3s ease-in-out infinite; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Header */
-        .compact-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            padding: 0.75rem 0;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
 
-        /* Cards */
-        .card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-            overflow: hidden;
+        .tab-button { position: relative; overflow: hidden; }
+        .tab-button::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
+        .tab-button:hover::before { left: 100%; }
 
-        .card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
-        }
+        .image-container { position: relative; overflow: hidden; }
+        .image-container img { transition: transform 0.5s ease; }
+        .image-container:hover img { transform: scale(1.1); }
 
-        .card-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .card-icon.secondary {
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
-        }
-
-        .card-icon.accent {
-            background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        /* Project Header */
-        .project-header {
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-        }
-
-        .project-title {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .project-description {
-            font-size: 1.125rem;
-            color: var(--gray);
-            margin-bottom: 1.5rem;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Features */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        @media (min-width: 768px) {
-            .feature-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .feature-item {
-            padding: 1.25rem;
-            background: var(--light);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .feature-item:hover {
-            border-color: var(--primary);
-        }
-
-        .feature-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .feature-description {
-            font-size: 0.875rem;
-            color: var(--gray);
-        }
-
-        /* Tech Stack */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-        }
-
-        .tech-item {
-            padding: 1rem;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-
-        .tech-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-1px);
-        }
-
-        .tech-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--light);
-            border-radius: 8px;
-        }
-
-        .tech-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        /* Overview Section */
-        .overview-section {
-            padding: 1.5rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .overview-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .overview-content {
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        .overview-content p {
-            margin-bottom: 1rem;
-        }
-
-        /* Back to top button */
-        .back-to-top {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            z-index: 40;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .back-to-top:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Footer */
-        .footer {
-            background: white;
-            border-top: 1px solid var(--border);
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            text-align: center;
-            color: var(--gray);
-        }
+        .glow-effect { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .glow-effect:hover { box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }
     </style>
 </head>
-
 <body class="min-h-screen">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
     <!-- Header -->
-    <header class="compact-header">
-        <div class="layout-container">
-            <div class="flex items-center justify-between">
-                <a href="/#projects" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
-                    <i class="fas fa-arrow-left text-sm"></i>
-                    <span class="font-medium text-sm">Back to Projects</span>
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/#projects" class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-all group">
+                    <div class="p-2 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-all group-hover:-translate-x-1">
+                        <i class="fas fa-arrow-left text-sm"></i>
+                    </div>
+                    <span class="font-medium">Back to Projects</span>
                 </a>
-                <h1 class="text-lg font-semibold text-gray-800">RevoMart</h1>
+                
+                <div class="flex items-center gap-3">
+                    @if($project->link)
+                        <a href="{{ $project->link }}" class="p-2 rounded-lg bg-white shadow-sm hover:shadow-md transition-all hover:scale-105" target="_blank">
+                            <i class="fab fa-github text-gray-700"></i>
+                        </a>
+                    @endif
+                    @if($project->depurl)
+                        <a href="{{ $project->depurl }}" class="p-2 rounded-lg bg-white shadow-sm hover:shadow-md transition-all hover:scale-105" target="_blank">
+                            <i class="fas fa-external-link-alt text-gray-700"></i>
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="layout-container">
-        <!-- Project Header -->
-        <div class="project-header">
-            <h1 class="project-title">RevoMart</h1>
-            <p class="project-description">A second hand good selling and swapping system with realtime chat</p>
-            
-            <div class="button-group">
-                <a href="#" class="btn btn-primary">
-                    <i class="fab fa-github"></i> 
-                    <span>View Code</span>
-                </a>
-                
-                <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-external-link-alt"></i> 
-                    <span>Live Demo</span>
-                </a>
-            </div>
-        </div>
+    <main class="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Hero Section -->
+            <div class="mb-12 animate-fadeIn">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                    
+                    <div class="relative bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100">
+                        <div class="flex flex-col lg:flex-row items-start justify-between gap-8">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg float">
+                                        <i class="fas fa-bolt text-white text-2xl"></i>
+                                    </div>
+                                    <h1 class="text-4xl md:text-5xl font-bold gradient-text">
+                                        {{ $project->title }}
+                                    </h1>
+                                </div>
+                                
+                                <p class="text-xl text-gray-600 leading-relaxed mb-6">
+                                    {{ $project->description }}
+                                </p>
 
-        <!-- Main Content Layout -->
-        <div class="main-layout">
-            <!-- Left Column - Cards -->
-            <div class="space-y-6">
-                <!-- Key Features Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon secondary">
-                            <i class="fas fa-star text-white text-sm"></i>
-                        </div>
-                        <h2 class="card-title">Key Features</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-comments text-green-500"></i>
-                                    Realtime Chat
-                                </h3>
-                                <p class="feature-description">
-                                    The messaging system with realtime chatting capabilities for seamless communication between buyers and sellers.
-                                </p>
+                                <div class="flex flex-wrap gap-3">
+                                    @if($project->link)
+                                        <a href="{{ $project->link }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-xl font-medium hover:shadow-xl transition-all hover:-translate-y-1 glow-effect" target="_blank">
+                                            <i class="fab fa-github"></i>
+                                            View Source
+                                        </a>
+                                    @endif
+                                    
+                                    @if($project->depurl)
+                                        <a href="{{ $project->depurl }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-xl transition-all hover:-translate-y-1 glow-effect" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                            Live Demo
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="feature-item">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-exchange-alt text-blue-500"></i>
-                                    Item Swapping
-                                </h3>
-                                <p class="feature-description">
-                                    Users can swap items directly without monetary transactions, making it easy to exchange goods.
-                                </p>
-                            </div>
-                            <div class="feature-item">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-search text-purple-500"></i>
-                                    Smart Search
-                                </h3>
-                                <p class="feature-description">
-                                    Advanced filtering and search functionality to help users find exactly what they're looking for.
-                                </p>
-                            </div>
-                            <div class="feature-item">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-shield-alt text-amber-500"></i>
-                                    Secure Transactions
-                                </h3>
-                                <p class="feature-description">
-                                    Built-in safety features and verification systems to ensure secure buying, selling, and swapping.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Technology Stack Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                            <i class="fas fa-code text-white text-sm"></i>
-                        </div>
-                        <h2 class="card-title">Technology Stack</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="tech-grid">
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fab fa-react text-blue-500"></i>
+                            <!-- Stats Cards -->
+                            <div class="grid grid-cols-2 gap-4 sm:gap-6">
+                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 card-hover">
+                                    <div class="text-4xl font-bold text-blue-600 mb-1">{{ $techStackSkills->count() }}</div>
+                                    <div class="text-sm text-gray-600">Technologies</div>
                                 </div>
-                                <div class="tech-name">React</div>
-                            </div>
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fab fa-node-js text-green-500"></i>
+                                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 card-hover">
+                                    <div class="text-4xl font-bold text-purple-600 mb-1">{{ is_array($overview->key_features) ? count($overview->key_features) : 0 }}</div>
+                                    <div class="text-sm text-gray-600">Key Features</div>
                                 </div>
-                                <div class="tech-name">Node.js</div>
-                            </div>
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fas fa-database text-amber-500"></i>
-                                </div>
-                                <div class="tech-name">MongoDB</div>
-                            </div>
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fab fa-socketio text-gray-700"></i>
-                                </div>
-                                <div class="tech-name">Socket.io</div>
-                            </div>
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fab fa-aws text-orange-500"></i>
-                                </div>
-                                <div class="tech-name">AWS</div>
-                            </div>
-                            <div class="tech-item">
-                                <div class="tech-icon">
-                                    <i class="fab fa-docker text-blue-400"></i>
-                                </div>
-                                <div class="tech-name">Docker</div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Project Gallery Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon accent">
-                            <i class="fas fa-images text-white text-sm"></i>
-                        </div>
-                        <h2 class="card-title">Project Gallery</h2>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                            <div style="aspect-ratio: 4/3; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
-                                <i class="fas fa-image text-3xl"></i>
-                            </div>
-                            <div style="aspect-ratio: 4/3; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
-                                <i class="fas fa-image text-3xl"></i>
-                            </div>
-                            <div style="aspect-ratio: 4/3; background: #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
-                                <i class="fas fa-image text-3xl"></i>
+                        <!-- Scroll Indicator -->
+                        <div class="flex justify-center mt-8">
+                            <div class="animate-bounce">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column - Overview -->
-            <div class="overview-section">
-                <h2 class="overview-title">
-                    <i class="fas fa-book-open text-blue-500"></i>
-                    Overview
-                </h2>
-                <div class="overview-content">
-                    <p>RevoMart is a comprehensive platform for buying, selling, and swapping second-hand goods with integrated real-time chat functionality.</p>
-                    
-                    <p>The system was designed to create a seamless experience for users looking to trade items in their local communities or beyond. With a focus on user experience and security, RevoMart makes it easy to connect buyers and sellers while ensuring safe transactions.</p>
-                    
-                    <p>Key aspects of the platform include:</p>
-                    
-                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-                        <li>User-friendly interface for listing items</li>
-                        <li>Advanced search and filtering options</li>
-                        <li>Secure messaging system with real-time capabilities</li>
-                        <li>Rating and review system for trust building</li>
-                        <li>Mobile-responsive design for on-the-go access</li>
-                    </ul>
-                    
-                    <p>The platform supports various transaction types including direct purchases, auctions, and item swaps, providing flexibility for different user needs and preferences.</p>
+            <!-- Navigation Tabs -->
+            <div class="mb-8 animate-fadeIn" style="animation-delay: 200ms">
+                <div class="bg-white rounded-2xl shadow-lg p-2 inline-flex gap-2 border border-gray-100 flex-wrap">
+                    <button onclick="switchTab('overview')" class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" data-tab="overview">
+                        <i class="fas fa-book-open"></i>
+                        Overview
+                    </button>
+                    <button onclick="switchTab('features')" class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all text-gray-600 hover:bg-gray-50" data-tab="features">
+                        <i class="fas fa-sparkles"></i>
+                        Features
+                    </button>
+                    <button onclick="switchTab('tech')" class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all text-gray-600 hover:bg-gray-50" data-tab="tech">
+                        <i class="fas fa-code"></i>
+                        Tech Stack
+                    </button>
+                    @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
+                        <button onclick="switchTab('gallery')" class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all text-gray-600 hover:bg-gray-50" data-tab="gallery">
+                            <i class="fas fa-images"></i>
+                            Gallery
+                        </button>
+                    @endif
                 </div>
+            </div>
+
+            <!-- Content Sections -->
+            <div id="content-container">
+                <!-- Overview Tab -->
+                <div id="overview-content" class="content-section animate-fadeIn">
+                    <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
+                                <i class="fas fa-book-open text-white text-3xl"></i>
+                            </div>
+                            <h2 class="text-3xl font-bold text-gray-800">Project Overview</h2>
+                        </div>
+                        
+                        <div class="prose prose-lg max-w-none">
+                            <div class="text-gray-600 leading-relaxed text-lg mb-6">
+                                {!! $overview->overview_description !!}
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mt-8">
+                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 card-hover">
+                                    <h3 class="font-bold text-blue-900 mb-3 text-xl flex items-center gap-2">
+                                        <i class="fas fa-palette"></i>
+                                        Design Philosophy
+                                    </h3>
+                                    <p class="text-blue-700">
+                                        Focused on creating an intuitive, user-friendly interface that delivers exceptional user experience.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 card-hover">
+                                    <h3 class="font-bold text-purple-900 mb-3 text-xl flex items-center gap-2">
+                                        <i class="fas fa-rocket"></i>
+                                        Performance
+                                    </h3>
+                                    <p class="text-purple-700">
+                                        Optimized for speed with efficient data handling for a seamless experience.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Tab -->
+                <div id="features-content" class="content-section hidden">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        @if(is_array($overview->key_features))
+                            @foreach($overview->key_features as $featureKey => $featureValue)
+                                <div class="group relative card-hover" style="animation-delay: {{ $loop->index * 100 }}ms">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                    <div class="relative bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+                                        <div class="flex items-start gap-4 mb-4">
+                                            <div class="text-5xl">
+                                                @if($loop->index == 0) 💬
+                                                @elseif($loop->index == 1) 🔄
+                                                @elseif($loop->index == 2) 🔍
+                                                @else 🛡️
+                                                @endif
+                                            </div>
+                                            <div class="flex-1">
+                                                <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                                                    {{ $featureKey }}
+                                                    <i class="fas fa-check-circle text-green-500"></i>
+                                                </h3>
+                                                <p class="text-gray-600 leading-relaxed">
+                                                    {{ $featureValue }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Tech Stack Tab -->
+                <div id="tech-content" class="content-section hidden">
+                    <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 shadow-lg">
+                                <i class="fas fa-code text-white text-3xl"></i>
+                            </div>
+                            <h2 class="text-3xl font-bold text-gray-800">Technology Stack</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                            @foreach($techStackSkills as $skill)
+                                <div class="group relative card-hover" style="animation-delay: {{ $loop->index * 100 }}ms">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                    <div class="relative bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center">
+                                        @if($skill->url)
+                                            <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="w-16 h-16 mx-auto mb-3 object-contain">
+                                        @else
+                                            <div class="text-6xl mb-3">💻</div>
+                                        @endif
+                                        <div class="font-bold text-gray-800">{{ $skill->name }}</div>
+                                        @if($skill->level)
+                                            <div class="text-sm text-gray-500 mt-1">{{ $skill->level }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Tab -->
+                @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
+                    <div id="gallery-content" class="content-section hidden">
+                        <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="p-4 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
+                                    <i class="fas fa-images text-white text-3xl"></i>
+                                </div>
+                                <h2 class="text-3xl font-bold text-gray-800">Project Gallery</h2>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                @foreach($overview->gallery_images as $image)
+                                    <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all image-container" style="animation-delay: {{ $loop->index * 100 }}ms">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                                        <img src="{{ $image }}" alt="Project Screenshot {{ $loop->iteration }}" class="w-full h-64 object-cover">
+                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                                            <p class="text-white font-medium">Screenshot {{ $loop->iteration }}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2025 RevoMart. All rights reserved.</p>
-        </div>
-    </footer>
-
     <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop">
-        <i class="fas fa-arrow-up"></i>
-    </div>
+    <button onclick="scrollToTop()" id="backToTop" class="fixed bottom-8 right-8 p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 opacity-0 pointer-events-none z-50">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <script>
-        // Back to top button functionality
-        const backToTop = document.getElementById('backToTop');
-        
+        function switchTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('animate-fadeIn');
+            });
+            
+            const selectedContent = document.getElementById(tabName + '-content');
+            selectedContent.classList.remove('hidden');
+            setTimeout(() => selectedContent.classList.add('animate-fadeIn'), 10);
+            
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'text-white', 'shadow-lg');
+                button.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+            
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            activeButton.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'text-white', 'shadow-lg');
+            activeButton.classList.remove('text-gray-600', 'hover:bg-gray-50');
+        }
+
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTop.classList.add('visible');
+            const header = document.getElementById('header');
+            const backToTop = document.getElementById('backToTop');
+            
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-lg');
+                header.classList.remove('bg-transparent');
             } else {
-                backToTop.classList.remove('visible');
+                header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-lg');
+                header.classList.add('bg-transparent');
+            }
+            
+            if (window.scrollY > 300) {
+                backToTop.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                backToTop.classList.add('opacity-0', 'pointer-events-none');
             }
         });
 
-        backToTop.addEventListener('click', () => {
+        function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        }
     </script>
 </body>
 </html>
