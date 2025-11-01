@@ -32,10 +32,50 @@
         @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']))
             <div class="mb-8 mt-6 md:mt-10 h-12 flex justify-center items-center">
                 <p class="text-xl md:text-3xl text-gray-600 font-medium inline-flex items-center">
-                    <span id="typed-text"></span>
+                    <span id="typed-text" class="min-w-[200px] text-left"></span>
                     <span class="inline-block w-1 h-8 bg-blue-600 ml-1 animate-pulse"></span>
                 </p>
             </div>
+
+            <script>
+                (function() {
+                    const texts = @json($heroContent['typing_texts'] ?? []);
+                    const typedElement = document.getElementById('typed-text');
+
+                    if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
+                        console.warn('Typing texts not available');
+                        return;
+                    }
+
+                    let textIndex = 0;
+                    let charIndex = 0;
+                    let isDeleting = false;
+
+                    function type() {
+                        const currentText = texts[textIndex];
+                        typedElement.textContent = isDeleting
+                            ? currentText.substring(0, charIndex - 1)
+                            : currentText.substring(0, charIndex + 1);
+
+                        charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
+
+                        let speed = isDeleting ? 50 : 100;
+
+                        if (!isDeleting && charIndex === currentText.length) {
+                            speed = 1500;
+                            isDeleting = true;
+                        } else if (isDeleting && charIndex === 0) {
+                            isDeleting = false;
+                            textIndex = (textIndex + 1) % texts.length;
+                            speed = 500;
+                        }
+
+                        setTimeout(type, speed);
+                    }
+
+                    setTimeout(type, 800);
+                })();
+            </script>
         @endif
 
         <!-- Description -->
@@ -101,13 +141,13 @@
             </style>
         @endif
 
-        <!-- Tech Stack -->
+        <!-- Tech Stack with Auto-Rotate -->
         @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
             <div class="inline-flex items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200 mb-12">
                 <span class="text-gray-600 font-medium">Tech Stack:</span>
-                <div class="flex items-center gap-4">
+                <div id="tech-stack-container" class="flex items-center gap-4">
                     @foreach ($techStackSkills as $skill)
-                        <div class="group relative">
+                        <div class="group relative tech-skill" data-skill-id="{{ $skill->id }}">
                             @if ($skill->url)
                                 <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
                                      class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer"
@@ -123,6 +163,59 @@
                     @endforeach
                 </div>
             </div>
+
+            <script>
+                (function() {
+                    const allSkills = @json($techStackSkills->map(fn($s) => ['id' => $s->id, 'name' => $s->name, 'url' => $s->url]));
+                    const displayCount = {{ $heroContent['tech_stack_count'] ?? 4 }};
+                    const container = document.getElementById('tech-stack-container');
+                    let currentSkills = allSkills.slice(0, displayCount);
+
+                    function getRandomSkills() {
+                        const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
+                        return shuffled.slice(0, displayCount);
+                    }
+
+                    function updateTechStack() {
+                        const newSkills = getRandomSkills();
+                        
+                        // Fade out
+                        container.style.opacity = '0';
+                        container.style.transform = 'translateY(10px)';
+                        
+                        setTimeout(() => {
+                            // Update content
+                            container.innerHTML = newSkills.map(skill => `
+                                <div class="group relative tech-skill" data-skill-id="${skill.id}">
+                                    ${skill.url ? `
+                                        <img src="${skill.url}" alt="${skill.name}"
+                                             class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                    ` : ''}
+                                    <div class="${skill.url ? 'hidden' : ''} w-8 h-8 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 rounded hover:scale-125 transition-transform cursor-pointer">
+                                        <i class="fas fa-code text-white text-sm"></i>
+                                    </div>
+                                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        ${skill.name}
+                                    </span>
+                                </div>
+                            `).join('');
+                            
+                            // Fade in
+                            container.style.opacity = '1';
+                            container.style.transform = 'translateY(0)';
+                        }, 300);
+                    }
+
+                    // Add transition styles
+                    container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+                    // Auto-rotate every 2 seconds
+                    if (allSkills.length > displayCount) {
+                        setInterval(updateTechStack, 2000);
+                    }
+                })();
+            </script>
         @endif
 
         <!-- Scroll Indicator -->
@@ -154,46 +247,3 @@
     .animation-delay-4000 { animation-delay: 4s; }
     .animate-gradient { background-size: 200% 200%; animation: gradient 3s ease infinite; }
 </style>
-
-<!-- TYPING SCRIPT (ONLY ONCE) -->
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const texts = @json($heroContent['typing_texts'] ?? [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        const typedElement = document.getElementById('typed-text');
-
-        if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
-            console.warn('Typing texts not available:', texts);
-            return;
-        }
-
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
-        function type() {
-            const currentText = texts[textIndex];
-            typedElement.textContent = isDeleting
-                ? currentText.substring(0, charIndex - 1)
-                : currentText.substring(0, charIndex + 1);
-
-            charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
-
-            let speed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && charIndex === currentText.length) {
-                speed = 1500;
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % texts.length;
-                speed = 500;
-            }
-
-            setTimeout(type, speed);
-        }
-
-        setTimeout(type, 800);
-    });
-</script>
-@endpush

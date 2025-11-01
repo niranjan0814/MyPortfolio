@@ -51,30 +51,31 @@
                         @endif
 
                         <!-- Project Links -->
-                        <div class="flex flex-wrap gap-3">
-                            {{-- View Overview (if overview exists) --}}
-                            @if ($project->overview)
-                                <a href="{{ route('project.overview', $project->id) }}"
-                                   class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 shadow-md hover:shadow-lg">
-                                    <i class="fas fa-book-open"></i>
-                                    View Overview
-                                </a>
-                            @endif
-
+                        <div class="flex flex-wrap gap-3 items-center">
                             {{-- GitHub/Source Link --}}
                             @if ($project->link)
                                 <a href="{{ $project->link }}" target="_blank"
-                                   class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                                    <i class="fab fa-github mr-2"></i> View Code
+                                   class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                                    <i class="fab fa-github text-lg"></i> 
+                                    <span>View Code</span>
                                 </a>
                             @endif
 
                             {{-- Live Demo Link (Only if deployed) --}}
                             @if ($project->depurl)
                                 <a href="{{ $project->depurl }}" target="_blank"
-                                   class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-md hover:shadow-lg">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    View Live
+                                   class="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors">
+                                    <i class="fas fa-external-link-alt text-lg"></i>
+                                    <span>View Live</span>
+                                </a>
+                            @endif
+
+                            {{-- View Overview (if overview exists) --}}
+                            @if ($project->overview)
+                                <a href="{{ route('project.overview', $project->id) }}"
+                                   class="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium transition-colors ml-auto">
+                                    <i class="fas fa-book-open text-lg"></i>
+                                    <span>Overview</span>
                                 </a>
                             @endif
                         </div>
