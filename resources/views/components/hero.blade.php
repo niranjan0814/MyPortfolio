@@ -29,8 +29,8 @@
         </h1>
 
         <!-- TYPING TEXT + CURSOR -->
-        @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']))
-            <div class="mb-8 mt-6 md:mt-10 h-12 flex justify-center items-center">
+        @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
+            <div class="mb-8 mt-6 md:mt-10 min-h-[48px] flex justify-center items-center">
                 <p class="text-xl md:text-3xl text-gray-600 font-medium inline-flex items-center">
                     <span id="typed-text" class="min-w-[200px] text-left"></span>
                     <span class="inline-block w-1 h-8 bg-blue-600 ml-1 animate-pulse"></span>
@@ -39,13 +39,15 @@
 
             <script>
                 (function() {
-                    const texts = @json($heroContent['typing_texts'] ?? []);
+                    const texts = @json(array_values($heroContent['typing_texts']));
                     const typedElement = document.getElementById('typed-text');
 
                     if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
-                        console.warn('Typing texts not available');
+                        console.warn('Typing texts not configured properly', {texts, element: typedElement});
                         return;
                     }
+
+                    console.log('Starting typing animation with texts:', texts);
 
                     let textIndex = 0;
                     let charIndex = 0;
@@ -53,11 +55,14 @@
 
                     function type() {
                         const currentText = texts[textIndex];
-                        typedElement.textContent = isDeleting
-                            ? currentText.substring(0, charIndex - 1)
-                            : currentText.substring(0, charIndex + 1);
-
-                        charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
+                        
+                        if (isDeleting) {
+                            typedElement.textContent = currentText.substring(0, charIndex - 1);
+                            charIndex--;
+                        } else {
+                            typedElement.textContent = currentText.substring(0, charIndex + 1);
+                            charIndex++;
+                        }
 
                         let speed = isDeleting ? 50 : 100;
 
@@ -73,6 +78,7 @@
                         setTimeout(type, speed);
                     }
 
+                    // Start typing after a brief delay
                     setTimeout(type, 800);
                 })();
             </script>
@@ -141,12 +147,12 @@
             </style>
         @endif
 
-        <!-- Tech Stack with Auto-Rotate -->
+        <!-- Tech Stack with Random Rotation -->
         @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
             <div class="inline-flex items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200 mb-12">
                 <span class="text-gray-600 font-medium">Tech Stack:</span>
-                <div id="tech-stack-container" class="flex items-center gap-4">
-                    @foreach ($techStackSkills as $skill)
+                <div id="tech-stack-container" class="flex items-center gap-4 transition-all duration-300">
+                    @foreach ($techStackSkills->take($heroContent['tech_stack_count'] ?? 4) as $skill)
                         <div class="group relative tech-skill" data-skill-id="{{ $skill->id }}">
                             @if ($skill->url)
                                 <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
@@ -166,14 +172,18 @@
 
             <script>
                 (function() {
-                    const allSkills = @json($techStackSkills->map(fn($s) => ['id' => $s->id, 'name' => $s->name, 'url' => $s->url]));
+                    const allSkills = @json($techStackSkills->map(fn($s) => ['id' => $s->id, 'name' => $s->name, 'url' => $s->url])->values());
                     const displayCount = {{ $heroContent['tech_stack_count'] ?? 4 }};
                     const container = document.getElementById('tech-stack-container');
-                    let currentSkills = allSkills.slice(0, displayCount);
+
+                    if (!container || allSkills.length === 0) {
+                        console.warn('Tech stack container or skills not available');
+                        return;
+                    }
 
                     function getRandomSkills() {
                         const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
-                        return shuffled.slice(0, displayCount);
+                        return shuffled.slice(0, Math.min(displayCount, allSkills.length));
                     }
 
                     function updateTechStack() {
@@ -210,9 +220,9 @@
                     // Add transition styles
                     container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
 
-                    // Auto-rotate every 2 seconds
+                    // Auto-rotate every 3 seconds if there are more skills than display count
                     if (allSkills.length > displayCount) {
-                        setInterval(updateTechStack, 2000);
+                        setInterval(updateTechStack, 3000);
                     }
                 })();
             </script>
