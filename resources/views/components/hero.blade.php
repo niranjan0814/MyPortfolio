@@ -28,33 +28,48 @@
             </div>
         </h1>
 
-        <!-- TYPING TEXT + CURSOR -->
+        <!-- FIXED TYPING TEXT + CURSOR -->
         @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-            <div class="mb-8 mt-6 md:mt-10 min-h-[48px] flex justify-center items-center">
-                <p class="text-xl md:text-3xl text-gray-600 font-medium inline-flex items-center">
-                    <span id="typed-text" class="min-w-[200px] text-left"></span>
-                    <span class="inline-block w-1 h-8 bg-blue-600 ml-1 animate-pulse"></span>
+            <div class="mb-8 mt-6 md:mt-10 min-h-[60px] flex justify-center items-center">
+                <p class="text-xl md:text-3xl text-gray-700 font-semibold inline-flex items-center">
+                    <span id="typed-text" class="min-w-[300px] text-center inline-block"></span>
+                    <span class="inline-block w-1 h-7 md:h-9 bg-blue-600 ml-1 animate-pulse"></span>
                 </p>
             </div>
 
             <script>
-                (function() {
-                    const texts = @json(array_values($heroContent['typing_texts']));
+                document.addEventListener('DOMContentLoaded', function() {
+                    const texts = @json(array_map(function($text) {
+                        return is_array($text) && isset($text['text']) ? $text['text'] : $text;
+                    }, array_values($heroContent['typing_texts'])));
+                    
                     const typedElement = document.getElementById('typed-text');
 
-                    if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
-                        console.warn('Typing texts not configured properly', {texts, element: typedElement});
+                    if (!typedElement) {
+                        console.error('Typed element not found');
                         return;
                     }
 
-                    console.log('Starting typing animation with texts:', texts);
+                    if (!Array.isArray(texts) || texts.length === 0) {
+                        console.error('No typing texts configured', texts);
+                        typedElement.textContent = 'Full-Stack Developer';
+                        return;
+                    }
+
+                    console.log('✅ Typing animation initialized with texts:', texts);
 
                     let textIndex = 0;
                     let charIndex = 0;
                     let isDeleting = false;
+                    let timeoutId = null;
 
                     function type() {
-                        const currentText = texts[textIndex];
+                        if (!texts[textIndex]) {
+                            console.error('Invalid text at index', textIndex);
+                            return;
+                        }
+
+                        const currentText = String(texts[textIndex]);
                         
                         if (isDeleting) {
                             typedElement.textContent = currentText.substring(0, charIndex - 1);
@@ -67,21 +82,35 @@
                         let speed = isDeleting ? 50 : 100;
 
                         if (!isDeleting && charIndex === currentText.length) {
-                            speed = 1500;
+                            speed = 2000; // Pause at end
                             isDeleting = true;
                         } else if (isDeleting && charIndex === 0) {
                             isDeleting = false;
                             textIndex = (textIndex + 1) % texts.length;
-                            speed = 500;
+                            speed = 500; // Pause before next word
                         }
 
-                        setTimeout(type, speed);
+                        timeoutId = setTimeout(type, speed);
                     }
 
                     // Start typing after a brief delay
-                    setTimeout(type, 800);
-                })();
+                    setTimeout(() => {
+                        type();
+                    }, 800);
+
+                    // Cleanup on page unload
+                    window.addEventListener('beforeunload', () => {
+                        if (timeoutId) clearTimeout(timeoutId);
+                    });
+                });
             </script>
+        @else
+            <!-- Fallback if no typing texts -->
+            <div class="mb-8 mt-6 md:mt-10">
+                <p class="text-xl md:text-3xl text-gray-700 font-semibold">
+                    Full-Stack Developer
+                </p>
+            </div>
         @endif
 
         <!-- Description -->
@@ -147,85 +176,54 @@
             </style>
         @endif
 
-        <!-- Tech Stack with Random Rotation -->
+        <!-- Tech Stack with Running Marquee Animation -->
         @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-            <div class="inline-flex items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200 mb-12">
-                <span class="text-gray-600 font-medium">Tech Stack:</span>
-                <div id="tech-stack-container" class="flex items-center gap-4 transition-all duration-300">
-                    @foreach ($techStackSkills->take($heroContent['tech_stack_count'] ?? 4) as $skill)
-                        <div class="group relative tech-skill" data-skill-id="{{ $skill->id }}">
-                            @if ($skill->url)
-                                <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
-                                     class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                            @endif
-                            <div class="{{ $skill->url ? 'hidden' : '' }} w-8 h-8 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 rounded hover:scale-125 transition-transform cursor-pointer">
-                                <i class="fas fa-code text-white text-sm"></i>
+            <div class="inline-flex flex-col items-center gap-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg border border-gray-200 mb-12 w-full max-w-4xl mx-auto">
+                <span class="text-gray-600 font-medium text-lg">Tech Stack:</span>
+                
+                <!-- Marquee Container -->
+                <div class="relative w-full overflow-hidden">
+                    <div class="flex items-center gap-8 animate-marquee whitespace-nowrap">
+                        <!-- First Set -->
+                        @foreach ($techStackSkills as $skill)
+                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}">
+                                @if ($skill->url)
+                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
+                                         class="w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                @endif
+                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 rounded-full hover:scale-125 transition-transform cursor-pointer">
+                                    <i class="fas fa-code text-white text-sm"></i>
+                                </div>
+                                <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                                    {{ $skill->name }}
+                                </span>
                             </div>
-                            <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                {{ $skill->name }}
-                            </span>
-                        </div>
-                    @endforeach
+                        @endforeach
+                        
+                        <!-- Duplicate Set for Seamless Loop -->
+                        @foreach ($techStackSkills as $skill)
+                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}-dup">
+                                @if ($skill->url)
+                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
+                                         class="w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                @endif
+                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 rounded-full hover:scale-125 transition-transform cursor-pointer">
+                                    <i class="fas fa-code text-white text-sm"></i>
+                                </div>
+                                <span class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                                    {{ $skill->name }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Gradient Overlays for Smooth Edges -->
+                    <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-blue-50/80 to-transparent pointer-events-none"></div>
+                    <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-blue-50/80 to-transparent pointer-events-none"></div>
                 </div>
             </div>
-
-            <script>
-                (function() {
-                    const allSkills = @json($techStackSkills->map(fn($s) => ['id' => $s->id, 'name' => $s->name, 'url' => $s->url])->values());
-                    const displayCount = {{ $heroContent['tech_stack_count'] ?? 4 }};
-                    const container = document.getElementById('tech-stack-container');
-
-                    if (!container || allSkills.length === 0) {
-                        console.warn('Tech stack container or skills not available');
-                        return;
-                    }
-
-                    function getRandomSkills() {
-                        const shuffled = [...allSkills].sort(() => 0.5 - Math.random());
-                        return shuffled.slice(0, Math.min(displayCount, allSkills.length));
-                    }
-
-                    function updateTechStack() {
-                        const newSkills = getRandomSkills();
-                        
-                        // Fade out
-                        container.style.opacity = '0';
-                        container.style.transform = 'translateY(10px)';
-                        
-                        setTimeout(() => {
-                            // Update content
-                            container.innerHTML = newSkills.map(skill => `
-                                <div class="group relative tech-skill" data-skill-id="${skill.id}">
-                                    ${skill.url ? `
-                                        <img src="${skill.url}" alt="${skill.name}"
-                                             class="w-8 h-8 hover:scale-125 transition-transform cursor-pointer"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                    ` : ''}
-                                    <div class="${skill.url ? 'hidden' : ''} w-8 h-8 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-500 rounded hover:scale-125 transition-transform cursor-pointer">
-                                        <i class="fas fa-code text-white text-sm"></i>
-                                    </div>
-                                    <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        ${skill.name}
-                                    </span>
-                                </div>
-                            `).join('');
-                            
-                            // Fade in
-                            container.style.opacity = '1';
-                            container.style.transform = 'translateY(0)';
-                        }, 300);
-                    }
-
-                    // Add transition styles
-                    container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-
-                    // Auto-rotate every 3 seconds if there are more skills than display count
-                    if (allSkills.length > displayCount) {
-                        setInterval(updateTechStack, 3000);
-                    }
-                })();
-            </script>
         @endif
 
         <!-- Scroll Indicator -->
@@ -252,8 +250,33 @@
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    
     .animate-blob { animation: blob 7s infinite; }
     .animation-delay-2000 { animation-delay: 2s; }
     .animation-delay-4000 { animation-delay: 4s; }
     .animate-gradient { background-size: 200% 200%; animation: gradient 3s ease infinite; }
+    .animate-marquee { 
+        animation: marquee 25s linear infinite; 
+        display: flex;
+        width: max-content;
+    }
+    
+    .animate-marquee:hover {
+        animation-play-state: paused;
+    }
+    
+    .tech-skill {
+        transition: all 0.3s ease;
+    }
+    
+    /* Ensure typed text is visible */
+    #typed-text {
+        color: #374151 !important;
+        font-weight: 600 !important;
+        display: inline-block !important;
+    }
 </style>

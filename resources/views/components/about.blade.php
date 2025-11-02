@@ -4,12 +4,12 @@
     class="section-full bg-gradient-to-br from-white via-blue-50 to-purple-50 relative overflow-hidden pt-12 pb-16">
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 about-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 about-blob about-delay-2000"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 about-blob about-delay-4000"></div>
     </div>
 
-    <div class="container mx-auto max-w-6xl fade-in relative z-10 px-4">
+    <div class="container mx-auto max-w-6xl about-fade-in relative z-10 px-4">
         <div class="text-center mb-12">
             <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 About Me
@@ -22,10 +22,10 @@
             <div class="flex-shrink-0">
                 <div class="relative group">
                     <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-110"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700 scale-105 animate-pulse"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700 scale-105 about-pulse"></div>
 
                     <div class="relative">
-                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-spin-slow p-1">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full about-spin-slow p-1">
                             <div class="w-full h-full bg-white rounded-full"></div>
                         </div>
 
@@ -127,32 +127,40 @@
                         </div>
                     @endif
 
-                    <!-- CTA Buttons with CV Download - FIXED COLORS -->
-                    <div class="pt-6 flex flex-wrap gap-4">
+                    <!-- CTA Buttons with CV Download - UPDATED COLORS -->
+                    <div class="pt-6 flex flex-col sm:flex-row flex-wrap gap-4 items-center sm:items-start">
+                        
                         <!-- Contact Button -->
                         <a href="#contact"
-                            class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group border-2 border-blue-700">
-                            <span class="relative z-10 drop-shadow-md">{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
+                            class="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                            <span class="relative z-10 drop-shadow-lg">
+                                {{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}
+                            </span>
                             <img src="{{ $aboutContent['stats_icon_urls']['cta'] ?? 'https://img.icons8.com/?size=100&id=62vgtZLAw1gl&format=png&color=FFFFFF' }}"
-                                class="w-5 h-5 group-hover:translate-x-2 transition-transform filter brightness-0 invert" />
+                                class="relative z-10 w-5 h-5 group-hover:translate-x-2 transition-transform filter brightness-0 invert drop-shadow-lg" 
+                                alt="CTA Icon" />
+                            <div class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </a>
 
-                        <!-- CV Download Button - IMPROVED VISIBILITY -->
+                        <!-- Download CV Button - UPDATED TO MATCH THEME -->
                         @if($aboutContent['user']->hasCv())
                             <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}"
-                                class="inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group border-2 border-emerald-700"
+                                class="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                                 download>
-                                <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform drop-shadow-md" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="relative z-10 w-5 h-5 group-hover:translate-y-1 transition-transform drop-shadow-lg" 
+                                     fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="drop-shadow-md">Download CV</span>
+                                <span class="relative z-10 drop-shadow-lg">Download CV</span>
+                                <div class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </a>
 
-                            <!-- View CV Button -->
+                            <!-- View CV Button - UPDATED TO MATCH THEME -->
                             <a href="{{ route('cv.public.view', $aboutContent['user']->id) }}"
                                 target="_blank"
-                                class="inline-flex items-center gap-3 bg-white text-gray-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-2 border-gray-300 hover:border-emerald-500 hover:bg-emerald-50 group">
-                                <svg class="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                                class="group relative inline-flex items-center gap-3 bg-white text-gray-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-2 border-gray-300 hover:border-purple-500 hover:bg-purple-50">
+                                <svg class="w-5 h-5 text-purple-600 group-hover:scale-110 transition-transform" 
+                                     fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
                                 </svg>
@@ -164,22 +172,117 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification - UPDATED COLORS -->
+    <div id="cv-toast" class="fixed top-24 right-8 z-[9999] hidden pointer-events-none">
+        <div class="bg-white rounded-xl shadow-2xl border-2 border-purple-500 p-4 flex items-center gap-3 about-slideIn pointer-events-auto min-w-[320px]">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <p class="font-bold text-gray-800">CV Download Started</p>
+                <p class="text-sm text-gray-600">Your file will download shortly</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" 
+                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+    </div>
 </section>
 
 <style>
-    @keyframes blob {
+    /* About-specific styles with unique class names to avoid conflicts */
+    @keyframes about-blob {
         0%, 100% { transform: translate(0, 0) scale(1); }
         33% { transform: translate(30px, -50px) scale(1.1); }
         66% { transform: translate(-20px, 20px) scale(0.9); }
     }
 
-    @keyframes spin-slow {
+    @keyframes about-spin-slow {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
 
-    .animate-blob { animation: blob 7s infinite; }
-    .animation-delay-2000 { animation-delay: 2s; }
-    .animation-delay-4000 { animation-delay: 4s; }
-    .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+    @keyframes about-slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .about-blob { animation: about-blob 7s infinite; }
+    .about-delay-2000 { animation-delay: 2s; }
+    .about-delay-4000 { animation-delay: 4s; }
+    .about-spin-slow { animation: about-spin-slow 8s linear infinite; }
+    .about-slideIn { animation: about-slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    
+    /* About-specific fade-in to avoid conflict with global fade-in */
+    .about-fade-in { 
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease;
+    }
+    
+    .about-fade-in.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* About-specific pulse animation */
+    .about-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.4; }
+    }
+
+    #cv-toast { z-index: 99999 !important; }
 </style>
+
+<script>
+    // About-specific initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        // About section reveal
+        const aboutReveal = document.querySelector('.about-fade-in');
+        if (aboutReveal) {
+            const windowHeight = window.innerHeight;
+            const elementTop = aboutReveal.getBoundingClientRect().top;
+            const elementVisible = 150;
+
+            if (elementTop < windowHeight - elementVisible) {
+                aboutReveal.classList.add('active');
+            }
+
+            window.addEventListener('scroll', () => {
+                const elementTop = aboutReveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    aboutReveal.classList.add('active');
+                }
+            });
+        }
+
+        // Toast trigger for CV download
+        const downloadBtn = document.querySelector('a[download][href*="cv"]');
+        const toast = document.getElementById('cv-toast');
+        
+        if (downloadBtn && toast) {
+            downloadBtn.addEventListener('click', function(e) {
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 4000);
+            });
+        }
+    });
+</script>

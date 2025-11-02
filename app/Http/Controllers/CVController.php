@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class CVController extends Controller
 {
     /**
-     * Download CV for a specific user
+     * Download CV for a specific user as PDF
      */
     public function download(User $user)
     {
@@ -19,11 +19,18 @@ class CVController extends Controller
         }
 
         $cvPath = $user->cv_path;
+        
+        if (!Storage::disk('public')->exists($cvPath)) {
+            abort(404, 'CV file not found in storage');
+        }
+
         $fileName = $user->full_name ? 
             str_replace(' ', '_', $user->full_name) . '_CV.pdf' : 
             'CV.pdf';
 
-        return Storage::download($cvPath, $fileName);
+        return Storage::disk('public')->download($cvPath, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 
     /**
@@ -37,11 +44,13 @@ class CVController extends Controller
 
         $cvPath = $user->cv_path;
         
-        if (!Storage::exists($cvPath)) {
-            abort(404, 'CV file not found');
+        if (!Storage::disk('public')->exists($cvPath)) {
+            abort(404, 'CV file not found in storage');
         }
 
-        return response()->file(Storage::path($cvPath), [
+        $fullPath = Storage::disk('public')->path($cvPath);
+
+        return response()->file($fullPath, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . ($user->full_name ?? 'CV') . '.pdf"'
         ]);
