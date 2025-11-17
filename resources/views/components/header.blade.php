@@ -28,14 +28,14 @@
                 <li><a href="{{ route('portfolio.index') }}#contact"
                        class="font-medium transition-colors hover:opacity-80"
                        style="color: var(--text-secondary);">Contact</a></li>
-                <!-- Theme Toggle Button (FIXED) -->
+                <!-- Theme Toggle Button - DESKTOP (NO inline onclick) -->
                 <li>
                     <button id="theme-toggle"
                             class="theme-toggle-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all hover:scale-105"
                             style="color: var(--text-primary); border: 1px solid var(--border-color);"
                             aria-label="Toggle Theme">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <!-- Icon will be updated by JavaScript -->
+                            <!-- Will be updated by JavaScript -->
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                         </svg>
                         <span class="theme-label">Dark</span>
@@ -63,9 +63,8 @@
                style="color: var(--text-secondary);">Education</a>
             <a href="#contact" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
                style="color: var(--text-secondary);">Contact</a>
-            <!-- Mobile Theme Toggle (NOW FIXED) -->
-            <button onclick="toggleTheme()"
-                    class="w-full theme-toggle-btn flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all mt-4"
+            <!-- Mobile Theme Toggle - FIXED (NO inline onclick) -->
+            <button class="theme-toggle-btn w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all mt-4"
                     style="color: var(--text-primary); border: 1px solid var(--border-color);"
                     aria-label="Toggle Theme">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

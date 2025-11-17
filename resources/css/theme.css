@@ -1,17 +1,21 @@
 /* ============================================
    THEME VARIABLES - Light & Dark
    ============================================ */
-/* Default (Light) Theme */
-:root {
+
+/* Light Theme (Default) */
+:root,
+[data-theme="light"] {
   /* Backgrounds */
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
   --bg-gradient-start: #f0f7ff;
   --bg-gradient-end: #faf5ff;
+  
   /* Text Colors */
   --text-primary: #1a202c;
   --text-secondary: #4a5568;
   --text-muted: #718096;
+  
   /* Accent Colors */
   --accent-blue: #3b82f6;
   --accent-purple: #8b5cf6;
@@ -19,48 +23,57 @@
   --accent-cyan: #06b6d4;
   --accent-green: #10b981;
   --accent-teal: #14b8a6;
+  
   /* Card Styles */
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
   --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
   /* Button Styles */
   --btn-gradient-start: #3b82f6;
   --btn-gradient-end: #8b5cf6;
+  
   /* Misc */
   --border-color: #e5e7eb;
   --overlay-bg: rgba(0, 0, 0, 0.5);
 }
 
-/* Dark Liquid Glass Theme */
+/* Dark Theme */
 [data-theme="dark"] {
-  /* Backgrounds - Subtle gradient like hero */
+  /* Backgrounds - Deep space aesthetic */
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
   --bg-gradient-start: #050510;
   --bg-gradient-end: #0a0a14;
+  
   /* Text Colors */
   --text-primary: #ffffff;
   --text-secondary: #d1d5db;
   --text-muted: #9ca3af;
-  /* Accent Colors (Monochrome - whites/grays) */
+  
+  /* Accent Colors - Monochrome whites/grays */
   --accent-blue: #ffffff;
   --accent-purple: #e5e7eb;
   --accent-pink: #d1d5db;
   --accent-cyan: #f3f4f6;
   --accent-green: #e5e7eb;
   --accent-teal: #d1d5db;
+  
   /* Card Styles - Glassmorphism */
   --card-bg: rgba(255, 255, 255, 0.03);
   --card-border: rgba(255, 255, 255, 0.1);
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  
   /* Button Styles */
   --btn-gradient-start: rgba(255, 255, 255, 0.1);
   --btn-gradient-end: rgba(255, 255, 255, 0.15);
+  
   /* Glassmorphism Effects */
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.15);
   --glass-blur: blur(12px);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
   /* Misc */
   --border-color: rgba(255, 255, 255, 0.1);
   --overlay-bg: rgba(0, 0, 0, 0.8);
@@ -77,7 +90,7 @@
 }
 
 /* ============================================
-   SECTION BACKGROUNDS - CONSISTENT THEME
+   SECTION BACKGROUNDS
    ============================================ */
 [data-theme="light"] #projects,
 [data-theme="light"] #experience,
@@ -110,7 +123,7 @@
   box-shadow: var(--glass-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
-/* Hover effects - GlassUI.dev style */
+/* Hover effects */
 [data-theme="light"] .glass-card:hover {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(229, 231, 235, 1);
@@ -213,7 +226,7 @@
 }
 
 /* ============================================
-   GRADIENT TEXT (Adapts to Theme)
+   GRADIENT TEXT
    ============================================ */
 .gradient-text {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
@@ -230,7 +243,6 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Dark version (white gradient) */
 [data-theme="dark"] .gradient-text {
   background: linear-gradient(135deg, #ffffff, #e5e7eb, #d1d5db);
   -webkit-background-clip: text;
@@ -288,4 +300,11 @@
   border-color: rgba(255, 255, 255, 0.25);
   box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
+}
+
+/* ============================================
+   HIDE NORMAL THEME ELEMENTS IN DARK MODE
+   ============================================ */
+[data-theme="dark"] .normal-theme-only {
+  display: none !important;
 }
