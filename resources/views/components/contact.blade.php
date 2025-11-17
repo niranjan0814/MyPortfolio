@@ -130,168 +130,169 @@
                 </svg>
             </button>
         </div>
+    </div>
 
-        <!-- Popup Modal (keeping existing code) -->
-        <div id="contactPopup"
-            class="fixed inset-0 hidden flex items-center justify-center z-50 p-4 transition-opacity duration-300"
-            style="background: var(--overlay-bg);"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="popup-heading">
-            <div class="rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 glass-card glass-noise"
-                 style="background: var(--card-bg); border: 1px solid var(--border-color);"
-                 @click.stop>
+    <!-- Fixed Popup Modal - Moved outside main container -->
+    <div id="contactPopup"
+        class="fixed inset-0 hidden flex items-center justify-center z-[9999] p-4 transition-opacity duration-300"
+        style="background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="popup-heading">
+        
+        <div class="rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 glass-card glass-noise"
+             style="background: var(--card-bg); border: 1px solid var(--border-color);"
+             @click.stop>
+            
+            <!-- Close Button -->
+            <div class="flex justify-end p-4 sticky top-0 rounded-t-2xl z-10"
+                 style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+                <button id="closePopup" 
+                        class="text-3xl font-light transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-opacity-10 focus:outline-none focus:ring-2"
+                        style="color: var(--text-muted); hover:background: var(--glass-bg);"
+                        aria-label="Close contact form">
+                    &times;
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8">
                 
-                <!-- Close Button -->
-                <div class="flex justify-end p-4 sticky top-0 rounded-t-2xl"
-                     style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
-                    <button id="closePopup" 
-                            class="text-3xl font-light transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-opacity-10 focus:outline-none focus:ring-2"
-                            style="color: var(--text-muted); hover:background: var(--glass-bg);"
-                            aria-label="Close contact form">
-                        &times;
-                    </button>
+                <!-- Left: Contact Info -->
+                <div class="p-6 rounded-xl glass-card"
+                     style="background: var(--glass-bg, var(--bg-gradient-start)); border: 1px solid var(--border-color);">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="p-3 rounded-xl shadow-md glass-card"
+                             style="background: var(--glass-bg, var(--accent-blue)); border: 1px solid var(--glass-border, transparent);">
+                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a2 2 0 01-2 2h-2C7.82 18 2 12.18 2 5V3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 id="popup-heading" class="text-2xl font-bold gradient-text">Let's Connect</h3>
+                            <p class="mt-1" style="color: var(--text-secondary);">I'm always open to discussing new opportunities and ideas.</p>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-5">
+                        @if($user->phone)
+                            <li class="flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 rounded-lg glass-card"
+                                         style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
+                                        <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium" style="color: var(--text-primary);">Phone</p>
+                                        <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        @endif
+
+                        @if($user->email)
+                            <li class="flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 rounded-lg glass-card"
+                                         style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
+                                        <svg class="w-4 h-4" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium" style="color: var(--text-primary);">Email</p>
+                                        <p class="text-sm break-all" style="color: var(--text-secondary);">{{ $user->email }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        @endif
+                    </ul>
+
+                    <!-- Response Time Info -->
+                    <div class="mt-8 p-4 rounded-lg glass-card"
+                         style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 rounded-lg glass-card"
+                                 style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
+                                <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-sm" style="color: var(--text-primary);">Quick Response</p>
+                                <p class="text-xs" style="color: var(--text-secondary);">Typically replies within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8">
-                    
-                    <!-- Left: Contact Info -->
-                    <div class="p-6 rounded-xl glass-card"
-                         style="background: var(--glass-bg, var(--bg-gradient-start)); border: 1px solid var(--border-color);">
-                        <div class="flex items-start gap-4 mb-6">
-                            <div class="p-3 rounded-xl shadow-md glass-card"
-                                 style="background: var(--glass-bg, var(--accent-blue)); border: 1px solid var(--glass-border, transparent);">
-                                <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a2 2 0 01-2 2h-2C7.82 18 2 12.18 2 5V3z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 id="popup-heading" class="text-2xl font-bold gradient-text">Let's Connect</h3>
-                                <p class="mt-1" style="color: var(--text-secondary);">I'm always open to discussing new opportunities and ideas.</p>
-                            </div>
+                <!-- Right: Contact Form -->
+                <div class="p-6 rounded-xl glass-card"
+                     style="background: var(--glass-bg, var(--bg-gradient-end)); border: 1px solid var(--border-color);">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="p-3 rounded-xl shadow-md glass-card"
+                             style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, transparent);">
+                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
                         </div>
-
-                        <ul class="space-y-5">
-                            @if($user->phone)
-                                <li class="flex items-center justify-between group">
-                                    <div class="flex items-center gap-3">
-                                        <div class="p-2 rounded-lg glass-card"
-                                             style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                            <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium" style="color: var(--text-primary);">Phone</p>
-                                            <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endif
-
-                            @if($user->email)
-                                <li class="flex items-center justify-between group">
-                                    <div class="flex items-center gap-3">
-                                        <div class="p-2 rounded-lg glass-card"
-                                             style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
-                                            <svg class="w-4 h-4" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium" style="color: var(--text-primary);">Email</p>
-                                            <p class="text-sm break-all" style="color: var(--text-secondary);">{{ $user->email }}</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endif
-                        </ul>
-
-                        <!-- Response Time Info -->
-                        <div class="mt-8 p-4 rounded-lg glass-card"
-                             style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 rounded-lg glass-card"
-                                     style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                    <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm" style="color: var(--text-primary);">Quick Response</p>
-                                    <p class="text-xs" style="color: var(--text-secondary);">Typically replies within 24 hours</p>
-                                </div>
-                            </div>
+                        <div>
+                            <h3 class="text-2xl font-bold gradient-text">Send a Message</h3>
+                            <p class="mt-1" style="color: var(--text-secondary);">Fill out the form below and I'll get back to you soon.</p>
                         </div>
                     </div>
 
-                    <!-- Right: Contact Form (keeping existing) -->
-                    <div class="p-6 rounded-xl glass-card"
-                         style="background: var(--glass-bg, var(--bg-gradient-end)); border: 1px solid var(--border-color);">
-                        <div class="flex items-start gap-4 mb-6">
-                            <div class="p-3 rounded-xl shadow-md glass-card"
-                                 style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, transparent);">
-                                <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold gradient-text">Send a Message</h3>
-                                <p class="mt-1" style="color: var(--text-secondary);">Fill out the form below and I'll get back to you soon.</p>
-                            </div>
+                    <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
+                        @csrf
+                        <div>
+                            <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your Name *</label>
+                            <input type="text" id="name" name="name" required
+                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
+                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
+                                placeholder="John Doe"
+                                value="{{ old('name') }}"
+                                aria-required="true">
                         </div>
 
-                        <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
-                            @csrf
-                            <div>
-                                <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your Name *</label>
-                                <input type="text" id="name" name="name" required
-                                    class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                    placeholder="John Doe"
-                                    value="{{ old('name') }}"
-                                    aria-required="true">
-                            </div>
+                        <div>
+                            <label for="email" class="block font-medium mb-2" style="color: var(--text-primary);">Your Email *</label>
+                            <input type="email" id="email" name="email" required
+                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
+                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
+                                placeholder="john@example.com"
+                                value="{{ old('email') }}"
+                                aria-required="true">
+                        </div>
 
-                            <div>
-                                <label for="email" class="block font-medium mb-2" style="color: var(--text-primary);">Your Email *</label>
-                                <input type="email" id="email" name="email" required
-                                    class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                    placeholder="john@example.com"
-                                    value="{{ old('email') }}"
-                                    aria-required="true">
-                            </div>
+                        <div>
+                            <label for="subject" class="block font-medium mb-2" style="color: var(--text-primary);">Subject</label>
+                            <input type="text" id="subject" name="subject"
+                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
+                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
+                                placeholder="Project Collaboration"
+                                value="{{ old('subject') }}">
+                        </div>
 
-                            <div>
-                                <label for="subject" class="block font-medium mb-2" style="color: var(--text-primary);">Subject</label>
-                                <input type="text" id="subject" name="subject"
-                                    class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                    placeholder="Project Collaboration"
-                                    value="{{ old('subject') }}">
-                            </div>
+                        <div>
+                            <label for="message" class="block font-medium mb-2" style="color: var(--text-primary);">Message *</label>
+                            <textarea id="message" name="message" rows="5" required
+                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 resize-none glass-card"
+                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
+                                placeholder="Hi {{ $user->name ?? 'there' }}, I'd love to discuss..."
+                                aria-required="true">{{ old('message') }}</textarea>
+                        </div>
 
-                            <div>
-                                <label for="message" class="block font-medium mb-2" style="color: var(--text-primary);">Message *</label>
-                                <textarea id="message" name="message" rows="5" required
-                                    class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 resize-none glass-card"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                    placeholder="Hi {{ $user->name ?? 'there' }}, I'd love to discuss..."
-                                    aria-required="true">{{ old('message') }}</textarea>
-                            </div>
-
-                            <button type="submit" id="submitBtn"
-                                class="theme-btn w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                                <span class="flex items-center justify-center gap-2">
-                                    <svg id="submitIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                    </svg>
-                                    Send Message
-                                </span>
-                            </button>
-                        </form>
-                    </div>
+                        <button type="submit" id="submitBtn"
+                            class="theme-btn w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span class="flex items-center justify-center gap-2">
+                                <svg id="submitIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                                Send Message
+                            </span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -303,10 +304,16 @@
             const popup = document.getElementById('contactPopup');
             const openBtn = document.getElementById('openPopup');
             const closeBtn = document.getElementById('closePopup');
+            const body = document.body;
 
             function openPopup() {
                 popup.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+                // Prevent background scrolling
+                body.style.overflow = 'hidden';
+                body.style.position = 'fixed';
+                body.style.width = '100%';
+                body.style.height = '100%';
+                
                 setTimeout(() => {
                     popup.style.opacity = '1';
                     popup.querySelector('.glass-card').style.transform = 'scale(1)';
@@ -316,9 +323,14 @@
             function closePopup() {
                 popup.style.opacity = '0';
                 popup.querySelector('.glass-card').style.transform = 'scale(0.95)';
+                
                 setTimeout(() => {
                     popup.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
+                    // Restore background scrolling
+                    body.style.overflow = '';
+                    body.style.position = '';
+                    body.style.width = '';
+                    body.style.height = '';
                 }, 300);
             }
 
@@ -399,6 +411,15 @@
         /* Hide normal theme blobs in monochrome mode */
         [data-theme="monochrome"] .normal-theme-only {
             display: none;
+        }
+
+        /* Popup specific styles */
+        #contactPopup {
+            z-index: 9999 !important;
+        }
+
+        #contactPopup .glass-card {
+            z-index: 10000 !important;
         }
     </style>
 </section>
