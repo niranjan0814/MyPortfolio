@@ -66,11 +66,7 @@
                 <div class="space-y-6">
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 mb-4">
-                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center shadow-lg glass-card"
-                                 style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, var(--border-color));">
-                                <img src="{{ $aboutContent['stats_icon_urls']['user'] ?? 'https://img.icons8.com/?size=100&id=dOldVYrPJBSo&format=png&color=000000' }}"
-                                    alt="User" class="w-6 h-6" />
-                            </div>
+                            
                             <h3 class="text-2xl md:text-3xl font-bold" style="color: var(--text-primary);">
                                 {{ $aboutContent['about_greeting'] ?? "Hi, I'm Niranjan!" }}
                             </h3>
