@@ -1,5 +1,5 @@
 /**
- * Theme Switcher - Normal ↔ Monochrome Liquid Glass
+ * Theme Switcher - Light ↔ Dark (Monochrome Liquid Glass)
  * Persists theme choice in localStorage
  */
 
@@ -31,7 +31,7 @@ function applyTheme(theme) {
   localStorage.setItem('portfolio-theme', theme);
   
   // Log for debugging
-  console.log(`🎨 Theme switched to: ${theme}`);
+  console.log(`🎨 Theme switched to: ${theme === 'monochrome' ? 'Dark' : 'Light'}`);
 }
 
 // Toggle between themes
@@ -47,29 +47,36 @@ function toggleTheme() {
   animateThemeTransition();
 }
 
-// Update toggle button appearance
+// Update toggle button appearance - FIXED LABELS
 function updateToggleButton(theme) {
-  const toggleBtn = document.getElementById('theme-toggle');
-  if (!toggleBtn) return;
+  const toggleBtns = document.querySelectorAll('#theme-toggle, [onclick="toggleTheme()"]');
   
-  const icon = toggleBtn.querySelector('svg');
-  const label = toggleBtn.querySelector('.theme-label');
-  
-  if (theme === 'monochrome') {
-    // Show "Switch to Normal" state
-    icon.innerHTML = `
-      <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
-    `;
-    if (label) label.textContent = 'Normal';
-    toggleBtn.setAttribute('aria-label', 'Switch to Normal Mode');
-  } else {
-    // Show "Switch to Monochrome" state
-    icon.innerHTML = `
-      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
-    `;
-    if (label) label.textContent = 'Glass';
-    toggleBtn.setAttribute('aria-label', 'Switch to Monochrome Glass Mode');
-  }
+  toggleBtns.forEach(toggleBtn => {
+    if (!toggleBtn) return;
+    
+    const icon = toggleBtn.querySelector('svg');
+    const label = toggleBtn.querySelector('.theme-label, span:last-child');
+    
+    if (theme === 'monochrome') {
+      // Current: Dark mode → Show "Light" to switch back
+      if (icon) {
+        icon.innerHTML = `
+          <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+        `;
+      }
+      if (label) label.textContent = 'Light';
+      toggleBtn.setAttribute('aria-label', 'Switch to Light Mode');
+    } else {
+      // Current: Light mode → Show "Dark" to switch
+      if (icon) {
+        icon.innerHTML = `
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+        `;
+      }
+      if (label) label.textContent = 'Dark';
+      toggleBtn.setAttribute('aria-label', 'Switch to Dark Mode');
+    }
+  });
 }
 
 // Add visual feedback during theme transition
@@ -86,11 +93,13 @@ function animateThemeTransition() {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   
-  // Add click handler to toggle button
-  const toggleBtn = document.getElementById('theme-toggle');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', toggleTheme);
-  }
+  // Add click handler to all toggle buttons
+  const toggleBtns = document.querySelectorAll('#theme-toggle');
+  toggleBtns.forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', toggleTheme);
+    }
+  });
 });
 
 // Export for use in inline scripts if needed

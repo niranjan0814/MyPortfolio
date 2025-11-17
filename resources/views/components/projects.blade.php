@@ -20,8 +20,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             @forelse ($projects as $project)
-                <!-- Dynamic Project Card -->
-                <div class="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2 glass-card"
+                <!-- Dynamic Project Card with flex layout -->
+                <div class="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2 glass-card flex flex-col"
                      style="background: var(--card-bg); border: 1px solid var(--border-color);">
                     
                     <!-- Glassmorphism overlay on hover (monochrome only) -->
@@ -43,8 +43,8 @@
                         </div>
                     @endif
 
-                    <!-- Project Details -->
-                    <div class="p-6 relative z-10">
+                    <!-- Project Details - flex-grow pushes buttons to bottom -->
+                    <div class="p-6 relative z-10 flex flex-col flex-grow">
                         <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">
                             {{ $project->title }}
                         </h3>
@@ -55,7 +55,7 @@
                             </p>
                         @endif
 
-                        <p class="mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                        <p class="mb-4 leading-relaxed flex-grow" style="color: var(--text-secondary);">
                             {{ $project->description }}
                         </p>
 
@@ -71,8 +71,8 @@
                             </div>
                         @endif
 
-                        <!-- Project Links -->
-                        <div class="flex flex-wrap gap-3 items-center">
+                        <!-- Project Links - Always at bottom -->
+                        <div class="flex flex-wrap gap-3 items-center mt-auto pt-4">
                             {{-- GitHub/Source Link --}}
                             @if ($project->link)
                                 <a href="{{ $project->link }}" target="_blank"

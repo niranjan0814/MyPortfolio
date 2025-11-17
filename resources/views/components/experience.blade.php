@@ -54,7 +54,7 @@
                             @if($isEven)
                                 <!-- Left side content (even indexes) -->
                                 <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0">
-                                    <div class="p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 glass-card"
+                                    <div class="p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 glass-card text-left"
                                          style="background: var(--card-bg); border: 2px solid var(--border-color);">
                                         @if($index === 0)
                                             <div class="flex items-center gap-4 mb-4">
@@ -72,15 +72,13 @@
                                         @endif
 
                                         <h3 class="text-3xl font-bold mb-3 flex items-center gap-3 gradient-text">
-                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 15H4V8h16v11z" />
-                                            </svg>
+                                            
                                             {{ $experience->role }}
                                         </h3>
-                                        <p class="text-xl font-semibold mb-4" style="color: var(--text-secondary);">{{ $experience->company }}</p>
+                                        <p class="text-xl font-semibold mb-4 text-left" style="color: var(--text-secondary);">{{ $experience->company }}</p>
 
                                         @if($experience->details)
-                                            <p class="leading-relaxed" style="color: var(--text-secondary);">{{ $experience->details }}</p>
+                                            <p class="leading-relaxed text-left" style="color: var(--text-secondary);">{{ $experience->details }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -109,7 +107,7 @@
 
                                 <!-- Right side content (odd indexes) -->
                                 <div class="md:w-1/2 md:pl-12">
-                                    <div class="p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 glass-card"
+                                    <div class="p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 glass-card text-left"
                                          style="background: var(--card-bg); border: 2px solid var(--border-color);">
                                         @if($experience->duration)
                                             <div class="flex items-center gap-4 mb-4">
@@ -118,15 +116,13 @@
                                         @endif
 
                                         <h3 class="text-3xl font-bold mb-3 flex items-center gap-3 gradient-text">
-                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
-                                            </svg>
+                                            
                                             {{ $experience->role }}
                                         </h3>
-                                        <p class="text-xl font-semibold mb-4" style="color: var(--text-secondary);">{{ $experience->company }}</p>
+                                        <p class="text-xl font-semibold mb-4 text-left" style="color: var(--text-secondary);">{{ $experience->company }}</p>
 
                                         @if($experience->details)
-                                            <p class="leading-relaxed" style="color: var(--text-secondary);">{{ $experience->details }}</p>
+                                            <p class="leading-relaxed text-left" style="color: var(--text-secondary);">{{ $experience->details }}</p>
                                         @endif
                                     </div>
                                 </div>

@@ -4,7 +4,10 @@
     $user = auth()->user();
 @endphp
 
-<section id="contact" class="section-full py-20" style="background: var(--bg-primary);" aria-labelledby="contact-heading">
+<section id="contact" class="section-full py-20 relative overflow-hidden" 
+         style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));" 
+         aria-labelledby="contact-heading">
+    
     <!-- Background decoration -->
     <div class="absolute inset-0 opacity-5 normal-theme-only">
         <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
@@ -50,8 +53,7 @@
         <!-- Contact Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             @if($user->email)
-                <div class="p-6 rounded-xl text-center group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 glass-card"
-                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
                         <svg class="w-6 h-6" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,8 +66,7 @@
             @endif
 
             @if($user->phone)
-                <div class="p-6 rounded-xl text-center group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 glass-card"
-                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
                         <svg class="w-6 h-6" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,8 +79,7 @@
             @endif
 
             @if($user->address)
-                <div class="p-6 rounded-xl text-center group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 glass-card"
-                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #e9d5ff); border: 1px solid var(--glass-border, transparent);">
                         <svg class="w-6 h-6" style="color: var(--accent-purple);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,25 +93,23 @@
             @endif
         </div>
 
-        <!-- Social Links -->
+        <!-- Social Links - GITHUB ICON FIX -->
         @if($user->linkedin_url || $user->github_url)
             <div class="text-center mb-12">
                 <h3 class="text-xl font-semibold mb-4" style="color: var(--text-primary);">Follow Me</h3>
                 <div class="flex justify-center gap-4">
                     @if($user->linkedin_url)
                         <a href="{{ $user->linkedin_url }}" target="_blank" rel="noopener noreferrer" 
-                           class="p-3 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group glass-button"
-                           style="background: var(--glass-bg, #3b82f6); color: var(--text-primary); border: 1px solid var(--glass-border, #3b82f6);">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                           class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
+                            <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                             </svg>
                         </a>
                     @endif
                     @if($user->github_url)
                         <a href="{{ $user->github_url }}" target="_blank" rel="noopener noreferrer"
-                           class="p-3 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group glass-button"
-                           style="background: var(--glass-bg, #1f2937); color: var(--text-primary); border: 1px solid var(--glass-border, #1f2937);">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                           class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
+                            <svg class="w-5 h-5 github-icon" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                             </svg>
                         </a>
@@ -123,8 +121,7 @@
         <!-- Open Popup Button -->
         <div class="text-center">
             <button id="openPopup"
-                class="py-4 px-10 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 theme-btn glass-button"
-                style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-indigo))); color: var(--text-primary); border: 1px solid var(--glass-border, var(--border-color));"
+                class="theme-btn py-4 px-10 rounded-xl font-bold text-lg transition-all duration-300 transform focus:outline-none focus:ring-4"
                 aria-haspopup="dialog"
                 aria-controls="contactPopup">
                 Send Message
@@ -134,7 +131,7 @@
             </button>
         </div>
 
-        <!-- Popup Modal -->
+        <!-- Popup Modal (keeping existing code) -->
         <div id="contactPopup"
             class="fixed inset-0 hidden flex items-center justify-center z-50 p-4 transition-opacity duration-300"
             style="background: var(--overlay-bg);"
@@ -165,7 +162,7 @@
                             <div class="p-3 rounded-xl shadow-md glass-card"
                                  style="background: var(--glass-bg, var(--accent-blue)); border: 1px solid var(--glass-border, transparent);">
                                 <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a2 2 0 01-2 2h-2C7.82 18 2 12.18 2 5V3z"/>
                                 </svg>
                             </div>
                             <div>
@@ -228,7 +225,7 @@
                         </div>
                     </div>
 
-                    <!-- Right: Contact Form -->
+                    <!-- Right: Contact Form (keeping existing) -->
                     <div class="p-6 rounded-xl glass-card"
                          style="background: var(--glass-bg, var(--bg-gradient-end)); border: 1px solid var(--border-color);">
                         <div class="flex items-start gap-4 mb-6">
@@ -285,8 +282,7 @@
                             </div>
 
                             <button type="submit" id="submitBtn"
-                                class="w-full py-3 rounded-lg font-bold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none theme-btn glass-button"
-                                style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-indigo))); color: var(--text-primary); border: 1px solid var(--glass-border, var(--border-color));">
+                                class="theme-btn w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                                 <span class="flex items-center justify-center gap-2">
                                     <svg id="submitIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -359,6 +355,45 @@
         
         .animate-shake {
             animation: shake 0.5s ease-in-out;
+        }
+
+        /* Contact Cards - GlassUI.dev style hover */
+        .contact-card {
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="normal"] .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="monochrome"] .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Social Links - GitHub icon visibility fix */
+        .social-link-contact {
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="normal"] .social-link-contact:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+        }
+        
+        [data-theme="monochrome"] .social-link-contact:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
+        }
+
+        /* GitHub icon color fix */
+        [data-theme="normal"] .github-icon {
+            color: #1a202c !important;
+        }
+        
+        [data-theme="monochrome"] .github-icon {
+            color: #ffffff !important;
         }
 
         /* Hide normal theme blobs in monochrome mode */

@@ -2,12 +2,12 @@
    THEME VARIABLES - Normal & Monochrome
    ============================================ */
 
-/* Default (Normal) Theme */
+/* Default (Light/Normal) Theme */
 :root {
   /* Backgrounds */
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
-  --bg-gradient-start: #eff6ff;
+  --bg-gradient-start: #f0f7ff;
   --bg-gradient-end: #faf5ff;
   
   /* Text Colors */
@@ -19,6 +19,9 @@
   --accent-blue: #3b82f6;
   --accent-purple: #8b5cf6;
   --accent-pink: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+  --accent-teal: #14b8a6;
   
   /* Card Styles */
   --card-bg: #ffffff;
@@ -34,13 +37,13 @@
   --overlay-bg: rgba(0, 0, 0, 0.5);
 }
 
-/* Monochrome Liquid Glass Theme */
+/* Monochrome Liquid Glass Theme (Dark) */
 [data-theme="monochrome"] {
-  /* Backgrounds */
+  /* Backgrounds - Subtle gradient like hero */
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
-  --bg-gradient-start: #0a0a0a;
-  --bg-gradient-end: #1a1a1a;
+  --bg-gradient-start: #050510;
+  --bg-gradient-end: #0a0a14;
   
   /* Text Colors */
   --text-primary: #ffffff;
@@ -51,6 +54,9 @@
   --accent-blue: #ffffff;
   --accent-purple: #e5e7eb;
   --accent-pink: #d1d5db;
+  --accent-cyan: #f3f4f6;
+  --accent-green: #e5e7eb;
+  --accent-teal: #d1d5db;
   
   /* Card Styles - Glassmorphism */
   --card-bg: rgba(255, 255, 255, 0.03);
@@ -83,28 +89,66 @@
 }
 
 /* ============================================
-   GLASSMORPHISM UTILITIES
+   SECTION BACKGROUNDS - CONSISTENT THEME
    ============================================ */
-[data-theme="monochrome"] .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+[data-theme="normal"] #projects,
+[data-theme="normal"] #experience,
+[data-theme="normal"] #contact {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end)) !important;
 }
 
-[data-theme="monochrome"] .glass-button {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+[data-theme="monochrome"] #projects,
+[data-theme="monochrome"] #experience,
+[data-theme="monochrome"] #contact {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end)) !important;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+.glass-card {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: var(--glass-bg, rgba(255, 255, 255, 0.7));
+  border: 1px solid var(--glass-border, rgba(229, 231, 235, 0.8));
+  box-shadow: var(--glass-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.glass-button {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: var(--glass-bg, rgba(255, 255, 255, 0.8));
+  border: 1px solid var(--glass-border, rgba(229, 231, 235, 0.8));
+  box-shadow: var(--glass-shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Hover effects - GlassUI.dev style */
+[data-theme="normal"] .glass-card:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(229, 231, 235, 1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+[data-theme="monochrome"] .glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+[data-theme="normal"] .glass-button:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+  transform: translateY(-2px);
 }
 
 [data-theme="monochrome"] .glass-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 /* ============================================
@@ -224,7 +268,7 @@
 }
 
 /* ============================================
-   BUTTON STYLES
+   BUTTON STYLES - GLASSUI.DEV INSPIRED
    ============================================ */
 .theme-btn {
   background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end));
@@ -237,9 +281,10 @@
   transition: all 0.3s ease;
 }
 
-.theme-btn:hover {
+[data-theme="normal"] .theme-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
 }
 
 [data-theme="monochrome"] .theme-btn {
@@ -251,6 +296,8 @@
 }
 
 [data-theme="monochrome"] .theme-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
