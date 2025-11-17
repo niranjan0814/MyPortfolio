@@ -1,0 +1,256 @@
+/* ============================================
+   THEME VARIABLES - Normal & Monochrome
+   ============================================ */
+
+/* Default (Normal) Theme */
+:root {
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-gradient-start: #eff6ff;
+  --bg-gradient-end: #faf5ff;
+  
+  /* Text Colors */
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  
+  /* Accent Colors */
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  
+  /* Card Styles */
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  /* Button Styles */
+  --btn-gradient-start: #3b82f6;
+  --btn-gradient-end: #8b5cf6;
+  
+  /* Misc */
+  --border-color: #e5e7eb;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+/* Monochrome Liquid Glass Theme */
+[data-theme="monochrome"] {
+  /* Backgrounds */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-gradient-start: #0a0a0a;
+  --bg-gradient-end: #1a1a1a;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  
+  /* Accent Colors (Monochrome - whites/grays) */
+  --accent-blue: #ffffff;
+  --accent-purple: #e5e7eb;
+  --accent-pink: #d1d5db;
+  
+  /* Card Styles - Glassmorphism */
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  
+  /* Button Styles */
+  --btn-gradient-start: rgba(255, 255, 255, 0.1);
+  --btn-gradient-end: rgba(255, 255, 255, 0.15);
+  
+  /* Glassmorphism Effects */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(12px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
+  /* Misc */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --overlay-bg: rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+* {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+[data-theme="monochrome"] .glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+[data-theme="monochrome"] .glass-button {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+[data-theme="monochrome"] .glass-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   STARFIELD BACKGROUND (Monochrome Only)
+   ============================================ */
+[data-theme="monochrome"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent),
+    radial-gradient(1px 1px at 15% 90%, white, transparent);
+  background-size: 200% 200%;
+  background-position: 0 0, 40% 40%, 60% 60%, 80% 80%, 20% 20%, 70% 70%, 50% 50%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  animation: twinkle 200s linear infinite;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.15; }
+  50% { opacity: 0.25; }
+  100% { opacity: 0.15; }
+}
+
+/* ============================================
+   FLOATING PARTICLES (Monochrome Only)
+   ============================================ */
+[data-theme="monochrome"] .hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+[data-theme="monochrome"] .hero-particles::before,
+[data-theme="monochrome"] .hero-particles::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 20s infinite ease-in-out;
+}
+
+[data-theme="monochrome"] .hero-particles::before {
+  background: rgba(255, 255, 255, 0.05);
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+[data-theme="monochrome"] .hero-particles::after {
+  background: rgba(255, 255, 255, 0.03);
+  bottom: 10%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+/* ============================================
+   GRADIENT TEXT (Adapts to Theme)
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Monochrome version (white gradient) */
+[data-theme="monochrome"] .gradient-text {
+  background: linear-gradient(135deg, #ffffff, #e5e7eb, #d1d5db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================
+   NOISE TEXTURE (Monochrome Only)
+   ============================================ */
+[data-theme="monochrome"] .glass-noise {
+  position: relative;
+}
+
+[data-theme="monochrome"] .glass-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+.theme-btn {
+  background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end));
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="monochrome"] .theme-btn {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+}
+
+[data-theme="monochrome"] .theme-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
