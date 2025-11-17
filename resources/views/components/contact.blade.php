@@ -52,7 +52,7 @@
 
         <!-- Contact Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            @if(!empty($user?->email))
+            @if($user->email)
                 <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
@@ -65,7 +65,7 @@
                 </div>
             @endif
 
-            @if(!empty($user?->phone))
+            @if($user->phone)
                 <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
@@ -78,7 +78,7 @@
                 </div>
             @endif
 
-            @if(!empty($user?->address))
+            @if($user->address)
                 <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
                          style="background: var(--glass-bg, #e9d5ff); border: 1px solid var(--glass-border, transparent);">
@@ -94,11 +94,11 @@
         </div>
 
         <!-- Social Links - GITHUB ICON FIX -->
-        @if(!empty($user?->linkedin_url) || !empty($user?->github_url))
+        @if($user->linkedin_url|| $user->github_url)
             <div class="text-center mb-12">
                 <h3 class="text-xl font-semibold mb-4" style="color: var(--text-primary);">Follow Me</h3>
                 <div class="flex justify-center gap-4">
-                    @if(!empty($user->linkedin_url))
+                    @if($user->linkedin_url)
                         <a href="{{ $user->linkedin_url }}" target="_blank" rel="noopener noreferrer" 
                            class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
                             <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,7 @@
                             </svg>
                         </a>
                     @endif
-                    @if(!empty($user->github_url))
+                    @if($user->github_url)
                         <a href="{{ $user->github_url }}" target="_blank" rel="noopener noreferrer"
                            class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
                             <svg class="w-5 h-5 github-icon" fill="currentColor" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@
                     </div>
 
                     <ul class="space-y-5">
-                        @if(!empty($user?->phone))
+                        @if($user->phone)
                             <li class="flex items-center justify-between group">
                                 <div class="flex items-center gap-3">
                                     <div class="p-2 rounded-lg glass-card"
@@ -191,7 +191,7 @@
                             </li>
                         @endif
 
-                        @if(!empty($user->email))
+                        @if($user->email)
                             <li class="flex items-center justify-between group">
                                 <div class="flex items-center gap-3">
                                     <div class="p-2 rounded-lg glass-card"

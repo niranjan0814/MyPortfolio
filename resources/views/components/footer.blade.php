@@ -27,7 +27,7 @@
                         {{ $user->description ?? 'Your default description' }}
                     </p>
 
-                    @if(!empty($user->location))
+                    @if($user->location)
                     <div class="flex items-center gap-3 text-sm" style="color: var(--text-muted);">
                         <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
@@ -79,7 +79,7 @@
                         </h3>
                         <ul class="space-y-4">
 
-                            @if(!empty($user?->phone))
+                            @if($user->phone)
                             <li>
                                 <a href="tel:{{ $user->phone }}" class="transition-colors flex items-start gap-3 group hover:opacity-80"
                                    style="color: var(--text-secondary);">
@@ -91,7 +91,7 @@
                             </li>
                             @endif
 
-                            @if(!empty($user?->email))
+                            @if($user->email)
                             <li>
                                 <a href="mailto:{{ $user->email }}" class="transition-colors flex items-start gap-3 group hover:opacity-80"
                                    style="color: var(--text-secondary);">
@@ -104,7 +104,7 @@
                             </li>
                             @endif
 
-                            @if(!empty($user?->address))
+                            @if($user->address)
                             <li class="flex items-start gap-3" style="color: var(--text-secondary);">
                                 <svg class="w-4 h-4 mt-1" style="color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
@@ -122,7 +122,7 @@
                         <h4 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">Connect With Me</h4>
                         <div class="flex flex-wrap gap-4">
 
-                            @if(!empty($user?->github_url))
+                            @if($user->github_url)
                             <a href="{{ $user->github_url }}" target="_blank"
                                class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
                                style="background: var(--glass-bg, #1f2937); border: 1px solid var(--glass-border, var(--border-color));">
@@ -136,7 +136,7 @@
                             </a>
                             @endif
 
-                            @if(!empty($user?->linkedin_url))
+                            @if($user->linkedin_url)
                             <a href="{{ $user->linkedin_url }}" target="_blank"
                                class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
                                style="background: var(--glass-bg, #3b82f6); border: 1px solid var(--glass-border, var(--border-color));">
@@ -150,7 +150,7 @@
                             </a>
                             @endif
 
-                            @if(!empty($user?->email))
+                            @if($user->email)
                             <a href="mailto:{{ $user->email }}"
                                class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
                                style="background: var(--glass-bg, #ef4444); border: 1px solid var(--glass-border, var(--border-color));">
@@ -165,7 +165,7 @@
                             </a>
                             @endif
 
-                            @if(!empty($user?->phone))
+                            @if($user->phone)
                             <a href="tel:{{ $user->phone }}"
                                class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
                                style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, var(--border-color));">
