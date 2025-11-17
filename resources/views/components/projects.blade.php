@@ -1,41 +1,61 @@
 @props(['projects'])
 <!-- resources/views/components/projects.blade.php -->
-<section id="projects" class="section-full bg-white">
-    <div class="container mx-auto fade-in">
-        <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center text-gray-800">Projects</h2>
+<section id="projects" class="section-full relative overflow-hidden" style="background: var(--bg-primary);">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 opacity-5 normal-theme-only">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+    </div>
+
+    <!-- Monochrome particles -->
+    <div class="hero-particles"></div>
+
+    <div class="container mx-auto fade-in relative z-10 px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Projects</h2>
+            <div class="h-1 w-32 mx-auto rounded-full"
+                 style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             @forelse ($projects as $project)
                 <!-- Dynamic Project Card -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md border border-gray-200 card-hover hover:shadow-lg transition-shadow">
+                <div class="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2 glass-card"
+                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                    
+                    <!-- Glassmorphism overlay on hover (monochrome only) -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                         style="background: var(--glass-bg); backdrop-filter: var(--glass-blur);"></div>
                     
                     <!-- Image / Icon Section -->
                     @if ($project->image)
-                        <div class="h-48 overflow-hidden border-b border-gray-200 flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100">
+                        <div class="h-48 overflow-hidden flex items-center justify-center relative"
+                             style="background: var(--bg-gradient-start); border-bottom: 1px solid var(--border-color);">
                             <img src="{{ asset('storage/' . $project->image) }}" 
                                  alt="{{ $project->title }}" 
-                                 class="object-cover h-full w-full hover:scale-105 transition-transform duration-300">
+                                 class="object-cover h-full w-full group-hover:scale-105 transition-transform duration-300">
                         </div>
                     @else
-                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 h-48 flex items-center justify-center border-b border-gray-200">
-                            <i class="fas fa-folder-open text-6xl text-blue-600"></i>
+                        <div class="h-48 flex items-center justify-center relative"
+                             style="background: var(--bg-gradient-start); border-bottom: 1px solid var(--border-color);">
+                            <i class="fas fa-folder-open text-6xl" style="color: var(--accent-blue);"></i>
                         </div>
                     @endif
 
                     <!-- Project Details -->
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                    <div class="p-6 relative z-10">
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">
                             {{ $project->title }}
                         </h3>
 
                         @if ($project->created_at)
-                            <p class="text-gray-500 mb-4">
+                            <p class="mb-4 text-sm" style="color: var(--text-muted);">
                                 {{ $project->created_at->format('M Y') }}
                             </p>
                         @endif
 
-                        <p class="text-gray-600 mb-4 leading-relaxed">
+                        <p class="mb-4 leading-relaxed" style="color: var(--text-secondary);">
                             {{ $project->description }}
                         </p>
 
@@ -43,7 +63,8 @@
                         @if (!empty($project->tags))
                             <div class="flex flex-wrap gap-2 mb-4">
                                 @foreach (explode(',', $project->tags) as $tag)
-                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <span class="px-3 py-1 rounded-full text-sm font-medium glass-card"
+                                          style="background: var(--glass-bg, #dbeafe); color: var(--accent-blue); border: 1px solid var(--glass-border, #3b82f6);">
                                         {{ trim($tag) }}
                                     </span>
                                 @endforeach
@@ -55,25 +76,28 @@
                             {{-- GitHub/Source Link --}}
                             @if ($project->link)
                                 <a href="{{ $project->link }}" target="_blank"
-                                   class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                                   class="inline-flex items-center gap-2 font-medium transition-colors hover:opacity-80"
+                                   style="color: var(--accent-blue);">
                                     <i class="fab fa-github text-lg"></i> 
                                     <span>View Code</span>
                                 </a>
                             @endif
 
-                            {{-- Live Demo Link (Only if deployed) --}}
+                            {{-- Live Demo Link --}}
                             @if ($project->depurl)
                                 <a href="{{ $project->depurl }}" target="_blank"
-                                   class="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors">
+                                   class="inline-flex items-center gap-2 font-medium transition-colors hover:opacity-80"
+                                   style="color: #10b981;">
                                     <i class="fas fa-external-link-alt text-lg"></i>
                                     <span>View Live</span>
                                 </a>
                             @endif
 
-                            {{-- View Overview (if overview exists) --}}
+                            {{-- View Overview --}}
                             @if ($project->overview)
                                 <a href="{{ route('project.overview', $project->id) }}"
-                                   class="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium transition-colors ml-auto">
+                                   class="inline-flex items-center gap-2 font-medium transition-colors hover:opacity-80 ml-auto"
+                                   style="color: var(--accent-purple);">
                                     <i class="fas fa-book-open text-lg"></i>
                                     <span>Overview</span>
                                 </a>
@@ -84,7 +108,11 @@
             @empty
                 <!-- Empty State -->
                 <div class="col-span-3 text-center py-10">
-                    <p class="text-gray-500 text-lg">No projects added yet.</p>
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 glass-card"
+                         style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                        <i class="fas fa-folder-open text-4xl" style="color: var(--text-muted);"></i>
+                    </div>
+                    <p class="text-lg" style="color: var(--text-muted);">No projects added yet.</p>
                 </div>
             @endforelse
 
