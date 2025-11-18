@@ -24,8 +24,8 @@
         </div>
 
         <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-            <!-- Left Side - Profile Image -->
-            <div class="flex-shrink-0">
+            <!-- Left Side - Profile Image (UPDATED: moved up) -->
+            <div class="flex-shrink-0 -mt-20 lg:-mt-16">
                 <div class="relative group">
                     <div class="absolute inset-0 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-110"
                          style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));"></div>

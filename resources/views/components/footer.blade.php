@@ -1,7 +1,7 @@
 @props([])
 
 @php
-    $user = auth()->user();
+     $user = \App\Models\User::first();
 @endphp
 
 <footer class="relative overflow-hidden" style="background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));">

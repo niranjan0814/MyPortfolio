@@ -37,10 +37,7 @@
         @else
             <!-- Unique Horizontal Timeline Layout -->
             <div class="relative">
-                <!-- Timeline Line -->
-                <div class="hidden md:block absolute top-32 left-0 right-0 h-1 rounded-full"
-                     style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink)); opacity: 0.3;"></div>
-
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
                     @foreach($educations->sortByDesc('year') as $index => $education)
                         @php
@@ -138,6 +135,8 @@
 .education-card {
     transition: all 0.3s ease;
 }
+
+
 
 [data-theme="normal"] .education-card:hover {
     transform: translateY(-8px);

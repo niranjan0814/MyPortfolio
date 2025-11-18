@@ -1,7 +1,7 @@
 @props([])
 
 @php
-    $user = auth()->user();
+     $user = \App\Models\User::first();
 @endphp
 
 <section id="contact" class="section-full py-20 relative overflow-hidden" 
