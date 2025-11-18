@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class ProjectOverview extends Model
 {
@@ -17,9 +18,9 @@ class ProjectOverview extends Model
     ];
 
     protected $casts = [
-        'key_features' => 'array',
+        'key_features'   => 'array',
         'gallery_images' => 'array',
-        'tech_stack' => 'array',
+        'tech_stack'     => 'array',
     ];
 
     public function project(): BelongsTo
@@ -27,13 +28,22 @@ class ProjectOverview extends Model
         return $this->belongsTo(Project::class);
     }
 
-    // Get tech stack skills
-    public function getTechStackSkills()
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the Skill models for the tech stack (only from the same user)
+     */
+    public function getTechStackSkills(): Collection
     {
         if (empty($this->tech_stack)) {
             return collect([]);
         }
-        
-        return \App\Models\Skill::whereIn('id', $this->tech_stack)->get();
+
+        return Skill::where('user_id', $this->user_id)
+                    ->whereIn('id', $this->tech_stack)
+                    ->get();
     }
 }

@@ -3,12 +3,31 @@
 @section('content')
     <x-hero 
         :heroContent="$heroContent" 
-        :techStackSkills="$techStackSkills" 
+        :techStackSkills="$techStackSkills"
+        :user="$user"
     />
-    <x-about :aboutContent="$aboutContent" />
-    <x-projects :projects="$projects" />
-    <x-skills :skills="$skills" />
-    <x-experience :experiences="$experiences" />
-    <x-education :educations="$educations" />
-    <x-contact :contactContent="$contactContent" />
+    <x-about 
+        :aboutContent="$aboutContent"
+        :user="$user"
+    />
+    <x-projects 
+        :projects="$projects"
+        :user="$user"
+    />
+    <x-skills 
+        :skills="$skills"
+        :user="$user"
+    />
+    <x-experience 
+        :experiences="$experiences"
+        :user="$user"
+    />
+    <x-education 
+        :educations="$educations"
+        :user="$user"
+    />
+    <x-contact 
+        :contactContent="$contactContent"
+        :user="$user"
+    />
 @endsection

@@ -1,3 +1,11 @@
+@props(['user' => null])
+
+@php
+    // Super safe fallback — if no $user, use the first user with a slug (or empty string)
+    $currentSlug = $user?->slug ?? \App\Models\User::whereNotNull('slug')->value('slug') ?? '';
+    $baseUrl = $currentSlug ? route('portfolio.show', $currentSlug) : '/';
+@endphp
+
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style="background: var(--card-bg); border-bottom: 1px solid var(--border-color); box-shadow: var(--card-shadow);">
     <nav class="container mx-auto px-6 py-4">
@@ -5,12 +13,12 @@
             <a href="#hero" class="text-2xl font-bold transition-colors hover:opacity-80" style="color: var(--text-primary);">NS</a>
 
             <ul class="hidden md:flex space-x-8 items-center">
-                <li><a href="{{ route('portfolio.index') }}#about" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">About</a></li>
-                <li><a href="{{ route('portfolio.index') }}#projects" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Projects</a></li>
-                <li><a href="{{ route('portfolio.index') }}#skills" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Skills</a></li>
-                <li><a href="{{ route('portfolio.index') }}#experience" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Experience</a></li>
-                <li><a href="{{ route('portfolio.index') }}#education" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Education</a></li>
-                <li><a href="{{ route('portfolio.index') }}#contact" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Contact</a></li>
+                <li><a href="{{ $baseUrl }}#about" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">About</a></li>
+                <li><a href="{{ $baseUrl }}#projects" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Projects</a></li>
+                <li><a href="{{ $baseUrl }}#skills" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Skills</a></li>
+                <li><a href="{{ $baseUrl }}#experience" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Experience</a></li>
+                <li><a href="{{ $baseUrl }}#education" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Education</a></li>
+                <li><a href="{{ $baseUrl }}#contact" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Contact</a></li>
 
                 <li>
                     <button id="theme-toggle" class="theme-toggle-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all hover:scale-105"
@@ -48,7 +56,6 @@
     document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
     });
-
     document.querySelectorAll('.mobile-menu-link').forEach(link => {
         link.addEventListener('click', function () {
             document.getElementById('mobile-menu')?.classList.add('hidden');

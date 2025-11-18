@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Enquiry extends Model
 {
@@ -13,4 +14,16 @@ class Enquiry extends Model
         'subject',
         'message',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
+    /**
+     * Each enquiry belongs to one portfolio owner
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

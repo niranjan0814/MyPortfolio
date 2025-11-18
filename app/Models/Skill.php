@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Skill extends Model
 {
@@ -13,4 +14,13 @@ class Skill extends Model
         'level',
         'category',
     ];
+
+    protected $casts = [
+        'level' => 'integer',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

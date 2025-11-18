@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -13,8 +14,6 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -28,13 +27,12 @@ class User extends Authenticatable
         'github_url',
         'linkedin_url',
         'profile_image',
-        'cv_path', // ✅ Added CV path
+        'cv_path',
+        'slug', // ← For clean URLs: /portfolio/john-doe
     ];
 
     /**
      * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -43,8 +41,6 @@ class User extends Authenticatable
 
     /**
      * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -53,11 +49,39 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    // ✅ NEW: Auto-create portfolio data after user registration
-    protected static function booted()
+
+    /**
+     * Use 'slug' instead of 'id' in routes → /portfolio/niru works automatically
+     */
+    public function getRouteKeyName(): string
     {
+        return 'slug';
+    }
+
+    /**
+     * Boot events: Auto-create portfolio data + Auto-generate unique slug
+     */
+    protected static function booted(): void
+    {
+        // 1. Auto-generate unique slug on create/update
+        static::saving(function ($user) {
+            if ($user->isDirty(['full_name', 'name']) || empty($user->slug)) {
+                $base = Str::slug($user->full_name ?: $user->name ?: 'user');
+                $slug = $base;
+                $i = 1;
+
+                // Avoid conflict with existing slugs (except itself)
+                while (static::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
+                    $slug = $base . '-' . $i++;
+                }
+
+                $user->slug = $slug;
+            }
+        });
+
+        // 2. Auto-create default portfolio sections when a new user registers
         static::created(function ($user) {
-            // Create default About section
+            // Default About section
             \App\Models\About::create([
                 'user_id' => $user->id,
                 'about_greeting' => "Hi, I'm {$user->full_name}!",
@@ -76,63 +100,99 @@ class User extends Authenticatable
                 'stat_problem_label' => 'Solving Expert',
             ]);
 
-            // Create default Hero section
+            // Default Hero section
             \App\Models\HeroContent::create([
                 'user_id' => $user->id,
                 'greeting' => "Hi, I'm",
                 'description' => "Transforming ideas into elegant, scalable digital solutions with the power of modern web technologies",
-                'typing_texts' => [
+                'typing_texts' => json_encode([
                     ['text' => 'Full-Stack Developer'],
                     ['text' => 'MERN Stack Enthusiast'],
                     ['text' => 'Problem Solver'],
                     ['text' => 'Team Leader'],
-                ],
+                ]),
                 'btn_contact_enabled' => true,
                 'btn_contact_text' => 'Get In Touch',
                 'btn_projects_enabled' => true,
                 'btn_projects_text' => 'View My Work',
-                'social_links' => [],
+                'social_links' => json_encode([]),
                 'tech_stack_enabled' => true,
                 'tech_stack_count' => 4,
             ]);
         });
     }
 
-    /**
-     * ✅ Check if user has a CV uploaded
-     */
+    // =================================================================
+    // RELATIONSHIPS — All portfolio data belongs to this user
+    // =================================================================
+
+    public function about()
+    {
+        return $this->hasOne(\App\Models\About::class);
+    }
+
+    public function abouts()
+    {
+        return $this->hasMany(\App\Models\About::class);
+    }
+
+    public function heroContents()
+    {
+        return $this->hasMany(\App\Models\HeroContent::class);
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(\App\Models\Skill::class);
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(\App\Models\Project::class);
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(\App\Models\Experience::class);
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(\App\Models\Education::class);
+    }
+
+    public function enquiries()
+    {
+        return $this->hasMany(\App\Models\Enquiry::class);
+    }
+
+    public function projectOverviews()
+    {
+        return $this->hasMany(\App\Models\ProjectOverview::class);
+    }
+
+    // =================================================================
+    // CV Helpers
+    // =================================================================
+
     public function hasCv(): bool
     {
         return !empty($this->cv_path) && Storage::disk('public')->exists($this->cv_path);
     }
 
-    /**
-     * ✅ Get the full URL for the CV
-     */
     public function getCvUrlAttribute(): ?string
     {
-        if ($this->hasCv()) {
-            return Storage::disk('public')->url($this->cv_path);
-        }
-        return null;
+        return $this->hasCv() ? Storage::disk('public')->url($this->cv_path) : null;
     }
 
-    /**
-     * ✅ Delete the CV file from storage
-     */
     public function deleteCv(): bool
     {
-        if ($this->cv_path && Storage::disk('public')->exists($this->cv_path)) {
-            return Storage::disk('public')->delete($this->cv_path);
+        if ($this->hasCv()) {
+            Storage::disk('public')->delete($this->cv_path);
+            $this->cv_path = null;
+            $this->save();
+            return true;
         }
         return false;
-    }
-
-    /**
-     * Relationship: User has one About record
-     */
-    public function about()
-    {
-        return $this->hasOne(\App\Models\About::class);
     }
 }

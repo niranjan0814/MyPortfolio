@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $heroContent['hero_name'] ?? 'Portfolio' }} | Full-Stack Developer Portfolio</title>
-    <meta name="description" content="{{ $heroContent['hero_description'] ?? 'Full-Stack Developer Portfolio' }}">
+
+    {{-- SUPER SAFE TITLE & META – will NEVER throw undefined variable error --}}
+    <title>
+        {{ 
+            data_get($heroContent, 'user_name') 
+            ?? data_get($heroContent, 'greeting') . ' ' . ($user->full_name ?? $user->name ?? '') 
+            ?? $user->full_name ?? $user->name ?? 'Portfolio' 
+        }} | Full-Stack Developer Portfolio
+    </title>
+
+    <meta name="description" content="{{ 
+        $heroContent['description'] 
+        ?? data_get($heroContent, 'description') 
+        ?? 'Full-Stack Developer Portfolio' 
+    }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
           integrity="sha512-D1xDxkGKfQ3FtA4iO7QdZq6r8N2IoT2EKHFXPhprYyLq4zHTGv7Ew2AZZT1jK8ZCKy9v6gRXH8tK2+gFqM6PlQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -58,9 +72,12 @@
     </style>
 </head>
 <body>
-    <x-header :headerContent="$headerContent" />
+    {{-- These will never throw errors thanks to ?? [] --}}
+    <x-header :headerContent="$headerContent ?? []" />
+    
     @yield('content')
-    <x-footer :footerContent="$footerContent" />
+    
+    <x-footer :footerContent="$footerContent ?? []" />
 
     <!-- Back to Top Button -->
     <button id="backToTop"
@@ -73,7 +90,6 @@
         </svg>
     </button>
 
-    <!-- All Your Working Scripts (reveal, back-to-top, smooth scroll) -->
     <script>
         function reveal() {
             const reveals = document.querySelectorAll('.fade-in');
@@ -114,9 +130,7 @@
         });
     </script>
 
-    <!-- LOAD THEME SCRIPT LAST -->
     @vite('resources/js/theme.js')
-
     @stack('scripts')
 </body>
 </html>
