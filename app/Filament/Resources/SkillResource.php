@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SkillResource\Pages;
+use App\Filament\Traits\BelongsToUser;
 use App\Models\Skill;
 use Filament\Forms;
 use Filament\Tables;
@@ -10,6 +11,8 @@ use Filament\Resources\Resource;
 
 class SkillResource extends Resource
 {
+    use BelongsToUser;
+
     protected static ?string $model = Skill::class;
     protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
     protected static ?string $navigationGroup = 'Portfolio';
@@ -17,16 +20,19 @@ class SkillResource extends Resource
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
+            Forms\Components\Hidden::make('user_id')
+                ->default(fn () => auth()->id()),
+
             Forms\Components\TextInput::make('name')
                 ->required()
                 ->label('Skill Name')
                 ->placeholder('e.g., React, Node.js, MongoDB'),
+
             Forms\Components\TextInput::make('url')
                 ->label('Icon URL')
                 ->placeholder('e.g., https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg')
                 ->helperText('Enter the full URL to the skill icon image')
                 ->url(),
-
 
             Forms\Components\Select::make('category')
                 ->required()

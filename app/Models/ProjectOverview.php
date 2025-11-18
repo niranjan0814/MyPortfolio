@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProjectOverview extends Model
 {
     protected $fillable = [
+        'user_id',
         'project_id',
         'overview_description',
         'key_features',

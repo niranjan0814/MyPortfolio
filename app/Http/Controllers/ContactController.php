@@ -1,5 +1,5 @@
 <?php
-
+// app/Http/Controllers/ContactController.php
 namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
@@ -9,7 +9,6 @@ class ContactController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate the form data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -17,10 +16,15 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Save to database
-        Enquiry::create($validated);
+        // ✅ CRITICAL: Associate enquiry with the WEBSITE OWNER (first user)
+        // This assumes portfolio visitors are submitting enquiries to the site owner
+        $portfolioOwner = \App\Models\User::first();
+        
+        Enquiry::create([
+            ...$validated,
+            'user_id' => $portfolioOwner->id ?? null,
+        ]);
 
-        // Redirect back with success message
         return redirect()->back()->with('success', 'Thank you for your message! I will get back to you soon.');
     }
 }

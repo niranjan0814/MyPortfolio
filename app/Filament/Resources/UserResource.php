@@ -10,22 +10,25 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationLabel = 'Users';
     protected static ?string $modelLabel = 'User';
     protected static ?int $navigationSort = 1;
 
+    // ✅ CRITICAL: Only show current user's profile
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->where('id', auth()->id());
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // === Account Section ===
                 Forms\Components\Section::make('Account Information')
                     ->description('Login credentials and basic info')
                     ->icon('heroicon-o-user-circle')
@@ -52,7 +55,6 @@ class UserResource extends Resource
                             ->maxLength(255),
                     ])->columns(2),
 
-                // === Profile Section ===
                 Forms\Components\Section::make('Profile Details')
                     ->description('Personal information displayed on your portfolio')
                     ->icon('heroicon-o-identification')
@@ -61,32 +63,31 @@ class UserResource extends Resource
                             ->label('Full Name')
                             ->required()
                             ->maxLength(255)
-                            ->placeholder('Niranjan Sivarasa'),
+                            ->placeholder('John Doe'),
 
                         Forms\Components\Textarea::make('description')
                             ->label('Bio / Description')
                             ->rows(4)
                             ->maxLength(1000)
-                            ->placeholder('Full-Stack Developer specializing in MERN Stack...'),
+                            ->placeholder('Full-Stack Developer...'),
 
                         Forms\Components\TextInput::make('phone')
                             ->label('Phone Number')
                             ->tel()
-                            ->placeholder('+94 76 423 1394'),
+                            ->placeholder('+1 234 567 8900'),
 
                         Forms\Components\TextInput::make('location')
                             ->label('Location')
                             ->maxLength(255)
-                            ->placeholder('Jaffna, Sri Lanka'),
+                            ->placeholder('New York, USA'),
 
                         Forms\Components\Textarea::make('address')
                             ->label('Full Address')
                             ->rows(2)
                             ->maxLength(500)
-                            ->placeholder('No. 424/11, K.K.S. Road, Jaffna, Sri Lanka'),
+                            ->placeholder('123 Main St, City, Country'),
                     ])->columns(2),
 
-                // === CV Upload Section ===
                 Forms\Components\Section::make('Curriculum Vitae (CV)')
                     ->description('Upload your CV/Resume for download')
                     ->icon('heroicon-o-document-text')
@@ -94,7 +95,7 @@ class UserResource extends Resource
                         Forms\Components\FileUpload::make('cv_path')
                             ->label('Upload CV/Resume')
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(5120) // 5MB max
+                            ->maxSize(5120)
                             ->directory('cvs')
                             ->downloadable()
                             ->openable()
@@ -104,7 +105,6 @@ class UserResource extends Resource
                             ->hint(fn ($record) => $record?->hasCv() ? '✓ CV uploaded' : 'No CV uploaded'),
                     ]),
 
-                // === Social Links Section ===
                 Forms\Components\Section::make('Social & Links')
                     ->description('Your online presence')
                     ->icon('heroicon-o-link')
@@ -113,13 +113,13 @@ class UserResource extends Resource
                             ->label('GitHub URL')
                             ->url()
                             ->prefix('https://')
-                            ->placeholder('github.com/niranjan0814'),
+                            ->placeholder('github.com/username'),
 
                         Forms\Components\TextInput::make('linkedin_url')
                             ->label('LinkedIn URL')
                             ->url()
                             ->prefix('https://')
-                            ->placeholder('linkedin.com/in/niranjan-sivarasa-56ba57366'),
+                            ->placeholder('linkedin.com/in/username'),
 
                         Forms\Components\TextInput::make('profile_image')
                             ->label('Profile Image URL')
@@ -159,28 +159,6 @@ class UserResource extends Resource
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger'),
-
-                Tables\Columns\TextColumn::make('phone')
-                    ->label('Phone')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                Tables\Columns\TextColumn::make('location')
-                    ->label('Location')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('M j, Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                Tables\Filters\TernaryFilter::make('has_cv')
-                    ->label('Has CV')
-                    ->queries(
-                        true: fn ($query) => $query->whereNotNull('cv_path'),
-                        false: fn ($query) => $query->whereNull('cv_path'),
-                    ),
             ])
             ->actions([
                 Tables\Actions\Action::make('download_cv')
@@ -194,34 +172,25 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-o-pencil')
                     ->button(),
-
-                Tables\Actions\DeleteAction::make()
-                    ->icon('heroicon-o-trash')
-                    ->button()
-                    ->before(function ($record) {
-                        // Delete CV file before deleting user
-                        $record->deleteCv();
-                    }),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->before(function ($records) {
-                            // Delete CV files before deleting users
-                            foreach ($records as $record) {
-                                $record->deleteCv();
-                            }
-                        }),
-                ]),
-            ])
+            ->bulkActions([]) // Disable bulk actions for security
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function canCreate(): bool
+    {
+        return false; // Prevent creating new users from panel
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false; // Prevent self-deletion
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }

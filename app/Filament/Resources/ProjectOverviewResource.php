@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectOverviewResource\Pages;
+use App\Filament\Traits\BelongsToUser;
 use App\Models\ProjectOverview;
 use App\Models\Project;
 use App\Models\Skill;
@@ -12,6 +13,8 @@ use Filament\Resources\Resource;
 
 class ProjectOverviewResource extends Resource
 {
+    use BelongsToUser;
+
     protected static ?string $model = ProjectOverview::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Portfolio';
@@ -20,11 +23,14 @@ class ProjectOverviewResource extends Resource
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
+            Forms\Components\Hidden::make('user_id')
+                ->default(fn () => auth()->id()),
+
             Forms\Components\Section::make('Project Selection')
                 ->schema([
                     Forms\Components\Select::make('project_id')
                         ->label('Select Project')
-                        ->options(Project::all()->pluck('title', 'id'))
+                        ->options(fn() => Project::where('user_id', auth()->id())->pluck('title', 'id'))
                         ->required()
                         ->searchable()
                         ->helperText('Choose the project this overview belongs to'),
@@ -54,7 +60,7 @@ class ProjectOverviewResource extends Resource
                         ->label('Key Features')
                         ->keyLabel('Feature Name')
                         ->valueLabel('Feature Description')
-                        ->helperText('Add key features with descriptions (e.g., "Real-time Chat" → "WebSocket-based instant messaging")')
+                        ->helperText('Add key features with descriptions')
                         ->addActionLabel('Add Feature')
                         ->columnSpanFull(),
                 ]),
@@ -63,7 +69,7 @@ class ProjectOverviewResource extends Resource
                 ->schema([
                     Forms\Components\Textarea::make('gallery_images')
                         ->label('Gallery Image URLs')
-                        ->helperText('Enter image URLs, one per line. These will be displayed in the project gallery.')
+                        ->helperText('Enter image URLs, one per line.')
                         ->rows(5)
                         ->placeholder("https://example.com/image1.jpg\nhttps://example.com/image2.jpg")
                         ->dehydrateStateUsing(fn ($state) => array_filter(array_map('trim', explode("\n", $state))))
@@ -76,7 +82,7 @@ class ProjectOverviewResource extends Resource
                     Forms\Components\Select::make('tech_stack')
                         ->label('Tech Stack')
                         ->multiple()
-                        ->options(Skill::orderBy('name')->pluck('name', 'id'))
+                        ->options(fn() => Skill::where('user_id', auth()->id())->orderBy('name')->pluck('name', 'id'))
                         ->searchable()
                         ->helperText('Select the technologies used in this project')
                         ->columnSpanFull(),
@@ -122,7 +128,7 @@ class ProjectOverviewResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('project_id')
                     ->label('Filter by Project')
-                    ->options(Project::all()->pluck('title', 'id')),
+                    ->options(fn() => Project::where('user_id', auth()->id())->pluck('title', 'id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

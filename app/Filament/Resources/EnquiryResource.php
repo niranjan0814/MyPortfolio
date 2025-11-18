@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EnquiryResource\Pages;
+use App\Filament\Traits\BelongsToUser;
 use App\Models\Enquiry;
 use Filament\Tables;
 use Filament\Resources\Resource;
@@ -11,11 +12,12 @@ use Filament\Infolists\Infolist;
 
 class EnquiryResource extends Resource
 {
+    use BelongsToUser;
+
     protected static ?string $model = Enquiry::class;
     protected static ?string $navigationIcon = 'heroicon-o-envelope';
     protected static ?string $navigationGroup = 'Contact';
 
-    // Add infolist for viewing enquiry details
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
@@ -82,7 +84,7 @@ class EnquiryResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(), // Allow deletion of spam
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

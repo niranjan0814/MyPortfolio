@@ -1,5 +1,5 @@
 <?php
-
+// app/Http/Controllers/PortfolioController.php
 namespace App\Http\Controllers;
 
 use App\Models\Project;
@@ -16,14 +16,15 @@ class PortfolioController extends Controller
 {
     public function index()
     {
-        // Get the authenticated user (or first user as fallback)
+        // ✅ CRITICAL: Get portfolio data for the LOGGED-IN user or first user (for public view)
         $user = Auth::user() ?? \App\Models\User::first();
+        
         if (!$user) {
             abort(404, 'No user found.');
         }
 
-        // ── ABOUT ─────────────────────────────────────────────────────
-        $about = $user->about ?? About::firstOrCreate(
+        // ✅ Filter ALL data by user_id
+        $about = About::where('user_id', $user->id)->first() ?? About::firstOrCreate(
             ['user_id' => $user->id],
             [
                 'about_greeting'      => "Hi, I'm {$user->full_name}!",
@@ -39,7 +40,6 @@ class PortfolioController extends Controller
         $aboutContent['user']         = $user;
         $aboutContent['profile_image']= $user->profile_image;
 
-        // ── HERO: DIRECT FROM DB ─────────────────────────────────────
         $hero = HeroContent::where('user_id', $user->id)->first();
 
         $heroContent = $hero ? [
@@ -70,36 +70,27 @@ class PortfolioController extends Controller
             'hero_image_url'       => null,
         ];
 
-        // ── TECH STACK SKILLS (FIXED: Now calculated BEFORE view) ───
         $techStackCount = $heroContent['tech_stack_count'] ?? 4;
-        $techStackSkills = Skill::where('url', '!=', '')
+        $techStackSkills = Skill::where('user_id', $user->id)
+            ->where('url', '!=', '')
             ->whereNotNull('url')
             ->inRandomOrder()
             ->limit($techStackCount)
             ->get();
 
-        // ── RETURN VIEW WITH ALL DATA ───────────────────────────────
         return view('welcome', [
-            // Projects
-            'projects'        => Project::with('overview')->latest()->get(),
-
-            // Skills
-            'skills'          => Skill::orderBy('category', 'asc')
+            'projects'        => Project::where('user_id', $user->id)->with('overview')->latest()->get(),
+            'skills'          => Skill::where('user_id', $user->id)
+                                      ->orderBy('category', 'asc')
                                       ->orderBy('name', 'asc')
                                       ->get(),
-
-            // Experiences & Education
-            'experiences'     => Experience::orderBy('created_at', 'desc')->get(),
-            'educations'      => Education::orderBy('year', 'desc')->get(),
-
-            // Sections
+            'experiences'     => Experience::where('user_id', $user->id)->orderBy('created_at', 'desc')->get(),
+            'educations'      => Education::where('user_id', $user->id)->orderBy('year', 'desc')->get(),
             'aboutContent'    => $aboutContent,
             'heroContent'     => $heroContent,
             'headerContent'   => PageContent::getSection('header', $user->id),
             'footerContent'   => PageContent::getSection('footer', $user->id),
             'contactContent'  => PageContent::getSection('contact', $user->id),
-
-            // CRITICAL: Pass techStackSkills to hero component
             'techStackSkills' => $techStackSkills,
         ]);
     }
@@ -107,10 +98,17 @@ class PortfolioController extends Controller
     public function showProjectOverview($id)
     {
         $user = Auth::user() ?? \App\Models\User::first();
-        $project = Project::with('overview')->findOrFail($id);
+        
+        // ✅ CRITICAL: Only show projects owned by the portfolio owner
+        $project = Project::where('user_id', $user->id)
+                          ->where('id', $id)
+                          ->with('overview')
+                          ->firstOrFail();
+        
         if (!$project->overview) {
             abort(404, 'Project overview not found');
         }
+        
         $overview = $project->overview;
         $techStackSkills = $overview->getTechStackSkills();
 
