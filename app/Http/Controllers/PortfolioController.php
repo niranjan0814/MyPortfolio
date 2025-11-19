@@ -20,82 +20,78 @@ class PortfolioController extends Controller
      * Automatically resolves the correct user via slug
      */
     public function show(User $user)
-    {
-        // $user is 100% safe — Laravel resolved it by slug + 404 if not found
+{
+    $hero = $user->heroContents()->first();
+    $about = $user->abouts()->first() ?? $user->about;
 
-        $hero = $user->heroContents()->first();
-        $about = $user->abouts()->first() ?? $user->about; // fallback to hasOne if needed
+    $techStackCount = $hero?->tech_stack_count ?? 4;
 
-        $techStackCount = $hero?->tech_stack_count ?? 4;
+    // Prepare Hero Content (with fallbacks)
+    $heroContent = $hero ? [
+        'greeting'           => $hero->greeting,
+        'description'        => $hero->description,
+        'user_name'          => $user->full_name ?? $user->name,
+        'typing_texts'       => $hero->typing_texts ?? [],
+        'btn_contact_enabled'=> $hero->btn_contact_enabled,
+        'btn_contact_text'   => $hero->btn_contact_text,
+        'btn_projects_enabled'=> $hero->btn_projects_enabled,
+        'btn_projects_text'  => $hero->btn_projects_text,
+        'social_links'       => $hero->social_links ?? [],
+        'tech_stack_enabled' => $hero->tech_stack_enabled,
+        'tech_stack_count'   => $hero->tech_stack_count,
+        'hero_image_url'     => $hero->hero_image_url,
+    ] : [
+        'greeting'           => "Hi, I'm",
+        'description'        => 'Transforming ideas into elegant, scalable digital solutions...',
+        'user_name'          => $user->full_name ?? $user->name,
+        'typing_texts'       => ['Full-Stack Developer', 'Problem Solver'],
+        'btn_contact_enabled'=> true,
+        'btn_contact_text'   => 'Get In Touch',
+        'btn_projects_enabled'=> true,
+        'btn_projects_text'  => 'View My Work',
+        'social_links'       => [],
+        'tech_stack_enabled' => true,
+        'tech_stack_count'   => 4,
+        'hero_image_url'     => null,
+    ];
 
-        // Prepare Hero Content (with fallbacks)
-        $heroContent = $hero ? [
-            'greeting'           => $hero->greeting,
-            'description'        => $hero->description,
-            'user_name'          => $user->full_name ?? $user->name,
-            'typing_texts'       => $hero->typing_texts ?? [],
-            'btn_contact_enabled'=> $hero->btn_contact_enabled,
-            'btn_contact_text'   => $hero->btn_contact_text,
-            'btn_projects_enabled'=> $hero->btn_projects_enabled,
-            'btn_projects_text'  => $hero->btn_projects_text,
-            'social_links'       => $hero->social_links ?? [],
-            'tech_stack_enabled' => $hero->tech_stack_enabled,
-            'tech_stack_count'   => $hero->tech_stack_count,
-            'hero_image_url'     => $hero->hero_image_url,
-        ] : [
-            'greeting'           => "Hi, I'm",
-            'description'        => 'Transforming ideas into elegant, scalable digital solutions...',
-            'user_name'          => $user->full_name ?? $user->name,
-            'typing_texts'       => ['Full-Stack Developer', 'Problem Solver'],
-            'btn_contact_enabled'=> true,
-            'btn_contact_text'   => 'Get In Touch',
-            'btn_projects_enabled'=> true,
-            'btn_projects_text'  => 'View My Work',
-            'social_links'       => [],
-            'tech_stack_enabled' => true,
-            'tech_stack_count'   => 4,
-            'hero_image_url'     => null,
-        ];
+    // Prepare About Content
+    $aboutContent = $about ? array_merge($about->toArray(), [
+        'user'           => $user,
+        'profile_image'  => $user->profile_image,
+    ]) : [
+        'about_greeting'     => "Hi, I'm {$user->full_name}!",
+        'about_description'  => $user->description ?? 'Passionate developer building amazing things.',
+        'profile_name'       => $user->full_name,
+        'profile_image'      => $user->profile_image,
+        'user'               => $user,
+        'profile_gpa_badge'  => 'GPA 3.79',
+        'profile_degree_badge'=> 'BSc(Hons)SE',
+        'cta_button_text'    => "Let's Work Together",
+    ];
 
-        // Prepare About Content
-        $aboutContent = $about ? array_merge($about->toArray(), [
-            'user'           => $user,
-            'profile_image'  => $user->profile_image,
-        ]) : [
-            'about_greeting'     => "Hi, I'm {$user->full_name}!",
-            'about_description'  => $user->description ?? 'Passionate developer building amazing things.',
-            'profile_name'       => $user->full_name,
-            'profile_image'      => $user->profile_image,
-            'user'               => $user,
-            'profile_gpa_badge'  => 'GPA 3.79',
-            'profile_degree_badge'=> 'BSc(Hons)SE',
-            'cta_button_text'    => "Let's Work Together",
-        ];
+    // Tech stack icons for hero section
+    $techStackSkills = Skill::where('user_id', $user->id)
+        ->whereNotNull('url')
+        ->where('url', '!=', '')
+        ->inRandomOrder()
+        ->limit($techStackCount)
+        ->get();
 
-        // Tech stack icons for hero section
-        $techStackSkills = Skill::where('user_id', $user->id)
-            ->whereNotNull('url')
-            ->where('url', '!=', '')
-            ->inRandomOrder()
-            ->limit($techStackCount)
-            ->get();
-
-        return view('welcome', [
-            'user'            => $user,
-            'heroContent'     => $heroContent,
-            'aboutContent'    => $aboutContent,
-            'techStackSkills' => $techStackSkills,
-
-            'projects'        => $user->projects()->with('overview')->latest()->get(),
-            'skills'          => $user->skills()->orderBy('category', 'asc')->orderBy('name', 'asc')->get(),
-            'experiences'     => $user->experiences()->orderByDesc('created_at')->get(),
-            'educations'      => $user->educations()->orderByDesc('year')->get(),
-
-            'headerContent'   => PageContent::getSection('header', $user->id),
-            'footerContent'   => PageContent::getSection('footer', $user->id),
-            'contactContent'  => PageContent::getSection('contact', $user->id),
-        ]);
-    }
+    return view('welcome', [
+        'user'            => $user,
+        'heroContent'     => $heroContent,
+        'aboutContent'    => $aboutContent,
+        'techStackSkills' => $techStackSkills,
+        'projects'        => $user->projects()->with('overview')->latest()->get(),
+        'skills'          => $user->skills()->orderBy('category', 'asc')->orderBy('name', 'asc')->get(),
+        'experiences'     => $user->experiences()->orderByDesc('created_at')->get(),
+        'educations'      => $user->educations()->orderByDesc('year')->get(),
+        'headerContent'   => PageContent::getSection('header', $user->id),
+        'footerContent'   => PageContent::getSection('footer', $user->id),
+        'contactContent'  => PageContent::getSection('contact', $user->id),
+    ]);
+}
 
     /**
      * Project detail page: /project/5/overview

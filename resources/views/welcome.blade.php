@@ -1,32 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-hero 
+    @php
+        // Get theme from user settings or default to theme1
+        $theme = $user->active_theme ?? 'theme1';
+        
+        // Allow preview mode
+        if (request('preview') && request('theme')) {
+            $theme = request('theme');
+        }
+    @endphp
+
+    <x-dynamic-component :component="'components.' . $theme . '.hero'" 
         :heroContent="$heroContent" 
         :techStackSkills="$techStackSkills"
         :user="$user"
     />
-    <x-about 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.about'" 
         :aboutContent="$aboutContent"
         :user="$user"
     />
-    <x-projects 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.projects'" 
         :projects="$projects"
         :user="$user"
     />
-    <x-skills 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.skills'" 
         :skills="$skills"
         :user="$user"
     />
-    <x-experience 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.experience'" 
         :experiences="$experiences"
         :user="$user"
     />
-    <x-education 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.education'" 
         :educations="$educations"
         :user="$user"
     />
-    <x-contact 
+    
+    <x-dynamic-component :component="'components.' . $theme . '.contact'" 
         :contactContent="$contactContent"
         :user="$user"
     />

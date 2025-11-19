@@ -28,7 +28,8 @@ class User extends Authenticatable
         'linkedin_url',
         'profile_image',
         'cv_path',
-        'slug', // ← For clean URLs: /portfolio/john-doe
+        'slug',
+        'active_theme',
     ];
 
     /**

@@ -50,8 +50,8 @@ class UserResource extends Resource
                             ->password()
                             ->revealable()
                             ->hint('Leave blank to keep current password')
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
                             ->maxLength(255),
                     ])->columns(2),
 
@@ -102,9 +102,9 @@ class UserResource extends Resource
                             ->previewable(false)
                             ->helperText('Upload your CV in PDF format (Max 5MB)')
                             ->columnSpanFull()
-                            ->hint(fn ($record) => $record?->hasCv() ? '✓ CV uploaded' : 'No CV uploaded'),
+                            ->hint(fn($record) => $record?->hasCv() ? '✓ CV uploaded' : 'No CV uploaded'),
                     ]),
-
+                
                 Forms\Components\Section::make('Social & Links')
                     ->description('Your online presence')
                     ->icon('heroicon-o-link')
@@ -127,6 +127,31 @@ class UserResource extends Resource
                             ->placeholder('https://example.com/profile.jpg')
                             ->helperText('Enter a URL for your profile image'),
                     ])->columns(2),
+                    Forms\Components\Section::make('Portfolio Theme')
+                ->schema([
+                    Forms\Components\Select::make('active_theme')
+                        ->label('Active Theme')
+                        ->options([
+                            'theme1' => '🎨 Theme 1 (Current Glass Design)',
+                            'theme2' => '📐 Theme 2 (Alternative Style)',
+                            'theme3' => '🚀 Theme 3 (Another Style)',
+                        ])
+                        ->default('theme1')
+                        ->reactive()
+                        ->helperText('Choose your portfolio design style'),
+                    
+                    Forms\Components\Placeholder::make('preview')
+                        ->label('')
+                        ->content(fn ($record) => new \Illuminate\Support\HtmlString(
+                            '<a href="/portfolio/' . ($record?->slug ?? 'preview') . '?preview=true&theme=' . ($record?->active_theme ?? 'theme1') . '" target="_blank" 
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                🔍 Preview Current Theme
+                            </a>'
+                        )),
+                ])
+                ->collapsible()
+                ->collapsed(false),
+        
             ]);
     }
 
@@ -154,7 +179,7 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('cv_uploaded')
                     ->label('CV')
                     ->boolean()
-                    ->getStateUsing(fn ($record) => $record->hasCv())
+                    ->getStateUsing(fn($record) => $record->hasCv())
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
@@ -165,8 +190,8 @@ class UserResource extends Resource
                     ->label('Download CV')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
-                    ->visible(fn ($record) => $record->hasCv())
-                    ->url(fn ($record) => route('cv.download', $record->id))
+                    ->visible(fn($record) => $record->hasCv())
+                    ->url(fn($record) => route('cv.download', $record->id))
                     ->openUrlInNewTab(),
 
                 Tables\Actions\EditAction::make()
