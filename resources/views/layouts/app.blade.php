@@ -35,15 +35,8 @@
         }
     @endphp
 
-    {{-- Load Theme CSS --}}
-    @if($activeTheme === 'theme2')
-        <link href="{{ asset('css/theme2.css') }}" rel="stylesheet">
-    @elseif($activeTheme === 'theme3')
-        <link href="{{ asset('css/theme3.css') }}" rel="stylesheet">
-    @else
-        {{-- theme1 uses default Tailwind --}}
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+    {{-- All themes use Tailwind + inline component styling --}}
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Global Base Styles -->
     <style>

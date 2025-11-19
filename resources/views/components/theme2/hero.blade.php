@@ -1,366 +1,620 @@
 @props(['heroContent', 'techStackSkills'])
 
-{{-- THEME 2: ULTRA PREMIUM CORPORATE HERO --}}
-<section id="hero" class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-    
-    {{-- ANIMATED GRID BACKGROUND --}}
-    <div class="absolute inset-0 overflow-hidden opacity-30">
-        <div class="absolute inset-0" style="background-image: 
-            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
-            background-size: 40px 40px;"></div>
-        {{-- Animated Gradient Orbs --}}
-        <div class="absolute top-1/4 -left-20 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute top-1/3 -right-20 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-20 left-1/2 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-    </div>
+<section id="hero"
+    class="section-full relative overflow-hidden min-h-screen w-full theme2-hero">
 
-    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 py-24">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-            
-            {{-- LEFT COLUMN: CONTENT --}}
-            <div class="space-y-8 animate-slide-left">
+    <!-- Animated Grid Background -->
+    <div class="cyber-grid absolute inset-0 -z-10"></div>
+    
+    <!-- Floating Orbs -->
+    <div class="orb-container absolute inset-0 -z-10 pointer-events-none"></div>
+
+    <!-- Split Layout Container -->
+    <div class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center">
+        
+        <!-- LEFT SIDE - Content -->
+        <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-16 py-20 lg:py-0 flex items-center">
+            <div class="max-w-2xl slide-in-left">
                 
-                {{-- STATUS BADGE --}}
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-blue-200 rounded-full shadow-lg">
-                    <span class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                    </span>
-                    <span class="text-sm font-semibold text-slate-700">Available for new opportunities</span>
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 cyber-badge">
+                    <span class="w-2 h-2 rounded-full pulse-dot"></span>
+                    <span class="text-sm font-medium">Available for opportunities</span>
                 </div>
 
-                {{-- GREETING --}}
-                <div>
-                    <p class="text-lg font-medium text-blue-600 mb-2 tracking-wide uppercase">
-                        {{ $heroContent['greeting'] ?? 'Hello, I\'m' }}
-                    </p>
-                    <h1 class="text-6xl lg:text-7xl xl:text-8xl font-black text-slate-900 leading-none tracking-tight mb-6">
-                        {{ $heroContent['user_name'] ?? 'Your Name' }}
+                <!-- Main Heading - Vertical Stack -->
+                <div class="mb-6">
+                    <h1 class="text-6xl md:text-7xl lg:text-8xl font-black mb-3 tracking-tight leading-none">
+                        <span class="block text-glow" style="color: var(--text-primary);">
+                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[0] }}
+                        </span>
+                        <span class="block neon-text">
+                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[1] ?? 'Developer' }}
+                        </span>
                     </h1>
                 </div>
 
-                {{-- DYNAMIC TYPING ROLE --}}
-                @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']))
-                    <div class="flex items-center gap-3 text-3xl lg:text-4xl font-bold text-slate-700">
-                        <span class="text-blue-600">→</span>
-                        <span id="typed-text-theme2" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"></span>
-                        <span class="typing-cursor-theme2 text-blue-600">|</span>
+                <!-- Typing Text with Glitch Effect -->
+                @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
+                    <div class="mb-8 min-h-[60px] flex items-center">
+                        <p class="text-2xl md:text-3xl font-bold glitch-text" style="color: var(--text-secondary);">
+                            <span id="typed-text-theme2"></span>
+                            <span class="cursor-blink">|</span>
+                        </p>
                     </div>
-                    
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const texts = @json(array_map(function ($text) {
-                                return is_array($text) && isset($text['text']) ? $text['text'] : $text;
-                            }, array_values($heroContent['typing_texts'])));
-                            
-                            const typedElement = document.getElementById('typed-text-theme2');
-                            if (!typedElement || !Array.isArray(texts) || texts.length === 0) return;
-
-                            let textIndex = 0, charIndex = 0, isDeleting = false;
-
-                            function type() {
-                                const currentText = String(texts[textIndex]);
-                                
-                                if (isDeleting) {
-                                    typedElement.textContent = currentText.substring(0, charIndex - 1);
-                                    charIndex--;
-                                } else {
-                                    typedElement.textContent = currentText.substring(0, charIndex + 1);
-                                    charIndex++;
-                                }
-
-                                let speed = isDeleting ? 50 : 100;
-                                
-                                if (!isDeleting && charIndex === currentText.length) {
-                                    speed = 2000;
-                                    isDeleting = true;
-                                } else if (isDeleting && charIndex === 0) {
-                                    isDeleting = false;
-                                    textIndex = (textIndex + 1) % texts.length;
-                                    speed = 500;
-                                }
-                                
-                                setTimeout(type, speed);
-                            }
-
-                            setTimeout(type, 500);
-                        });
-                    </script>
+                @else
+                    <p class="text-2xl md:text-3xl font-bold mb-8 glitch-text" style="color: var(--text-secondary);">
+                        Problem solver & Innovator<span class="cursor-blink">|</span>
+                    </p>
                 @endif
 
-                {{-- DESCRIPTION --}}
-                <p class="text-xl text-slate-600 leading-relaxed max-w-xl">
-                    {{ $heroContent['description'] ?? 'Crafting exceptional digital experiences with precision, creativity, and cutting-edge technology. Transforming complex problems into elegant solutions.' }}
+                <!-- Description -->
+                <p class="text-lg md:text-xl mb-10 leading-relaxed" style="color: var(--text-muted);">
+                    Crafting digital experiences with cutting-edge technology and creative innovation.
                 </p>
 
-                {{-- CTA BUTTONS --}}
-                <div class="flex flex-wrap gap-4">
-                    @if ($heroContent['btn_contact_enabled'] ?? false)
-                        <a href="#contact" 
-                           class="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-xl shadow-blue-500/50 hover:shadow-2xl hover:shadow-blue-600/50 transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                            <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
-                            <svg class="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                    @endif
+                <!-- CTA Buttons - Horizontal -->
+                @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
+                    <div class="flex flex-wrap gap-4 mb-10">
+                        @if ($heroContent['btn_contact_enabled'] ?? false)
+                            <a href="#contact" class="cyber-btn-primary group">
+                                <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
+                                <div class="cyber-btn-glow"></div>
+                            </a>
+                        @endif
 
-                    @if ($heroContent['btn_projects_enabled'] ?? false)
-                        <a href="#projects" 
-                           class="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-bold rounded-xl border-2 border-slate-200 shadow-lg hover:shadow-xl hover:border-blue-300 transform hover:-translate-y-1 transition-all duration-300">
-                            <span>{{ $heroContent['btn_projects_text'] ?? 'View Projects' }}</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                        </a>
-                    @endif
-                </div>
+                        @if ($heroContent['btn_projects_enabled'] ?? false)
+                            <a href="#projects" class="cyber-btn-secondary group">
+                                <span class="relative z-10">{{ $heroContent['btn_projects_text'] ?? 'View Projects' }}</span>
+                            </a>
+                        @endif
+                    </div>
+                @endif
 
-                {{-- SOCIAL LINKS --}}
+                <!-- Social Links - Horizontal Row -->
                 @if (!empty($heroContent['social_links'] ?? []))
-                    <div class="flex items-center gap-4 pt-4">
-                        <span class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Connect:</span>
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium" style="color: var(--text-muted);">Connect:</span>
                         <div class="flex gap-3">
                             @foreach ($heroContent['social_links'] as $social)
                                 @if (!empty($social['url'] ?? ''))
                                     <a href="{{ $social['url'] }}" target="_blank" 
-                                       class="group relative w-12 h-12 flex items-center justify-center bg-white border-2 border-slate-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                                       class="hexagon-link group" 
+                                       title="{{ $social['name'] ?? 'Social' }}">
                                         @if (!empty($social['icon'] ?? ''))
-                                            <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}" class="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" />
-                                        @else
-                                            <i class="fab fa-link text-slate-600 group-hover:text-blue-600 transition-colors"></i>
+                                            <img src="{{ $social['icon'] }}" 
+                                                 alt="{{ $social['name'] ?? 'Social' }}"
+                                                 class="w-5 h-5 relative z-10"
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
                                         @endif
+                                        <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-5 h-5 relative z-10"
+                                            fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                        </svg>
                                     </a>
                                 @endif
                             @endforeach
                         </div>
                     </div>
                 @endif
-
-                {{-- STATS ROW --}}
-                <div class="grid grid-cols-3 gap-6 pt-8">
-                    <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200 shadow-lg hover:shadow-xl transition-shadow">
-                        <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">5+</div>
-                        <div class="text-sm font-semibold text-slate-600 mt-1">Years Exp.</div>
-                    </div>
-                    <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200 shadow-lg hover:shadow-xl transition-shadow">
-                        <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">50+</div>
-                        <div class="text-sm font-semibold text-slate-600 mt-1">Projects</div>
-                    </div>
-                    <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200 shadow-lg hover:shadow-xl transition-shadow">
-                        <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-rose-600">100%</div>
-                        <div class="text-sm font-semibold text-slate-600 mt-1">Satisfaction</div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- RIGHT COLUMN: VISUAL --}}
-            <div class="relative animate-slide-right">
-                {{-- Main Card --}}
-                <div class="relative group">
-                    {{-- Glow Effect --}}
-                    <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl opacity-20 group-hover:opacity-30 blur-2xl transition-opacity duration-500"></div>
-                    
-                    {{-- Card Container --}}
-                    <div class="relative bg-gradient-to-br from-white to-blue-50 rounded-3xl border-2 border-white shadow-2xl overflow-hidden transform group-hover:scale-105 transition-all duration-500">
-                        @if (!empty($heroContent['hero_image_url']))
-                            <img src="{{ $heroContent['hero_image_url'] }}" alt="Hero" class="w-full h-auto object-cover" />
-                        @else
-                            {{-- Premium Gradient Placeholder --}}
-                            <div class="aspect-square bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-16 flex items-center justify-center relative overflow-hidden">
-                                {{-- Animated Circles --}}
-                                <div class="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-float"></div>
-                                <div class="absolute bottom-10 right-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-float-delayed"></div>
-                                
-                                {{-- Center Icon --}}
-                                <div class="relative z-10 text-center text-white">
-                                    <svg class="w-32 h-32 mx-auto mb-6 drop-shadow-2xl" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
-                                        <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zm9.99 7.176A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/>
-                                    </svg>
-                                    <h3 class="text-3xl font-bold mb-2">Premium Portfolio</h3>
-                                    <p class="text-blue-100 text-lg">Crafting Excellence</p>
-                                </div>
-                            </div>
-                        @endif
-                        
-                        {{-- Overlay Badge --}}
-                        <div class="absolute top-6 right-6 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full shadow-xl border border-white">
-                            <span class="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                                ⭐ Top Rated
-                            </span>
-                        </div>
-                    </div>
-
-                    {{-- Decorative Elements --}}
-                    <div class="absolute -bottom-6 -right-6 w-48 h-48 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl -z-10 opacity-20 blur-xl"></div>
-                    <div class="absolute -top-6 -left-6 w-40 h-40 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl -z-10 opacity-20 blur-xl"></div>
-                </div>
             </div>
         </div>
 
-        {{-- TECH STACK SECTION --}}
-        @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-            <div class="mt-24 animate-slide-up">
-                <div class="bg-white/60 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-xl p-8">
-                    <div class="flex items-center justify-between mb-8">
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 mb-2">Tech Stack</h3>
-                            <p class="text-slate-600">Tools & Technologies I Master</p>
-                        </div>
-                        <div class="w-16 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
-                    </div>
-                    
-                    <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-6">
-                        @foreach ($techStackSkills as $skill)
-                            <div class="group relative">
-                                <div class="relative w-16 h-16 flex items-center justify-center bg-white rounded-2xl border-2 border-slate-200 shadow-lg hover:shadow-xl hover:border-blue-300 transition-all duration-300 hover:-translate-y-2">
-                                    @if ($skill->url)
-                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="w-10 h-10 object-contain grayscale group-hover:grayscale-0 transition-all" />
-                                    @else
-                                        <i class="fas fa-code text-slate-400 text-2xl group-hover:text-blue-600 transition-colors"></i>
-                                    @endif
-                                </div>
-                                <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div class="bg-slate-900 text-white text-xs font-semibold px-3 py-1 rounded-lg whitespace-nowrap shadow-xl">
-                                        {{ $skill->name }}
+        <!-- RIGHT SIDE - Visual Element -->
+        <div class="w-full lg:w-1/2 px-6 lg:px-0 py-12 lg:py-0 flex items-center justify-center relative">
+            <div class="hologram-container relative slide-in-right">
+                
+                <!-- 3D Rotating Ring -->
+                <div class="rotating-ring"></div>
+                
+                <!-- Center Profile Image -->
+                <div class="center-profile">
+                    <div class="profile-ring"></div>
+                    <img src="{{ $heroContent['user']->profile_image ?? '/images/profile.png' }}" 
+                         alt="{{ $heroContent['user_name'] ?? 'Profile' }}"
+                         class="profile-image" />
+                </div>
+
+                <!-- Tech Stack Floating Icons -->
+                @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
+                    <div class="floating-icons absolute inset-0">
+                        @foreach ($techStackSkills as $index => $skill)
+                            <div class="floating-icon" style="--delay: {{ $index * 0.2 }}s; --angle: {{ ($index * (360 / $techStackSkills->count())) }}deg;">
+                                @if ($skill->url)
+                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
+                                        class="w-14 h-14 icon-glow"
+                                        onerror="this.style.display='none';" />
+                                @else
+                                    <div class="w-14 h-14 flex items-center justify-center rounded-xl icon-glow cyber-icon-bg">
+                                        <i class="fas fa-code text-xl"></i>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         @endforeach
                     </div>
-                </div>
+                @endif
+
+                <!-- Scan Lines Effect -->
+                <div class="scan-lines"></div>
             </div>
-        @endif
+        </div>
     </div>
 
-    {{-- SCROLL INDICATOR --}}
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <a href="#about" class="flex flex-col items-center gap-2 text-slate-400 hover:text-blue-600 transition-colors">
-            <span class="text-sm font-semibold uppercase tracking-wider">Scroll</span>
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
+    <!-- Bottom Tech Stack Ticker -->
+    @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
+        <div class="absolute bottom-0 left-0 right-0 ticker-container">
+            <div class="ticker-content">
+                @foreach ($techStackSkills as $skill)
+                    <span class="ticker-item">{{ $skill->name }}</span>
+                @endforeach
+                @foreach ($techStackSkills as $skill)
+                    <span class="ticker-item">{{ $skill->name }}</span>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-down">
+        <a href="#about" class="flex flex-col items-center gap-2">
+            <span class="text-xs font-medium tracking-widest uppercase" style="color: var(--text-muted);">Scroll</span>
+            <div class="scroll-arrow"></div>
         </a>
     </div>
 </section>
 
+<!-- Typing Animation Script -->
+@if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const texts = @json(array_map(function ($text) {
+        return is_array($text) && isset($text['text']) ? $text['text'] : $text;
+    }, array_values($heroContent['typing_texts'])));
+    
+    const typedElement = document.getElementById('typed-text-theme2');
+    if (!typedElement || !Array.isArray(texts) || texts.length === 0) return;
+
+    let textIndex = 0, charIndex = 0, isDeleting = false;
+
+    function type() {
+        const currentText = String(texts[textIndex]);
+        if (isDeleting) {
+            typedElement.textContent = currentText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typedElement.textContent = currentText.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        let speed = isDeleting ? 50 : 100;
+        if (!isDeleting && charIndex === currentText.length) {
+            speed = 2000;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            textIndex = (textIndex + 1) % texts.length;
+            speed = 500;
+        }
+        setTimeout(type, speed);
+    }
+
+    setTimeout(type, 800);
+});
+</script>
+@endif
+
+<!-- Orb Animation Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const orbContainer = document.querySelector('.orb-container');
+    if (!orbContainer) return;
+
+    const orbCount = 6;
+    for (let i = 0; i < orbCount; i++) {
+        const orb = document.createElement('div');
+        orb.className = 'floating-orb';
+        orb.style.left = `${Math.random() * 100}%`;
+        orb.style.top = `${Math.random() * 100}%`;
+        orb.style.animationDelay = `${Math.random() * 5}s`;
+        orb.style.animationDuration = `${15 + Math.random() * 10}s`;
+        orbContainer.appendChild(orb);
+    }
+});
+</script>
+
 <style>
-    /* Theme 2 Premium Animations */
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
+/* ===================================
+   THEME 2 - FUTURISTIC CYBER AESTHETIC
+   =================================== */
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
-    }
+:root {
+    --neon-blue: #00d9ff;
+    --neon-purple: #b537ff;
+    --neon-pink: #ff006e;
+    --cyber-dark: #0a0e27;
+}
 
-    @keyframes float-delayed {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-30px); }
-    }
+.theme2-hero {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+    position: relative;
+}
 
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
+/* Animated Grid Background */
+.cyber-grid {
+    background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+}
 
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
+@keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
 
-    .animation-delay-4000 {
-        animation-delay: 4s;
-    }
+/* Floating Orbs */
+.floating-orb {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.15) 0%, transparent 70%);
+    filter: blur(40px);
+    animation: floatOrb 20s ease-in-out infinite;
+    pointer-events: none;
+}
 
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
+@keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(100px, -100px) scale(1.2); }
+    50% { transform: translate(-50px, 100px) scale(0.8); }
+    75% { transform: translate(150px, 50px) scale(1.1); }
+}
 
-    .animate-float-delayed {
-        animation: float-delayed 8s ease-in-out infinite;
-    }
+/* Slide In Animations */
+.slide-in-left {
+    animation: slideInLeft 1s ease-out;
+}
 
-    .typing-cursor-theme2 {
-        animation: blink 1s step-end infinite;
-    }
+.slide-in-right {
+    animation: slideInRight 1.2s ease-out;
+}
 
-    @keyframes blink {
-        from, to { opacity: 1; }
-        50% { opacity: 0; }
-    }
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
 
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-100px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
 
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(100px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
+/* Cyber Badge */
+.cyber-badge {
+    background: rgba(0, 217, 255, 0.1);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: var(--neon-blue);
+}
 
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+.pulse-dot {
+    background: var(--neon-blue);
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--neon-blue);
+}
 
-    .animate-slide-left {
-        animation: slideInLeft 1s ease-out;
-    }
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
 
-    .animate-slide-right {
-        animation: slideInRight 1s ease-out 0.2s backwards;
-    }
+/* Neon Text */
+.neon-text {
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+    animation: neonGlow 3s ease-in-out infinite;
+}
 
-    .animate-slide-up {
-        animation: slideInUp 1s ease-out 0.4s backwards;
-    }
+.text-glow {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
 
-    /* Dark Mode */
-    [data-theme="dark"] #hero {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%) !important;
-    }
+@keyframes neonGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+}
 
-    [data-theme="dark"] #hero .bg-white {
-        background: rgba(30, 41, 59, 0.8) !important;
-    }
+/* Glitch Text Effect */
+.glitch-text {
+    position: relative;
+}
 
-    [data-theme="dark"] #hero .border-slate-200 {
-        border-color: #334155 !important;
-    }
+.cursor-blink {
+    animation: blink 1s step-end infinite;
+    color: var(--neon-blue);
+}
 
-    [data-theme="dark"] #hero .text-slate-900 {
-        color: #f8fafc !important;
-    }
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
 
-    [data-theme="dark"] #hero .text-slate-700 {
-        color: #cbd5e1 !important;
-    }
+/* Cyber Buttons */
+.cyber-btn-primary {
+    position: relative;
+    padding: 16px 40px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #0a0e27;
+    background: var(--neon-blue);
+    border: none;
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
 
-    [data-theme="dark"] #hero .text-slate-600 {
-        color: #94a3b8 !important;
+.cyber-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
+}
+
+.cyber-btn-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.cyber-btn-primary:hover .cyber-btn-glow {
+    transform: translateX(100%);
+}
+
+.cyber-btn-secondary {
+    padding: 16px 40px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--neon-blue);
+    background: transparent;
+    border: 2px solid var(--neon-blue);
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+    transition: all 0.3s ease;
+}
+
+.cyber-btn-secondary:hover {
+    background: rgba(0, 217, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+}
+
+/* Hexagon Social Links */
+.hexagon-link {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 217, 255, 0.1);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    transition: all 0.3s ease;
+    color: var(--neon-blue);
+}
+
+.hexagon-link:hover {
+    background: var(--neon-blue);
+    color: #0a0e27;
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
+/* Hologram Container */
+.hologram-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+/* 3D Rotating Ring */
+.rotating-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid transparent;
+    border-top-color: var(--neon-blue);
+    border-right-color: var(--neon-purple);
+    border-radius: 50%;
+    animation: rotate3D 10s linear infinite;
+    filter: drop-shadow(0 0 20px var(--neon-blue));
+}
+
+@keyframes rotate3D {
+    0% { transform: rotateY(0deg) rotateX(20deg); }
+    100% { transform: rotateY(360deg) rotateX(20deg); }
+}
+
+/* Center Profile Image */
+.center-profile {
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse-profile 3s ease-in-out infinite;
+}
+
+.profile-ring {
+    position: absolute;
+    inset: -10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 40%, var(--neon-purple) 50%, transparent 60%);
+    box-shadow: 
+        0 0 60px var(--neon-purple),
+        inset 0 0 40px var(--neon-blue);
+    animation: pulse-ring 3s ease-in-out infinite;
+}
+
+.profile-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--neon-blue);
+    box-shadow: 
+        0 0 30px var(--neon-blue),
+        inset 0 0 20px rgba(0, 217, 255, 0.3);
+    z-index: 10;
+}
+
+@keyframes pulse-profile {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes pulse-ring {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Floating Tech Icons */
+.floating-icons {
+    pointer-events: none;
+}
+
+.floating-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    animation: orbit 20s linear infinite;
+    animation-delay: var(--delay);
+}
+
+@keyframes orbit {
+    0% { 
+        transform: rotate(var(--angle)) translateX(220px) rotate(calc(-1 * var(--angle))); 
     }
+    100% { 
+        transform: rotate(calc(var(--angle) + 360deg)) translateX(220px) rotate(calc(-1 * (var(--angle) + 360deg))); 
+    }
+}
+
+.icon-glow {
+    filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.icon-glow:hover {
+    transform: scale(1.2);
+}
+
+.cyber-icon-bg {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+}
+
+/* Scan Lines */
+.scan-lines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 217, 255, 0.03) 2px,
+        rgba(0, 217, 255, 0.03) 4px
+    );
+    pointer-events: none;
+    animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50px); }
+}
+
+/* Bottom Ticker */
+.ticker-container {
+    height: 50px;
+    background: rgba(0, 217, 255, 0.05);
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.ticker-content {
+    display: flex;
+    gap: 40px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+}
+
+.ticker-item {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neon-blue);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+@keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Scroll Down Indicator */
+.scroll-down {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.scroll-arrow {
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(180deg, var(--neon-blue) 0%, transparent 100%);
+    position: relative;
+}
+
+.scroll-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -3px;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--neon-blue);
+    border-bottom: 2px solid var(--neon-blue);
+    transform: rotate(45deg);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hologram-container {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .floating-icon {
+        animation: orbit 15s linear infinite;
+    }
+}
+
+@media (max-width: 768px) {
+    .neon-text {
+        font-size: 3rem;
+    }
+    
+    .hologram-container {
+        width: 250px;
+        height: 250px;
+    }
+}
 </style>
