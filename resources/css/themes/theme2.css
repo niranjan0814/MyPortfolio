@@ -1,87 +1,117 @@
 /* ============================================
    THEME 2: PREMIUM CORPORATE DESIGN SYSTEM
-   Sharp, Professional, Modern Business
+   Professional, Clean, Business-Focused
    ============================================ */
 
 /* ==========================================
-   COLOR SYSTEM - Corporate Professional
+   ROOT VARIABLES - Corporate Color Palette
    ========================================== */
 :root[data-theme="light"] {
     /* Primary Brand Colors */
-    --theme2-primary: #1e3a8a;           /* Deep Professional Blue */
-    --theme2-secondary: #059669;         /* Success Green */
-    --theme2-accent: #7c3aed;           /* Accent Purple */
-    --theme2-warning: #f59e0b;          /* Amber */
-    --theme2-danger: #dc2626;           /* Red */
+    --corporate-primary: #1e40af;
+    --corporate-secondary: #059669;
+    --corporate-accent: #7c3aed;
+    --corporate-warning: #d97706;
+    --corporate-danger: #dc2626;
+    --corporate-info: #0369a1;
     
-    /* Backgrounds - Clean & Professional */
-    --theme2-bg-primary: #ffffff;
-    --theme2-bg-secondary: #f8fafc;
-    --theme2-bg-tertiary: #f1f5f9;
-    --theme2-bg-dark: #0f172a;
+    /* Neutral Colors */
+    --corporate-white: #ffffff;
+    --corporate-gray-50: #f8fafc;
+    --corporate-gray-100: #f1f5f9;
+    --corporate-gray-200: #e2e8f0;
+    --corporate-gray-300: #cbd5e1;
+    --corporate-gray-400: #94a3b8;
+    --corporate-gray-500: #64748b;
+    --corporate-gray-600: #475569;
+    --corporate-gray-700: #334155;
+    --corporate-gray-800: #1e293b;
+    --corporate-gray-900: #0f172a;
+    
+    /* Backgrounds */
+    --corporate-bg-primary: var(--corporate-white);
+    --corporate-bg-secondary: var(--corporate-gray-50);
+    --corporate-bg-tertiary: var(--corporate-gray-100);
     
     /* Text Colors */
-    --theme2-text-primary: #0f172a;
-    --theme2-text-secondary: #475569;
-    --theme2-text-muted: #94a3b8;
-    --theme2-text-white: #ffffff;
+    --corporate-text-primary: var(--corporate-gray-900);
+    --corporate-text-secondary: var(--corporate-gray-700);
+    --corporate-text-muted: var(--corporate-gray-500);
+    --corporate-text-inverse: var(--corporate-white);
     
-    /* Borders */
-    --theme2-border-light: #e2e8f0;
-    --theme2-border-medium: #cbd5e1;
-    --theme2-border-dark: #94a3b8;
-    
-    /* Shadows - Sharp & Defined */
-    --theme2-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-    --theme2-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --theme2-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --theme2-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-    --theme2-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    /* Borders & Shadows */
+    --corporate-border: var(--corporate-gray-200);
+    --corporate-border-strong: var(--corporate-gray-300);
+    --corporate-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --corporate-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --corporate-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --corporate-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 :root[data-theme="dark"] {
-    /* Primary Brand Colors - Brighter for dark mode */
-    --theme2-primary: #3b82f6;
-    --theme2-secondary: #10b981;
-    --theme2-accent: #a855f7;
-    --theme2-warning: #fbbf24;
-    --theme2-danger: #ef4444;
+    --corporate-primary: #3b82f6;
+    --corporate-secondary: #10b981;
+    --corporate-accent: #8b5cf6;
+    --corporate-warning: #f59e0b;
+    --corporate-danger: #ef4444;
+    --corporate-info: #0ea5e9;
     
-    /* Backgrounds - Dark Professional */
-    --theme2-bg-primary: #0f172a;
-    --theme2-bg-secondary: #1e293b;
-    --theme2-bg-tertiary: #334155;
-    --theme2-bg-dark: #020617;
+    /* Neutral Colors */
+    --corporate-white: #ffffff;
+    --corporate-gray-50: #f8fafc;
+    --corporate-gray-100: #f1f5f9;
+    --corporate-gray-200: #e2e8f0;
+    --corporate-gray-300: #cbd5e1;
+    --corporate-gray-400: #94a3b8;
+    --corporate-gray-500: #64748b;
+    --corporate-gray-600: #475569;
+    --corporate-gray-700: #334155;
+    --corporate-gray-800: #1e293b;
+    --corporate-gray-900: #0f172a;
+    
+    /* Backgrounds */
+    --corporate-bg-primary: #0f172a;
+    --corporate-bg-secondary: #1e293b;
+    --corporate-bg-tertiary: #334155;
     
     /* Text Colors */
-    --theme2-text-primary: #f8fafc;
-    --theme2-text-secondary: #cbd5e1;
-    --theme2-text-muted: #64748b;
-    --theme2-text-white: #ffffff;
+    --corporate-text-primary: var(--corporate-white);
+    --corporate-text-secondary: var(--corporate-gray-200);
+    --corporate-text-muted: var(--corporate-gray-400);
+    --corporate-text-inverse: var(--corporate-gray-900);
     
-    /* Borders */
-    --theme2-border-light: #334155;
-    --theme2-border-medium: #475569;
-    --theme2-border-dark: #64748b;
-    
-    /* Shadows - More prominent in dark mode */
-    --theme2-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5);
-    --theme2-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6);
-    --theme2-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
-    --theme2-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.8);
-    --theme2-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.9);
+    /* Borders & Shadows */
+    --corporate-border: #334155;
+    --corporate-border-strong: #475569;
+    --corporate-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+    --corporate-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --corporate-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --corporate-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
 }
 
 /* ==========================================
-   CORPORATE CARD SYSTEM - Sharp Edges
+   BASE STYLES & RESETS
+   ========================================== */
+.corporate-theme {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--corporate-text-primary);
+    background: var(--corporate-bg-primary);
+    transition: all 0.3s ease;
+}
+
+/* ==========================================
+   CORPORATE CARD SYSTEM
    ========================================== */
 .corporate-card {
-    background: var(--theme2-bg-primary);
-    border: 2px solid var(--theme2-border-light);
-    border-radius: 8px;
+    background: var(--corporate-bg-primary);
+    border: 1px solid var(--corporate-border);
+    border-radius: 12px;
     padding: 2rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    overflow: hidden;
+    box-shadow: var(--corporate-shadow);
 }
 
 .corporate-card::before {
@@ -91,82 +121,122 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--theme2-primary), var(--theme2-secondary));
+    background: linear-gradient(90deg, var(--corporate-primary), var(--corporate-secondary));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .corporate-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--theme2-primary);
-    box-shadow: var(--theme2-shadow-xl);
+    transform: translateY(-4px);
+    border-color: var(--corporate-primary);
+    box-shadow: var(--corporate-shadow-lg);
 }
 
 .corporate-card:hover::before {
     opacity: 1;
 }
 
-/* ==========================================
-   PREMIUM BUTTONS - Corporate Style
-   ========================================== */
-.corporate-btn-primary {
-    background: linear-gradient(135deg, var(--theme2-primary), var(--theme2-accent));
-    color: var(--theme2-text-white);
-    padding: 1rem 2.5rem;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 1rem;
-    border: none;
-    box-shadow: var(--theme2-shadow-md);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+/* Card Variations */
+.corporate-card-elevated {
+    box-shadow: var(--corporate-shadow-lg);
+    border: 1px solid var(--corporate-border-strong);
 }
 
-.corporate-btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.5s ease;
+.corporate-card-elevated:hover {
+    box-shadow: var(--corporate-shadow-xl);
+}
+
+.corporate-card-bordered {
+    border: 2px solid var(--corporate-border);
+}
+
+.corporate-card-bordered:hover {
+    border-color: var(--corporate-primary);
+}
+
+/* ==========================================
+   PREMIUM BUTTONS
+   ========================================== */
+.corporate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.corporate-btn-primary {
+    background: linear-gradient(135deg, var(--corporate-primary), var(--corporate-accent));
+    color: var(--corporate-white);
+    box-shadow: var(--corporate-shadow-md);
 }
 
 .corporate-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: var(--theme2-shadow-lg);
-}
-
-.corporate-btn-primary:hover::before {
-    left: 100%;
+    box-shadow: var(--corporate-shadow-lg);
+    background: linear-gradient(135deg, var(--corporate-primary), var(--corporate-primary));
 }
 
 .corporate-btn-secondary {
-    background: var(--theme2-bg-primary);
-    color: var(--theme2-primary);
-    padding: 1rem 2.5rem;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 1rem;
-    border: 2px solid var(--theme2-primary);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background: var(--corporate-bg-secondary);
+    color: var(--corporate-text-primary);
+    border: 2px solid var(--corporate-border);
+    box-shadow: var(--corporate-shadow);
 }
 
 .corporate-btn-secondary:hover {
-    background: var(--theme2-primary);
-    color: var(--theme2-text-white);
+    background: var(--corporate-bg-tertiary);
+    border-color: var(--corporate-primary);
     transform: translateY(-2px);
-    box-shadow: var(--theme2-shadow-md);
+    box-shadow: var(--corporate-shadow-md);
+}
+
+.corporate-btn-outline {
+    background: transparent;
+    color: var(--corporate-primary);
+    border: 2px solid var(--corporate-primary);
+}
+
+.corporate-btn-outline:hover {
+    background: var(--corporate-primary);
+    color: var(--corporate-white);
+    transform: translateY(-2px);
+}
+
+.corporate-btn-ghost {
+    background: transparent;
+    color: var(--corporate-text-secondary);
+    border: 2px solid transparent;
+}
+
+.corporate-btn-ghost:hover {
+    background: var(--corporate-bg-secondary);
+    color: var(--corporate-text-primary);
+}
+
+/* Button Sizes */
+.corporate-btn-sm {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+}
+
+.corporate-btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
 }
 
 /* ==========================================
-   SECTION LAYOUTS - Professional Grid
+   SECTION LAYOUTS
    ========================================== */
 .corporate-section {
     padding: 6rem 2rem;
@@ -181,8 +251,8 @@
 
 .corporate-section-title {
     font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--theme2-text-primary);
+    font-weight: 800;
+    color: var(--corporate-text-primary);
     margin-bottom: 1rem;
     letter-spacing: -0.02em;
     line-height: 1.1;
@@ -190,54 +260,76 @@
 
 .corporate-section-subtitle {
     font-size: 1.25rem;
-    color: var(--theme2-text-secondary);
+    color: var(--corporate-text-secondary);
     font-weight: 400;
     line-height: 1.6;
 }
 
 .corporate-divider {
-    width: 100px;
+    width: 80px;
     height: 4px;
-    background: linear-gradient(90deg, var(--theme2-primary), var(--theme2-secondary));
+    background: linear-gradient(90deg, var(--corporate-primary), var(--corporate-secondary));
     margin: 1.5rem 0;
+    border-radius: 2px;
+}
+
+/* Section Background Variants */
+.corporate-section-alt {
+    background: var(--corporate-bg-secondary);
+}
+
+.corporate-section-accent {
+    background: linear-gradient(135deg, var(--corporate-primary), var(--corporate-accent));
+    color: var(--corporate-white);
+}
+
+.corporate-section-accent .corporate-section-title,
+.corporate-section-accent .corporate-section-subtitle {
+    color: var(--corporate-white);
 }
 
 /* ==========================================
-   BADGES & TAGS - Sharp Corporate Style
+   BADGES & TAGS
    ========================================== */
 .corporate-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     font-size: 0.875rem;
-    font-weight: 700;
-    border: 2px solid;
+    font-weight: 600;
+    border: 1px solid;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .corporate-badge-primary {
     background: rgba(59, 130, 246, 0.1);
-    color: var(--theme2-primary);
-    border-color: var(--theme2-primary);
+    color: var(--corporate-primary);
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
 .corporate-badge-success {
     background: rgba(16, 185, 129, 0.1);
-    color: var(--theme2-secondary);
-    border-color: var(--theme2-secondary);
+    color: var(--corporate-secondary);
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
-.corporate-badge-accent {
-    background: rgba(124, 58, 237, 0.1);
-    color: var(--theme2-accent);
-    border-color: var(--theme2-accent);
+.corporate-badge-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--corporate-warning);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.corporate-badge-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--corporate-danger);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 /* ==========================================
-   GRID SYSTEM - Corporate Layout
+   GRID SYSTEM
    ========================================== */
 .corporate-grid {
     display: grid;
@@ -256,6 +348,10 @@
     grid-template-columns: repeat(4, 1fr);
 }
 
+.corporate-grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
 @media (max-width: 1024px) {
     .corporate-grid-3,
     .corporate-grid-4 {
@@ -263,7 +359,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .corporate-grid-2,
     .corporate-grid-3,
     .corporate-grid-4 {
@@ -273,118 +369,142 @@
     .corporate-section-title {
         font-size: 2.5rem;
     }
+    
+    .corporate-section {
+        padding: 4rem 1.5rem;
+    }
 }
 
 /* ==========================================
-   NAVIGATION - Corporate Professional
+   NAVIGATION
    ========================================== */
 .corporate-nav {
-    background: var(--theme2-bg-primary);
-    border-bottom: 2px solid var(--theme2-border-light);
+    background: var(--corporate-bg-primary);
+    border-bottom: 1px solid var(--corporate-border);
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: var(--theme2-shadow-md);
+    box-shadow: var(--corporate-shadow);
+    backdrop-filter: blur(8px);
+}
+
+.corporate-nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.corporate-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .corporate-nav-link {
-    color: var(--theme2-text-secondary);
-    font-weight: 600;
-    padding: 1rem 1.5rem;
-    border-radius: 4px;
+    color: var(--corporate-text-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     transition: all 0.2s ease;
     position: relative;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.875rem;
+    text-decoration: none;
 }
 
 .corporate-nav-link:hover {
-    color: var(--theme2-primary);
-    background: var(--theme2-bg-secondary);
+    color: var(--corporate-primary);
+    background: var(--corporate-bg-secondary);
 }
 
 .corporate-nav-link.active {
-    color: var(--theme2-primary);
-    font-weight: 700;
+    color: var(--corporate-primary);
+    font-weight: 600;
 }
 
 .corporate-nav-link.active::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -18px;
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--theme2-primary);
+    background: var(--corporate-primary);
+    border-radius: 2px;
 }
 
 /* ==========================================
-   INPUTS & FORMS - Professional Style
-   ========================================== */
-.corporate-input {
-    background: var(--theme2-bg-primary);
-    color: var(--theme2-text-primary);
-    padding: 1rem 1.25rem;
-    border-radius: 6px;
-    border: 2px solid var(--theme2-border-light);
-    transition: all 0.2s ease;
-    width: 100%;
-    font-size: 1rem;
-}
-
-.corporate-input:focus {
-    border-color: var(--theme2-primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* ==========================================
-   TYPOGRAPHY - Corporate Professional
+   TYPOGRAPHY
    ========================================== */
 .corporate-heading-1 {
     font-size: 4.5rem;
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--theme2-text-primary);
+    color: var(--corporate-text-primary);
 }
 
 .corporate-heading-2 {
     font-size: 3.5rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.01em;
-    color: var(--theme2-text-primary);
+    color: var(--corporate-text-primary);
 }
 
 .corporate-heading-3 {
     font-size: 2.25rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
-    color: var(--theme2-text-primary);
+    color: var(--corporate-text-primary);
+}
+
+.corporate-heading-4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--corporate-text-primary);
 }
 
 .corporate-body-large {
     font-size: 1.25rem;
-    line-height: 1.8;
-    color: var(--theme2-text-secondary);
+    line-height: 1.7;
+    color: var(--corporate-text-secondary);
     font-weight: 400;
 }
 
 .corporate-body {
     font-size: 1rem;
     line-height: 1.6;
-    color: var(--theme2-text-secondary);
+    color: var(--corporate-text-secondary);
 }
 
+.corporate-body-small {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--corporate-text-muted);
+}
+
+/* Text Colors */
+.corporate-text-primary { color: var(--corporate-text-primary); }
+.corporate-text-secondary { color: var(--corporate-text-secondary); }
+.corporate-text-muted { color: var(--corporate-text-muted); }
+.corporate-text-inverse { color: var(--corporate-text-inverse); }
+
+/* Text Alignment */
+.corporate-text-center { text-align: center; }
+.corporate-text-left { text-align: left; }
+.corporate-text-right { text-align: right; }
+
 /* ==========================================
-   ANIMATIONS - Professional & Subtle
+   ANIMATIONS
    ========================================== */
 @keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-50px);
+        transform: translateX(-30px);
     }
     to {
         opacity: 1;
@@ -395,7 +515,7 @@
 @keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateX(50px);
+        transform: translateX(30px);
     }
     to {
         opacity: 1;
@@ -406,7 +526,7 @@
 @keyframes slideInUp {
     from {
         opacity: 0;
-        transform: translateY(50px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -415,40 +535,77 @@
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.animate-slide-left {
-    animation: slideInLeft 0.8s ease-out;
+.corporate-animate-slide-left {
+    animation: slideInLeft 0.6s ease-out;
 }
 
-.animate-slide-right {
-    animation: slideInRight 0.8s ease-out;
+.corporate-animate-slide-right {
+    animation: slideInRight 0.6s ease-out;
 }
 
-.animate-slide-up {
-    animation: slideInUp 0.8s ease-out;
+.corporate-animate-slide-up {
+    animation: slideInUp 0.6s ease-out;
 }
 
-.animate-fade {
-    animation: fadeIn 0.8s ease-out;
+.corporate-animate-fade {
+    animation: fadeIn 0.6s ease-out;
 }
 
 /* ==========================================
-   HOVER EFFECTS - Professional Polish
+   UTILITIES
+   ========================================== */
+.corporate-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.corporate-row {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.corporate-col {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .corporate-row {
+        flex-direction: column;
+    }
+}
+
+/* Spacing Utilities */
+.corporate-p-0 { padding: 0; }
+.corporate-p-4 { padding: 1rem; }
+.corporate-p-8 { padding: 2rem; }
+.corporate-p-12 { padding: 3rem; }
+
+.corporate-m-0 { margin: 0; }
+.corporate-m-4 { margin: 1rem; }
+.corporate-m-8 { margin: 2rem; }
+.corporate-m-12 { margin: 3rem; }
+
+.corporate-mt-4 { margin-top: 1rem; }
+.corporate-mt-8 { margin-top: 2rem; }
+.corporate-mb-4 { margin-bottom: 1rem; }
+.corporate-mb-8 { margin-bottom: 2rem; }
+
+/* ==========================================
+   HOVER EFFECTS
    ========================================== */
 .corporate-hover-lift {
     transition: all 0.3s ease;
 }
 
 .corporate-hover-lift:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--theme2-shadow-xl);
+    transform: translateY(-4px);
+    box-shadow: var(--corporate-shadow-lg);
 }
 
 .corporate-hover-scale {
@@ -459,62 +616,211 @@
     transform: scale(1.05);
 }
 
-.corporate-hover-border {
-    transition: all 0.3s ease;
+/* ==========================================
+   INPUTS & FORMS
+   ========================================== */
+.corporate-input {
+    background: var(--corporate-bg-primary);
+    color: var(--corporate-text-primary);
+    padding: 0.875rem 1.25rem;
+    border-radius: 8px;
+    border: 2px solid var(--corporate-border);
+    transition: all 0.2s ease;
+    width: 100%;
+    font-size: 1rem;
+    font-family: inherit;
 }
 
-.corporate-hover-border:hover {
-    border-color: var(--theme2-primary);
+.corporate-input:focus {
+    border-color: var(--corporate-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.corporate-input::placeholder {
+    color: var(--corporate-text-muted);
+}
+
+.corporate-label {
+    display: block;
+    font-weight: 500;
+    color: var(--corporate-text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.corporate-form-group {
+    margin-bottom: 1.5rem;
 }
 
 /* ==========================================
-   UTILITIES - Professional Spacing
+   STATS & METRICS
    ========================================== */
-.corporate-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
+.corporate-stat {
+    text-align: center;
+    padding: 2rem;
 }
 
-.corporate-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.corporate-stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--corporate-primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
 }
 
-.corporate-row {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
+.corporate-stat-label {
+    font-size: 1rem;
+    color: var(--corporate-text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/* ==========================================
+   AVATARS
+   ========================================== */
+.corporate-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--corporate-border);
+}
+
+.corporate-avatar-sm {
+    width: 40px;
+    height: 40px;
+}
+
+.corporate-avatar-md {
+    width: 60px;
+    height: 60px;
+}
+
+.corporate-avatar-lg {
+    width: 80px;
+    height: 80px;
+}
+
+.corporate-avatar-xl {
+    width: 120px;
+    height: 120px;
+}
+
+/* ==========================================
+   PROGRESS BARS
+   ========================================== */
+.corporate-progress {
+    background: var(--corporate-bg-secondary);
+    border-radius: 9999px;
+    height: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.corporate-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--corporate-primary), var(--corporate-secondary));
+    border-radius: 9999px;
+    transition: width 0.6s ease;
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+.corporate-alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid;
+    margin-bottom: 1rem;
+}
+
+.corporate-alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--corporate-secondary);
+}
+
+.corporate-alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--corporate-warning);
+}
+
+.corporate-alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--corporate-danger);
+}
+
+.corporate-alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: var(--corporate-primary);
+}
+
+/* ==========================================
+   RESPONSIVE TYPOGRAPHY
+   ========================================== */
 @media (max-width: 768px) {
-    .corporate-row {
-        flex-direction: column;
+    .corporate-heading-1 {
+        font-size: 3rem;
+    }
+    
+    .corporate-heading-2 {
+        font-size: 2.5rem;
+    }
+    
+    .corporate-heading-3 {
+        font-size: 1.875rem;
+    }
+    
+    .corporate-body-large {
+        font-size: 1.125rem;
+    }
+    
+    .corporate-section-title {
+        font-size: 2.5rem;
     }
 }
 
 /* ==========================================
-   THEME-SPECIFIC OVERRIDES
+   ACCESSIBILITY
    ========================================== */
-[data-theme="light"] {
-    --bg-primary: var(--theme2-bg-primary);
-    --bg-secondary: var(--theme2-bg-secondary);
-    --text-primary: var(--theme2-text-primary);
-    --text-secondary: var(--theme2-text-secondary);
-    --text-muted: var(--theme2-text-muted);
-    --border-color: var(--theme2-border-light);
-    --card-bg: var(--theme2-bg-primary);
-    --card-shadow: var(--theme2-shadow-md);
+@media (prefers-reduced-motion: reduce) {
+    .corporate-animate-slide-left,
+    .corporate-animate-slide-right,
+    .corporate-animate-slide-up,
+    .corporate-animate-fade {
+        animation: none;
+    }
+    
+    .corporate-hover-lift:hover,
+    .corporate-hover-scale:hover,
+    .corporate-btn:hover,
+    .corporate-card:hover {
+        transform: none;
+    }
 }
 
-[data-theme="dark"] {
-    --bg-primary: var(--theme2-bg-primary);
-    --bg-secondary: var(--theme2-bg-secondary);
-    --text-primary: var(--theme2-text-primary);
-    --text-secondary: var(--theme2-text-secondary);
-    --text-muted: var(--theme2-text-muted);
-    --border-color: var(--theme2-border-light);
-    --card-bg: var(--theme2-bg-secondary);
-    --card-shadow: var(--theme2-shadow-lg);
+/* Focus styles */
+.corporate-btn:focus-visible,
+.corporate-input:focus-visible,
+.corporate-nav-link:focus-visible {
+    outline: 2px solid var(--corporate-primary);
+    outline-offset: 2px;
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+@media print {
+    .corporate-btn,
+    .corporate-nav {
+        display: none;
+    }
+    
+    .corporate-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
 }
