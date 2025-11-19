@@ -4,23 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- BULLETPROOF TITLE - Works on ALL pages --}}
+    {{-- DYNAMIC TITLE & META --}}
     <title>
-        @if(isset($project))
-            {{ $project->title }} | {{ $user->full_name ?? $user->name ?? 'Portfolio' }}
-        @elseif(isset($heroContent['user_name']))
-            {{ $heroContent['user_name'] }} | Full-Stack Developer Portfolio
+        @hasSection('title')
+            @yield('title')
         @else
-            {{ $user->full_name ?? $user->name ?? 'Portfolio' }} | Developer Portfolio
+            {{ $user->full_name ?? $user->name ?? 'Portfolio' }} | 
+            {{ $heroContent['title'] ?? 'Full-Stack Developer' }}
         @endif
     </title>
 
-    {{-- BULLETPROOF META DESCRIPTION --}}
-    <meta name="description" content="{{
-        $project->description ??
-        $heroContent['description'] ??
-        $user->description ??
-        'Full-Stack Developer Portfolio'
+    <meta name="description" content="{{ 
+        $heroContent['meta_description'] ?? 
+        $aboutContent['meta_description'] ?? 
+        'Full-Stack Developer Portfolio' 
     }}">
 
     <!-- Font Awesome -->
@@ -30,10 +27,7 @@
           crossorigin="anonymous" 
           referrerpolicy="no-referrer" />
 
-    <!-- Global Tailwind / App CSS (includes all themes) -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    {{-- Determine active theme (with preview support) --}}
+    <!-- Theme-specific CSS -->
     @php
         $activeTheme = $theme ?? $user->active_theme ?? 'theme1';
         if (request('preview') && request('theme')) {
@@ -41,68 +35,123 @@
         }
     @endphp
 
-    <!-- Global styles that apply to every theme -->
+    {{-- Load Theme CSS --}}
+    @if($activeTheme === 'theme2')
+        <link href="{{ asset('css/theme2.css') }}" rel="stylesheet">
+    @elseif($activeTheme === 'theme3')
+        <link href="{{ asset('css/theme3.css') }}" rel="stylesheet">
+    @else
+        {{-- theme1 uses default Tailwind --}}
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
+
+    <!-- Global Base Styles -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        * { scroll-behavior: smooth; }
+        /* CSS Variables for Theme Consistency */
+        :root {
+            --header-height: 70px;
+            --section-spacing: 6rem;
+            --container-max-width: 1280px;
+        }
+
+        * { 
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+        }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .fade-in { animation: fadeIn 0.8s ease-in; }
+        /* Global Animations */
+        .fade-in { 
+            animation: fadeIn 0.8s ease-in; 
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-hover:hover { transform: translateY(-8px) scale(1.02); }
-
-        .section-full { min-height: auto; padding: 6rem 1.5rem; }
-        @media (max-width: 768px) { .section-full { padding: 4rem 1.5rem; } }
-
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 10px;
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--accent-purple), var(--accent-blue));
+
+        /* Responsive Section Spacing */
+        .section-full { 
+            min-height: auto; 
+            padding: var(--section-spacing) 1.5rem; 
+        }
+        
+        @media (max-width: 768px) { 
+            .section-full { 
+                padding: 4rem 1.5rem; 
+            } 
+            
+            :root {
+                --section-spacing: 4rem;
+            }
+        }
+
+        /* Scrollbar - Theme Aware */
+        .theme-scrollbar::-webkit-scrollbar { 
+            width: 8px; 
+        }
+        
+        .theme-scrollbar::-webkit-scrollbar-track { 
+            background: transparent; 
+        }
+        
+        .theme-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb, #cbd5e1);
+            border-radius: 4px;
         }
     </style>
+
+    {{-- Theme-specific additional styles --}}
+    @if($activeTheme === 'theme2')
+    <style>
+        /* Corporate theme overrides */
+        body { background: var(--corporate-bg-primary); }
+    </style>
+    @endif
 </head>
-<body>
+<body class="theme-scrollbar">
 
     {{-- Theme-aware Header --}}
     <x-dynamic-component :component="$activeTheme . '.header'" :user="$user" />
 
     {{-- Page Content --}}
-    @yield('content')
+    <main>
+        @yield('content')
+    </main>
 
     {{-- Theme-aware Footer --}}
     <x-dynamic-component :component="$activeTheme . '.footer'" :user="$user" />
 
-    <!-- Back to Top Button -->
+    <!-- Back to Top Button - Theme Aware -->
     <button id="backToTop"
-            class="fixed bottom-8 right-8 p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50 glass-button"
-            style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple)));
-                   color: var(--text-primary);
-                   border: 1px solid var(--glass-border, var(--border-color));">
+            class="fixed bottom-8 right-8 p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50 back-to-top-btn">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
         </svg>
     </button>
 
     <script>
+        // Global JavaScript that works for all themes
         const backToTop = document.getElementById('backToTop');
+        
+        // Back to top functionality
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
                 backToTop.style.opacity = '1';
@@ -123,13 +172,56 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const headerHeight = document.querySelector('header')?.offsetHeight || 70;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
                 }
             });
         });
+
+        // Theme switching functionality
+        function switchTheme(themeName) {
+            // Update active theme
+            fetch('/update-theme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ theme: themeName })
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+
+        // Initialize theme-based styles
+        document.addEventListener('DOMContentLoaded', function() {
+            const activeTheme = '{{ $activeTheme }}';
+            
+            // Add theme class to body for specific overrides
+            document.body.classList.add(activeTheme + '-theme');
+            
+            // Initialize any theme-specific JS
+            if (typeof window[activeTheme + 'Init'] === 'function') {
+                window[activeTheme + 'Init']();
+            }
+        });
     </script>
 
-    @vite('resources/js/theme.js')
+    {{-- Theme-specific scripts --}}
+    @if($activeTheme === 'theme2')
+    <script>
+        function theme2Init() {
+            // Corporate theme specific initializations
+            console.log('Corporate theme initialized');
+        }
+    </script>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

@@ -5,6 +5,15 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CVController;
+use App\Http\Controllers\LandingController;
+
+// ✅ ADD THESE ROUTES AT THE TOP
+Route::get('/get-started', [LandingController::class, 'index'])
+    ->name('landing.index');
+
+Route::post('/select-theme', [LandingController::class, 'selectTheme'])
+    ->name('landing.select-theme');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +31,8 @@ Route::get('/portfolio/{user}', [PortfolioController::class, 'show'])
 
 // Option A: Redirect root to first user in DB (good for demo/single-user mode)
 Route::get('/', function () {
-    $firstUser = \App\Models\User::whereNotNull('slug')->oldest()->first();
-    return $firstUser
-        ? redirect()->route('portfolio.show', $firstUser->slug)
-        : view('welcome'); // fallback if no users
+    return redirect('/get-started');
 })->name('home');
-
 // Option B: Keep your old index() method as fallback (for admin preview)
 // Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
 
