@@ -867,3 +867,447 @@
         padding: 1rem;
     }
 }
+/* ============================================
+   CRYSTAL CLEAR WATER DROP GLASS SYSTEM
+   Applied consistently across all sections
+   ============================================ */
+
+/* ==========================================
+   CORE WATER DROP GLASS BASE
+   ========================================== */
+.water-drop-glass {
+    position: relative;
+    backdrop-filter: blur(8px) saturate(180%);
+    -webkit-backdrop-filter: blur(8px) saturate(180%);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Mode */
+[data-theme="light"] .water-drop-glass {
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 8px rgba(255, 255, 255, 0.6),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.12),
+        0 8px 28px rgba(31, 38, 135, 0.22);
+}
+
+/* Dark Mode */
+[data-theme="dark"] .water-drop-glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+        inset 0 2px 8px rgba(255, 255, 255, 0.15),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.5),
+        0 8px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* Top Highlight (Wet Glass Effect) */
+.water-drop-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    height: 35%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+    filter: blur(10px);
+    border-radius: 50% 50% 0 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+[data-theme="dark"] .water-drop-glass::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Bottom Shine */
+.water-drop-glass::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 12%;
+    background: rgba(255, 255, 255, 0.15);
+    filter: blur(8px);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Content Layer */
+.water-drop-glass > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Hover State */
+.water-drop-glass:hover {
+    transform: translateY(-4px);
+}
+
+[data-theme="light"] .water-drop-glass:hover {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow:
+        inset 0 2px 12px rgba(255, 255, 255, 0.7),
+        inset 0 -4px 14px rgba(0, 0, 0, 0.15),
+        0 16px 48px rgba(31, 38, 135, 0.28);
+}
+
+[data-theme="dark"] .water-drop-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow:
+        inset 0 2px 12px rgba(255, 255, 255, 0.2),
+        inset 0 -4px 14px rgba(0, 0, 0, 0.6),
+        0 16px 48px rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+   SECTION CONTAINERS
+   ========================================== */
+.water-drop-section {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    padding: 4rem 2rem;
+    position: relative;
+}
+
+[data-theme="light"] .water-drop-section {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .water-drop-section {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* ==========================================
+   PROJECT CARDS
+   ========================================== */
+.project-card-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+[data-theme="light"] .project-card-glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.1),
+        0 8px 24px rgba(31, 38, 135, 0.18);
+}
+
+[data-theme="dark"] .project-card-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.4),
+        0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.project-card-glass:hover {
+    transform: translateY(-8px);
+}
+
+[data-theme="light"] .project-card-glass:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.6),
+        inset 0 -3px 12px rgba(0, 0, 0, 0.15),
+        0 20px 48px rgba(31, 38, 135, 0.25);
+}
+
+[data-theme="dark"] .project-card-glass:hover {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.15),
+        inset 0 -3px 12px rgba(0, 0, 0, 0.5),
+        0 20px 48px rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================
+   SKILL CARDS
+   ========================================== */
+.skill-card-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+[data-theme="light"] .skill-card-glass {
+    background: rgba(255, 255, 255, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.08),
+        0 8px 20px rgba(31, 38, 135, 0.15);
+}
+
+[data-theme="dark"] .skill-card-glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.12),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.4),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.skill-card-glass:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+[data-theme="light"] .skill-card-glass:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.6),
+        inset 0 -3px 12px rgba(0, 0, 0, 0.12),
+        0 20px 40px rgba(31, 38, 135, 0.22);
+}
+
+[data-theme="dark"] .skill-card-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.18),
+        inset 0 -3px 12px rgba(0, 0, 0, 0.5),
+        0 20px 40px rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+   EDUCATION CARDS
+   ========================================== */
+.education-card-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+[data-theme="light"] .education-card-glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 8px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.1),
+        0 8px 24px rgba(31, 38, 135, 0.18);
+}
+
+[data-theme="dark"] .education-card-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 2px 8px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.4),
+        0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================
+   ICON CONTAINERS
+   ========================================== */
+.icon-glass-container {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 1rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+[data-theme="light"] .icon-glass-container {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+        inset 0 1px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 4px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(31, 38, 135, 0.15);
+}
+
+[data-theme="dark"] .icon-glass-container {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        inset 0 1px 4px rgba(255, 255, 255, 0.15),
+        inset 0 -1px 4px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.icon-glass-container:hover {
+    transform: scale(1.1);
+}
+
+/* ==========================================
+   BADGE / TAG GLASS
+   ========================================== */
+.badge-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .badge-glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 1px 3px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(31, 38, 135, 0.12);
+}
+
+[data-theme="dark"] .badge-glass {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        inset 0 1px 3px rgba(255, 255, 255, 0.12),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================
+   BUTTON GLASS
+   ========================================== */
+.btn-glass {
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-radius: 9999px;
+    padding: 0.875rem 2rem;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+[data-theme="light"] .btn-glass {
+    background: rgba(255, 255, 255, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.1),
+        0 8px 20px rgba(31, 38, 135, 0.2);
+}
+
+[data-theme="dark"] .btn-glass {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.12),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.4),
+        0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.btn-glass:hover {
+    transform: translateY(-3px);
+}
+
+[data-theme="light"] .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.6),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.15),
+        0 16px 40px rgba(31, 38, 135, 0.3);
+}
+
+[data-theme="dark"] .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 2px 10px rgba(255, 255, 255, 0.18),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.5),
+        0 16px 40px rgba(255, 255, 255, 0.18);
+}
+
+/* ==========================================
+   STAT BOX GLASS
+   ========================================== */
+.stat-box-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+[data-theme="light"] .stat-box-glass {
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.08),
+        0 8px 20px rgba(31, 38, 135, 0.15);
+}
+
+[data-theme="dark"] .stat-box-glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 2px 6px rgba(255, 255, 255, 0.12),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.4),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.stat-box-glass:hover {
+    transform: translateY(-4px);
+}
+
+/* ==========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================== */
+@media (max-width: 768px) {
+    .water-drop-glass,
+    .project-card-glass,
+    .skill-card-glass,
+    .education-card-glass {
+        border-radius: 1rem;
+    }
+    
+    .water-drop-section {
+        padding: 2rem 1rem;
+    }
+}
+
+/* ==========================================
+   UTILITY CLASSES
+   ========================================== */
+.glass-overlay {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="light"] .glass-overlay {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .glass-overlay {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Smooth theme transitions */
+.water-drop-glass,
+.project-card-glass,
+.skill-card-glass,
+.education-card-glass,
+.icon-glass-container,
+.badge-glass,
+.btn-glass,
+.stat-box-glass {
+    transition:
+        background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
