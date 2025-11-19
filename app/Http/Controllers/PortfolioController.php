@@ -97,36 +97,44 @@ class PortfolioController extends Controller
      * Project detail page: /project/5/overview
      * Must belong to the current portfolio owner (security check)
      */
-    public function showProjectOverview(Project $project)
-    {
-        // Security: Ensure project belongs to the intended portfolio owner
-        // We get the user from the current route (via slug) or fallback safely
-        $currentUser = request()->route('user'); // from /portfolio/{user}
-        if (!$currentUser instanceof User) {
-            $currentUser = Auth::user() ?? User::first();
-        }
-
-        if ($project->user_id !== $currentUser->id) {
-            abort(404);
-        }
-
-        $overview = $project->overview;
-
-        if (!$overview) {
-            abort(404, 'Project overview not found');
-        }
-
-        $techStackSkills = $overview->getTechStackSkills();
-
-        return view('project-overview', [
-            'user'            => $currentUser,
-            'project'         => $project,
-            'overview'        => $overview,
-            'techStackSkills' => $techStackSkills,
-            'headerContent'   => PageContent::getSection('header', $currentUser->id),
-            'footerContent'   => PageContent::getSection('footer', $currentUser->id),
-        ]);
+   public function showProjectOverview(Project $project)
+{
+    // Security: Ensure project belongs to the intended portfolio owner
+    $currentUser = request()->route('user'); // from /portfolio/{user}
+    if (!$currentUser instanceof User) {
+        $currentUser = Auth::user() ?? User::first();
     }
+
+    if ($project->user_id !== $currentUser->id) {
+        abort(404);
+    }
+
+    $overview = $project->overview;
+
+    if (!$overview) {
+        abort(404, 'Project overview not found');
+    }
+
+    $techStackSkills = $overview->getTechStackSkills();
+
+    // ✅ ADD THEME SUPPORT
+    $theme = $currentUser->active_theme ?? 'theme1';
+    
+    // Allow preview mode
+    if (request('preview') && request('theme')) {
+        $theme = request('theme');
+    }
+
+    return view('project-overview-master', [
+        'user'            => $currentUser,
+        'project'         => $project,
+        'overview'        => $overview,
+        'techStackSkills' => $techStackSkills,
+        'theme'           => $theme, // ✅ PASS THEME TO VIEW
+        'headerContent'   => PageContent::getSection('header', $currentUser->id),
+        'footerContent'   => PageContent::getSection('footer', $currentUser->id),
+    ]);
+}
 
     /**
      * Optional: Keep old index() for admin preview or fallback

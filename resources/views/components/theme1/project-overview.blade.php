@@ -1,6 +1,7 @@
-@extends('layouts.app')
+{{-- resources/views/components/theme1/project-overview.blade.php --}}
 
-@section('content')
+@props(['user', 'project', 'overview', 'techStackSkills', 'headerContent', 'footerContent'])
+
 <div class="pt-24 pb-16 relative overflow-hidden"
      style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));">
     
@@ -16,7 +17,7 @@
     <!-- Breadcrumbs -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
         <nav class="flex items-center gap-2 text-sm flex-wrap">
-            <a href="{{ route('portfolio.index') }}" 
+            <a href="{{ route('portfolio.show', $user->slug) }}" 
                class="font-medium transition-colors hover:opacity-80"
                style="color: var(--accent-blue);">
                 Home
@@ -24,7 +25,7 @@
             <svg class="w-4 h-4" style="color: var(--text-muted);" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
             </svg>
-            <a href="{{ route('portfolio.index') }}#projects" 
+            <a href="{{ route('portfolio.show', $user->slug) }}#projects" 
                class="font-medium transition-colors hover:opacity-80"
                style="color: var(--accent-blue);">
                 Projects
@@ -282,18 +283,15 @@
 
 <script>
     function switchTab(tabName) {
-        // Hide all content sections
         document.querySelectorAll('.content-section').forEach(section => {
             section.classList.add('hidden');
             section.classList.remove('animate-fadeIn');
         });
         
-        // Show selected content with animation
         const selectedContent = document.getElementById(tabName + '-content');
         selectedContent.classList.remove('hidden');
         setTimeout(() => selectedContent.classList.add('animate-fadeIn'), 10);
         
-        // Reset all buttons to inactive state
         document.querySelectorAll('.tab-button').forEach(button => {
             button.classList.remove('theme-btn');
             button.classList.add('glass-button');
@@ -302,7 +300,6 @@
             button.style.border = '1px solid var(--border-color)';
         });
         
-        // Set active button
         const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
         activeButton.classList.add('theme-btn');
         activeButton.classList.remove('glass-button');
@@ -313,7 +310,6 @@
 </script>
 
 <style>
-    /* Animations */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
@@ -329,7 +325,6 @@
     .animate-blob { animation: blob 7s infinite; }
     .animation-delay-2000 { animation-delay: 2s; }
     
-    /* Gradient Text */
     .gradient-text {
         background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
         -webkit-background-clip: text;
@@ -337,68 +332,7 @@
         color: transparent !important;
     }
     
-    /* Theme Buttons - GlassUI.dev style */
-    .theme-btn {
-        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)) !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    [data-theme="normal"] .theme-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
-    }
-    
-    [data-theme="monochrome"] .theme-btn {
-        background: rgba(255, 255, 255, 0.12) !important;
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-    
-    [data-theme="monochrome"] .theme-btn:hover {
-        background: rgba(255, 255, 255, 0.18) !important;
-        box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-    }
-    
-    /* Glass Buttons */
-    .glass-button {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-    
-    [data-theme="normal"] .glass-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        border-color: var(--accent-blue);
-    }
-    
-    [data-theme="monochrome"] .glass-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 48px rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    /* Hide normal theme elements in dark mode */
     [data-theme="monochrome"] .normal-theme-only {
         display: none;
     }
-    
-    /* Ensure proper contrast for prose content */
-    .prose p, .prose ul, .prose ol {
-        color: var(--text-secondary) !important;
-    }
-    
-    .prose strong {
-        color: var(--text-primary) !important;
-    }
-    
-    .prose a {
-        color: var(--accent-blue) !important;
-    }
-    
-    .prose a:hover {
-        color: var(--accent-purple) !important;
-    }
 </style>
-@endsection

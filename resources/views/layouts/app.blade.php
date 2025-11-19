@@ -4,30 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- SUPER SAFE TITLE & META – will NEVER throw undefined variable error --}}
+    {{-- BULLETPROOF TITLE - Works on ALL pages --}}
     <title>
-        {{ 
-            data_get($heroContent, 'user_name') 
-            ?? data_get($heroContent, 'greeting') . ' ' . ($user->full_name ?? $user->name ?? '') 
-            ?? $user->full_name ?? $user->name ?? 'Portfolio' 
-        }} | Full-Stack Developer Portfolio
+        @if(isset($project))
+            {{ $project->title }} | {{ $user->full_name ?? $user->name ?? 'Portfolio' }}
+        @elseif(isset($heroContent['user_name']))
+            {{ $heroContent['user_name'] }} | Full-Stack Developer Portfolio
+        @else
+            {{ $user->full_name ?? $user->name ?? 'Portfolio' }} | Developer Portfolio
+        @endif
     </title>
 
-    <meta name="description" content="{{ 
-        $heroContent['description'] 
-        ?? data_get($heroContent, 'description') 
-        ?? 'Full-Stack Developer Portfolio' 
+    {{-- BULLETPROOF META DESCRIPTION --}}
+    <meta name="description" content="{{
+        $project->description ??
+        $heroContent['description'] ??
+        $user->description ??
+        'Full-Stack Developer Portfolio'
     }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    <!-- Font Awesome -->
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
           integrity="sha512-D1xDxkGKfQ3FtA4iO7QdZq6r8N2IoT2EKHFXPhprYyLq4zHTGv7Ew2AZZT1jK8ZCKy9v6gRXH8tK2+gFqM6PlQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
 
+    <!-- Global Tailwind / App CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- Determine active theme (with preview support) --}}
+    @php
+        $activeTheme = $theme ?? $user->active_theme ?? 'theme1';
+        if (request('preview') && request('theme')) {
+            $activeTheme = request('theme');
+        }
+    @endphp
+
+    {{-- Load theme-specific CSS only --}}
+    @if($activeTheme === 'theme1')
+        @vite('resources/css/themes/theme1.css')
+    @elseif($activeTheme === 'theme2')
+        @vite('resources/css/themes/theme2.css')
+    @elseif($activeTheme === 'theme3')
+        @vite('resources/css/themes/theme3.css')
+    @elseif($activeTheme === 'theme4')
+        @vite('resources/css/themes/theme4.css')
+    @endif
+
+    <!-- Global styles that apply to every theme -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
         * { scroll-behavior: smooth; }
+
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
@@ -36,15 +66,19 @@
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .fade-in { animation: fadeIn 0.8s ease-in; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover { transform: translateY(-8px) scale(1.02); }
+
         .section-full { min-height: auto; padding: 6rem 1.5rem; }
         @media (max-width: 768px) { .section-full { padding: 4rem 1.5rem; } }
+
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb {
@@ -54,30 +88,18 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--accent-purple), var(--accent-blue));
         }
-        .skeleton {
-            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-primary) 50%, var(--bg-secondary) 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s ease-in-out infinite;
-        }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-        .float { animation: float 3s ease-in-out infinite; }
-        .glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .glow:hover { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.6s ease; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
-    {{-- These will never throw errors thanks to ?? [] --}}
-    <x-header :headerContent="$headerContent ?? []" />
-    
+
+    {{-- Theme-aware Header --}}
+    <x-dynamic-component :component="$activeTheme . '.header'" :user="$user" />
+
+    {{-- Page Content --}}
     @yield('content')
-    
-    <x-footer :footerContent="$footerContent ?? []" />
+
+    {{-- Theme-aware Footer --}}
+    <x-dynamic-component :component="$activeTheme . '.footer'" :user="$user" />
 
     <!-- Back to Top Button -->
     <button id="backToTop"
@@ -91,20 +113,6 @@
     </button>
 
     <script>
-        function reveal() {
-            const reveals = document.querySelectorAll('.fade-in');
-            reveals.forEach(el => {
-                const windowHeight = window.innerHeight;
-                const elementTop = el.getBoundingClientRect().top;
-                const elementVisible = 150;
-                if (elementTop < windowHeight - elementVisible) {
-                    el.classList.add('active');
-                }
-            });
-        }
-        window.addEventListener('scroll', reveal);
-        reveal();
-
         const backToTop = document.getElementById('backToTop');
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
@@ -115,10 +123,12 @@
                 backToTop.style.pointerEvents = 'none';
             }
         });
+
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();

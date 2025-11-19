@@ -11,38 +11,52 @@
         }
     @endphp
 
-    <x-dynamic-component :component="'components.' . $theme . '.hero'" 
+    {{-- Hero Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.hero'" 
         :heroContent="$heroContent" 
         :techStackSkills="$techStackSkills"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.about'" 
+    {{-- About Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.about'" 
         :aboutContent="$aboutContent"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.projects'" 
+    {{-- Projects Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.projects'" 
         :projects="$projects"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.skills'" 
+    {{-- Skills Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.skills'" 
         :skills="$skills"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.experience'" 
+    {{-- Experience Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.experience'" 
         :experiences="$experiences"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.education'" 
+    {{-- Education Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.education'" 
         :educations="$educations"
         :user="$user"
     />
     
-    <x-dynamic-component :component="'components.' . $theme . '.contact'" 
+    {{-- Contact Section --}}
+    <x-dynamic-component 
+        :component="$theme . '.contact'" 
         :contactContent="$contactContent"
         :user="$user"
     />
