@@ -25,7 +25,7 @@
                 <!-- Main Heading - Vertical Stack -->
                 <div class="mb-6">
                     <h1 class="text-6xl md:text-7xl lg:text-8xl font-black mb-3 tracking-tight leading-none">
-                        <span class="block text-glow" style="color: var(--text-primary);">
+                        <span class="block text-glow hero-name">
                             {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[0] }}
                         </span>
                         <span class="block neon-text">
@@ -37,19 +37,19 @@
                 <!-- Typing Text with Glitch Effect -->
                 @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
                     <div class="mb-8 min-h-[60px] flex items-center">
-                        <p class="text-2xl md:text-3xl font-bold glitch-text" style="color: var(--text-secondary);">
+                        <p class="text-2xl md:text-3xl font-bold glitch-text hero-subtitle">
                             <span id="typed-text-theme2"></span>
                             <span class="cursor-blink">|</span>
                         </p>
                     </div>
                 @else
-                    <p class="text-2xl md:text-3xl font-bold mb-8 glitch-text" style="color: var(--text-secondary);">
+                    <p class="text-2xl md:text-3xl font-bold mb-8 glitch-text hero-subtitle">
                         Problem solver & Innovator<span class="cursor-blink">|</span>
                     </p>
                 @endif
 
                 <!-- Description -->
-                <p class="text-lg md:text-xl mb-10 leading-relaxed" style="color: var(--text-muted);">
+                <p class="text-lg md:text-xl mb-10 leading-relaxed hero-description">
                     Crafting digital experiences with cutting-edge technology and creative innovation.
                 </p>
 
@@ -74,7 +74,7 @@
                 <!-- Social Links - Horizontal Row -->
                 @if (!empty($heroContent['social_links'] ?? []))
                     <div class="flex items-center gap-4">
-                        <span class="text-sm font-medium" style="color: var(--text-muted);">Connect:</span>
+                        <span class="text-sm font-medium social-label">Connect:</span>
                         <div class="flex gap-3">
                             @foreach ($heroContent['social_links'] as $social)
                                 @if (!empty($social['url'] ?? ''))
@@ -84,10 +84,10 @@
                                         @if (!empty($social['icon'] ?? ''))
                                             <img src="{{ $social['icon'] }}" 
                                                  alt="{{ $social['name'] ?? 'Social' }}"
-                                                 class="w-5 h-5 relative z-10"
+                                                 class="w-5 h-5 relative z-10 social-icon"
                                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
                                         @endif
-                                        <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-5 h-5 relative z-10"
+                                        <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-5 h-5 relative z-10 social-icon"
                                             fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                                         </svg>
@@ -157,7 +157,7 @@
     <!-- Scroll Indicator -->
     <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-down">
         <a href="#about" class="flex flex-col items-center gap-2">
-            <span class="text-xs font-medium tracking-widest uppercase" style="color: var(--text-muted);">Scroll</span>
+            <span class="text-xs font-medium tracking-widest uppercase scroll-text">Scroll</span>
             <div class="scroll-arrow"></div>
         </a>
     </div>
@@ -224,26 +224,77 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 /* ===================================
-   THEME 2 - FUTURISTIC CYBER AESTHETIC
+   THEME 2 HERO - DUAL THEME SUPPORT
    =================================== */
 
 :root {
-    --neon-blue: #00d9ff;
-    --neon-purple: #b537ff;
-    --neon-pink: #ff006e;
-    --cyber-dark: #0a0e27;
+    /* Dark Theme Colors (Default) */
+    --hero-bg-start: #0a0e27;
+    --hero-bg-mid: #1a1f3a;
+    --hero-bg-end: #0f1729;
+    --hero-text-primary: #ffffff;
+    --hero-text-secondary: #cbd5e1;
+    --hero-text-muted: #94a3b8;
+    --neon-primary: #00d9ff;
+    --neon-secondary: #b537ff;
+    --neon-accent: #ff006e;
+    --grid-color: rgba(0, 217, 255, 0.05);
+    --orb-color: rgba(0, 217, 255, 0.15);
+    --badge-bg: rgba(0, 217, 255, 0.1);
+    --badge-border: rgba(0, 217, 255, 0.3);
+    --btn-primary-bg: #00d9ff;
+    --btn-primary-text: #0a0e27;
+    --btn-secondary-border: #00d9ff;
+    --hexagon-bg: rgba(0, 217, 255, 0.1);
+    --hexagon-hover-bg: #00d9ff;
+    --hexagon-hover-text: #0a0e27;
+    --ring-border-1: #00d9ff;
+    --ring-border-2: #b537ff;
+    --profile-border: #00d9ff;
+    --ticker-bg: rgba(0, 217, 255, 0.05);
+    --ticker-border: rgba(0, 217, 255, 0.2);
+    --scroll-color: #00d9ff;
+}
+
+/* Light Theme Override */
+[data-theme="light"] {
+    --hero-bg-start: #f8fafc;
+    --hero-bg-mid: #e2e8f0;
+    --hero-bg-end: #cbd5e1;
+    --hero-text-primary: #1e293b;
+    --hero-text-secondary: #475569;
+    --hero-text-muted: #64748b;
+    --neon-primary: #0ea5e9;
+    --neon-secondary: #8b5cf6;
+    --neon-accent: #ec4899;
+    --grid-color: rgba(14, 165, 233, 0.08);
+    --orb-color: rgba(14, 165, 233, 0.12);
+    --badge-bg: rgba(14, 165, 233, 0.15);
+    --badge-border: rgba(14, 165, 233, 0.4);
+    --btn-primary-bg: #0ea5e9;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-border: #0ea5e9;
+    --hexagon-bg: rgba(14, 165, 233, 0.15);
+    --hexagon-hover-bg: #0ea5e9;
+    --hexagon-hover-text: #ffffff;
+    --ring-border-1: #0ea5e9;
+    --ring-border-2: #8b5cf6;
+    --profile-border: #0ea5e9;
+    --ticker-bg: rgba(14, 165, 233, 0.08);
+    --ticker-border: rgba(14, 165, 233, 0.25);
+    --scroll-color: #0ea5e9;
 }
 
 .theme2-hero {
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+    background: linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
     position: relative;
 }
 
 /* Animated Grid Background */
 .cyber-grid {
     background-image: 
-        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 50px 50px;
     animation: gridMove 20s linear infinite;
 }
@@ -259,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 217, 255, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--orb-color) 0%, transparent 70%);
     filter: blur(40px);
     animation: floatOrb 20s ease-in-out infinite;
     pointer-events: none;
@@ -293,16 +344,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Cyber Badge */
 .cyber-badge {
-    background: rgba(0, 217, 255, 0.1);
-    border: 1px solid rgba(0, 217, 255, 0.3);
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
     backdrop-filter: blur(10px);
-    color: var(--neon-blue);
+    color: var(--neon-primary);
 }
 
 .pulse-dot {
-    background: var(--neon-blue);
+    background: var(--neon-primary);
     animation: pulse 2s ease-in-out infinite;
-    box-shadow: 0 0 10px var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-primary);
 }
 
 @keyframes pulse {
@@ -310,18 +361,18 @@ document.addEventListener('DOMContentLoaded', function() {
     50% { opacity: 0.5; transform: scale(1.2); }
 }
 
-/* Neon Text */
+/* Text Styles */
+.hero-name {
+    color: var(--hero-text-primary);
+    text-shadow: 0 0 20px var(--orb-color);
+}
+
 .neon-text {
-    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+    background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
     animation: neonGlow 3s ease-in-out infinite;
-}
-
-.text-glow {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 @keyframes neonGlow {
@@ -329,14 +380,17 @@ document.addEventListener('DOMContentLoaded', function() {
     50% { filter: brightness(1.3); }
 }
 
-/* Glitch Text Effect */
-.glitch-text {
-    position: relative;
+.hero-subtitle {
+    color: var(--hero-text-secondary);
+}
+
+.hero-description {
+    color: var(--hero-text-muted);
 }
 
 .cursor-blink {
     animation: blink 1s step-end infinite;
-    color: var(--neon-blue);
+    color: var(--neon-primary);
 }
 
 @keyframes blink {
@@ -350,8 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 16px 40px;
     font-weight: 700;
     font-size: 16px;
-    color: #0a0e27;
-    background: var(--neon-blue);
+    color: var(--btn-primary-text);
+    background: var(--btn-primary-bg);
     border: none;
     clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
     transition: all 0.3s ease;
@@ -360,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .cyber-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
+    box-shadow: 0 10px 40px var(--orb-color);
 }
 
 .cyber-btn-glow {
@@ -379,20 +433,24 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 16px 40px;
     font-weight: 700;
     font-size: 16px;
-    color: var(--neon-blue);
+    color: var(--neon-primary);
     background: transparent;
-    border: 2px solid var(--neon-blue);
+    border: 2px solid var(--btn-secondary-border);
     clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
     transition: all 0.3s ease;
 }
 
 .cyber-btn-secondary:hover {
-    background: rgba(0, 217, 255, 0.1);
+    background: var(--badge-bg);
     transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+    box-shadow: 0 10px 40px var(--orb-color);
 }
 
-/* Hexagon Social Links */
+/* Social Links */
+.social-label {
+    color: var(--hero-text-muted);
+}
+
 .hexagon-link {
     position: relative;
     width: 45px;
@@ -400,17 +458,25 @@ document.addEventListener('DOMContentLoaded', function() {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 217, 255, 0.1);
+    background: var(--hexagon-bg);
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     transition: all 0.3s ease;
-    color: var(--neon-blue);
+    color: var(--neon-primary);
 }
 
 .hexagon-link:hover {
-    background: var(--neon-blue);
-    color: #0a0e27;
+    background: var(--hexagon-hover-bg);
+    color: var(--hexagon-hover-text);
     transform: scale(1.1) rotate(10deg);
-    box-shadow: 0 0 20px var(--neon-blue);
+    box-shadow: 0 0 20px var(--neon-primary);
+}
+
+.social-icon {
+    filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .social-icon {
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(180deg);
 }
 
 /* Hologram Container */
@@ -425,11 +491,11 @@ document.addEventListener('DOMContentLoaded', function() {
     position: absolute;
     inset: 0;
     border: 3px solid transparent;
-    border-top-color: var(--neon-blue);
-    border-right-color: var(--neon-purple);
+    border-top-color: var(--ring-border-1);
+    border-right-color: var(--ring-border-2);
     border-radius: 50%;
     animation: rotate3D 10s linear infinite;
-    filter: drop-shadow(0 0 20px var(--neon-blue));
+    filter: drop-shadow(0 0 20px var(--neon-primary));
 }
 
 @keyframes rotate3D {
@@ -437,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
     100% { transform: rotateY(360deg) rotateX(20deg); }
 }
 
-/* Center Profile Image */
+/* Center Profile */
 .center-profile {
     position: absolute;
     inset: 20%;
@@ -452,10 +518,10 @@ document.addEventListener('DOMContentLoaded', function() {
     position: absolute;
     inset: -10%;
     border-radius: 50%;
-    background: radial-gradient(circle, transparent 40%, var(--neon-purple) 50%, transparent 60%);
+    background: radial-gradient(circle, transparent 40%, var(--neon-secondary) 50%, transparent 60%);
     box-shadow: 
-        0 0 60px var(--neon-purple),
-        inset 0 0 40px var(--neon-blue);
+        0 0 60px var(--neon-secondary),
+        inset 0 0 40px var(--neon-primary);
     animation: pulse-ring 3s ease-in-out infinite;
 }
 
@@ -465,10 +531,10 @@ document.addEventListener('DOMContentLoaded', function() {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid var(--neon-blue);
+    border: 4px solid var(--profile-border);
     box-shadow: 
-        0 0 30px var(--neon-blue),
-        inset 0 0 20px rgba(0, 217, 255, 0.3);
+        0 0 30px var(--neon-primary),
+        inset 0 0 20px var(--orb-color);
     z-index: 10;
 }
 
@@ -482,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
     50% { opacity: 1; transform: scale(1.1); }
 }
 
-/* Floating Tech Icons */
+/* Floating Icons */
 .floating-icons {
     pointer-events: none;
 }
@@ -505,7 +571,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .icon-glow {
-    filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.6));
+    filter: drop-shadow(0 0 10px var(--neon-primary));
     transition: transform 0.3s ease;
 }
 
@@ -514,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .cyber-icon-bg {
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
 }
 
 /* Scan Lines */
@@ -525,8 +591,8 @@ document.addEventListener('DOMContentLoaded', function() {
         0deg,
         transparent,
         transparent 2px,
-        rgba(0, 217, 255, 0.03) 2px,
-        rgba(0, 217, 255, 0.03) 4px
+        var(--grid-color) 2px,
+        var(--grid-color) 4px
     );
     pointer-events: none;
     animation: scanMove 8s linear infinite;
@@ -540,8 +606,8 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Bottom Ticker */
 .ticker-container {
     height: 50px;
-    background: rgba(0, 217, 255, 0.05);
-    border-top: 1px solid rgba(0, 217, 255, 0.2);
+    background: var(--ticker-bg);
+    border-top: 1px solid var(--ticker-border);
     overflow: hidden;
     backdrop-filter: blur(10px);
 }
@@ -556,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .ticker-item {
     font-size: 14px;
     font-weight: 600;
-    color: var(--neon-blue);
+    color: var(--neon-primary);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -566,15 +632,19 @@ document.addEventListener('DOMContentLoaded', function() {
     100% { transform: translateX(-50%); }
 }
 
-/* Scroll Down Indicator */
+/* Scroll Indicator */
 .scroll-down {
     animation: bounce 2s ease-in-out infinite;
+}
+
+.scroll-text {
+    color: var(--hero-text-muted);
 }
 
 .scroll-arrow {
     width: 2px;
     height: 30px;
-    background: linear-gradient(180deg, var(--neon-blue) 0%, transparent 100%);
+    background: linear-gradient(180deg, var(--scroll-color) 0%, transparent 100%);
     position: relative;
 }
 
@@ -585,8 +655,8 @@ document.addEventListener('DOMContentLoaded', function() {
     left: -3px;
     width: 8px;
     height: 8px;
-    border-right: 2px solid var(--neon-blue);
-    border-bottom: 2px solid var(--neon-blue);
+    border-right: 2px solid var(--scroll-color);
+    border-bottom: 2px solid var(--scroll-color);
     transform: rotate(45deg);
 }
 
@@ -600,10 +670,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .hologram-container {
         width: 300px;
         height: 300px;
-    }
-    
-    .floating-icon {
-        animation: orbit 15s linear infinite;
     }
 }
 
