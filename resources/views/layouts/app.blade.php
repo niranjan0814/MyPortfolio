@@ -30,7 +30,7 @@
           crossorigin="anonymous" 
           referrerpolicy="no-referrer" />
 
-    <!-- Global Tailwind / App CSS -->
+    <!-- Global Tailwind / App CSS (includes all themes) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Determine active theme (with preview support) --}}
@@ -40,17 +40,6 @@
             $activeTheme = request('theme');
         }
     @endphp
-
-    {{-- Load theme-specific CSS only --}}
-    @if($activeTheme === 'theme1')
-        @vite('resources/css/themes/theme1.css')
-    @elseif($activeTheme === 'theme2')
-        @vite('resources/css/themes/theme2.css')
-    @elseif($activeTheme === 'theme3')
-        @vite('resources/css/themes/theme3.css')
-    @elseif($activeTheme === 'theme4')
-        @vite('resources/css/themes/theme4.css')
-    @endif
 
     <!-- Global styles that apply to every theme -->
     <style>
