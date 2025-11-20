@@ -10,31 +10,29 @@
     <div class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center justify-center">
 
         <!-- LEFT SIDE - Content + Tech Stack -->
-        <div class="w-full lg:w-[55%] px-16 flex items-start justify-start">
+        <div class="w-full lg:w-[55%] pl-24 pr-12 flex items-start justify-start -mt-16">
             <div class="max-w-md lg:max-w-lg xl:max-w-2xl content-area">
 
                 <!-- Main Heading -->
-                <div class="mb-12 space-y-4">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight">
-                        <span class="block digital-text name-primary inline-block">
-                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[0] }}
-                        </span>
-                        <span class="block matrix-gradient name-secondary inline-block">
-                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[1] ?? 'Developer' }}
-                        </span>
+                <div class="mb-8 space-y-4">
+                    <h1
+                        class="hero-name text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black leading-tight tracking-tight whitespace-nowrap mt-16 ml-3">
+                        <span class="name-primary">{{ explode(' ', $heroContent['user_name'])[0] }}</span>
+                        <span class="name-secondary">{{ explode(' ', $heroContent['user_name'])[1] }}</span>
                     </h1>
+
                 </div>
 
                 <!-- Dynamic Role Text -->
                 @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-                    <div class="typing-wrapper mb-16 min-h-[48px] flex items-center">
+                    <div class="typing-wrapper mb-6 -mt-2 min-h-[48px] flex items-center">
                         <div class="role-display">
                             <span id="typed-text-theme3" class="role-text"></span>
                             <span class="typing-cursor">|</span>
                         </div>
                     </div>
                 @else
-                    <div class="typing-wrapper mb-16 min-h-[48px] flex items-center">
+                    <div class="typing-wrapper mb-6 -mt-2 min-h-[48px] flex items-center">
                         <div class="role-display">
                             <span class="role-text">Full Stack Developer</span>
                             <span class="typing-cursor">|</span>
@@ -44,37 +42,87 @@
 
                 <!-- Tech Stack (still on left, under typing text) -->
                 @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-                    <div class="tech-stack-section mt-16">
-                        <div class="tech-label-wrapper">
-                            <span class="tech-label">Tech Stack</span>
+                    <div class="tech-stack-section mt-6 flex items-start gap-10">
+
+                        <!-- Vertical Tech Stack label -->
+                        <div class="tech-label-vertical">
+                            T<br>E<br>C<br>H<br><br>S<br>T<br>A<br>C<br>K
                         </div>
-                        <div class="tech-grid" id="tech-stack-container">
-                            @foreach ($techStackSkills as $index => $skill)
-                                <div class="tech-item" style="--item-index: {{ $index }}">
-                                    @if($skill->url)
-                                        <div class="tech-icon-wrapper">
-                                            <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="tech-icon">
-                                        </div>
-                                    @else
-                                        <div class="tech-icon-wrapper">
-                                            <div class="tech-icon-fallback">
-                                                <i class="fas fa-code"></i>
+
+                        <!-- Icons Grid -->
+                        <div>
+                            <div class="tech-grid" id="tech-stack-container">
+
+                                @foreach ($techStackSkills as $index => $skill)
+                                    <div class="tech-item" style="--item-index: {{ $index }}">
+                                        @if($skill->url)
+                                            <div class="tech-icon-wrapper">
+                                                <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="tech-icon">
                                             </div>
-                                        </div>
-                                    @endif
-                                    <div class="tech-tooltip">{{ $skill->name }}</div>
+                                        @else
+                                            <div class="tech-icon-wrapper">
+                                                <div class="tech-icon-fallback">
+                                                    <i class="fas fa-code"></i>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <div class="tech-tooltip">{{ $skill->name }}</div>
+                                    </div>
+                                @endforeach
+
+                                <!-- Three Dots as part of the grid -->
+                                <a href="#skills" class="tech-item three-dot-icon">
+                                    <div class="tech-icon-wrapper">
+                                        <div class="three-dot-box">• • •</div>
+                                    </div>
+                                    <div class="tech-tooltip">More</div>
+                                </a>
+
+                            </div>
+                            <br>
+                            <!-- Social Links - UNDER THE CTA BUTTONS -->
+                            @if (!empty($heroContent['social_links'] ?? []))
+                                <div class="social-section">
+                                    <div class="social-label-container justify-center lg:justify-start">
+                                        <span class="social-label">Connect with me</span>
+                                        <div class="label-underline"></div>
+                                    </div>
+                                    <div class="social-icons-grid justify-center lg:justify-start">
+                                        @foreach ($heroContent['social_links'] as $social)
+                                            @if (!empty($social['url'] ?? ''))
+                                                <a href="{{ $social['url'] }}" target="_blank" class="crystal-bubble group"
+                                                    title="{{ $social['name'] ?? 'Social' }}">
+                                                    <div class="bubble-shine"></div>
+                                                    <div class="bubble-content">
+                                                        @if (!empty($social['icon'] ?? ''))
+                                                            <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
+                                                                class="social-icon-img" />
+                                                        @else
+                                                            <i class="fas fa-share-alt social-icon-fallback"></i>
+                                                        @endif
+                                                    </div>
+                                                    <span class="bubble-tooltip">{{ $social['name'] ?? 'Social' }}</span>
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
-                            @endforeach
+                            @endif
+
+
                         </div>
+
                     </div>
+
                 @endif
 
             </div>
         </div>
 
         <!-- RIGHT SIDE - Image + CTA Buttons + Social Links -->
-        <div class="w-full lg:w-1/2 px-8 lg:px-16 py-16 lg:py-0 flex items-center justify-start">
-            <div class="visual-area text-center lg:text-left space-y-10">
+        <div class="w-full lg:w-1/2 px-8 lg:px-16 py-8 lg:py-0 flex items-center justify-start -mt-0">
+            <div class="visual-area text-center lg:text-left space-y-6">
 
                 <!-- Profile Image -->
                 <div class="profile-container inline-block">
@@ -116,34 +164,7 @@
                     </div>
                 @endif
 
-                <!-- Social Links - UNDER THE CTA BUTTONS -->
-                @if (!empty($heroContent['social_links'] ?? []))
-                    <div class="social-section mt-8">
-                        <div class="social-label-container justify-center lg:justify-start">
-                            <span class="social-label">Connect with me</span>
-                            <div class="label-underline"></div>
-                        </div>
-                        <div class="social-icons-grid justify-center lg:justify-start">
-                            @foreach ($heroContent['social_links'] as $social)
-                                @if (!empty($social['url'] ?? ''))
-                                    <a href="{{ $social['url'] }}" target="_blank" class="crystal-bubble group"
-                                        title="{{ $social['name'] ?? 'Social' }}">
-                                        <div class="bubble-shine"></div>
-                                        <div class="bubble-content">
-                                            @if (!empty($social['icon'] ?? ''))
-                                                <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
-                                                    class="social-icon-img" />
-                                            @else
-                                                <i class="fas fa-share-alt social-icon-fallback"></i>
-                                            @endif
-                                        </div>
-                                        <span class="bubble-tooltip">{{ $social['name'] ?? 'Social' }}</span>
-                                    </a>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+
 
             </div>
         </div>
@@ -351,6 +372,7 @@
     /* Content Area */
     .content-area {
         animation: contentSlideIn 1s ease-out;
+        margin-top: -40px !important;
     }
 
     @keyframes contentSlideIn {
@@ -452,6 +474,33 @@
         line-height: 1.4;
         min-height: 1.5em;
     }
+
+    .three-dot-icon {
+        display: block;
+        text-decoration: none;
+    }
+
+    .three-dot-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 2px solid var(--border-light);
+        backdrop-filter: blur(10px);
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-primary);
+        transition: 0.3s ease;
+    }
+
+    .three-dot-box:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 25px var(--accent-glow);
+        transform: translateY(-6px);
+    }
+
 
     .typing-cursor {
         color: var(--accent-primary);
@@ -556,6 +605,15 @@
         }
     }
 
+    .hero-name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        /* spacing between names */
+        white-space: nowrap;
+        /* force single line */
+    }
+
     .primary-btn:hover {
         transform: translateY(-4px);
         box-shadow:
@@ -597,7 +655,7 @@
 
     /* Premium Crystal Bubble Social Icons */
     .social-section {
-        margin-top: 3rem;
+        margin-top: 1rem !important;
     }
 
     .social-label-container {
@@ -605,6 +663,63 @@
         align-items: center;
         gap: 1rem;
         margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        white-space: nowrap;
+    }
+
+    .hero-name {
+        gap: 20px;
+        /* modern spacing */
+    }
+
+
+    .tech-label-vertical {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        line-height: 1.2;
+        text-transform: uppercase;
+        text-align: center;
+        user-select: none;
+        margin-right: 2rem;
+    }
+
+    .tech-stack-section {
+        margin-top: 1.5rem !important;
+    }
+
+    .three-dots-box {
+        margin-top: 1.5rem;
+        display: block;
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        background: var(--card-bg);
+        border: 2px solid var(--border-light);
+        backdrop-filter: blur(10px);
+        color: var(--text-primary);
+        font-size: 1.4rem;
+        text-align: center;
+        line-height: 56px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .three-dots-box:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 25px var(--accent-glow);
+        transform: translateY(-6px);
+    }
+
+    .typing-wrapper {
+        margin-bottom: 1rem !important;
+        /* reduced spacing between typing and tech stack */
     }
 
     .social-label {
@@ -757,7 +872,7 @@
     /* Premium Profile Frame */
     .profile-container {
         position: relative;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem !important;
         animation: visualSlideIn 1.2s ease-out;
     }
 
@@ -885,7 +1000,6 @@
     /* Premium Tech Stack */
     .tech-stack-section {
         text-align: center;
-        margin-top: 2rem;
     }
 
     .tech-label-wrapper {
@@ -1131,11 +1245,11 @@
 
     .name-primary,
     .name-secondary {
+        font-size: inherit !important;
+        /* THIS is the fix */
+        line-height: inherit;
         display: inline-block;
-        margin-right: 10px;
-        /* spacing between first + second name */
         white-space: nowrap;
-        /* FORCE one line */
         text-align: left;
     }
 
@@ -1206,107 +1320,18 @@
         .tech-grid {
             grid-template-columns: repeat(3, 1fr);
         }
-    }
 
-    @media (max-width: 768px) {
-
-        .name-primary,
-        .name-secondary {
-            font-size: 3rem;
+        .content-area {
+            margin-top: -20px !important;
         }
 
-        .role-text {
-            font-size: 1.25rem;
+        .w-full.lg\:w-\[55\%\].pl-24.pr-12 {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
         }
 
-        .cta-btn {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            min-width: 160px;
-        }
-
-        .profile-frame {
-            width: 220px;
-            height: 220px;
-        }
-
-        .tech-icon,
-        .tech-icon-fallback {
-            width: 52px;
-            height: 52px;
-            padding: 8px;
-        }
-
-        .crystal-bubble {
-            width: 52px;
-            height: 52px;
-        }
-
-        .social-icon-img {
-            width: 22px;
-            height: 22px;
-        }
-
-        .floating-orb {
-            display: none;
-        }
-    }
-
-    @media (max-width: 480px) {
-
-        .name-primary,
-        .name-secondary {
-            font-size: 2.5rem;
-        }
-
-        .role-display {
-            padding: 1rem 1.25rem;
-        }
-
-        .role-text {
-            font-size: 1.125rem;
-        }
-
-        .cta-btn {
-            padding: 0.875rem 1.75rem;
-            font-size: 0.95rem;
-            width: 100%;
-        }
-
-        .profile-frame {
-            width: 200px;
-            height: 200px;
-        }
-
-        .tech-grid {
-            grid-template-columns: repeat(3, 1fr);
-            max-width: 240px;
-        }
-
-        .tech-icon,
-        .tech-icon-fallback {
-            width: 48px;
-            height: 48px;
-            padding: 6px;
-            border-radius: 12px;
-        }
-
-        .crystal-bubble {
-            width: 48px;
-            height: 48px;
-        }
-
-        .scroll-indicator {
-            bottom: 1.5rem;
-        }
-
-        .scroll-text {
-            font-size: 0.75rem;
-        }
-
-        .scroll-icon {
-            width: 24px;
-            height: 42px;
+        .-mt-16 {
+            margin-top: -40px !important;
         }
     }
 
@@ -1341,4 +1366,42 @@
         .crystal-bubble:active {
             transform: scale(0.95);
         }
+
+        .hero-name {
+            font-size: 8rem !important;
+            line-height: 0.9 !important;
+        }
+
+        @media (max-width: 1280px) {
+            .hero-name {
+                font-size: 6rem !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-name {
+                font-size: 4rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-name {
+                font-size: 3rem !important;
+            }
+        }
     }
+
+    /* Additional adjustments for lifting up elements */
+    .theme3-hero .relative.z-10.min-h-screen {
+        align-items: flex-start !important;
+        padding-top: 60px !important;
+    }
+
+    .w-full.lg\:w-\[55\%\].pl-24.pr-12.flex.items-start.justify-start {
+        margin-top: -40px !important;
+    }
+
+    .visual-area.space-y-6 {
+        margin-top: -20px !important;
+    }
+</style>

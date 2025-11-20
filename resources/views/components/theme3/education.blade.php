@@ -90,17 +90,7 @@
             </div>
         @endif
 
-        <!-- Additional Info Section -->
-        <div class="text-center mt-16">
-            <div class="additional-info">
-                <p class="info-text">Continuous learning and professional development</p>
-                <div class="certifications">
-                    <span class="cert-badge">Certifications</span>
-                    <span class="cert-badge">Workshops</span>
-                    <span class="cert-badge">Online Courses</span>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </section>
 
