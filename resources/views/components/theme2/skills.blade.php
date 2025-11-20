@@ -12,20 +12,12 @@
         
         <!-- Section Header -->
         <div class="text-center mb-16 animate-fade-in">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 skills-badge">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
-                </svg>
-                <span class="text-sm font-semibold uppercase tracking-wider">Expertise</span>
-            </div>
             
             <h2 class="text-5xl md:text-6xl font-black mb-6 skills-title">
                 Technical Skills
             </h2>
+           
             
-            <p class="text-lg md:text-xl max-w-3xl mx-auto skills-description mb-8">
-                Technologies and tools I use to build exceptional digital experiences
-            </p>
             
             <div class="flex items-center justify-center gap-4">
                 <div class="h-px flex-1 max-w-24 skills-divider"></div>

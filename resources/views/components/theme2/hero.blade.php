@@ -1,12 +1,12 @@
 @props(['heroContent', 'techStackSkills'])
-<section id="hero" class="section-full relative overflow-hidden min-h-screen w-full theme2-hero">
+<section id="hero" class="section-full relative overflow-hidden w-full theme2-hero" style="min-height: 100vh; padding-top: 100px; padding-bottom: 60px;">
     <!-- Animated Grid Background -->
     <div class="cyber-grid absolute inset-0 -z-10"></div>
     <!-- Floating Orbs -->
     <div class="orb-container absolute inset-0 -z-10 pointer-events-none"></div>
 
     <!-- Main Flex Container - Visual on LEFT, Text on RIGHT -->
-    <div class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center justify-center">
+    <div class="relative z-10 flex flex-col lg:flex-row items-center justify-center" style="min-height: calc(100vh - 160px);">
 
         <!-- LEFT: Profile Image + Orbiting Tech Icons -->
         <div class="w-full lg:w-1/2 flex justify-center lg:justify-end items-center px-6 order-2 lg:order-1">
@@ -127,8 +127,6 @@
             </div>
         </div>
     </div>
-
-   
 </section>
 
 <!-- Typing Animation Script -->
@@ -363,16 +361,16 @@
        PROFESSIONAL SPACING & LAYOUT
        =================================== */
 
-    /* Hero Content Wrapper - Lifted Higher */
+    /* Hero Content Wrapper - Optimized Spacing */
     .hero-content-wrapper {
         text-align: center;
-        transform: translateY(-80px);
+        transform: translateY(-20px);
     }
 
     @media (min-width: 1024px) {
         .hero-content-wrapper {
             text-align: left;
-            transform: translateY(-100px) translateX(40px);
+            transform: translateY(-20px) translateX(40px);
         }
     }
 
@@ -586,7 +584,7 @@
         position: relative;
         width: 480px;
         height: 480px;
-        transform: translate(-40px, -120px);
+        transform: translate(-40px, -40px);
     }
 
     /* Center Profile */
@@ -679,57 +677,17 @@
         background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
     }
 
-    /* Scroll Indicator */
-    .scroll-down {
-        animation: bounce 2s ease-in-out infinite;
-    }
-
-    .scroll-text {
-        color: var(--hero-text-muted);
-    }
-
-    .scroll-arrow {
-        width: 2px;
-        height: 30px;
-        background: linear-gradient(180deg, var(--scroll-color) 0%, transparent 100%);
-        position: relative;
-    }
-
-    .scroll-arrow::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: -3px;
-        width: 8px;
-        height: 8px;
-        border-right: 2px solid var(--scroll-color);
-        border-bottom: 2px solid var(--scroll-color);
-        transform: rotate(45deg);
-    }
-
-    @keyframes bounce {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(10px);
-        }
-    }
-
     /* Responsive */
     @media (max-width: 1024px) {
         .hologram-container {
             width: 350px;
             height: 350px;
             transform: translate(0, 0);
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
         }
 
         .hero-content-wrapper {
-            transform: translateY(-40px);
+            transform: translateY(0);
         }
 
         .hero-heading-section {
@@ -754,11 +712,11 @@
         .hologram-container {
             width: 280px;
             height: 280px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
         }
 
         .hero-content-wrapper {
-            transform: translateY(-20px);
+            transform: translateY(0);
         }
 
         .typing-section {

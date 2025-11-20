@@ -12,20 +12,13 @@
         
         <!-- Section Header -->
         <div class="text-center mb-16 animate-fade-in">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 section-badge">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                </svg>
-                <span class="text-sm font-semibold uppercase tracking-wider">Portfolio</span>
-            </div>
+            
             
             <h2 class="text-5xl md:text-6xl font-black mb-6 section-title">
                 Featured Projects
             </h2>
             
-            <p class="text-lg md:text-xl max-w-3xl mx-auto section-description mb-8">
-                A collection of my recent work showcasing technical expertise and creative problem-solving
-            </p>
+           
             
             <div class="flex items-center justify-center gap-4">
                 <div class="h-px flex-1 max-w-20 divider-line"></div>
