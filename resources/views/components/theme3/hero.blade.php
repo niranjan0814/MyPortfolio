@@ -1,751 +1,762 @@
 @props(['heroContent', 'techStackSkills'])
 
-<section id="hero"
-    class="section-full relative overflow-hidden flex items-center justify-center glass-noise min-h-screen w-full"
-    style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));">
+<section id="hero" class="section-full relative overflow-hidden min-h-screen w-full theme3-hero">
+    <!-- Background Elements -->
+    <div class="background-pattern absolute inset-0 -z-10"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
 
-    <!-- Floating Particles (Dark Only) -->
-    <div class="hero-particles absolute inset-0 -z-10 pointer-events-none"></div>
+    <!-- Main Layout Container -->
+    <div class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center justify-center">
+        
+        <!-- LEFT SIDE - Content -->
+        <div class="w-full lg:w-1/2 px-8 md:px-16 lg:px-24 py-24 lg:py-0 flex items-center justify-end">
+            <div class="max-w-md lg:max-w-lg xl:max-w-2xl content-area">
+                
+                <!-- Main Heading with Perfect Spacing -->
+                <div class="mb-12 space-y-4">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight">
+                        <span class="block digital-text name-primary">
+                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[0] }}
+                        </span>
+                        <span class="block matrix-gradient name-secondary">
+                            {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[1] ?? 'Developer' }}
+                        </span>
+                    </h1>
+                </div>
 
-    <!-- Background Blobs (Light Only) - Centered, no side shadows -->
-    <div class="absolute inset-0 -z-10 normal-theme-only overflow-hidden">
-        <div
-            class="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
-        </div>
-        <div
-            class="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-20 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
-        </div>
-    </div>
-
-    <!-- Hero Background Image -->
-    @if (!empty($heroContent['hero_image_url']))
-        <div class="absolute inset-0 -z-20">
-            <img src="{{ $heroContent['hero_image_url'] }}" alt="Hero Background"
-                class="w-full h-full object-cover opacity-10">
-        </div>
-    @endif
-
-    <div class="mx-auto text-center fade-in relative z-10 px-6 md:px-12 lg:px-20 w-full max-w-7xl">
-        <!-- Heading -->
-        <h1 class="text-5xl mt-14 md:text-7xl lg:text-8xl font-bold mb-6 
-           inline-flex gap-4 items-center justify-center flex-wrap"
-            style="color: var(--text-primary); line-height: 1.2;">
-
-            <span class="gradient-text animate-gradient whitespace-nowrap">
-                {{ $heroContent['user_name'] ?? 'Your Name' }}
-            </span>
-        </h1>
-
-        <!-- TYPING TEXT WITHOUT CURSOR -->
-        @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-            <div class="mb-2 mt-0 md:mt-2 min-h-[40px] flex justify-center items-center">
-                <p class="text-xl md:text-3xl font-semibold" style="color: var(--text-secondary);">
-                    <span id="typed-text" class="min-w-[300px] text-center inline-block"></span>
-                </p>
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const texts = @json(array_map(function ($text) {
-                        return is_array($text) && isset($text['text']) ? $text['text'] : $text;
-                    }, array_values($heroContent['typing_texts'])));
-                    const typedElement = document.getElementById('typed-text');
-                    if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
-                        typedElement && (typedElement.textContent = 'Full-Stack Developer');
-                        return;
-                    }
-
-                    let textIndex = 0, charIndex = 0, isDeleting = false, timeoutId = null;
-
-                    function type() {
-                        const currentText = String(texts[textIndex]);
-                        if (isDeleting) {
-                            typedElement.textContent = currentText.substring(0, charIndex - 1);
-                            charIndex--;
-                        } else {
-                            typedElement.textContent = currentText.substring(0, charIndex + 1);
-                            charIndex++;
-                        }
-
-                        let speed = isDeleting ? 50 : 100;
-                        if (!isDeleting && charIndex === currentText.length) {
-                            speed = 2000; isDeleting = true;
-                        } else if (isDeleting && charIndex === 0) {
-                            isDeleting = false;
-                            textIndex = (textIndex + 1) % texts.length;
-                            speed = 500;
-                        }
-                        timeoutId = setTimeout(type, speed);
-                    }
-
-                    setTimeout(type, 800);
-                    window.addEventListener('beforeunload', () => timeoutId && clearTimeout(timeoutId));
-                });
-            </script>
-        @else
-            <div class="mb-8 mt-2 md:mt-10 ">
-                <p class="text-xl md:text-3xl font-semibold" style="color: var(--text-secondary);">
-                    Problem solver & Innovator
-                </p>
-            </div>
-        @endif
-
-        <!-- Social Links - FIXED ICON VISIBILITY -->
-        @if (!empty($heroContent['social_links'] ?? []))
-            <div class="flex justify-center gap-6 mb-12 mt-8">
-                @foreach ($heroContent['social_links'] as $social)
-                    @if (!empty($social['url'] ?? ''))
-                        <a href="{{ $social['url'] }}" target="_blank" class="water-drop group relative">
-
-
-                            @if (!empty($social['icon'] ?? ''))
-                                <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
-                                    class="social-icon w-7 h-7 group-hover:scale-110 transition-transform"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                            @endif
-
-                            <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-7 h-7 group-hover:scale-110 transition-transform"
-                                fill="currentColor" style="color: var(--text-primary);" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-
-                            <span
-                                class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs font-medium z-50"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                {{ $social['name'] ?? 'Social' }}
-                            </span>
-                        </a>
-                    @endif
-                @endforeach
-            </div>
-        @endif
-        <!-- CTA BUTTONS - LIQUID GLASS FINISH -->
-        @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
-            <div class="flex flex-col sm:flex-row gap-12 justify-center items-center mb-12 mt-12">
-
-                @if ($heroContent['btn_contact_enabled'] ?? false)
-                    <a href="#contact"
-                        class="hero-cta-primary group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all duration-300 overflow-hidden">
-                        <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
-                        <svg class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                            fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                        </svg>
-                    </a>
+                <!-- Dynamic Role Text with Refined Typography -->
+                @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
+                    <div class="mb-16 min-h-[48px] flex items-center">
+                        <div class="role-display">
+                            <span id="typed-text-theme3" class="role-text"></span>
+                            <span class="typing-cursor">|</span>
+                        </div>
+                    </div>
+                @else
+                    <div class="mb-16 min-h-[48px] flex items-center">
+                        <div class="role-display">
+                            <span class="role-text">Full Stack Developer</span>
+                            <span class="typing-cursor">|</span>
+                        </div>
+                    </div>
                 @endif
 
-                @if ($heroContent['btn_projects_enabled'] ?? false)
-                    <a href="#projects"
-                        class="hero-cta-secondary group inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all duration-300 border-2">
-                        <span>{{ $heroContent['btn_projects_text'] ?? 'View My Work' }}</span>
-                        <svg class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform rotate-180"
-                            fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                        </svg>
-                    </a>
+                <!-- CTA Buttons with Professional Spacing -->
+                @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
+                    <div class="flex flex-col sm:flex-row gap-4 mb-20">
+                        @if ($heroContent['btn_contact_enabled'] ?? false)
+                            <a href="#contact" class="cta-btn primary-btn group">
+                                <span class="btn-glow-effect"></span>
+                                <span class="btn-content">
+                                    <span class="btn-text">{{ $heroContent['btn_contact_text'] ?? 'Hire Me' }}</span>
+                                    <span class="btn-arrow">→</span>
+                                </span>
+                            </a>
+                        @endif
+
+                        @if ($heroContent['btn_projects_enabled'] ?? false)
+                            <a href="#projects" class="cta-btn secondary-btn group">
+                                <span class="btn-content">
+                                    <span class="btn-text">{{ $heroContent['btn_projects_text'] ?? 'My Work' }}</span>
+                                    <span class="btn-arrow">↗</span>
+                                </span>
+                            </a>
+                        @endif
+                    </div>
+                @endif
+
+                <!-- Social Links with Elegant Spacing -->
+                @if (!empty($heroContent['social_links'] ?? []))
+                    <div class="social-section">
+                        <div class="social-label-container">
+                            <span class="social-label">Connect with me</span>
+                            <div class="label-underline"></div>
+                        </div>
+                        <div class="social-icons-grid">
+                            @foreach ($heroContent['social_links'] as $social)
+                                @if (!empty($social['url'] ?? ''))
+                                    <a href="{{ $social['url'] }}" target="_blank" 
+                                       class="social-icon-link group" 
+                                       title="{{ $social['name'] ?? 'Social' }}">
+                                        <div class="social-icon-wrapper">
+                                            @if (!empty($social['icon'] ?? ''))
+                                                <img src="{{ $social['icon'] }}" 
+                                                     alt="{{ $social['name'] ?? 'Social' }}"
+                                                     class="social-icon-img" />
+                                            @else
+                                                <div class="social-icon-fallback">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <span class="social-platform-name">{{ $social['name'] ?? 'Social' }}</span>
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
                 @endif
             </div>
-        @endif
+        </div>
 
-
-
-        <!-- Tech Stack with Running Marquee - FIXED ICON VISIBILITY -->
-        @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-            <div class="tech-stack-container inline-flex flex-col items-center gap-4 px-8 py-4 rounded-2xl shadow-lg border mb-12 mt-3 w-full max-w-4xl mx-auto"
-                style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                <span class="text-gray-600 font-medium text-lg" style="color: var(--text-secondary);">Tech Stack:</span>
-                <div class="relative w-full overflow-hidden">
-                    <div class="flex items-center gap-8 animate-marquee whitespace-nowrap">
-                        @foreach ($techStackSkills as $skill)
-                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}">
-                                @if ($skill->url)
-                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
-                                        class="tech-stack-icon w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                @endif
-                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center rounded-full hover:scale-125 transition-transform cursor-pointer"
-                                    style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">
-                                    <i class="fas fa-code text-white text-sm"></i>
-                                </div>
-                                <span
-                                    class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs z-50"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    {{ $skill->name }}
-                                </span>
-                            </div>
-                        @endforeach
-                        @foreach ($techStackSkills as $skill)
-                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}-dup">
-                                @if ($skill->url)
-                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
-                                        class="tech-stack-icon w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                @endif
-                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center rounded-full hover:scale-125 transition-transform cursor-pointer"
-                                    style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">
-                                    <i class="fas fa-code text-white text-sm"></i>
-                                </div>
-                                <span
-                                    class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs z-50"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    {{ $skill->name }}
-                                </span>
-                            </div>
-                        @endforeach
+        <!-- RIGHT SIDE - Visual Element -->
+        <div class="w-full lg:w-1/2 px-8 lg:px-16 py-16 lg:py-0 flex items-center justify-start">
+            <div class="visual-area">
+                
+                <!-- Profile Image Container -->
+                <div class="profile-container">
+                    <div class="profile-frame">
+                        <div class="frame-glow"></div>
+                        <div class="frame-border"></div>
+                        <img src="{{ $heroContent['user']->profile_image ?? '/images/profile.png' }}" 
+                             alt="{{ $heroContent['user_name'] ?? 'Profile' }}"
+                             class="profile-image"
+                             id="profile-image" />
                     </div>
                 </div>
-            </div>
-        @endif
 
-        <!-- Scroll Indicator - FIXED POSITION -->
-        <div class="scroll-indicator animate-bounce fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40">
-            <a href="#about" class="flex flex-col items-center gap-2 transition-all duration-300"
-                style="color: var(--text-muted);">
-                <span class="text-sm font-medium">Scroll to explore</span>
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd" />
-                </svg>
-            </a>
+                <!-- Tech Stack with Polling -->
+                
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Floating Particles Script (Dark Only) -->
+<!-- Typing Animation Script -->
+@if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const particlesContainer = document.querySelector('.hero-particles');
-        if (!particlesContainer) return;
+document.addEventListener('DOMContentLoaded', function () {
+    const texts = @json(array_map(function ($text) {
+        return is_array($text) && isset($text['text']) ? $text['text'] : $text;
+    }, array_values($heroContent['typing_texts'])));
+    
+    const typedElement = document.getElementById('typed-text-theme3');
+    if (!typedElement || !Array.isArray(texts) || texts.length === 0) return;
 
-        function updateParticles() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    let textIndex = 0, charIndex = 0, isDeleting = false;
 
-            if (isDark && particlesContainer.children.length === 0) {
-                const particleCount = 40;
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'absolute w-1 h-1 bg-white rounded-full opacity-20 animate-float';
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.top = `${Math.random() * 100}%`;
-                    particle.style.animationDelay = `${Math.random() * 5}s`;
-                    particle.style.animationDuration = `${5 + Math.random() * 10}s`;
-                    particlesContainer.appendChild(particle);
-                }
-            } else if (!isDark) {
-                particlesContainer.innerHTML = '';
-            }
+    function type() {
+        const currentText = String(texts[textIndex]);
+        if (isDeleting) {
+            typedElement.textContent = currentText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typedElement.textContent = currentText.substring(0, charIndex + 1);
+            charIndex++;
         }
 
-        updateParticles();
+        let speed = isDeleting ? 40 : 80;
+        if (!isDeleting && charIndex === currentText.length) {
+            speed = 2000;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            textIndex = (textIndex + 1) % texts.length;
+            speed = 500;
+        }
+        setTimeout(type, speed);
+    }
 
-        // Listen for theme changes
-        const observer = new MutationObserver(updateParticles);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
-    });
+    setTimeout(type, 1000);
+});
+</script>
+@endif
+
+<!-- Polling Script for Tech Stack -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const techStackContainer = document.getElementById('tech-stack-container');
+    
+    async function updateTechStack() {
+        try {
+            const response = await fetch('/api/tech-stack');
+            const data = await response.json();
+            
+            if (techStackContainer && data.techStack) {
+                techStackContainer.innerHTML = '';
+                
+                data.techStack.forEach((skill, index) => {
+                    const techItem = document.createElement('div');
+                    techItem.className = 'tech-item';
+                    techItem.style.setProperty('--item-index', index);
+                    
+                    if (skill.url) {
+                        techItem.innerHTML = `
+                            <img src="${skill.url}" alt="${skill.name}" class="tech-icon">
+                            <div class="tech-tooltip">${skill.name}</div>
+                        `;
+                    } else {
+                        techItem.innerHTML = `
+                            <div class="tech-icon tech-icon-fallback">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="tech-tooltip">${skill.name}</div>
+                        `;
+                    }
+                    
+                    techStackContainer.appendChild(techItem);
+                });
+            }
+            
+        } catch (error) {
+            console.error('Error updating tech stack:', error);
+        }
+    }
+    
+    if (techStackContainer) {
+        updateTechStack();
+        setInterval(updateTechStack, 1000);
+    }
+
+    // Floating Particles
+    const particleContainer = document.querySelector('.particle-container');
+    if (particleContainer) {
+        const particleCount = 8;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particleContainer.appendChild(particle);
+        }
+    }
+});
 </script>
 
-<!-- COMPLETE STYLES -->
 <style>
-    @keyframes blob {
+/* ===================================
+   THEME 3 HERO - PROFESSIONAL SPACING
+   =================================== */
 
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-        }
+:root {
+    /* Professional Color Scheme */
+    --bg-primary: #0a0a12;
+    --bg-secondary: #151522;
+    --text-primary: #ffffff;
+    --text-secondary: #b4c6e0;
+    --text-muted: #8fa3c7;
+    --accent-primary: #00ff9d;
+    --accent-secondary: #00d4ff;
+    --accent-glow: rgba(0, 255, 157, 0.3);
+    --border-light: rgba(0, 255, 157, 0.2);
+}
 
-        33% {
-            transform: translate(30px, -50px) scale(1.1);
-        }
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --accent-primary: #00cc7a;
+    --accent-secondary: #0099cc;
+    --accent-glow: rgba(0, 204, 122, 0.2);
+    --border-light: rgba(0, 204, 122, 0.3);
+}
 
-        66% {
-            transform: translate(-20px, 20px) scale(0.9);
-        }
-    }
-
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @keyframes marquee {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(0deg);
-        }
-
-        50% {
-            transform: translateY(-20px) rotate(5deg);
-        }
-    }
-
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
-
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
-
-    .animate-gradient {
-        background-size: 200% 200%;
-        animation: gradient 3s ease infinite;
-    }
-
-    .animate-marquee {
-        animation: marquee 25s linear infinite;
-    }
-
-    .animate-marquee:hover {
-        animation-play-state: paused;
-    }
-
-    .animate-float {
-        animation: float linear infinite;
-    }
-
-    .gradient-text {
-        background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent !important;
-        display: inline-block;
-        padding: 0 4px;
-    }
-
-    /* Fix text rendering and prevent clipping */
-    h1 {
-        overflow: visible !important;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    h1 span {
-        display: inline-block;
-        overflow: visible !important;
-    }
-
-    /* ==========================================
-       CTA BUTTONS - LIQUID GLASS FINISH
-       ========================================== */
-    .hero-cta-primary,
-    .hero-cta-secondary {
-        position: relative;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 2px solid rgba(255, 255, 255, 0.18);
-    }
-
-    /* PRIMARY BUTTON - Light Mode */
-    [data-theme="light"] .hero-cta-primary {
-        background: rgba(255, 255, 255, 0.25);
-        box-shadow:
-            0 8px 32px 0 rgba(59, 130, 246, 0.37),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-        color: #1e40af;
-    }
-
-    [data-theme="light"] .hero-cta-primary::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 9999px;
-        padding: 2px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-    }
-
-    [data-theme="light"] .hero-cta-primary:hover {
-        background: rgba(255, 255, 255, 0.35);
-        box-shadow:
-            0 12px 48px 0 rgba(59, 130, 246, 0.5),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* PRIMARY BUTTON - Dark Mode */
-    [data-theme="dark"] .hero-cta-primary {
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.1),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    [data-theme="dark"] .hero-cta-primary::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 9999px;
-        padding: 2px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-    }
-
-    [data-theme="dark"] .hero-cta-primary:hover {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow:
-            0 12px 48px 0 rgba(255, 255, 255, 0.1),
-            inset 0 2px 6px rgba(255, 255, 255, 0.15),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* SECONDARY BUTTON - Light Mode */
-    [data-theme="light"] .hero-cta-secondary {
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.1),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.05);
-        color: #1e293b;
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    [data-theme="light"] .hero-cta-secondary:hover {
-        background: rgba(255, 255, 255, 0.3);
-        box-shadow:
-            0 12px 48px 0 rgba(0, 0, 0, 0.15),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.1);
-        transform: translateY(-3px);
-        border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    /* SECONDARY BUTTON - Dark Mode */
-    [data-theme="dark"] .hero-cta-secondary {
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.08),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-        color: #e5e7eb;
-        border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    [data-theme="dark"] .hero-cta-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow:
-            0 12px 48px 0 rgba(255, 255, 255, 0.08),
-            inset 0 2px 6px rgba(255, 255, 255, 0.12),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    /* ==========================================
-       SOCIAL LINKS - FIXED ICON VISIBILITY
-       ========================================== */
-    .social-link {
-        background: var(--card-bg);
-        border-color: var(--border-color);
-    }
-
-    /* Light mode - Make dark icons visible with slight opacity */
-    [data-theme="light"] .social-icon {
-        filter: none !important;
-        opacity: 0.8;
-    }
-
-    [data-theme="light"] .social-link:hover .social-icon {
-        opacity: 1;
-    }
-
-    /* Dark mode - Force bright filter on dark icons */
-    [data-theme="dark"] .social-icon {
-        filter: brightness(0) invert(1) !important;
-        opacity: 0.9;
-    }
-
-    [data-theme="dark"] .social-link:hover .social-icon {
-        opacity: 1;
-    }
-
-    /* Tech Stack Icons - Show in original colors */
-    [data-theme="light"] .tech-stack-icon {
-        filter: none !important;
-        opacity: 0.85;
-    }
-
-    [data-theme="light"] .tech-skill:hover .tech-stack-icon {
-        opacity: 1;
-    }
-
-    /* Dark mode - Keep original colors, just brighten visibility */
-    [data-theme="dark"] .tech-stack-icon {
-        filter: brightness(1.2) !important;
-        opacity: 0.95;
-    }
-
-    [data-theme="dark"] .tech-skill:hover .tech-stack-icon {
-        filter: brightness(1.4) !important;
-        opacity: 1;
-    }
-
-    [data-theme="light"] .social-link:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        border-color: #3b82f6;
-        background: #ffffff;
-    }
-
-    [data-theme="dark"] .social-link {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(12px);
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    [data-theme="dark"] .social-link:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* ==========================================
-       SCROLL INDICATOR - FIXED & STABLE
-       ========================================== */
-    .scroll-indicator {
-        pointer-events: auto;
-        position: fixed;
-        bottom: 1.75rem;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 40;
-    }
-
-    .scroll-indicator a {
-        opacity: 1;
-    }
-
-    [data-theme="light"] .scroll-indicator a:hover {
-        color: #3b82f6;
-        transform: translateY(4px);
-    }
-
-    [data-theme="dark"] .scroll-indicator a:hover {
-        color: rgba(255, 255, 255, 0.9);
-        transform: translateY(4px);
-    }
-
-    /* ==========================================
-       TECH STACK - NO EDGE SHADES
-       ========================================== */
-    .tech-stack-container {
-        backdrop-filter: blur(12px);
-    }
-
-    [data-theme="light"] .tech-stack-container {
-        background: rgba(255, 255, 255, 0.7) !important;
-        border-color: rgba(229, 231, 235, 0.8) !important;
-    }
-
-    [data-theme="dark"] .tech-stack-container {
-        background: rgba(255, 255, 255, 0.05) !important;
-        border-color: rgba(255, 255, 255, 0.15) !important;
-    }
-
-    /* Theme-specific visibility */
-    [data-theme="dark"] .normal-theme-only {
-        display: none !important;
-    }
-
-    [data-theme="light"] .hero-particles {
-        display: none !important;
-    }
-
-    /* Glassmorphism */
-    .glass-noise {
-        backdrop-filter: blur(12px) saturate(180%);
-        -webkit-backdrop-filter: blur(12px) saturate(180%);
-    }
-
-    .glass-card,
-    .glass-button {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-
-    [data-theme="light"] .glass-card,
-    [data-theme="light"] .glass-button {
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(229, 231, 235, 0.8);
-    }
-
-    [data-theme="dark"] .glass-card,
-    [data-theme="dark"] .glass-button {
-        background: rgba(30, 30, 30, 0.3);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* ==========================================
-   LIQUID GLASS EFFECT FOR SOCIAL LINKS
-   ========================================== */
-    .liquid-glass-icon {
-        position: relative;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 2px solid rgba(255, 255, 255, 0.18);
-        border-radius: 9999px;
-        /* fully round */
-        overflow: hidden;
-    }
-
-    /* Light Mode */
-    [data-theme="light"] .liquid-glass-icon {
-        background: rgba(255, 255, 255, 0.35);
-        box-shadow:
-            0 8px 32px rgba(59, 130, 246, 0.25),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Dark Mode */
-    [data-theme="dark"] .liquid-glass-icon {
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.1),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Hover */
-    .liquid-glass-icon:hover {
-        transform: translateY(-6px);
-        transition: 0.3s ease;
-    }
-
-    /* Light hover */
-    [data-theme="light"] .liquid-glass-icon:hover {
-        background: rgba(255, 255, 255, 0.45);
-        box-shadow:
-            0 12px 48px rgba(59, 130, 246, 0.35),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Dark hover */
-    [data-theme="dark"] .liquid-glass-icon:hover {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow:
-            0 12px 48px rgba(255, 255, 255, 0.1),
-            inset 0 2px 6px rgba(255, 255, 255, 0.15),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-   /* ⭐ CRYSTAL CLEAR LIQUID GLASS ICON */
-.water-drop {
+.theme3-hero {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
     position: relative;
-    width: 60px;
-    height: 60px;
+    overflow: hidden;
+}
+
+/* Background Pattern */
+.background-pattern {
+    background-image: 
+        radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+    opacity: 0.1;
+}
+
+/* Floating Particles */
+.floating-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
+    background: var(--accent-primary);
+    box-shadow: 0 0 12px var(--accent-primary);
+    animation: particleFloat 20s ease-in-out infinite;
+}
 
-    /* Almost fully transparent centre */
-    background: rgba(255, 255, 255, 0.08);
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% { 
+        transform: translate(80px, -60px) scale(1.3);
+        opacity: 0.7;
+    }
+    50% { 
+        transform: translate(-40px, 80px) scale(0.8);
+        opacity: 0.4;
+    }
+    75% { 
+        transform: translate(100px, 40px) scale(1.1);
+        opacity: 0.6;
+    }
+}
 
-    /* Very low blur = crystal clear */
-    backdrop-filter: blur(6px) saturate(180%);
-    -webkit-backdrop-filter: blur(6px) saturate(180%);
+/* Content Area - Perfect Spacing */
+.content-area {
+    animation: contentSlideIn 1s ease-out;
+}
 
-    /* Sharp glossy edges */
-    border: 1px solid rgba(255, 255, 255, 0.3);
+@keyframes contentSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
-    /* Strong glass edge highlight */
-    box-shadow:
-        inset 0 1px 4px rgba(255, 255, 255, 0.4),  /* top highlight */
-        inset 0 -2px 6px rgba(0, 0, 0, 0.3),      /* bottom shadow */
-        0 8px 22px rgba(0, 0, 0, 0.35);           /* outside depth */
+/* Name Typography with Professional Spacing */
+.name-primary {
+    color: var(--text-primary);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    margin-bottom: 0.5rem;
+}
 
+.name-secondary {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+}
+
+/* Role Display */
+.role-display {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.role-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    min-height: 1.5em;
+}
+
+.typing-cursor {
+    color: var(--accent-primary);
+    font-weight: 700;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* CTA Buttons with Professional Spacing */
+.cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    transition: 0.3s ease;
+    padding: 1.25rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    min-width: 160px;
 }
 
-/* Curved top highlight (very glassy) */
-.water-drop::before {
-    content: '';
+.primary-btn {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--bg-primary);
+    box-shadow: 0 4px 20px rgba(0, 255, 157, 0.3);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 40px rgba(0, 255, 157, 0.4),
+        0 0 0 1px rgba(0, 255, 157, 0.2);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--border-light);
+}
+
+.secondary-btn:hover {
+    background: rgba(0, 255, 157, 0.1);
+    border-color: var(--accent-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 255, 157, 0.2);
+}
+
+.btn-glow-effect {
     position: absolute;
-    top: 5px;
-    left: 6px;
-    width: 70%;
-    height: 28%;
-    background: rgba(255, 255, 255, 0.35);
-    filter: blur(6px);
-    border-radius: 50%;
-    opacity: 0.55;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
 }
 
-/* Bottom shine */
-.water-drop::after {
-    content: '';
-    position: absolute;
-    bottom: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 26%;
-    height: 16%;
-    background: rgba(255, 255, 255, 0.18);
-    filter: blur(6px);
-    border-radius: 9999px;
+.primary-btn:hover .btn-glow-effect {
+    transform: translateX(100%);
 }
 
-/* Hover effect */
-.water-drop:hover {
-    transform: translateY(-5px) scale(1.05);
-    background: rgba(255, 255, 255, 0.12);
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 2;
 }
 
-/* ICON inside */
-.water-drop img {
-    width: 28px;
-    height: 28px;
-    opacity: 0.95;
+.btn-text {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.btn-arrow {
+    font-size: 1.25em;
     transition: transform 0.3s ease;
 }
 
-.water-drop:hover img {
-    transform: scale(1.18);
+.cta-btn:hover .btn-arrow {
+    transform: translateX(3px);
 }
 
+/* Social Section with Elegant Spacing */
+.social-section {
+    margin-top: 3rem;
+}
+
+.social-label-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.label-underline {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-light), transparent);
+}
+
+.social-icons-grid {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.social-icon-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.social-icon-link:hover {
+    background: rgba(0, 255, 157, 0.1);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 157, 0.15);
+}
+
+.social-icon-wrapper {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon-img {
+    width: 100%;
+    height: 100%;
+    filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .social-icon-img {
+    filter: brightness(0) saturate(100%) invert(30%) sepia(90%) saturate(2000%) hue-rotate(140deg);
+}
+
+.social-platform-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* Visual Area */
+.visual-area {
+    animation: visualSlideIn 1.2s ease-out;
+}
+
+@keyframes visualSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Profile Container */
+.profile-container {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.profile-frame {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.frame-glow {
+    position: absolute;
+    inset: -2px;
+    background: conic-gradient(from 0deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+    border-radius: 26px;
+    filter: blur(12px);
+    opacity: 0.4;
+    z-index: 1;
+}
+
+.frame-border {
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(from 0deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+    border-radius: 24px;
+    padding: 3px;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: 2;
+}
+
+.profile-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 21px;
+    z-index: 3;
+    transition: transform 0.5s ease;
+}
+
+.profile-frame:hover .profile-image {
+    transform: scale(1.03);
+}
+
+/* Tech Stack Section */
+.tech-stack-section {
+    text-align: center;
+}
+
+.tech-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: techItemAppear 0.6s ease forwards;
+    animation-delay: calc(var(--item-index) * 0.1s);
+}
+
+@keyframes techItemAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.tech-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(0, 255, 157, 0.08);
+    border: 1.5px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.tech-item:hover .tech-icon {
+    transform: scale(1.15);
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 25px rgba(0, 255, 157, 0.25);
+    background: rgba(0, 255, 157, 0.12);
+}
+
+.tech-icon-fallback {
+    color: var(--accent-primary);
+    font-size: 1.25rem;
+}
+
+.tech-tooltip {
+    position: absolute;
+    bottom: -40px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.tech-item:hover .tech-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design with Perfect Breakpoints */
+@media (max-width: 1280px) {
+    .profile-frame {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .tech-grid {
+        max-width: 260px;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .content-area {
+        text-align: center;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .social-label-container {
+        justify-content: center;
+    }
+    
+    .social-icons-grid {
+        justify-content: center;
+    }
+    
+    .profile-frame {
+        width: 240px;
+        height: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    .name-primary,
+    .name-secondary {
+        font-size: 3rem;
+    }
+    
+    .role-text {
+        font-size: 1.25rem;
+    }
+    
+    .cta-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .profile-frame {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .tech-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .name-primary,
+    .name-secondary {
+        font-size: 2.5rem;
+    }
+    
+    .social-icon-link {
+        min-width: 120px;
+        padding: 0.75rem 1rem;
+    }
+    
+    .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 </style>

@@ -1,170 +1,556 @@
 @props(['educations'])
-<!-- resources/views/components/education.blade.php -->
-<section id="education" class="section-full relative overflow-hidden py-20"
-         style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));">
+
+<section id="education" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-education">
+    <!-- Background Elements -->
+    <div class="background-pattern absolute inset-0 -z-10"></div>
     
-    <!-- Background decoration -->
-    <div class="absolute top-0 right-0 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob normal-theme-only"
-         style="background: #c4b5fd;"></div>
-    <div class="absolute bottom-0 left-0 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 normal-theme-only"
-         style="background: #93c5fd;"></div>
+    <!-- Floating Particles -->
+    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
 
-    <!-- Monochrome particles -->
-    <div class="hero-particles"></div>
-
-    <div class="container mx-auto max-w-7xl fade-in relative z-10 px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight gradient-text" style="line-height: 1.2;">
-                Education Journey
+    <div class="container mx-auto max-w-7xl relative z-10 px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-20">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+                <span class="section-title-primary">Education</span>
+                <span class="section-title-secondary">Journey</span>
             </h2>
-            <p class="text-lg" style="color: var(--text-secondary);">Academic excellence and continuous learning</p>
-            <div class="h-1 w-32 mx-auto rounded-full mt-4"
-                 style="background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));"></div>
+            <div class="section-divider"></div>
+            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6" style="color: var(--text-secondary);">
+                Academic excellence and continuous learning path
+            </p>
         </div>
 
         @if($educations->isEmpty())
             <!-- Empty State -->
-            <div class="text-center py-12">
-                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4 glass-card"
-                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                    <svg class="w-12 h-12" style="color: var(--text-muted);" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                    </svg>
+            <div class="text-center py-20">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="empty-title">No Education Added Yet</h3>
+                    <p class="empty-description">Educational background will appear here once added through the admin panel.</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">No Education Added Yet</h3>
-                <p style="color: var(--text-muted);">Educational background will appear here once added through the admin panel.</p>
             </div>
         @else
-            <!-- Unique Horizontal Timeline Layout -->
-            <div class="relative">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
-                    @foreach($educations->sortByDesc('year') as $index => $education)
-                        @php
-                            $iconUrl = $education->icon_url ?: 'https://img.icons8.com/?size=100&id=XJ2wmYGmoVoN&format=png&color=000000';
-                            $colors = [
-                                ['bg' => '#dbeafe', 'accent' => '#3b82f6', 'shadow' => 'rgba(59, 130, 246, 0.2)'],
-                                ['bg' => '#d1fae5', 'accent' => '#10b981', 'shadow' => 'rgba(16, 185, 129, 0.2)'],
-                                ['bg' => '#e9d5ff', 'accent' => '#8b5cf6', 'shadow' => 'rgba(139, 92, 246, 0.2)'],
-                                ['bg' => '#fed7aa', 'accent' => '#f59e0b', 'shadow' => 'rgba(245, 158, 11, 0.2)'],
-                            ];
-                            $colorSet = $colors[$index % count($colors)];
-                        @endphp
-
-                        <div class="education-card group relative">
-                            <!-- Year Badge - Top -->
-                            <div class="flex justify-center mb-4">
-                                <div class="year-badge inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold shadow-lg glass-card"
-                                     style="background: var(--glass-bg, {{ $colorSet['bg'] }}); 
-                                            color: {{ $colorSet['accent'] }}; 
-                                            border: 2px solid var(--glass-border, {{ $colorSet['accent'] }});">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>{{ $education->year ?: 'Present' }}</span>
-                                </div>
-                            </div>
-
-                            <!-- Timeline Node -->
-                            <div class="hidden md:flex absolute top-28 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full shadow-lg z-20"
-                                 style="background: {{ $colorSet['accent'] }}; border: 3px solid var(--card-bg);"></div>
-
-                            <!-- Card Content -->
-                            <div class="relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 glass-card"
-                                 style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                                
-                                <!-- Hover Overlay -->
-                                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                                     style="background: var(--glass-bg); backdrop-filter: var(--glass-blur);"></div>
-
-                                <div class="p-6 relative z-10">
-                                    <!-- Icon -->
-                                    <div class="flex justify-center mb-4">
-                                        <div class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 glass-card"
-                                             style="background: var(--glass-bg, {{ $colorSet['bg'] }}); border: 1px solid var(--glass-border, transparent);">
-                                            <img src="{{ $iconUrl }}" alt="Education Icon" class="w-12 h-12 object-contain" />
-                                        </div>
-                                    </div>
-
-                                    <!-- Content -->
-                                    <h3 class="text-2xl font-bold mb-3 text-center gradient-text line-clamp-2" style="min-height: 3.5rem;">
-                                        {{ $education->degree }}
-                                    </h3>
-                                    
-                                    <p class="font-semibold mb-4 text-center" style="color: var(--text-secondary);">
-                                        {{ $education->institution }}
-                                    </p>
-
-                                    @if($education->details)
-                                        <div class="mt-4 p-4 rounded-xl glass-card"
-                                             style="background: var(--glass-bg, var(--bg-gradient-start)); border: 1px solid var(--border-color);">
-                                            <p class="text-sm leading-relaxed text-center" style="color: var(--text-secondary);">
-                                                {{ $education->details }}
-                                            </p>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <!-- Bottom Accent Line -->
-                                <div class="h-1 w-full" style="background: linear-gradient(90deg, {{ $colorSet['accent'] }}, transparent);"></div>
+            <!-- Education Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach($educations->sortByDesc('year') as $index => $education)
+                    <!-- Education Card -->
+                    <div class="education-card group">
+                        <!-- Year Badge -->
+                        <div class="education-year">
+                            <div class="year-badge">
+                                <i class="fas fa-calendar-alt year-icon"></i>
+                                <span class="year-text">{{ $education->year ?: 'Present' }}</span>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+
+                        <!-- Card Content -->
+                        <div class="education-content">
+                            <!-- Institution Icon -->
+                            <div class="education-icon">
+                                @if($education->icon_url)
+                                    <img src="{{ $education->icon_url }}" alt="{{ $education->institution }}" class="institution-icon">
+                                @else
+                                    <div class="institution-icon-placeholder">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Degree Information -->
+                            <div class="education-info">
+                                <h3 class="degree-title">{{ $education->degree }}</h3>
+                                <p class="institution-name">{{ $education->institution }}</p>
+                                
+                                @if($education->details)
+                                    <div class="education-details">
+                                        <p class="details-text">{{ $education->details }}</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Status Indicator -->
+                            <div class="education-status">
+                                @if(!$education->year || $education->year == date('Y'))
+                                    <div class="status-badge current">
+                                        <i class="fas fa-spinner"></i>
+                                        <span>Current</span>
+                                    </div>
+                                @else
+                                    <div class="status-badge completed">
+                                        <i class="fas fa-check"></i>
+                                        <span>Completed</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         @endif
+
+        <!-- Additional Info Section -->
+        <div class="text-center mt-16">
+            <div class="additional-info">
+                <p class="info-text">Continuous learning and professional development</p>
+                <div class="certifications">
+                    <span class="cert-badge">Certifications</span>
+                    <span class="cert-badge">Workshops</span>
+                    <span class="cert-badge">Online Courses</span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
 <style>
-@keyframes blob {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
+/* ===================================
+   THEME 3 EDUCATION - PROFESSIONAL DESIGN
+   =================================== */
+
+:root {
+    --bg-primary: #0a0a12;
+    --bg-secondary: #151522;
+    --text-primary: #ffffff;
+    --text-secondary: #b4c6e0;
+    --text-muted: #8fa3c7;
+    --accent-primary: #00ff9d;
+    --accent-secondary: #00d4ff;
+    --accent-glow: rgba(0, 255, 157, 0.3);
+    --border-light: rgba(0, 255, 157, 0.2);
+    --card-bg: rgba(255, 255, 255, 0.05);
 }
 
-.animate-blob {
-    animation: blob 7s infinite;
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --accent-primary: #00cc7a;
+    --accent-secondary: #0099cc;
+    --accent-glow: rgba(0, 204, 122, 0.2);
+    --border-light: rgba(0, 204, 122, 0.3);
+    --card-bg: rgba(0, 0, 0, 0.03);
 }
 
-.animation-delay-2000 {
-    animation-delay: 2s;
+.theme3-education {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Education Card Hover - GlassUI.dev style */
+/* Background Pattern */
+.background-pattern {
+    background-image: 
+        radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+    opacity: 0.1;
+}
+
+/* Floating Particles */
+.particle-container .floating-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    box-shadow: 0 0 12px var(--accent-primary);
+    animation: particleFloat 25s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% { 
+        transform: translate(100px, -80px) scale(1.3);
+        opacity: 0.7;
+    }
+    50% { 
+        transform: translate(-60px, 120px) scale(0.8);
+        opacity: 0.4;
+    }
+    75% { 
+        transform: translate(120px, 60px) scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+/* Section Header */
+.section-title-primary {
+    color: var(--text-primary);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.section-title-secondary {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.section-divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+/* Education Card */
 .education-card {
-    transition: all 0.3s ease;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-
-
-[data-theme="normal"] .education-card:hover {
+.education-card:hover {
     transform: translateY(-8px);
+    border-color: var(--accent-primary);
+    box-shadow: 
+        0 20px 40px rgba(0, 255, 157, 0.15),
+        0 0 0 1px rgba(0, 255, 157, 0.1);
 }
 
-[data-theme="normal"] .education-card:hover .glass-card {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+.education-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
 }
 
-[data-theme="monochrome"] .education-card:hover {
-    transform: translateY(-8px);
+.education-card:hover::before {
+    opacity: 0.03;
 }
 
-[data-theme="monochrome"] .education-card:hover .glass-card {
-    box-shadow: 0 20px 60px rgba(255, 255, 255, 0.15);
+/* Education Year */
+.education-year {
+    padding: 1.5rem 2rem 1rem;
+    text-align: center;
 }
 
-/* Year Badge Animation */
 .year-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    color: var(--accent-primary);
+    font-weight: 600;
+    font-size: 0.875rem;
     transition: all 0.3s ease;
 }
 
 .education-card:hover .year-badge {
+    background: rgba(0, 255, 157, 0.15);
+    transform: scale(1.05);
+}
+
+.year-icon {
+    font-size: 0.875rem;
+}
+
+.year-text {
+    font-weight: 600;
+}
+
+/* Education Content */
+.education-content {
+    padding: 0 2rem 2rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Education Icon */
+.education-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.institution-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1.5px solid var(--border-light);
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.education-card:hover .institution-icon {
+    transform: scale(1.1);
+    border-color: var(--accent-primary);
+}
+
+.institution-icon-placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-primary);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.education-card:hover .institution-icon-placeholder {
     transform: scale(1.1);
 }
 
-/* Hide normal theme blobs in monochrome mode */
-[data-theme="monochrome"] .normal-theme-only {
-    display: none;
+/* Education Info */
+.education-info {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.degree-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.institution-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.education-details {
+    margin-top: 0.5rem;
+}
+
+.details-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Education Status */
+.education-status {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-badge.current {
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.status-badge.completed {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid var(--accent-secondary);
+    color: var(--accent-secondary);
+}
+
+.status-badge i {
+    font-size: 0.75rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-light);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    color: var(--text-muted);
+    font-size: 2rem;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.empty-description {
+    color: var(--text-secondary);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Additional Info */
+.additional-info {
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.info-text {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.certifications {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.cert-badge {
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent-primary);
+    transition: all 0.3s ease;
+}
+
+.cert-badge:hover {
+    background: rgba(0, 255, 157, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1280px) {
+    .grid {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .education-content {
+        padding: 0 1.5rem 1.5rem;
+    }
+    
+    .education-year {
+        padding: 1.25rem 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title-primary,
+    .section-title-secondary {
+        font-size: 3rem;
+    }
+    
+    .education-card {
+        margin-bottom: 1rem;
+    }
+    
+    .certifications {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cert-badge {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title-primary,
+    .section-title-secondary {
+        font-size: 2.5rem;
+    }
+    
+    .education-content {
+        padding: 0 1.25rem 1.25rem;
+    }
+    
+    .education-year {
+        padding: 1rem 1.25rem 0.75rem;
+    }
+    
+    .degree-title {
+        font-size: 1.125rem;
+    }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Floating Particles
+    const particleContainer = document.querySelector('.particle-container');
+    if (particleContainer) {
+        const particleCount = 6;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particleContainer.appendChild(particle);
+        }
+    }
+
+    // Education card animations
+    const educationCards = document.querySelectorAll('.education-card');
+    educationCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+</script>

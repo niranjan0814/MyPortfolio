@@ -1,294 +1,238 @@
 @props([])
 
 @php
-     $user = \App\Models\User::first();
+    $user = \App\Models\User::first();
 @endphp
 
-<section id="contact" class="section-full py-20 relative overflow-hidden" 
-         style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));" 
-         aria-labelledby="contact-heading">
+<section id="contact" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-contact">
+    <!-- Background Elements -->
+    <div class="background-pattern absolute inset-0 -z-10"></div>
     
-    <!-- Background decoration -->
-    <div class="absolute inset-0 opacity-5 normal-theme-only">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-    </div>
+    <!-- Floating Particles -->
+    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
 
-    <!-- Monochrome particles -->
-    <div class="hero-particles"></div>
-
-    <div class="container mx-auto max-w-4xl fade-in px-4 relative z-10">
-        <div class="text-center mb-12">
-            <h2 id="contact-heading" class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Get In Touch</h2>
-            <div class="h-1 w-32 mx-auto rounded-full"
-                 style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+    <div class="container mx-auto max-w-6xl relative z-10 px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-20">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+                <span class="section-title-primary">Get In</span>
+                <span class="section-title-secondary">Touch</span>
+            </h2>
+            <div class="section-divider"></div>
+            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6" style="color: var(--text-secondary);">
+                Let's discuss your next project and bring your ideas to life
+            </p>
         </div>
 
         <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="mb-6 px-4 py-3 rounded-lg text-center font-medium animate-fade-in glass-card" 
-                 style="background: var(--glass-bg, #d1fae5); color: #065f46; border: 1px solid var(--glass-border, #10b981);"
-                 role="alert">
-                <div class="flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{{ session('success') }}</span>
+            <div class="success-message mb-8" role="alert">
+                <div class="message-content success">
+                    <i class="fas fa-check-circle message-icon"></i>
+                    <span class="message-text">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
 
         @if($errors->any())
-            <div class="mb-6 px-4 py-3 rounded-lg animate-shake glass-card" 
-                 style="background: var(--glass-bg, #fee2e2); color: #991b1b; border: 1px solid var(--glass-border, #ef4444);"
-                 role="alert">
-                <ul class="list-disc list-inside space-y-1">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <div class="error-message mb-8" role="alert">
+                <div class="message-content error">
+                    <i class="fas fa-exclamation-circle message-icon"></i>
+                    <div class="message-list">
+                        @foreach($errors->all() as $error)
+                            <span class="error-item">{{ $error }}</span>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         @endif
 
-        <!-- Contact Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <!-- Contact Information Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             @if($user->email)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                         style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-envelope contact-icon"></i>
                     </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Email Me</h3>
-                    <p class="text-sm break-all" style="color: var(--text-secondary);">{{ $user->email }}</p>
+                    <div class="contact-info-content">
+                        <h3 class="contact-info-title">Email Me</h3>
+                        <p class="contact-info-value">{{ $user->email }}</p>
+                    </div>
                 </div>
             @endif
 
             @if($user->phone)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                         style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                        </svg>
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-phone contact-icon"></i>
                     </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Call Me</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
+                    <div class="contact-info-content">
+                        <h3 class="contact-info-title">Call Me</h3>
+                        <p class="contact-info-value">{{ $user->phone }}</p>
+                    </div>
                 </div>
             @endif
 
             @if($user->address)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                         style="background: var(--glass-bg, #e9d5ff); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: var(--accent-purple);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
+                <div class="contact-info-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fas fa-map-marker-alt contact-icon"></i>
                     </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Location</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">{{ $user->address }}</p>
+                    <div class="contact-info-content">
+                        <h3 class="contact-info-title">Location</h3>
+                        <p class="contact-info-value">{{ $user->address }}</p>
+                    </div>
                 </div>
             @endif
         </div>
 
-        <!-- Social Links - GITHUB ICON FIX -->
-        @if($user->linkedin_url|| $user->github_url)
-            <div class="text-center mb-12">
-                <h3 class="text-xl font-semibold mb-4" style="color: var(--text-primary);">Follow Me</h3>
-                <div class="flex justify-center gap-4">
+        <!-- Social Links -->
+        @if($user->linkedin_url || $user->github_url)
+            <div class="social-section text-center mb-16">
+                <h3 class="social-section-title">Follow My Work</h3>
+                <div class="social-links-grid">
                     @if($user->linkedin_url)
-                        <a href="{{ $user->linkedin_url }}" target="_blank" rel="noopener noreferrer" 
-                           class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
-                            <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                            </svg>
+                        <a href="{{ $user->linkedin_url }}" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <i class="fab fa-linkedin social-icon"></i>
+                            <span class="social-tooltip">LinkedIn</span>
                         </a>
                     @endif
                     @if($user->github_url)
-                        <a href="{{ $user->github_url }}" target="_blank" rel="noopener noreferrer"
-                           class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
-                            <svg class="w-5 h-5 github-icon" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
+                        <a href="{{ $user->github_url }}" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <i class="fab fa-github social-icon"></i>
+                            <span class="social-tooltip">GitHub</span>
                         </a>
                     @endif
                 </div>
             </div>
         @endif
 
-        <!-- Open Popup Button -->
+        <!-- Contact Form Trigger -->
         <div class="text-center">
-            <button id="openPopup"
-                class="theme-btn py-4 px-10 rounded-xl font-bold text-lg transition-all duration-300 transform focus:outline-none focus:ring-4"
-                aria-haspopup="dialog"
-                aria-controls="contactPopup">
-                Send Message
-                <svg class="w-4 h-4 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
+            <button id="openContactForm" class="contact-cta-btn">
+                <span class="btn-text">Send Message</span>
+                <i class="fas fa-arrow-right btn-icon"></i>
             </button>
         </div>
     </div>
 
-    <!-- Fixed Popup Modal - Moved outside main container -->
-    <div id="contactPopup"
-        class="fixed inset-0 hidden flex items-center justify-center z-[9999] p-4 transition-opacity duration-300"
-        style="background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="popup-heading">
-        
-        <div class="rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 glass-card glass-noise"
-             style="background: var(--card-bg); border: 1px solid var(--border-color);"
-             @click.stop>
-            
-            <!-- Close Button -->
-            <div class="flex justify-end p-4 sticky top-0 rounded-t-2xl z-10"
-                 style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
-                <button id="closePopup" 
-                        class="text-3xl font-light transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-opacity-10 focus:outline-none focus:ring-2"
-                        style="color: var(--text-muted); hover:background: var(--glass-bg);"
-                        aria-label="Close contact form">
-                    &times;
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-container">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">Let's Start a Conversation</h3>
+                <button id="closeContactForm" class="modal-close-btn" aria-label="Close contact form">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8">
-                
-                <!-- Left: Contact Info -->
-                <div class="p-6 rounded-xl glass-card"
-                     style="background: var(--glass-bg, var(--bg-gradient-start)); border: 1px solid var(--border-color);">
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="p-3 rounded-xl shadow-md glass-card"
-                             style="background: var(--glass-bg, var(--accent-blue)); border: 1px solid var(--glass-border, transparent);">
-                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a2 2 0 01-2 2h-2C7.82 18 2 12.18 2 5V3z"/>
-                            </svg>
+            <!-- Modal Content -->
+            <div class="modal-content">
+                <!-- Contact Information -->
+                <div class="contact-details-section">
+                    <div class="section-header">
+                        <div class="header-icon">
+                            <i class="fas fa-comments"></i>
                         </div>
                         <div>
-                            <h3 id="popup-heading" class="text-2xl font-bold gradient-text">Let's Connect</h3>
-                            <p class="mt-1" style="color: var(--text-secondary);">I'm always open to discussing new opportunities and ideas.</p>
+                            <h4 class="section-title">Get In Touch</h4>
+                            <p class="section-description">I'm always excited to hear about new opportunities</p>
                         </div>
                     </div>
 
-                    <ul class="space-y-5">
+                    <div class="contact-details-list">
                         @if($user->phone)
-                            <li class="flex items-center justify-between group">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 rounded-lg glass-card"
-                                         style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                        <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium" style="color: var(--text-primary);">Phone</p>
-                                        <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
-                                    </div>
+                            <div class="contact-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-phone"></i>
                                 </div>
-                            </li>
+                                <div class="detail-content">
+                                    <span class="detail-label">Phone</span>
+                                    <span class="detail-value">{{ $user->phone }}</span>
+                                </div>
+                            </div>
                         @endif
 
                         @if($user->email)
-                            <li class="flex items-center justify-between group">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 rounded-lg glass-card"
-                                         style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
-                                        <svg class="w-4 h-4" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium" style="color: var(--text-primary);">Email</p>
-                                        <p class="text-sm break-all" style="color: var(--text-secondary);">{{ $user->email }}</p>
-                                    </div>
+                            <div class="contact-detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-envelope"></i>
                                 </div>
-                            </li>
+                                <div class="detail-content">
+                                    <span class="detail-label">Email</span>
+                                    <span class="detail-value">{{ $user->email }}</span>
+                                </div>
+                            </div>
                         @endif
-                    </ul>
+                    </div>
 
                     <!-- Response Time Info -->
-                    <div class="mt-8 p-4 rounded-lg glass-card"
-                         style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 rounded-lg glass-card"
-                                 style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-medium text-sm" style="color: var(--text-primary);">Quick Response</p>
-                                <p class="text-xs" style="color: var(--text-secondary);">Typically replies within 24 hours</p>
-                            </div>
+                    <div class="response-info">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <span class="info-title">Quick Response</span>
+                            <span class="info-description">Typically reply within 24 hours</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right: Contact Form -->
-                <div class="p-6 rounded-xl glass-card"
-                     style="background: var(--glass-bg, var(--bg-gradient-end)); border: 1px solid var(--border-color);">
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="p-3 rounded-xl shadow-md glass-card"
-                             style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, transparent);">
-                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
+                <!-- Contact Form -->
+                <div class="contact-form-section">
+                    <div class="section-header">
+                        <div class="header-icon">
+                            <i class="fas fa-paper-plane"></i>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold gradient-text">Send a Message</h3>
-                            <p class="mt-1" style="color: var(--text-secondary);">Fill out the form below and I'll get back to you soon.</p>
+                            <h4 class="section-title">Send Message</h4>
+                            <p class="section-description">Fill out the form and I'll get back to you soon</p>
                         </div>
                     </div>
 
-                    <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
+                    <form action="{{ route('contact.store') }}" method="POST" class="contact-form" id="contactForm">
                         @csrf
-                        <div>
-                            <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your Name *</label>
-                            <input type="text" id="name" name="name" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="John Doe"
-                                value="{{ old('name') }}"
-                                aria-required="true">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Your Name *</label>
+                                <input type="text" id="name" name="name" required 
+                                       class="form-input" 
+                                       placeholder="John Doe"
+                                       value="{{ old('name') }}"
+                                       aria-required="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Your Email *</label>
+                                <input type="email" id="email" name="email" required 
+                                       class="form-input" 
+                                       placeholder="john@example.com"
+                                       value="{{ old('email') }}"
+                                       aria-required="true">
+                            </div>
                         </div>
 
-                        <div>
-                            <label for="email" class="block font-medium mb-2" style="color: var(--text-primary);">Your Email *</label>
-                            <input type="email" id="email" name="email" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="john@example.com"
-                                value="{{ old('email') }}"
-                                aria-required="true">
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" id="subject" name="subject" 
+                                   class="form-input" 
+                                   placeholder="Project Collaboration"
+                                   value="{{ old('subject') }}">
                         </div>
 
-                        <div>
-                            <label for="subject" class="block font-medium mb-2" style="color: var(--text-primary);">Subject</label>
-                            <input type="text" id="subject" name="subject"
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="Project Collaboration"
-                                value="{{ old('subject') }}">
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea id="message" name="message" rows="5" required 
+                                      class="form-textarea" 
+                                      placeholder="Hi {{ $user->name ?? 'there' }}, I'd love to discuss..."
+                                      aria-required="true">{{ old('message') }}</textarea>
                         </div>
 
-                        <div>
-                            <label for="message" class="block font-medium mb-2" style="color: var(--text-primary);">Message *</label>
-                            <textarea id="message" name="message" rows="5" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 resize-none glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="Hi {{ $user->name ?? 'there' }}, I'd love to discuss..."
-                                aria-required="true">{{ old('message') }}</textarea>
-                        </div>
-
-                        <button type="submit" id="submitBtn"
-                            class="theme-btn w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                            <span class="flex items-center justify-center gap-2">
-                                <svg id="submitIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                </svg>
+                        <button type="submit" class="form-submit-btn">
+                            <span class="submit-content">
+                                <i class="fas fa-paper-plane submit-icon"></i>
                                 Send Message
                             </span>
                         </button>
@@ -297,129 +241,766 @@
             </div>
         </div>
     </div>
-
-    <!-- Enhanced JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const popup = document.getElementById('contactPopup');
-            const openBtn = document.getElementById('openPopup');
-            const closeBtn = document.getElementById('closePopup');
-            const body = document.body;
-
-            function openPopup() {
-                popup.classList.remove('hidden');
-                // Prevent background scrolling
-                body.style.overflow = 'hidden';
-                body.style.position = 'fixed';
-                body.style.width = '100%';
-                body.style.height = '100%';
-                
-                setTimeout(() => {
-                    popup.style.opacity = '1';
-                    popup.querySelector('.glass-card').style.transform = 'scale(1)';
-                }, 10);
-            }
-
-            function closePopup() {
-                popup.style.opacity = '0';
-                popup.querySelector('.glass-card').style.transform = 'scale(0.95)';
-                
-                setTimeout(() => {
-                    popup.classList.add('hidden');
-                    // Restore background scrolling
-                    body.style.overflow = '';
-                    body.style.position = '';
-                    body.style.width = '';
-                    body.style.height = '';
-                }, 300);
-            }
-
-            openBtn?.addEventListener('click', openPopup);
-            closeBtn?.addEventListener('click', closePopup);
-
-            popup?.addEventListener('click', (e) => {
-                if (e.target === popup) closePopup();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !popup?.classList.contains('hidden')) {
-                    closePopup();
-                }
-            });
-        });
-    </script>
-
-    <style>
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .animate-fade-in {
-            animation: fade-in 0.5s ease-out;
-        }
-        
-        .animate-shake {
-            animation: shake 0.5s ease-in-out;
-        }
-
-        /* Contact Cards - GlassUI.dev style hover */
-        .contact-card {
-            transition: all 0.3s ease;
-        }
-        
-        [data-theme="normal"] .contact-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        
-        [data-theme="monochrome"] .contact-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Social Links - GitHub icon visibility fix */
-        .social-link-contact {
-            transition: all 0.3s ease;
-        }
-        
-        [data-theme="normal"] .social-link-contact:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-        }
-        
-        [data-theme="monochrome"] .social-link-contact:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
-        }
-
-        /* GitHub icon color fix */
-        [data-theme="normal"] .github-icon {
-            color: #1a202c !important;
-        }
-        
-        [data-theme="monochrome"] .github-icon {
-            color: #ffffff !important;
-        }
-
-        /* Hide normal theme blobs in monochrome mode */
-        [data-theme="monochrome"] .normal-theme-only {
-            display: none;
-        }
-
-        /* Popup specific styles */
-        #contactPopup {
-            z-index: 9999 !important;
-        }
-
-        #contactPopup .glass-card {
-            z-index: 10000 !important;
-        }
-    </style>
 </section>
+
+<style>
+/* ===================================
+   THEME 3 CONTACT - PROFESSIONAL DESIGN
+   =================================== */
+
+:root {
+    --bg-primary: #0a0a12;
+    --bg-secondary: #151522;
+    --text-primary: #ffffff;
+    --text-secondary: #b4c6e0;
+    --text-muted: #8fa3c7;
+    --accent-primary: #00ff9d;
+    --accent-secondary: #00d4ff;
+    --accent-glow: rgba(0, 255, 157, 0.3);
+    --border-light: rgba(0, 255, 157, 0.2);
+    --card-bg: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --accent-primary: #00cc7a;
+    --accent-secondary: #0099cc;
+    --accent-glow: rgba(0, 204, 122, 0.2);
+    --border-light: rgba(0, 204, 122, 0.3);
+    --card-bg: rgba(0, 0, 0, 0.03);
+}
+
+.theme3-contact {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Pattern */
+.background-pattern {
+    background-image: 
+        radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+    opacity: 0.1;
+}
+
+/* Floating Particles */
+.particle-container .floating-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    box-shadow: 0 0 12px var(--accent-primary);
+    animation: particleFloat 25s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% { 
+        transform: translate(100px, -80px) scale(1.3);
+        opacity: 0.7;
+    }
+    50% { 
+        transform: translate(-60px, 120px) scale(0.8);
+        opacity: 0.4;
+    }
+    75% { 
+        transform: translate(120px, 60px) scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+/* Section Header */
+.section-title-primary {
+    color: var(--text-primary);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.section-title-secondary {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.section-divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+/* Success/Error Messages */
+.success-message, .error-message {
+    animation: slideInDown 0.5s ease-out;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.message-content.success {
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.message-content.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.message-icon {
+    font-size: 1.25rem;
+}
+
+.message-text, .error-item {
+    font-weight: 500;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* Contact Information Cards */
+.contact-info-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-info-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent-primary);
+    box-shadow: 
+        0 20px 40px rgba(0, 255, 157, 0.15),
+        0 0 0 1px rgba(0, 255, 157, 0.1);
+}
+
+.contact-info-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.contact-info-card:hover::before {
+    opacity: 0.03;
+}
+
+.contact-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1.5px solid var(--border-light);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.contact-info-card:hover .contact-icon-wrapper {
+    transform: scale(1.1);
+    border-color: var(--accent-primary);
+}
+
+.contact-icon {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.contact-info-content {
+    position: relative;
+    z-index: 2;
+}
+
+.contact-info-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.contact-info-value {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Social Section */
+.social-section {
+    padding: 2rem 0;
+}
+
+.social-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.social-links-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-link {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: rgba(0, 255, 157, 0.1);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    transform: translateY(-3px);
+}
+
+.social-icon {
+    font-size: 1.25rem;
+}
+
+.social-tooltip {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border: 1px solid var(--border-light);
+    z-index: 10;
+}
+
+.social-link:hover .social-tooltip {
+    opacity: 1;
+}
+
+/* Contact CTA Button */
+.contact-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 2.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: 12px;
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.contact-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 255, 157, 0.3);
+}
+
+.btn-icon {
+    transition: transform 0.3s ease;
+}
+
+.contact-cta-btn:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+/* Contact Modal */
+.contact-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.contact-modal.active {
+    display: flex;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+.modal-container {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--card-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(0, 255, 157, 0.15);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+/* Modal Content */
+.modal-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.contact-details-section,
+.contact-form-section {
+    padding: 2rem;
+}
+
+.contact-details-section {
+    background: rgba(0, 255, 157, 0.03);
+    border-right: 1px solid var(--border-light);
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.header-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 1.25rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.section-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Contact Details List */
+.contact-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.contact-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.contact-detail-item:hover {
+    background: rgba(0, 255, 157, 0.08);
+    border-color: var(--accent-primary);
+}
+
+.detail-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 0.875rem;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.125rem;
+}
+
+.detail-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Response Info */
+.response-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+}
+
+.info-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 0.875rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+}
+
+.info-description {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-textarea {
+    padding: 0.875rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    resize: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.1);
+}
+
+.form-textarea {
+    min-height: 120px;
+}
+
+.form-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: 10px;
+    color: var(--bg-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 255, 157, 0.3);
+}
+
+.submit-icon {
+    transition: transform 0.3s ease;
+}
+
+.form-submit-btn:hover .submit-icon {
+    transform: translateX(3px);
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .modal-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-details-section {
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title-primary,
+    .section-title-secondary {
+        font-size: 3rem;
+    }
+    
+    .contact-info-card {
+        padding: 1.5rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-header {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .contact-details-section,
+    .contact-form-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title-primary,
+    .section-title-secondary {
+        font-size: 2.5rem;
+    }
+    
+    .social-links-grid {
+        flex-wrap: wrap;
+    }
+    
+    .contact-cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Floating Particles
+    const particleContainer = document.querySelector('.particle-container');
+    if (particleContainer) {
+        const particleCount = 8;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particleContainer.appendChild(particle);
+        }
+    }
+
+    // Contact Modal Functionality
+    const contactModal = document.getElementById('contactModal');
+    const openBtn = document.getElementById('openContactForm');
+    const closeBtn = document.getElementById('closeContactForm');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const body = document.body;
+
+    function openModal() {
+        contactModal.style.display = 'flex';
+        setTimeout(() => {
+            contactModal.classList.add('active');
+        }, 10);
+        body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        contactModal.classList.remove('active');
+        setTimeout(() => {
+            contactModal.style.display = 'none';
+        }, 300);
+        body.style.overflow = '';
+    }
+
+    if (openBtn) {
+        openBtn.addEventListener('click', openModal);
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+    
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeModal);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && contactModal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Contact form submission handling
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('.form-submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
+    }
+});
+</script>
