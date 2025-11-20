@@ -22,7 +22,7 @@
                 @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
                     <div class="floating-icons absolute inset-0 pointer-events-none">
                         @php
-                            $visibleCount = 6; // You want 12 icons
+                            $visibleCount = 6;
                             $icons = $techStackSkills->take($visibleCount);
                         @endphp
 
@@ -39,7 +39,6 @@
                                 @endif
                             </div>
                         @endforeach
-
                     </div>
                 @endif
             </div>
@@ -48,77 +47,80 @@
         <!-- RIGHT: All Text Content -->
         <div
             class="w-full lg:w-1/2 px-6 md:px-12 lg:px-16 flex items-center justify-center lg:justify-start order-1 lg:order-2">
-            <div class="w-full slide-in-right text-center lg:text-left">
-                <!-- Main Heading -->
-                <div class="mb-6">
-                    <h1
-                        class="text-6xl md:text-7xl lg:text-8xl font-black mb-3 tracking-tight leading-none whitespace-nowrap flex flex-wrap lg:flex-nowrap items-center gap-4">
-                        <span class="inline-block text-glow hero-name mr-4">
+            <div class="w-full max-w-2xl slide-in-right hero-content-wrapper">
+
+                <!-- Main Heading - Single Line -->
+                <div class="hero-heading-section">
+                    <h1 class="hero-name-single-line">
+                        <span class="hero-first-name">
                             {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[0] }}
                         </span>
-
-                        <span class="inline-block neon-text">
+                        <span class="hero-last-name">
                             {{ explode(' ', $heroContent['user_name'] ?? 'Your Name')[1] ?? 'Developer' }}
                         </span>
                     </h1>
-
                 </div>
 
-                <!-- Typing Text -->
+                <!-- Typing Text with proper spacing -->
                 @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-                    <div class="mb-8 min-h-[60px] flex items-center justify-center lg:justify-start">
-                        <p class="text-2xl md:text-3xl font-bold glitch-text hero-subtitle">
+                    <div class="typing-section">
+                        <p class="typing-text">
                             <span id="typed-text-theme2"></span>
                             <span class="cursor-blink">|</span>
                         </p>
                     </div>
                 @else
-                    <p class="text-2xl md:text-3xl font-bold mb-8 glitch-text hero-subtitle">
-                        Problem solver & Innovator<span class="cursor-blink">|</span>
-                    </p>
-                @endif
-
-
-
-                <!-- CTA Buttons -->
-                @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
-                    <div class="flex flex-wrap gap-4 mb-10 justify-center lg:justify-start">
-                        @if ($heroContent['btn_contact_enabled'] ?? false)
-                            <a href="#contact" class="cyber-btn-primary group">
-                                <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
-                                <div class="cyber-btn-glow"></div>
-                            </a>
-                        @endif
-                        @if ($heroContent['btn_projects_enabled'] ?? false)
-                            <a href="#projects" class="cyber-btn-secondary group">
-                                <span class="relative z-10">{{ $heroContent['btn_projects_text'] ?? 'View Projects' }}</span>
-                            </a>
-                        @endif
+                    <div class="typing-section">
+                        <p class="typing-text">
+                            Problem solver & Innovator<span class="cursor-blink">|</span>
+                        </p>
                     </div>
                 @endif
 
-                <!-- Social Links -->
+                <!-- CTA Buttons with proper spacing -->
+                @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
+                    <div class="cta-section">
+                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                            @if ($heroContent['btn_contact_enabled'] ?? false)
+                                <a href="#contact" class="cyber-btn-primary group">
+                                    <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
+                                    <div class="cyber-btn-glow"></div>
+                                </a>
+                            @endif
+                            @if ($heroContent['btn_projects_enabled'] ?? false)
+                                <a href="#projects" class="cyber-btn-secondary group">
+                                    <span
+                                        class="relative z-10">{{ $heroContent['btn_projects_text'] ?? 'View Projects' }}</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Social Links with proper spacing -->
                 @if (!empty($heroContent['social_links'] ?? []))
-                    <div class="flex items-center gap-4 justify-center lg:justify-start">
-                        <span class="text-sm font-medium social-label">Connect:</span>
-                        <div class="flex gap-3">
-                            @foreach ($heroContent['social_links'] as $social)
-                                @if (!empty($social['url'] ?? ''))
-                                    <a href="{{ $social['url'] }}" target="_blank" class="hexagon-link group"
-                                        title="{{ $social['name'] ?? 'Social' }}">
-                                        @if (!empty($social['icon'] ?? ''))
-                                            <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
-                                                class="w-5 h-5 relative z-10 social-icon"
-                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                                        @endif
-                                        <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-5 h-5 relative z-10 social-icon"
-                                            fill="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                        </svg>
-                                    </a>
-                                @endif
-                            @endforeach
+                    <div class="social-section">
+                        <div class="flex items-center gap-4 justify-center lg:justify-start">
+                            <span class="social-label">Connect:</span>
+                            <div class="flex gap-3">
+                                @foreach ($heroContent['social_links'] as $social)
+                                    @if (!empty($social['url'] ?? ''))
+                                        <a href="{{ $social['url'] }}" target="_blank" class="hexagon-link group"
+                                            title="{{ $social['name'] ?? 'Social' }}">
+                                            @if (!empty($social['icon'] ?? ''))
+                                                <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
+                                                    class="w-5 h-5 relative z-10 social-icon"
+                                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                                            @endif
+                                            <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-5 h-5 relative z-10 social-icon"
+                                                fill="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                            </svg>
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -126,16 +128,8 @@
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-down">
-        <a href="#about" class="flex flex-col items-center gap-2">
-            <span class="text-xs font-medium tracking-widest uppercase scroll-text">Scroll</span>
-            <div class="scroll-arrow"></div>
-        </a>
-    </div>
+   
 </section>
-
-<!-- Keep your existing <script> blocks for typing & orbs + the full <style> block unchanged -->
 
 <!-- Typing Animation Script -->
 @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
@@ -176,6 +170,7 @@
         });
     </script>
 @endif
+
 <!-- Orbit Icon Rotation Script -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -187,7 +182,7 @@
 
         function rotateOneIcon() {
             const icon = visibleIcons[fadeIndex];
-            icon.src = allIcons[nextIndex]; // just swap instantly
+            icon.src = allIcons[nextIndex];
 
             nextIndex = (nextIndex + 1) % allIcons.length;
             fadeIndex = (fadeIndex + 1) % visibleIcons.length;
@@ -196,7 +191,6 @@
         setInterval(rotateOneIcon, 2500);
     });
 </script>
-
 
 <!-- Orb Animation Script -->
 <script>
@@ -216,41 +210,10 @@
         }
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const allIcons = @json($techStackSkills->pluck('url')->toArray());
-        const maxVisible = 10;
-        let startIndex = 0;
-
-        const visibleIcons = document.querySelectorAll('.floating-icon img');
-
-        function updateIcons() {
-            visibleIcons.forEach((icon, i) => {
-                const nextIndex = (startIndex + i) % allIcons.length;
-
-                // Fade-out
-                icon.style.opacity = 0;
-
-                // After fade-out completes, change image
-                setTimeout(() => {
-                    icon.src = allIcons[nextIndex];
-
-                    // Fade-in
-                    icon.style.opacity = 1;
-                }, 800); // match transition speed
-            });
-
-            startIndex = (startIndex + 1) % allIcons.length;
-        }
-
-        // Change icons every 4 seconds
-        setInterval(updateIcons, 10000);
-    });
-</script>
 
 <style>
     /* ===================================
-   THEME 2 HERO - DUAL THEME SUPPORT
+   THEME 2 HERO - PROFESSIONAL SPACING
    =================================== */
 
     :root {
@@ -277,8 +240,6 @@
         --ring-border-1: #00d9ff;
         --ring-border-2: #b537ff;
         --profile-border: #00d9ff;
-        --ticker-bg: rgba(0, 217, 255, 0.05);
-        --ticker-border: rgba(0, 217, 255, 0.2);
         --scroll-color: #00d9ff;
     }
 
@@ -306,8 +267,6 @@
         --ring-border-1: #0ea5e9;
         --ring-border-2: #8b5cf6;
         --profile-border: #0ea5e9;
-        --ticker-bg: rgba(14, 165, 233, 0.08);
-        --ticker-border: rgba(14, 165, 233, 0.25);
         --scroll-color: #0ea5e9;
     }
 
@@ -400,46 +359,52 @@
         }
     }
 
-    /* Cyber Badge */
-    .cyber-badge {
-        background: var(--badge-bg);
-        border: 1px solid var(--badge-border);
-        backdrop-filter: blur(10px);
-        color: var(--neon-primary);
+    /* ===================================
+       PROFESSIONAL SPACING & LAYOUT
+       =================================== */
+
+    /* Hero Content Wrapper - Lifted Higher */
+    .hero-content-wrapper {
+        text-align: center;
+        transform: translateY(-80px);
     }
 
-    .pulse-dot {
-        background: var(--neon-primary);
-        animation: pulse 2s ease-in-out infinite;
-        box-shadow: 0 0 10px var(--neon-primary);
-    }
-
-    .floating-icon img {
-        transition: opacity 0.8s ease;
-        /* smooth fade */
-    }
-
-    @keyframes pulse {
-
-        0%,
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        50% {
-            opacity: 0.5;
-            transform: scale(1.2);
+    @media (min-width: 1024px) {
+        .hero-content-wrapper {
+            text-align: left;
+            transform: translateY(-100px) translateX(40px);
         }
     }
 
-    /* Text Styles */
-    .hero-name {
+    /* Heading Section - Single Line Name */
+    .hero-heading-section {
+        margin-bottom: 1.75rem;
+    }
+
+    .hero-name-single-line {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: baseline;
+        justify-content: center;
+        gap: 1rem;
+        font-size: clamp(3rem, 8vw, 5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    @media (min-width: 1024px) {
+        .hero-name-single-line {
+            justify-content: flex-start;
+        }
+    }
+
+    .hero-first-name {
         color: var(--hero-text-primary);
         text-shadow: 0 0 20px var(--orb-color);
     }
 
-    .neon-text {
+    .hero-last-name {
         background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent));
         -webkit-background-clip: text;
         background-clip: text;
@@ -459,17 +424,34 @@
         }
     }
 
-    .hero-subtitle {
-        color: var(--hero-text-secondary);
+    /* Typing Section */
+    .typing-section {
+        margin-bottom: 2.25rem;
+        min-height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .hero-description {
-        color: var(--hero-text-muted);
+    .typing-text {
+        font-size: clamp(1.25rem, 3vw, 1.75rem);
+        font-weight: 600;
+        color: var(--hero-text-secondary);
+        line-height: 1.4;
+        text-align: center;
+        width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+        .typing-text {
+            text-align: left;
+        }
     }
 
     .cursor-blink {
         animation: blink 1s step-end infinite;
         color: var(--neon-primary);
+        margin-left: 0.25rem;
     }
 
     @keyframes blink {
@@ -485,12 +467,27 @@
         }
     }
 
+    /* CTA Section */
+    .cta-section {
+        margin-bottom: 2.25rem;
+    }
+
+    .cta-section .flex {
+        justify-content: center;
+    }
+
+    @media (min-width: 1024px) {
+        .cta-section .flex {
+            justify-content: flex-start;
+        }
+    }
+
     /* Cyber Buttons */
     .cyber-btn-primary {
         position: relative;
-        padding: 16px 40px;
+        padding: 1rem 2.5rem;
         font-weight: 700;
-        font-size: 16px;
+        font-size: 1rem;
         color: var(--btn-primary-text);
         background: var(--btn-primary-bg);
         border: none;
@@ -517,9 +514,9 @@
     }
 
     .cyber-btn-secondary {
-        padding: 16px 40px;
+        padding: 1rem 2.5rem;
         font-weight: 700;
-        font-size: 16px;
+        font-size: 1rem;
         color: var(--neon-primary);
         background: transparent;
         border: 2px solid var(--btn-secondary-border);
@@ -533,9 +530,27 @@
         box-shadow: 0 10px 40px var(--orb-color);
     }
 
-    /* Social Links */
+    /* Social Section */
+    .social-section {
+        padding-top: 0.5rem;
+    }
+
+    .social-section .flex {
+        justify-content: center;
+    }
+
+    @media (min-width: 1024px) {
+        .social-section .flex {
+            justify-content: flex-start;
+        }
+    }
+
     .social-label {
         color: var(--hero-text-muted);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .hexagon-link {
@@ -574,28 +589,6 @@
         transform: translate(-40px, -120px);
     }
 
-    /* 3D Rotating Ring */
-    .rotating-ring {
-        position: absolute;
-        inset: 0;
-        border: 3px solid transparent;
-        border-top-color: var(--ring-border-1);
-        border-right-color: var(--ring-border-2);
-        border-radius: 50%;
-        animation: rotate3D 10s linear infinite;
-        filter: drop-shadow(0 0 20px var(--neon-primary));
-    }
-
-    @keyframes rotate3D {
-        0% {
-            transform: rotateY(0deg) rotateX(20deg);
-        }
-
-        100% {
-            transform: rotateY(360deg) rotateX(20deg);
-        }
-    }
-
     /* Center Profile */
     .center-profile {
         position: absolute;
@@ -610,13 +603,10 @@
         justify-content: center;
     }
 
-
     .profile-ring {
         position: absolute;
         inset: -10%;
         border-radius: 50%;
-        0 0 60px var(--neon-secondary),
-        inset 0 0 40px var(--neon-primary);
         animation: pulse-ring 3s ease-in-out infinite;
     }
 
@@ -631,18 +621,6 @@
             0 0 30px var(--neon-primary),
             inset 0 0 20px var(--orb-color);
         z-index: 10;
-    }
-
-    @keyframes pulse-profile {
-
-        0%,
-        100% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.05);
-        }
     }
 
     @keyframes pulse-ring {
@@ -675,9 +653,8 @@
 
     .floating-icon img {
         opacity: 1;
-        transition: none;
+        transition: opacity 0.8s ease;
     }
-
 
     @keyframes orbit {
         0% {
@@ -688,7 +665,6 @@
             transform: translate(-50%, -50%) rotate(calc(var(--angle) + 360deg)) translateX(200px) rotate(calc(-1 * (var(--angle) + 360deg)));
         }
     }
-
 
     .icon-glow {
         filter: drop-shadow(0 0 10px var(--neon-primary));
@@ -701,63 +677,6 @@
 
     .cyber-icon-bg {
         background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
-    }
-
-    /* Scan Lines */
-    .scan-lines {
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(0deg,
-                transparent,
-                transparent 2px,
-                var(--grid-color) 2px,
-                var(--grid-color) 4px);
-        pointer-events: none;
-        animation: scanMove 8s linear infinite;
-    }
-
-    @keyframes scanMove {
-        0% {
-            transform: translateY(0);
-        }
-
-        100% {
-            transform: translateY(50px);
-        }
-    }
-
-    /* Bottom Ticker */
-    .ticker-container {
-        height: 50px;
-        background: var(--ticker-bg);
-        border-top: 1px solid var(--ticker-border);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-    }
-
-    .ticker-content {
-        display: flex;
-        gap: 40px;
-        animation: ticker 30s linear infinite;
-        white-space: nowrap;
-    }
-
-    .ticker-item {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--neon-primary);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    @keyframes ticker {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
     }
 
     /* Scroll Indicator */
@@ -803,19 +722,58 @@
     /* Responsive */
     @media (max-width: 1024px) {
         .hologram-container {
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
+            transform: translate(0, 0);
+            margin-bottom: 3rem;
+        }
+
+        .hero-content-wrapper {
+            transform: translateY(-40px);
+        }
+
+        .hero-heading-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .typing-section {
+            margin-bottom: 2rem;
+        }
+
+        .cta-section {
+            margin-bottom: 2rem;
         }
     }
 
     @media (max-width: 768px) {
-        .neon-text {
-            font-size: 3rem;
+        .hero-name-single-line {
+            font-size: clamp(2rem, 10vw, 3rem);
+            gap: 0.75rem;
         }
 
         .hologram-container {
-            width: 250px;
-            height: 250px;
+            width: 280px;
+            height: 280px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content-wrapper {
+            transform: translateY(-20px);
+        }
+
+        .typing-section {
+            min-height: 3rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .cta-section {
+            margin-bottom: 1.75rem;
+        }
+
+        .cyber-btn-primary,
+        .cyber-btn-secondary {
+            padding: 0.875rem 2rem;
+            font-size: 0.9375rem;
         }
     }
 </style>

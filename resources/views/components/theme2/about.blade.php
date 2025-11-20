@@ -23,9 +23,9 @@
             </h2>
             
             <div class="flex items-center justify-center gap-4">
-                <div class="h-px w-20 cyber-line"></div>
-                <div class="w-3 h-3 rotate-45 cyber-diamond"></div>
-                <div class="h-px w-20 cyber-line"></div>
+                <div class="h-px flex-1 max-w-20 divider-line"></div>
+                <div class="w-2 h-2 rotate-45 divider-square"></div>
+                <div class="h-px flex-1 max-w-20 divider-line"></div>
             </div>
         </div>
 
