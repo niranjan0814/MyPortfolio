@@ -102,7 +102,7 @@
                     <div class="social-section">
                         <div class="flex items-center gap-4 justify-center lg:justify-start">
                             <span class="social-label">Connect:</span>
-                            <div class="flex gap-3">
+                            <div class="flex gap-4 mt-0.5">
                                 @foreach ($heroContent['social_links'] as $social)
                                     @if (!empty($social['url'] ?? ''))
                                         <a href="{{ $social['url'] }}" target="_blank" class="hexagon-link group"
