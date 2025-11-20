@@ -11,15 +11,17 @@
     <div class="container mx-auto max-w-7xl relative z-10 px-4 md:px-6">
         
         <!-- Section Header -->
-        <div class="text-center mb-16 animate-fade-in">
+        <div class="text-center mb-20 lg:mb-24 animate-fade-in">
+            <!-- Badge -->
             
-            <h2 class="text-5xl md:text-6xl font-black mb-6 skills-title">
+            
+            <!-- Title -->
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 skills-title">
                 Technical Skills
             </h2>
-           
             
-            
-            <div class="flex items-center justify-center gap-4">
+            <!-- Divider -->
+            <div class="flex items-center justify-center gap-4 max-w-xs mx-auto">
                 <div class="h-px flex-1 max-w-24 skills-divider"></div>
                 <div class="w-2.5 h-2.5 rounded-full skills-dot"></div>
                 <div class="h-px flex-1 max-w-24 skills-divider"></div>
@@ -29,13 +31,13 @@
         @if($skills->isEmpty())
             <!-- Empty State -->
             <div class="text-center py-20 animate-fade-in">
-                <div class="inline-flex items-center justify-center w-32 h-32 rounded-3xl mb-6 skills-empty-icon">
+                <div class="inline-flex items-center justify-center w-32 h-32 rounded-3xl mb-8 skills-empty-icon">
                     <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                     </svg>
                 </div>
-                <h3 class="text-2xl md:text-3xl font-bold mb-3 skills-empty-title">No Skills Added Yet</h3>
-                <p class="text-lg skills-empty-text">Skills will appear here once added through the admin panel.</p>
+                <h3 class="text-2xl md:text-3xl font-bold mb-4 skills-empty-title">No Skills Added Yet</h3>
+                <p class="text-lg max-w-md mx-auto skills-empty-text">Skills will appear here once added through the admin panel.</p>
             </div>
         @else
             @php
@@ -66,19 +68,19 @@
             @endphp
 
             <!-- Categories -->
-            <div class="space-y-20">
+            <div class="space-y-16 md:space-y-20">
                 @foreach($categories as $categoryKey => $categoryData)
                     @if($groupedSkills->has($categoryKey) && $groupedSkills[$categoryKey]->isNotEmpty())
                         <div class="category-section animate-slide-up" style="animation-delay: {{ $loop->index * 0.1 }}s">
                             
                             <!-- Category Header -->
-                            <div class="flex items-center gap-4 mb-10">
+                            <div class="flex items-center gap-5 mb-12 md:mb-14">
                                 <div class="category-icon-wrapper category-{{ $categoryData['color'] }}">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $categoryData['icon'] }}"/>
                                     </svg>
                                 </div>
-                                <div>
+                                <div class="flex-1">
                                     <h3 class="category-title">{{ $categoryData['title'] }}</h3>
                                     <p class="category-count">
                                         {{ $groupedSkills[$categoryKey]->count() }} 
@@ -105,10 +107,21 @@
                                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                                 @endif
                                                 
-                                                
+                                                <!-- Fallback Icon -->
+                                                <div class="skill-icon-fallback" style="display: {{ $skill->url && filter_var($skill->url, FILTER_VALIDATE_URL) ? 'none' : 'flex' }};">
+                                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                                    </svg>
+                                                </div>
                                             </div>
                                             
-                                            
+                                            <!-- Content -->
+                                            <div class="skill-content">
+                                                <h4 class="skill-name">{{ $skill->name }}</h4>
+                                                @if($skill->level)
+                                                    <p class="skill-level">{{ $skill->level }}</p>
+                                                @endif
+                                            </div>
                                             
                                             <!-- Hover Border -->
                                             <div class="skill-border"></div>
@@ -209,10 +222,12 @@
 .skills-title {
     color: var(--skills-text-primary);
     line-height: 1.1;
+    letter-spacing: -0.025em;
 }
 
 .skills-description {
     color: var(--skills-text-secondary);
+    line-height: 1.6;
 }
 
 .skills-divider {
@@ -238,6 +253,7 @@
 
 .skills-empty-text {
     color: var(--skills-text-muted);
+    line-height: 1.6;
 }
 
 /* Category Section */
@@ -258,6 +274,7 @@
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .category-icon-wrapper::before {
@@ -313,15 +330,18 @@
 }
 
 .category-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--skills-text-primary);
     line-height: 1.2;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
 }
 
 .category-count {
     color: var(--skills-text-muted);
     font-weight: 500;
+    font-size: 0.95rem;
 }
 
 /* Skills Grid */
@@ -343,11 +363,11 @@
     background: var(--skills-card-bg);
     border: 2px solid var(--skills-card-border);
     border-radius: 20px;
-    padding: 1.5rem;
+    padding: 1.75rem 1.25rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
@@ -418,6 +438,7 @@
 .skill-content {
     text-align: center;
     z-index: 1;
+    width: 100%;
 }
 
 .skill-name {
@@ -425,12 +446,14 @@
     font-weight: 700;
     color: var(--skills-text-primary);
     margin-bottom: 0.25rem;
+    line-height: 1.3;
 }
 
 .skill-level {
     font-size: 0.75rem;
     color: var(--skills-text-muted);
     font-weight: 500;
+    line-height: 1.4;
 }
 
 /* Hover Border */
@@ -505,12 +528,37 @@
     }
     
     .skill-card-inner {
-        padding: 1.25rem;
+        padding: 1.5rem 1rem;
+        gap: 1rem;
     }
     
     .skill-icon-container {
         width: 56px;
         height: 56px;
+    }
+    
+    .category-icon-wrapper {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .category-section .flex.items-center {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+    
+    .skill-card-inner {
+        padding: 1.25rem 0.75rem;
+    }
+    
+    .skill-icon-container {
+        width: 48px;
+        height: 48px;
     }
 }
 </style>

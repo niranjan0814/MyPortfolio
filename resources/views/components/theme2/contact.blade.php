@@ -28,9 +28,7 @@
                 Let's Connect
             </h2>
             
-            <p class="text-lg md:text-xl max-w-3xl mx-auto contact-description mb-8">
-                Have a project in mind or want to collaborate? I'd love to hear from you
-            </p>
+        
             
             <div class="flex items-center justify-center gap-4">
                 <div class="h-px flex-1 max-w-24 contact-divider"></div>
