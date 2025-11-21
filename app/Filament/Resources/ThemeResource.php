@@ -79,7 +79,11 @@ class ThemeResource extends Resource
                             ->label('Theme ZIP File')
                             ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
                             ->directory('themes/zips')
+                            ->disk('public')  // ✅ ADD THIS
+                            ->visibility('public')  // ✅ ADD THIS
                             ->maxSize(10240)
+                            ->downloadable()  // ✅ ADD THIS - allows viewing uploaded file
+                            ->openable()  // ✅ ADD THIS - allows opening uploaded file
                             ->helperText('Upload theme as ZIP file (Max: 10MB). Must contain all required components.')
                             ->afterStateUpdated(function ($state, $set, $record) {
                                 if ($state && $record) {
