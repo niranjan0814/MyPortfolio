@@ -20,42 +20,43 @@ class LandingPageContent extends Model
     ];
 
     /**
-     * Get content by section with shorter caching
+     * Get content by section WITHOUT caching
      */
     public static function getSection(string $section): array
     {
-        // Reduced cache time to 5 minutes for better real-time updates
-        return Cache::remember("landing_section_{$section}", 300, function () use ($section) {
-            return self::where('section', $section)
-                ->orderBy('order')
-                ->pluck('value', 'key')
-                ->toArray();
-        });
+        // ✅ REMOVED CACHING - Always fetch fresh data
+        return self::where('section', $section)
+            ->orderBy('order')
+            ->pluck('value', 'key')
+            ->toArray();
     }
 
     /**
-     * Get specific content by key
+     * Get specific content by key WITHOUT caching
      */
     public static function getValue(string $section, string $key, $default = null)
     {
-        $sectionData = self::getSection($section);
-        return $sectionData[$key] ?? $default;
+        $content = self::where('section', $section)
+            ->where('key', $key)
+            ->first();
+            
+        return $content ? $content->value : $default;
     }
 
     /**
-     * Clear ALL landing page cache on update
+     * Clear ALL cache on update
      */
-   protected static function boot()
-{
-    parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-    static::saved(function ($content) {
-        Cache::flush(); // clear ALL cache
-    });
+        static::saved(function ($content) {
+            // Clear all cache to ensure fresh data
+            Cache::flush();
+        });
 
-    static::deleted(function ($content) {
-        Cache::flush();
-    });
-}
-
+        static::deleted(function ($content) {
+            Cache::flush();
+        });
+    }
 }

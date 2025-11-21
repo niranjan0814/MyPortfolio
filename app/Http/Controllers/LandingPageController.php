@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LandingPageContent;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LandingPageController extends Controller
 {
@@ -13,7 +14,10 @@ class LandingPageController extends Controller
      */
     public function index()
     {
-        // Fetch all landing page contents
+        // ✅ CRITICAL: Clear cache to ensure fresh data
+        Cache::forget('landing_section_hero');
+        
+        // Fetch all landing page contents WITHOUT caching
         $contents = LandingPageContent::orderBy('order')->get();
 
         // Organize content by key for easy access in view
@@ -23,7 +27,6 @@ class LandingPageController extends Controller
         }
 
         // ✅ CRITICAL FIX: ALWAYS fetch FRESH data from the selected user
-        // This completely overrides any static stored values in landing_page_contents
         if (isset($data['preview_user_id']) && !empty($data['preview_user_id'])) {
             $previewUser = User::with(['projects', 'about'])->find($data['preview_user_id']);
             
@@ -65,9 +68,8 @@ class LandingPageController extends Controller
                 $data['preview_projects_count'] = $previewUser->projects()->count();
                 
                 // ========================================
-                // KEEP FROM DB: Clients & Awards (manually set by admin)
+                // USE SAVED VALUES: Clients & Awards (from DB)
                 // ========================================
-                // These are NOT overridden - admin can set them manually
                 $data['preview_clients_count'] = $data['preview_clients_count'] ?? '10+';
                 $data['preview_awards_count'] = $data['preview_awards_count'] ?? '5';
                 

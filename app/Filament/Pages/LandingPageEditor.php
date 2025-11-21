@@ -10,6 +10,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class LandingPageEditor extends Page implements HasForms
 {
@@ -51,6 +52,16 @@ class LandingPageEditor extends Page implements HasForms
                 ]
             );
         }
+
+        // ✅ CRITICAL: Clear ALL cache after saving
+        Cache::flush();
+        
+        // Also clear specific landing page cache keys
+        Cache::forget('landing_section_hero');
+        Cache::forget('landing_section_features');
+        Cache::forget('landing_section_themes');
+        Cache::forget('landing_section_contact');
+        Cache::forget('landing_section_footer');
 
         Notification::make()
             ->title('Landing Page Updated Successfully 🎉')
@@ -211,38 +222,34 @@ class LandingPageEditor extends Page implements HasForms
                         ->helperText('⚡ Live Preview: When users update their profiles, the landing page automatically shows their latest data!')
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
                     
-                    // Preview fields (read-only, just for reference)
+                    // ✅ EDITABLE Preview fields (no longer disabled)
                     Forms\Components\Placeholder::make('preview_info')
-                        ->label('Preview Data (Auto-Updated)')
-                        ->content(fn ($get) => 'The landing page will always show the latest data from the selected user\'s profile. The fields below are just a preview of what will be displayed.')
+                        ->label('Preview Data')
+                        ->content('The fields below show what will appear on the landing page. You can manually edit these values, but they will be overridden with live data when the user updates their profile.')
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\TextInput::make('preview_name')
                         ->label('Preview: User Name')
-                        ->disabled()
-                        ->dehydrated()
+                        ->helperText('Overridden by user\'s actual name in real-time')
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\TextInput::make('preview_title')
                         ->label('Preview: User Title')
-                        ->disabled()
-                        ->dehydrated()
+                        ->helperText('Overridden by user\'s description in real-time')
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\Textarea::make('preview_bio')
                         ->label('Preview: Bio')
                         ->rows(2)
-                        ->disabled()
-                        ->dehydrated()
+                        ->helperText('Overridden by user\'s about description in real-time')
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\Grid::make(3)
                         ->schema([
                             Forms\Components\TextInput::make('preview_projects_count')
                                 ->label('Projects (Live Count)')
-                                ->disabled()
-                                ->dehydrated()
-                                ->helperText('Real-time project count'),
+                                ->numeric()
+                                ->helperText('Real-time project count from database'),
                             Forms\Components\TextInput::make('preview_clients_count')
                                 ->label('Clients Count')
                                 ->default('10+')
