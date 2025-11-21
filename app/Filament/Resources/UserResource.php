@@ -18,16 +18,23 @@ class UserResource extends Resource
    protected static ?string $navigationLabel = 'My Profile';
     protected static ?string $modelLabel = 'My Profile';
     protected static ?int $navigationSort = 1;
-    public static function canViewAny(): bool
+public static function canViewAny(): bool
 {
-    return !auth()->user()?->hasRole('super_admin');
+    return true; // Allow all authenticated users
 }
 
     // ✅ CRITICAL: Only show current user's profile
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        return parent::getEloquentQuery()->where('id', auth()->id());
+{
+    $query = parent::getEloquentQuery();
+    
+    // Super admins can see all users, others only see themselves
+    if (!auth()->user()->hasRole('super_admin')) {
+        $query->where('id', auth()->id());
     }
+    
+    return $query;
+}
 
     public static function form(Form $form): Form
     {
