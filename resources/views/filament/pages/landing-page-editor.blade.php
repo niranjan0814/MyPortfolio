@@ -1,13 +1,16 @@
-<x-filament::page>
-    <form wire:submit.prevent="save" class="space-y-6">
-
+<x-filament-panels::page>
+    <form wire:submit="save">
         {{ $this->form }}
-
-        <div class="flex justify-end">
-            <x-filament::button type="submit" color="primary" icon="heroicon-o-check-circle">
+        
+        <div class="flex justify-end mt-6">
+            <x-filament::button type="submit" size="lg">
+                <x-slot name="icon">
+                    heroicon-o-check-circle
+                </x-slot>
                 Save Changes
             </x-filament::button>
         </div>
-
     </form>
-</x-filament::page>
+    
+    <x-filament-actions::modals />
+</x-filament-panels::page>

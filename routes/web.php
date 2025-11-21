@@ -5,36 +5,28 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CVController;
-use App\Http\Controllers\LandingController;
+use App\Http\Controllers\LandingPageController;
 
-// ✅ ADD THESE ROUTES AT THE TOP
-Route::get('/get-started', [LandingController::class, 'index'])
+/*
+|--------------------------------------------------------------------------
+| LANDING PAGE ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [LandingPageController::class, 'index'])
     ->name('landing.index');
 
-Route::post('/select-theme', [LandingController::class, 'selectTheme'])
+Route::post('/select-theme', [LandingPageController::class, 'selectTheme'])
     ->name('landing.select-theme');
-
 
 /*
 |--------------------------------------------------------------------------
 | PUBLIC PORTFOLIO ROUTES – The heart of your multi-user system
 |--------------------------------------------------------------------------
 */
-
 // 1. Main portfolio page: /portfolio/niru → shows only that user's data
 Route::get('/portfolio/{user}', [PortfolioController::class, 'show'])
     ->name('portfolio.show')
     ->where('user', '[A-Za-z0-9\-]+'); // Matches slugs only
-
-// 2. Optional: Make root URL redirect to first portfolio or a specific one
-//     (Uncomment ONE of these options)
-
-// Option A: Redirect root to first user in DB (good for demo/single-user mode)
-Route::get('/', function () {
-    return redirect('/get-started');
-})->name('home');
-// Option B: Keep your old index() method as fallback (for admin preview)
-// Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -58,15 +50,14 @@ Route::get('/project/{project}/overview', [PortfolioController::class, 'showProj
 | CV ROUTES – Public & Authenticated
 |--------------------------------------------------------------------------
 */
-
 // Authenticated user (admin area) – can manage their own CV
 Route::middleware(['auth'])->group(function () {
     Route::get('/cv/download/{user}', [CVController::class, 'download'])
         ->name('cv.download');
-
+    
     Route::get('/cv/view/{user}', [CVController::class, 'view'])
         ->name('cv.view');
-
+    
     Route::get('/cv/my-cv/download', [CVController::class, 'downloadOwn'])
         ->name('cv.download.own');
 });

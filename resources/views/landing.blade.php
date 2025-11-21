@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detech Portfolio System - Get Started</title>
+    <title>{{ $data['footer_company_name'] ?? 'Detech Portfolio System' }} - Get Started</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -82,7 +82,7 @@
                 <div class="w-10 h-10 hero-gradient rounded-lg flex items-center justify-center">
                     <i class="fas fa-code text-white text-lg"></i>
                 </div>
-                <span class="text-xl font-bold text-gray-900">Detech Portfolio</span>
+                <span class="text-xl font-bold text-gray-900">{{ $data['footer_company_name'] ?? 'Detech Portfolio' }}</span>
             </div>
             <a href="/admin/login" class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
                 Sign In
@@ -105,53 +105,87 @@
                     </div>
                     
                     <h1 class="text-5xl md:text-6xl font-bold leading-tight">
-                        Showcase Your
-                        <span class="block text-orange-100">Extraordinary Work</span>
+                        {{ $data['hero_title'] ?? 'Showcase Your Extraordinary' }}
+                        <span class="block text-orange-100">{{ $data['hero_title_line2'] ?? 'Work' }}</span>
                     </h1>
                     
                     <p class="text-lg text-white/90 max-w-lg">
-                        Create a stunning, professional portfolio in minutes. Impress clients, employers, and collaborators with a portfolio that truly represents your skills and achievements.
+                        {{ $data['hero_subtitle'] ?? 'Create a stunning, professional portfolio in minutes. Impress clients, employers, and collaborators with a portfolio that truly represents your skills and achievements.' }}
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 pt-4">
                         <a href="#themes" class="btn-primary text-white px-8 py-3 rounded-lg font-semibold text-center">
-                            Get Started
+                            {{ $data['hero_cta_primary'] ?? 'Get Started' }}
                             <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                         <a href="#contact" class="btn-secondary px-8 py-3 rounded-lg font-semibold text-center">
-                            Learn More
+                            {{ $data['hero_cta_secondary'] ?? 'Learn More' }}
                         </a>
                     </div>
                     
                     <!-- Stats -->
                     <div class="grid grid-cols-3 gap-6 pt-8">
                         <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">500+</p>
-                            <p class="text-sm text-white/80">Portfolios Created</p>
+                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_1_value'] ?? '500+' }}</p>
+                            <p class="text-sm text-white/80">{{ $data['stat_1_label'] ?? 'Portfolios Created' }}</p>
                         </div>
                         <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">50K+</p>
-                            <p class="text-sm text-white/80">Active Users</p>
+                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_2_value'] ?? '50K+' }}</p>
+                            <p class="text-sm text-white/80">{{ $data['stat_2_label'] ?? 'Active Users' }}</p>
                         </div>
                         <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">99.9%</p>
-                            <p class="text-sm text-white/80">Uptime</p>
+                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_3_value'] ?? '99.9%' }}</p>
+                            <p class="text-sm text-white/80">{{ $data['stat_3_label'] ?? 'Uptime' }}</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Right Visual -->
+                <!-- Right Visual - Dynamic Portfolio Preview -->
                 <div class="hidden md:block relative">
                     <div class="animated-float">
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-                            <div class="space-y-4">
-                                <div class="h-3 bg-white/20 rounded w-3/4"></div>
-                                <div class="h-3 bg-white/20 rounded w-1/2"></div>
-                                <div class="h-40 bg-white/10 rounded-lg mt-6"></div>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <div class="h-12 bg-white/10 rounded-lg"></div>
-                                    <div class="h-12 bg-white/10 rounded-lg"></div>
-                                    <div class="h-12 bg-white/10 rounded-lg"></div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+                            <!-- Profile Header -->
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                    {{ substr($data['preview_name'] ?? 'JD', 0, 1) }}
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white font-bold text-lg">{{ $data['preview_name'] ?? 'John Doe' }}</h3>
+                                    <p class="text-white/70 text-sm">{{ $data['preview_title'] ?? 'Senior Product Designer' }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Bio -->
+                            <p class="text-white/80 text-sm mb-6">
+                                {{ $data['preview_bio'] ?? 'Crafting beautiful digital experiences for over 5 years' }}
+                            </p>
+                            
+                            <!-- Stats Grid -->
+                            <div class="grid grid-cols-3 gap-3 mb-6">
+                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_projects_count'] ?? '24' }}</p>
+                                    <p class="text-white/60 text-xs">Projects</p>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_clients_count'] ?? '50+' }}</p>
+                                    <p class="text-white/60 text-xs">Clients</p>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_awards_count'] ?? '12' }}</p>
+                                    <p class="text-white/60 text-xs">Awards</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Project Thumbnails -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="h-24 bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-lg backdrop-blur border border-white/10"></div>
+                                <div class="h-24 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-lg backdrop-blur border border-white/10"></div>
+                            </div>
+                            
+                            <!-- View Portfolio Button -->
+                            <div class="mt-6">
+                                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg py-2 text-center text-white text-sm font-semibold">
+                                    View Full Portfolio
                                 </div>
                             </div>
                         </div>
@@ -165,8 +199,8 @@
     <section class="py-20 px-4 bg-white">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose Detech?</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Everything you need to build and manage your professional portfolio</p>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['features_title'] ?? 'Why Choose Detech?' }}</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['features_subtitle'] ?? 'Everything you need to build and manage your professional portfolio' }}</p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
@@ -175,8 +209,8 @@
                     <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-rocket text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Lightning Fast</h3>
-                    <p class="text-gray-600">Optimized performance and instant loading times to keep your visitors engaged.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $data['feature_1_title'] ?? 'Lightning Fast' }}</h3>
+                    <p class="text-gray-600">{{ $data['feature_1_description'] ?? 'Optimized performance and instant loading times to keep your visitors engaged.' }}</p>
                 </div>
                 
                 <!-- Feature 2 -->
@@ -184,8 +218,8 @@
                     <div class="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-palette text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Fully Customizable</h3>
-                    <p class="text-gray-600">Multiple themes and layouts to match your personal style and brand identity.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $data['feature_2_title'] ?? 'Fully Customizable' }}</h3>
+                    <p class="text-gray-600">{{ $data['feature_2_description'] ?? 'Multiple themes and layouts to match your personal style and brand identity.' }}</p>
                 </div>
                 
                 <!-- Feature 3 -->
@@ -193,8 +227,8 @@
                     <div class="w-12 h-12 bg-yellow-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-shield-alt text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Secure & Reliable</h3>
-                    <p class="text-gray-600">Enterprise-grade security and 99.9% uptime guarantee for peace of mind.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ $data['feature_3_title'] ?? 'Secure & Reliable' }}</h3>
+                    <p class="text-gray-600">{{ $data['feature_3_description'] ?? 'Enterprise-grade security and 99.9% uptime guarantee for peace of mind.' }}</p>
                 </div>
             </div>
         </div>
@@ -204,8 +238,8 @@
     <section id="themes" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Choose Your Theme</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Select from beautifully designed themes to get started</p>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['themes_title'] ?? 'Choose Your Theme' }}</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['themes_subtitle'] ?? 'Select from beautifully designed themes to get started' }}</p>
             </div>
 
             <form id="themeForm" action="{{ route('landing.select-theme') }}" method="POST" class="max-w-6xl mx-auto">
@@ -383,8 +417,8 @@
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Left Content -->
                 <div class="space-y-6">
-                    <h2 class="text-4xl font-bold text-gray-900">Get in Touch</h2>
-                    <p class="text-lg text-gray-600">Have questions about Detech? We're here to help! Send us a message and we'll respond as soon as possible.</p>
+                    <h2 class="text-4xl font-bold text-gray-900">{{ $data['contact_title'] ?? 'Get in Touch' }}</h2>
+                    <p class="text-lg text-gray-600">{{ $data['contact_subtitle'] ?? "Have questions about Detech? We're here to help! Send us a message and we'll respond as soon as possible." }}</p>
                     
                     <!-- Contact Info -->
                     <div class="space-y-4">
@@ -394,7 +428,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">Email</h4>
-                                <p class="text-gray-600">support@detech.com</p>
+                                <p class="text-gray-600">{{ $data['contact_email'] ?? 'support@detech.com' }}</p>
                             </div>
                         </div>
                         
@@ -404,7 +438,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">Phone</h4>
-                                <p class="text-gray-600">+1 (555) 123-4567</p>
+                                <p class="text-gray-600">{{ $data['contact_phone'] ?? '+1 (555) 123-4567' }}</p>
                             </div>
                         </div>
                         
@@ -414,7 +448,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">Location</h4>
-                                <p class="text-gray-600">123 Tech Street, Silicon Valley, CA</p>
+                                <p class="text-gray-600">{{ $data['contact_address'] ?? '123 Tech Street, Silicon Valley, CA' }}</p>
                             </div>
                         </div>
                     </div>
@@ -464,9 +498,9 @@
                         <div class="w-10 h-10 hero-gradient rounded-lg flex items-center justify-center">
                             <i class="fas fa-code text-white"></i>
                         </div>
-                        <span class="text-xl font-bold text-white">Detech</span>
+                        <span class="text-xl font-bold text-white">{{ $data['footer_company_name'] ?? 'Detech' }}</span>
                     </div>
-                    <p class="text-sm">Build stunning portfolios effortlessly.</p>
+                    <p class="text-sm">{{ $data['footer_tagline'] ?? 'Build stunning portfolios effortlessly.' }}</p>
                 </div>
                 
                 <div>
@@ -498,7 +532,7 @@
             </div>
             
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm">© 2025 Detech Company. All rights reserved.</p>
+                <p class="text-sm">{{ $data['footer_copyright'] ?? '© 2025 Detech Company. All rights reserved.' }}</p>
                 <div class="flex gap-6 mt-4 md:mt-0">
                     <a href="#" class="hover:text-white transition"><i class="fab fa-twitter"></i></a>
                     <a href="#" class="hover:text-white transition"><i class="fab fa-github"></i></a>
