@@ -37,7 +37,8 @@ class ThemeResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => 
+                            ->afterStateUpdated(
+                                fn($state, callable $set) =>
                                 $set('slug', Str::slug($state))
                             )
                             ->helperText('e.g., "Modern Professional"'),
@@ -85,14 +86,14 @@ class ThemeResource extends Resource
                                     try {
                                         $zipPath = Storage::disk('public')->path($state);
                                         $missing = Theme::validateZip($zipPath);
-                                        
+
                                         if (!empty($missing)) {
                                             Notification::make()
                                                 ->title('Invalid ZIP File')
                                                 ->body('Missing components: ' . implode(', ', $missing))
                                                 ->danger()
                                                 ->send();
-                                            
+
                                             $set('zip_file_path', null);
                                         } else {
                                             Notification::make()
@@ -123,9 +124,9 @@ class ThemeResource extends Resource
                                 if (!$record) {
                                     return 'Upload ZIP to check components';
                                 }
-                                
-                                return $record->componentsExist() 
-                                    ? '✅ All components installed' 
+
+                                return $record->componentsExist()
+                                    ? '✅ All components installed'
                                     : '⚠️ Some components missing - upload ZIP to fix';
                             }),
                     ]),
@@ -145,8 +146,8 @@ class ThemeResource extends Resource
                             ->label('Active')
                             ->helperText('Make theme available to users')
                             ->default(true)
-                            ->disabled(fn ($record) => $record && $record->slug === 'theme1')
-                            ->hint(fn ($record) => $record && $record->slug === 'theme1' ? '⚠️ Default theme cannot be deactivated' : ''),
+                            ->disabled(fn($record) => $record && $record->slug === 'theme1')
+                            ->hint(fn($record) => $record && $record->slug === 'theme1' ? '⚠️ Default theme cannot be deactivated' : ''),
 
                         Forms\Components\TextInput::make('sort_order')
                             ->numeric()
@@ -203,7 +204,7 @@ class ThemeResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn ($record) => $record->slug),
+                    ->description(fn($record) => $record->slug),
 
                 Tables\Columns\TextColumn::make('version')
                     ->badge()
@@ -216,13 +217,13 @@ class ThemeResource extends Resource
                     ->falseIcon('heroicon-o-hand-thumb-up')
                     ->trueColor('warning')
                     ->falseColor('success')
-                    ->tooltip(fn ($record) => $record->is_premium ? 'Premium' : 'Free'),
+                    ->tooltip(fn($record) => $record->is_premium ? 'Premium' : 'Free'),
 
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('Active')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->disabled(fn ($record) => $record->slug === 'theme1')
+                    ->disabled(fn($record) => $record->slug === 'theme1')
                     ->beforeStateUpdated(function ($record, $state) {
                         if ($record->slug === 'theme1' && !$state) {
                             Notification::make()
@@ -269,7 +270,7 @@ class ThemeResource extends Resource
                     ->label('Preview')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn ($record) => route('portfolio.show', [
+                    ->url(fn($record) => route('portfolio.show', [
                         'user' => auth()->user()->slug,
                         'preview' => true,
                         'theme' => $record->slug,
@@ -277,10 +278,14 @@ class ThemeResource extends Resource
                     ->openUrlInNewTab(),
 
                 Tables\Actions\EditAction::make()
+                    ->label('Edit')
                     ->icon('heroicon-o-pencil')
                     ->color('warning'),
 
                 Tables\Actions\DeleteAction::make()
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
                     ->before(function ($record, $action) {
                         if ($record->slug === 'theme1') {
                             Notification::make()
@@ -288,7 +293,7 @@ class ThemeResource extends Resource
                                 ->body('theme1 is the system fallback and cannot be removed')
                                 ->danger()
                                 ->send();
-                            
+
                             $action->cancel();
                         }
                     }),
@@ -303,7 +308,7 @@ class ThemeResource extends Resource
                                     ->body('theme1 cannot be deleted')
                                     ->danger()
                                     ->send();
-                                
+
                                 $action->cancel();
                             }
                         }),
@@ -322,6 +327,26 @@ class ThemeResource extends Resource
 
     public static function canViewAny(): bool
     {
+        return auth()->user()?->hasRole('super_admin') ?? false;
+    }
+
+    // ✅ ADD THESE METHODS
+    public static function canEdit($record): bool
+    {
+        return auth()->user()?->hasRole('super_admin') ?? false;
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->hasRole('super_admin') ?? false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        // Don't allow deleting theme1
+        if ($record->slug === 'theme1') {
+            return false;
+        }
         return auth()->user()?->hasRole('super_admin') ?? false;
     }
 }
