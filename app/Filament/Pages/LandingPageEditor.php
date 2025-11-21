@@ -254,8 +254,10 @@ class LandingPageEditor extends Page implements HasForms
                         ])
                         ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
                 ])
+                
                 ->columns(2)
                 ->collapsible(),
+                
 
             Forms\Components\Section::make('⚡ Features Section')
                 ->description('Manage the feature blocks that highlight what your platform offers.')

@@ -1,15 +1,4 @@
-@php
-    // TEMPORARY DEBUG - Remove after testing
-    if (request()->get('debug') == '1') {
-        dd([
-            'preview_user_id' => $data['preview_user_id'] ?? 'NOT SET',
-            'preview_name' => $data['preview_name'] ?? 'NOT SET',
-            'preview_title' => $data['preview_title'] ?? 'NOT SET',
-            'preview_bio' => $data['preview_bio'] ?? 'NOT SET',
-            'preview_has_image' => $data['preview_has_image'] ?? 'NOT SET',
-        ]);
-    }
-@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

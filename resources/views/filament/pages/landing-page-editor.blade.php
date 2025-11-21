@@ -4,9 +4,7 @@
         
         <div class="flex justify-end mt-6">
             <x-filament::button type="submit" size="lg">
-                <x-slot name="icon">
-                    heroicon-o-check-circle
-                </x-slot>
+               
                 Save Changes
             </x-filament::button>
         </div>
