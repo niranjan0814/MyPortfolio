@@ -1,4 +1,5 @@
 <?php
+// app/Models/User.php - UPDATED VERSION
 
 namespace App\Models;
 
@@ -7,14 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles; // ✅ ADD THIS
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles; // ✅ ADD HasRoles
 
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
         'name',
         'email',
@@ -32,17 +31,11 @@ class User extends Authenticatable
         'active_theme',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     */
     protected function casts(): array
     {
         return [
@@ -52,7 +45,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Use 'slug' instead of 'id' in routes → /portfolio/niru works automatically
+     * Use 'slug' instead of 'id' in routes
      */
     public function getRouteKeyName(): string
     {
@@ -60,18 +53,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Boot events: Auto-create portfolio data + Auto-generate unique slug
+     * Boot events
      */
     protected static function booted(): void
     {
-        // 1. Auto-generate unique slug on create/update
+        // Auto-generate slug
         static::saving(function ($user) {
             if ($user->isDirty(['full_name', 'name']) || empty($user->slug)) {
                 $base = Str::slug($user->full_name ?: $user->name ?: 'user');
                 $slug = $base;
                 $i = 1;
 
-                // Avoid conflict with existing slugs (except itself)
                 while (static::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
                     $slug = $base . '-' . $i++;
                 }
@@ -80,9 +72,23 @@ class User extends Authenticatable
             }
         });
 
-        // 2. Auto-create default portfolio sections when a new user registers
+        // Auto-create default portfolio sections + assign role
         static::created(function ($user) {
-            // Default About section
+            // ✅ Assign default role if not already assigned
+            if (!$user->hasAnyRole(['super_admin', 'premium_user', 'free_user'])) {
+                $user->assignRole('free_user');
+            }
+
+            // ✅ Give default theme access (theme1)
+            $defaultTheme = \App\Models\Theme::where('slug', 'theme1')->first();
+            if ($defaultTheme) {
+                $user->themes()->attach($defaultTheme->id, [
+                    'purchased_at' => now(),
+                    'is_active' => true,
+                ]);
+            }
+
+            // Create default About section
             \App\Models\About::create([
                 'user_id' => $user->id,
                 'about_greeting' => "Hi, I'm {$user->full_name}!",
@@ -101,16 +107,15 @@ class User extends Authenticatable
                 'stat_problem_label' => 'Solving Expert',
             ]);
 
-            // Default Hero section
+            // Create default Hero section
             \App\Models\HeroContent::create([
                 'user_id' => $user->id,
                 'greeting' => "Hi, I'm",
-                'description' => "Transforming ideas into elegant, scalable digital solutions with the power of modern web technologies",
+                'description' => "Transforming ideas into elegant, scalable digital solutions",
                 'typing_texts' => json_encode([
                     ['text' => 'Full-Stack Developer'],
                     ['text' => 'MERN Stack Enthusiast'],
                     ['text' => 'Problem Solver'],
-                    ['text' => 'Team Leader'],
                 ]),
                 'btn_contact_enabled' => true,
                 'btn_contact_text' => 'Get In Touch',
@@ -124,7 +129,66 @@ class User extends Authenticatable
     }
 
     // =================================================================
-    // RELATIONSHIPS — All portfolio data belongs to this user
+    // THEME RELATIONSHIPS
+    // =================================================================
+
+    /**
+     * Themes this user has access to
+     */
+    public function themes()
+    {
+        return $this->belongsToMany(Theme::class, 'theme_user')
+            ->withPivot(['purchased_at', 'expires_at', 'is_active'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if user can access a specific theme
+     */
+    public function canAccessTheme(string $themeSlug): bool
+    {
+        // Super admins can access all themes
+        if ($this->hasRole('super_admin')) {
+            return true;
+        }
+
+        // Check if user owns this theme
+        return $this->themes()
+            ->where('slug', $themeSlug)
+            ->wherePivot('is_active', true)
+            ->exists();
+    }
+
+    /**
+     * Get user's available themes
+     */
+    public function availableThemes()
+    {
+        if ($this->hasRole('super_admin')) {
+            return Theme::active()->get();
+        }
+
+        return $this->themes()->wherePivot('is_active', true)->get();
+    }
+
+    /**
+     * Check if user is premium
+     */
+    public function isPremium(): bool
+    {
+        return $this->hasAnyRole(['premium_user', 'super_admin']);
+    }
+
+    /**
+     * Check if user is super admin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
+    // =================================================================
+    // EXISTING RELATIONSHIPS
     // =================================================================
 
     public function about()
@@ -172,10 +236,7 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\ProjectOverview::class);
     }
 
-    // =================================================================
     // CV Helpers
-    // =================================================================
-
     public function hasCv(): bool
     {
         return !empty($this->cv_path) && Storage::disk('public')->exists($this->cv_path);

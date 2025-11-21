@@ -1,9 +1,9 @@
 <?php
+// database/seeders/DatabaseSeeder.php - UPDATED
 
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,14 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Optionally seed a test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            DefaultThemesSeeder::class,
+            LandingPageContentSeeder::class,
         ]);
 
-        // ✅ Add this line to run your PageContentSeeder
-        
-        $this->call(HeroContentSeeder::class);
+        $this->command->info('🎉 All seeders completed successfully!');
     }
 }
