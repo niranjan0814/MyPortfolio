@@ -7,52 +7,47 @@
     <div class="grid-lines absolute inset-0 -z-10 pointer-events-none"></div>
 
     <!-- Main Layout Container -->
-    <div class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center justify-center">
+    <div class="relative z-10 min-h-screen flex flex-col justify-center -mt-32">
 
-        <!-- LEFT SIDE - Content + Tech Stack -->
-        <div class="w-full lg:w-[55%] pl-24 pr-12 flex items-start justify-start -mt-16">
-            <div class="max-w-md lg:max-w-lg xl:max-w-2xl content-area">
+        <!-- FULL WIDTH NAME SECTION -->
+        <div class="w-full text-center space-y-2 mb-6">
+            <!-- Main Heading - Full Width -->
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-bold 
+           mt-10 md:mt-16 lg:mt-20 
+           mb-6 flex items-center justify-center gap-8 flex-wrap"
+    style="color: var(--text-primary); line-height: 1.1;">
 
-                <!-- Main Heading -->
-                <div class="mb-8 space-y-4">
-                    <h1
-                        class="hero-name text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black leading-tight tracking-tight whitespace-nowrap mt-16 ml-3">
-                        <span class="name-primary">{{ explode(' ', $heroContent['user_name'])[0] }}</span>
-                        <span class="name-secondary">{{ explode(' ', $heroContent['user_name'])[1] }}</span>
-                    </h1>
+    <span class="gradient-text animate-gradient whitespace-nowrap">
+        {{ explode(' ', $heroContent['user_name'])[0] }}
+    </span>
 
-                </div>
+    <span class="gradient-text animate-gradient whitespace-nowrap">
+        {{ explode(' ', $heroContent['user_name'])[1] ?? '' }}
+    </span>
 
-                <!-- Dynamic Role Text -->
-                @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-                    <div class="typing-wrapper mb-6 -mt-2 min-h-[48px] flex items-center">
-                        <div class="role-display">
-                            <span id="typed-text-theme3" class="role-text"></span>
-                            <span class="typing-cursor">|</span>
-                        </div>
-                    </div>
-                @else
-                    <div class="typing-wrapper mb-6 -mt-2 min-h-[48px] flex items-center">
-                        <div class="role-display">
-                            <span class="role-text">Full Stack Developer</span>
-                            <span class="typing-cursor">|</span>
-                        </div>
-                    </div>
-                @endif
+</h1>
 
-                <!-- Tech Stack (still on left, under typing text) -->
-                @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-                    <div class="tech-stack-section mt-6 flex items-start gap-10">
 
-                        <!-- Vertical Tech Stack label -->
-                        <div class="tech-label-vertical">
-                            T<br>E<br>C<br>H<br><br>S<br>T<br>A<br>C<br>K
-                        </div>
 
-                        <!-- Icons Grid -->
-                        <div>
-                            <div class="tech-grid" id="tech-stack-container">
 
+
+
+            
+        </div>
+
+        <!-- CONTENT LAYOUT - Left and Right -->
+        <div class="relative z-10 flex flex-col lg:flex-row items-stretch justify-between gap-6 px-8 lg:px-20">
+
+            <!-- LEFT SIDE - Tech Stack -->
+            @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
+                <div class="w-full lg:w-1/3 flex items-start">
+                    <div class="tech-stack-section space-y-6">
+                        <div class="flex items-start gap-6">
+                            <div class="tech-label-vertical">
+                                T<br>E<br>C<br>H<br><br>S<br>T<br>A<br>C<br>K
+                            </div>
+
+                            <div class="tech-grid">
                                 @foreach ($techStackSkills as $index => $skill)
                                     <div class="tech-item" style="--item-index: {{ $index }}">
                                         @if($skill->url)
@@ -66,82 +61,74 @@
                                                 </div>
                                             </div>
                                         @endif
-
                                         <div class="tech-tooltip">{{ $skill->name }}</div>
                                     </div>
                                 @endforeach
 
-                                <!-- Three Dots as part of the grid -->
+                                <!-- Three Dots -->
                                 <a href="#skills" class="tech-item three-dot-icon">
                                     <div class="tech-icon-wrapper">
                                         <div class="three-dot-box">• • •</div>
                                     </div>
                                     <div class="tech-tooltip">More</div>
                                 </a>
-
                             </div>
-                            <br>
-                            <!-- Social Links - UNDER THE CTA BUTTONS -->
-                            @if (!empty($heroContent['social_links'] ?? []))
-                                <div class="social-section">
-                                    <div class="social-label-container justify-center lg:justify-start">
-                                        <span class="social-label">Connect with me</span>
-                                        <div class="label-underline"></div>
-                                    </div>
-                                    <div class="social-icons-grid justify-center lg:justify-start">
-                                        @foreach ($heroContent['social_links'] as $social)
-                                            @if (!empty($social['url'] ?? ''))
-                                                <a href="{{ $social['url'] }}" target="_blank" class="crystal-bubble group"
-                                                    title="{{ $social['name'] ?? 'Social' }}">
-                                                    <div class="bubble-shine"></div>
-                                                    <div class="bubble-content">
-                                                        @if (!empty($social['icon'] ?? ''))
-                                                            <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
-                                                                class="social-icon-img" />
-                                                        @else
-                                                            <i class="fas fa-share-alt social-icon-fallback"></i>
-                                                        @endif
-                                                    </div>
-                                                    <span class="bubble-tooltip">{{ $social['name'] ?? 'Social' }}</span>
-                                                </a>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
-
-
                         </div>
 
+                        <!-- Social Links - Under Tech Stack -->
+                        @if (!empty($heroContent['social_links'] ?? []))
+                            <div class="social-section space-y-4 pt-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="social-label">Connect</span>
+                                    <div class="flex-1 h-px bg-gradient-to-r from-current to-transparent opacity-30"></div>
+                                </div>
+                                <div class="flex gap-3 flex-wrap">
+                                    @foreach ($heroContent['social_links'] as $social)
+                                        @if (!empty($social['url'] ?? ''))
+                                            <a href="{{ $social['url'] }}" target="_blank" class="crystal-bubble group"
+                                                title="{{ $social['name'] ?? 'Social' }}">
+                                                <div class="bubble-shine"></div>
+                                                <div class="bubble-content">
+                                                    @if (!empty($social['icon'] ?? ''))
+                                                        <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
+                                                            class="social-icon-img" />
+                                                    @else
+                                                        <i class="fas fa-share-alt social-icon-fallback"></i>
+                                                    @endif
+                                                </div>
+                                                <span class="bubble-tooltip">{{ $social['name'] ?? 'Social' }}</span>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
+                </div>
+            @endif
 
-                @endif
+            <!-- CENTER - Empty Space -->
+            <div class="hidden lg:block lg:w-1/3"></div>
 
-            </div>
-        </div>
-
-        <!-- RIGHT SIDE - Image + CTA Buttons + Social Links -->
-        <div class="w-full lg:w-1/2 px-8 lg:px-16 py-8 lg:py-0 flex items-center justify-start -mt-0">
-            <div class="visual-area text-center lg:text-left space-y-6">
-
+            <!-- RIGHT SIDE - Profile Image + CTA Buttons -->
+            <div class="w-full lg:w-1/3 flex flex-col items-center lg:items-end">
                 <!-- Profile Image -->
-                <div class="profile-container inline-block">
+                <div class="profile-container mb-8">
                     <div class="profile-frame">
                         <div class="frame-rotating-border"></div>
                         <div class="frame-glow"></div>
                         <div class="frame-border"></div>
                         <img src="{{ $heroContent['user']->profile_image ?? '/images/profile.png' }}"
-                            alt="{{ $heroContent['user_name'] ?? 'Profile' }}" class="profile-image"
-                            id="profile-image" />
+                            alt="{{ $heroContent['user_name'] ?? 'Profile' }}" class="profile-image" />
                         <div class="floating-orb orb-1"></div>
                         <div class="floating-orb orb-2"></div>
                         <div class="floating-orb orb-3"></div>
                     </div>
                 </div>
 
-                <!-- CTA Buttons - NOW UNDER THE IMAGE -->
+                <!-- CTA Buttons - Under Image -->
                 @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <div class="flex flex-col sm:flex-row gap-4 w-full lg:w-auto lg:justify-end">
                         @if ($heroContent['btn_contact_enabled'] ?? false)
                             <a href="#contact" class="cta-btn primary-btn group">
                                 <span class="btn-shimmer"></span>
@@ -163,10 +150,8 @@
                         @endif
                     </div>
                 @endif
-
-
-
             </div>
+
         </div>
     </div>
 
@@ -251,10 +236,6 @@
 </script>
 
 <style>
-    /* ===================================
-   THEME 3 PREMIUM HERO - ENHANCED
-   =================================== */
-
     :root {
         --bg-primary: #0a0a12;
         --bg-secondary: #151522;
@@ -265,6 +246,7 @@
         --accent-secondary: #00d4ff;
         --accent-glow: rgba(0, 255, 157, 0.3);
         --border-light: rgba(0, 255, 157, 0.2);
+        --card-bg: rgba(255, 255, 255, 0.05);
     }
 
     [data-theme="light"] {
@@ -277,6 +259,7 @@
         --accent-secondary: #0099cc;
         --accent-glow: rgba(0, 204, 122, 0.2);
         --border-light: rgba(0, 204, 122, 0.3);
+        --card-bg: rgba(0, 204, 122, 0.05);
     }
 
     .theme3-hero {
@@ -285,7 +268,6 @@
         overflow: hidden;
     }
 
-    /* Enhanced Background Pattern */
     .background-pattern {
         background-image:
             radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
@@ -307,7 +289,6 @@
         }
     }
 
-    /* Premium Floating Particles */
     .floating-particle {
         position: absolute;
         width: 3px;
@@ -342,15 +323,11 @@
         }
     }
 
-    /* Animated Grid Lines */
     .grid-line {
         position: absolute;
         width: 1px;
         height: 100%;
-        background: linear-gradient(to bottom,
-                transparent 0%,
-                var(--accent-primary) 50%,
-                transparent 100%);
+        background: linear-gradient(to bottom, transparent 0%, var(--accent-primary) 50%, transparent 100%);
         opacity: 0.1;
         animation: gridFlow 8s ease-in-out infinite;
     }
@@ -369,32 +346,21 @@
         }
     }
 
-    /* Content Area */
-    .content-area {
-        animation: contentSlideIn 1s ease-out;
-        margin-top: -40px !important;
+    /* Full Width Name Section */
+    .hero-name {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+        line-height: 0.9;
+        font-size: 4.5rem;
+        margin-bottom: 0;
     }
 
-    @keyframes contentSlideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    /* Premium Name Typography */
     .name-primary {
         color: var(--text-primary);
         font-weight: 900;
-        letter-spacing: -0.02em;
-        line-height: 0.95;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 0 30px var(--accent-glow);
+        letter-spacing: -0.03em;
     }
 
     .name-secondary {
@@ -402,105 +368,29 @@
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-        line-height: 0.95;
-        position: relative;
-        animation: gradientShift 3s ease-in-out infinite;
+        font-weight: 900;
+        letter-spacing: -0.03em;
     }
 
-    @keyframes gradientShift {
-
-        0%,
-        100% {
-            filter: hue-rotate(0deg);
-        }
-
-        50% {
-            filter: hue-rotate(10deg);
-        }
-    }
-
-    /* Premium Role Display */
+    /* Centered Role Display */
     .role-display {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 1.25rem 1.5rem;
+        padding: 0.75rem 1.5rem;
         background: var(--card-bg);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 2px solid var(--border-light);
         border-radius: 12px;
         position: relative;
-        overflow: hidden;
-    }
-
-    .role-display::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        background: linear-gradient(45deg,
-                var(--accent-primary),
-                var(--accent-secondary),
-                var(--accent-primary));
-        border-radius: 12px;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .role-display:hover::before {
-        opacity: 0.3;
-        animation: borderPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes borderPulse {
-
-        0%,
-        100% {
-            opacity: 0.3;
-        }
-
-        50% {
-            opacity: 0.6;
-        }
     }
 
     .role-text {
-        font-size: 1.5rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: var(--text-secondary);
-        line-height: 1.4;
-        min-height: 1.5em;
+        min-height: 1.2em;
     }
-
-    .three-dot-icon {
-        display: block;
-        text-decoration: none;
-    }
-
-    .three-dot-box {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
-        background: var(--card-bg);
-        border: 2px solid var(--border-light);
-        backdrop-filter: blur(10px);
-        font-size: 1.3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-primary);
-        transition: 0.3s ease;
-    }
-
-    .three-dot-box:hover {
-        border-color: var(--accent-primary);
-        box-shadow: 0 8px 25px var(--accent-glow);
-        transform: translateY(-6px);
-    }
-
 
     .typing-cursor {
         color: var(--accent-primary);
@@ -521,7 +411,126 @@
         }
     }
 
-    /* Premium CTA Buttons */
+    /* Tech Stack */
+    .tech-label-vertical {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        white-space: nowrap;
+        line-height: 1.4;
+        padding-top: 0.5rem;
+    }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .tech-item {
+        position: relative;
+        opacity: 0;
+        animation: techItemAppear 0.8s ease forwards;
+        animation-delay: calc(var(--item-index) * 0.15s);
+    }
+
+    @keyframes techItemAppear {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.8);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .tech-icon-wrapper {
+        position: relative;
+        width: 70px;
+        height: 70px;
+        margin: 0 auto;
+    }
+
+    .tech-icon,
+    .tech-icon-fallback {
+        width: 70px;
+        height: 70px;
+        padding: 14px;
+        border-radius: 18px;
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border: 2px solid var(--border-light);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+
+    .tech-item:hover .tech-icon,
+    .tech-item:hover .tech-icon-fallback {
+        transform: translateY(-10px) scale(1.15);
+        border-color: var(--accent-primary);
+        box-shadow: 0 12px 35px var(--accent-glow);
+    }
+
+    .tech-icon-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        color: var(--bg-primary);
+        font-size: 1.5rem;
+    }
+
+    .three-dot-box {
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        background: var(--card-bg);
+        border: 2px solid var(--border-light);
+        backdrop-filter: blur(10px);
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .three-dot-box:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 25px var(--accent-glow);
+        transform: translateY(-10px);
+    }
+
+    .tech-tooltip {
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-light);
+        z-index: 10;
+    }
+
+    .tech-item:hover .tech-tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* CTA Buttons */
     .cta-btn {
         position: relative;
         display: inline-flex;
@@ -529,99 +538,36 @@
         justify-content: center;
         padding: 1.25rem 2.5rem;
         font-weight: 600;
-        font-size: 1.125rem;
+        font-size: 1.1rem;
         border-radius: 14px;
         text-decoration: none;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
-        min-width: 180px;
     }
 
-    /* Primary Button - Premium Glass Effect */
     .primary-btn {
         background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
         color: var(--bg-primary);
-        box-shadow:
-            0 8px 32px rgba(0, 255, 157, 0.35),
-            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        box-shadow: 0 8px 32px rgba(0, 255, 157, 0.35);
     }
 
-    .primary-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.2),
-                transparent 50%,
-                rgba(0, 0, 0, 0.1));
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .primary-btn:hover::before {
-        opacity: 1;
+    .primary-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0, 255, 157, 0.5);
     }
 
     .btn-shimmer {
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg,
-                transparent,
-                rgba(255, 255, 255, 0.4),
-                transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         transform: translateX(-100%);
-        transition: transform 0.6s ease;
     }
 
     .primary-btn:hover .btn-shimmer {
         transform: translateX(100%);
+        transition: transform 0.6s ease;
     }
 
-    .btn-glow {
-        position: absolute;
-        inset: -4px;
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-        border-radius: 14px;
-        z-index: -1;
-        filter: blur(20px);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .primary-btn:hover .btn-glow {
-        opacity: 0.6;
-        animation: glowPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-
-        0%,
-        100% {
-            opacity: 0.6;
-        }
-
-        50% {
-            opacity: 0.9;
-        }
-    }
-
-    .hero-name {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        /* spacing between names */
-        white-space: nowrap;
-        /* force single line */
-    }
-
-    .primary-btn:hover {
-        transform: translateY(-4px);
-        box-shadow:
-            0 16px 48px rgba(0, 255, 157, 0.5),
-            0 0 0 1px rgba(255, 255, 255, 0.2) inset;
-    }
-
-    /* Secondary Button */
     .secondary-btn {
         background: transparent;
         color: var(--text-primary);
@@ -646,112 +592,29 @@
 
     .btn-arrow {
         font-size: 1.25em;
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.4s ease;
     }
 
     .cta-btn:hover .btn-arrow {
         transform: translateX(4px);
     }
 
-    /* Premium Crystal Bubble Social Icons */
-    .social-section {
-        margin-top: 1rem !important;
-    }
-
-    .social-label-container {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .hero-name {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        white-space: nowrap;
-    }
-
-    .hero-name {
-        gap: 20px;
-        /* modern spacing */
-    }
-
-
-    .tech-label-vertical {
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: 2px;
-        color: var(--text-muted);
-        line-height: 1.2;
-        text-transform: uppercase;
-        text-align: center;
-        user-select: none;
-        margin-right: 2rem;
-    }
-
-    .tech-stack-section {
-        margin-top: 1.5rem !important;
-    }
-
-    .three-dots-box {
-        margin-top: 1.5rem;
-        display: block;
-        width: 60px;
-        height: 60px;
-        border-radius: 14px;
-        background: var(--card-bg);
-        border: 2px solid var(--border-light);
-        backdrop-filter: blur(10px);
-        color: var(--text-primary);
-        font-size: 1.4rem;
-        text-align: center;
-        line-height: 56px;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-    .three-dots-box:hover {
-        border-color: var(--accent-primary);
-        box-shadow: 0 8px 25px var(--accent-glow);
-        transform: translateY(-6px);
-    }
-
-    .typing-wrapper {
-        margin-bottom: 1rem !important;
-        /* reduced spacing between typing and tech stack */
-    }
-
+    /* Social Links */
     .social-label {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         color: var(--text-muted);
-        font-weight: 500;
-        letter-spacing: 0.05em;
+        font-weight: 600;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        white-space: nowrap;
     }
 
-    .label-underline {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg, var(--border-light), transparent);
-    }
-
-    .social-icons-grid {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    /* Crystal Bubble Effect */
     .crystal-bubble {
         position: relative;
-        width: 56px;
-        height: 56px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
         background: var(--card-bg);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border: 2px solid var(--border-light);
         display: flex;
         align-items: center;
@@ -759,6 +622,13 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
         overflow: hidden;
+        text-decoration: none;
+    }
+
+    .crystal-bubble:hover {
+        transform: translateY(-8px) scale(1.12);
+        border-color: var(--accent-primary);
+        box-shadow: 0 12px 35px var(--accent-glow);
     }
 
     .bubble-shine {
@@ -767,53 +637,10 @@
         left: 8px;
         width: 60%;
         height: 35%;
-        background: radial-gradient(ellipse at center,
-                rgba(255, 255, 255, 0.4) 0%,
-                transparent 70%);
+        background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
         border-radius: 50%;
         filter: blur(4px);
         opacity: 0.6;
-        transition: opacity 0.4s ease;
-    }
-
-    .crystal-bubble::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        background: linear-gradient(135deg,
-                var(--accent-primary),
-                var(--accent-secondary));
-        border-radius: 50%;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .crystal-bubble:hover::before {
-        opacity: 1;
-        animation: rotateBorder 3s linear infinite;
-    }
-
-    @keyframes rotateBorder {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .crystal-bubble:hover {
-        transform: translateY(-6px) scale(1.1);
-        border-color: var(--accent-primary);
-        box-shadow:
-            0 12px 35px var(--accent-glow),
-            0 0 0 4px rgba(0, 255, 157, 0.1);
-    }
-
-    .crystal-bubble:hover .bubble-shine {
-        opacity: 1;
     }
 
     .bubble-content {
@@ -825,42 +652,32 @@
     }
 
     .social-icon-img {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         filter: brightness(0) invert(1);
         transition: transform 0.4s ease;
-    }
-
-    [data-theme="light"] .social-icon-img {
-        filter: brightness(0) saturate(100%) invert(30%) sepia(90%) saturate(2000%) hue-rotate(140deg);
     }
 
     .crystal-bubble:hover .social-icon-img {
         transform: scale(1.2) rotate(5deg);
     }
 
-    .social-icon-fallback {
-        font-size: 1.25rem;
-        color: var(--accent-primary);
-    }
-
     .bubble-tooltip {
         position: absolute;
-        bottom: -45px;
+        bottom: -48px;
         left: 50%;
         transform: translateX(-50%) translateY(10px);
         background: var(--bg-secondary);
         color: var(--text-primary);
-        padding: 0.5rem 0.875rem;
+        padding: 0.6rem 1rem;
         border-radius: 10px;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         font-weight: 600;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
         transition: all 0.3s ease;
         border: 1px solid var(--border-light);
-        backdrop-filter: blur(10px);
         z-index: 10;
     }
 
@@ -869,10 +686,9 @@
         transform: translateX(-50%) translateY(0);
     }
 
-    /* Premium Profile Frame */
+    /* Profile Image */
     .profile-container {
         position: relative;
-        margin-bottom: 2rem !important;
         animation: visualSlideIn 1.2s ease-out;
     }
 
@@ -890,21 +706,17 @@
 
     .profile-frame {
         position: relative;
-        width: 340px;
-        height: 340px;
-        border-radius: 28px;
+        width: 380px;
+        height: 380px;
+        border-radius: 30px;
         overflow: hidden;
     }
 
-    /* Rotating Border Animation */
     .frame-rotating-border {
         position: absolute;
         inset: -4px;
-        background: conic-gradient(from 0deg,
-                var(--accent-primary),
-                var(--accent-secondary),
-                var(--accent-primary));
-        border-radius: 32px;
+        background: conic-gradient(from 0deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+        border-radius: 34px;
         z-index: 1;
         animation: rotateBorder 4s linear infinite;
     }
@@ -912,22 +724,29 @@
     .frame-glow {
         position: absolute;
         inset: -8px;
-        background: conic-gradient(from 0deg,
-                var(--accent-primary),
-                var(--accent-secondary),
-                var(--accent-primary));
-        border-radius: 36px;
+        background: conic-gradient(from 0deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+        border-radius: 38px;
         filter: blur(20px);
         opacity: 0.5;
         z-index: 0;
         animation: rotateBorder 4s linear infinite;
     }
 
+    @keyframes rotateBorder {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
     .frame-border {
         position: absolute;
         inset: 0;
         background: var(--bg-primary);
-        border-radius: 28px;
+        border-radius: 30px;
         padding: 4px;
         z-index: 2;
     }
@@ -937,7 +756,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 24px;
+        border-radius: 26px;
         z-index: 3;
         transition: transform 0.6s ease;
     }
@@ -946,13 +765,10 @@
         transform: scale(1.05);
     }
 
-    /* Floating Orbs */
     .floating-orb {
         position: absolute;
         border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%,
-                var(--accent-primary),
-                var(--accent-secondary));
+        background: radial-gradient(circle at 30% 30%, var(--accent-primary), var(--accent-secondary));
         opacity: 0.6;
         filter: blur(12px);
         z-index: 0;
@@ -960,26 +776,25 @@
     }
 
     .orb-1 {
-        width: 80px;
-        height: 80px;
-        top: -20px;
-        right: -20px;
-        animation-delay: 0s;
+        width: 100px;
+        height: 100px;
+        top: -30px;
+        right: -30px;
     }
 
     .orb-2 {
-        width: 60px;
-        height: 60px;
-        bottom: -15px;
-        left: -15px;
+        width: 70px;
+        height: 70px;
+        bottom: -20px;
+        left: -20px;
         animation-delay: 2s;
     }
 
     .orb-3 {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         top: 50%;
-        left: -25px;
+        left: -30px;
         animation-delay: 4s;
     }
 
@@ -997,165 +812,7 @@
         }
     }
 
-    /* Premium Tech Stack */
-    .tech-stack-section {
-        text-align: center;
-    }
-
-    .tech-label-wrapper {
-        margin-bottom: 1.5rem;
-    }
-
-    .tech-label {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 0.5rem 1.5rem;
-        background: var(--card-bg);
-        border: 1px solid var(--border-light);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        display: inline-block;
-    }
-
-    .tech-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.25rem;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-
-    .tech-item {
-        position: relative;
-        opacity: 0;
-        animation: techItemAppear 0.8s ease forwards;
-        animation-delay: calc(var(--item-index) * 0.15s);
-    }
-
-    @keyframes techItemAppear {
-        from {
-            opacity: 0;
-            transform: translateY(30px) scale(0.8);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-
-    .tech-icon-wrapper {
-        position: relative;
-        width: 60px;
-        height: 60px;
-        margin: 0 auto;
-    }
-
-    .tech-icon {
-        width: 60px;
-        height: 60px;
-        padding: 12px;
-        border-radius: 16px;
-        background: var(--card-bg);
-        backdrop-filter: blur(15px);
-        border: 2px solid var(--border-light);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        z-index: 2;
-    }
-
-    .tech-icon-wrapper::before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        background: linear-gradient(135deg,
-                var(--accent-primary),
-                var(--accent-secondary));
-        border-radius: 18px;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: 1;
-        filter: blur(8px);
-    }
-
-    .tech-item:hover .tech-icon-wrapper::before {
-        opacity: 0.6;
-        animation: techGlow 2s ease-in-out infinite;
-    }
-
-    @keyframes techGlow {
-
-        0%,
-        100% {
-            opacity: 0.6;
-            transform: scale(1);
-        }
-
-        50% {
-            opacity: 0.9;
-            transform: scale(1.1);
-        }
-    }
-
-    .tech-item:hover .tech-icon {
-        transform: translateY(-8px) scale(1.15) rotate(5deg);
-        border-color: var(--accent-primary);
-        box-shadow:
-            0 12px 35px var(--accent-glow),
-            0 0 0 4px rgba(0, 255, 157, 0.1);
-    }
-
-    .tech-icon-fallback {
-        width: 60px;
-        height: 60px;
-        padding: 12px;
-        border-radius: 16px;
-        background: linear-gradient(135deg,
-                var(--accent-primary),
-                var(--accent-secondary));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--bg-primary);
-        font-size: 1.5rem;
-        transition: all 0.4s ease;
-    }
-
-    .tech-item:hover .tech-icon-fallback {
-        transform: translateY(-8px) scale(1.15) rotate(5deg);
-        box-shadow: 0 12px 35px var(--accent-glow);
-    }
-
-    .tech-tooltip {
-        position: absolute;
-        bottom: -45px;
-        left: 50%;
-        transform: translateX(-50%) translateY(10px);
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        padding: 0.5rem 0.875rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: all 0.3s ease;
-        border: 1px solid var(--border-light);
-        backdrop-filter: blur(15px);
-        z-index: 10;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .tech-item:hover .tech-tooltip {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-
-    /* Premium Scroll Indicator */
+    /* Scroll Indicator */
     .scroll-indicator {
         position: fixed;
         bottom: 2rem;
@@ -1178,7 +835,7 @@
     }
 
     .scroll-text {
-        font-size: 0.875rem;
+        font-size: 0.9rem;
         font-weight: 500;
         color: var(--text-muted);
         letter-spacing: 0.05em;
@@ -1223,119 +880,174 @@
         box-shadow: 0 8px 25px var(--accent-glow);
     }
 
-    /* Responsive Design */
-    @media (max-width: 1280px) {
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .hero-name {
+            font-size: 3.5rem;
+        }
+
         .profile-frame {
             width: 300px;
             height: 300px;
         }
 
         .tech-grid {
-            max-width: 280px;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
+        }
+
+        .tech-icon-wrapper,
+        .three-dot-box {
+            width: 60px;
+            height: 60px;
         }
 
         .tech-icon,
         .tech-icon-fallback {
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             padding: 10px;
         }
-    }
 
-    .name-primary,
-    .name-secondary {
-        font-size: inherit !important;
-        /* THIS is the fix */
-        line-height: inherit;
-        display: inline-block;
-        white-space: nowrap;
-        text-align: left;
-    }
+        .role-text {
+            font-size: 0.9rem;
+        }
 
-    .content-area {
-        text-align: left;
-        /* name stays left */
-    }
-
-    .role-display,
-    .tech-stack-section {
-        margin-left: 0;
-    }
-
-    .typing-wrapper,
-    .tech-stack-section {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .visual-area {
-        margin-left: 80px;
-        /* move right */
-        text-align: left !important;
-    }
-
-    .profile-container {
-        margin-left: auto;
-        /* push image to right */
-    }
-
-    .cta-btn {
-        margin-left: auto;
-    }
-
-    .social-section {
-        margin-left: auto;
-    }
-
-    @media (min-width: 1024px) {
-        .theme3-hero .relative.flex {
+        .relative.flex.flex-col.lg\:flex-row {
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+        }
+
+        .w-full.lg\:w-1\/3 {
+            width: 100%;
         }
     }
 
-    @media (max-width: 1024px) {
-        .content-area {
-            text-align: center;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .social-label-container {
-            justify-content: center;
-        }
-
-        .social-icons-grid {
-            justify-content: center;
+    @media (max-width: 768px) {
+        .hero-name {
+            font-size: 2.5rem;
+            gap: 0.25rem;
         }
 
         .profile-frame {
             width: 260px;
             height: 260px;
-            margin: 0 auto;
         }
 
         .tech-grid {
             grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
         }
 
-        .content-area {
-            margin-top: -20px !important;
+        .tech-icon-wrapper {
+            width: 50px;
+            height: 50px;
         }
 
-        .w-full.lg\:w-\[55\%\].pl-24.pr-12 {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
+        .tech-icon,
+        .tech-icon-fallback,
+        .three-dot-box {
+            width: 50px;
+            height: 50px;
+            padding: 8px;
         }
 
-        .-mt-16 {
-            margin-top: -40px !important;
+        .role-display {
+            padding: 0.6rem 1.2rem;
+        }
+
+        .role-text {
+            font-size: 0.85rem;
+        }
+
+        .cta-btn {
+            padding: 0.9rem 1.8rem;
+            font-size: 0.95rem;
+        }
+
+        .social-label {
+            font-size: 0.7rem;
+        }
+
+        .crystal-bubble {
+            width: 52px;
+            height: 52px;
+        }
+
+        .social-icon-img {
+            width: 22px;
+            height: 22px;
         }
     }
 
-    /* Performance Optimization */
+    @media (max-width: 640px) {
+        .hero-name {
+            font-size: 2rem;
+            gap: 0.2rem;
+        }
+
+        .profile-frame {
+            width: 220px;
+            height: 220px;
+        }
+
+        .tech-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
+
+        .tech-icon-wrapper {
+            width: 45px;
+            height: 45px;
+        }
+
+        .tech-icon,
+        .tech-icon-fallback,
+        .three-dot-box {
+            width: 45px;
+            height: 45px;
+            padding: 6px;
+        }
+
+        .tech-label-vertical {
+            font-size: 0.7rem;
+            line-height: 1.2;
+        }
+
+        .role-text {
+            font-size: 0.8rem;
+        }
+
+        .cta-btn {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .flex.flex-col.sm\:flex-row {
+            flex-direction: column;
+        }
+
+        .crystal-bubble {
+            width: 48px;
+            height: 48px;
+        }
+
+        .social-icon-img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .px-8.lg\:px-20 {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .profile-container {
+            margin-bottom: 1rem;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
 
         *,
@@ -1345,63 +1057,5 @@
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
         }
-    }
-
-    /* Dark/Light Theme Transitions */
-    * {
-        transition: background-color 0.3s ease,
-            color 0.3s ease,
-            border-color 0.3s ease;
-    }
-
-    /* Hover States for Touch Devices */
-    @media (hover: none) {
-
-        .crystal-bubble:hover,
-        .tech-item:hover .tech-icon,
-        .cta-btn:hover {
-            transform: none;
-        }
-
-        .crystal-bubble:active {
-            transform: scale(0.95);
-        }
-
-        .hero-name {
-            font-size: 8rem !important;
-            line-height: 0.9 !important;
-        }
-
-        @media (max-width: 1280px) {
-            .hero-name {
-                font-size: 6rem !important;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .hero-name {
-                font-size: 4rem !important;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .hero-name {
-                font-size: 3rem !important;
-            }
-        }
-    }
-
-    /* Additional adjustments for lifting up elements */
-    .theme3-hero .relative.z-10.min-h-screen {
-        align-items: flex-start !important;
-        padding-top: 60px !important;
-    }
-
-    .w-full.lg\:w-\[55\%\].pl-24.pr-12.flex.items-start.justify-start {
-        margin-top: -40px !important;
-    }
-
-    .visual-area.space-y-6 {
-        margin-top: -20px !important;
     }
 </style>
