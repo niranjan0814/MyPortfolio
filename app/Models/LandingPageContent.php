@@ -20,11 +20,12 @@ class LandingPageContent extends Model
     ];
 
     /**
-     * Get content by section with caching
+     * Get content by section with shorter caching
      */
     public static function getSection(string $section): array
     {
-        return Cache::remember("landing_section_{$section}", 3600, function () use ($section) {
+        // Reduced cache time to 5 minutes for better real-time updates
+        return Cache::remember("landing_section_{$section}", 300, function () use ($section) {
             return self::where('section', $section)
                 ->orderBy('order')
                 ->pluck('value', 'key')
@@ -42,18 +43,19 @@ class LandingPageContent extends Model
     }
 
     /**
-     * Clear cache on update
+     * Clear ALL landing page cache on update
      */
-    protected static function boot()
-    {
-        parent::boot();
+   protected static function boot()
+{
+    parent::boot();
 
-        static::saved(function ($content) {
-            Cache::forget("landing_section_{$content->section}");
-        });
+    static::saved(function ($content) {
+        Cache::flush(); // clear ALL cache
+    });
 
-        static::deleted(function ($content) {
-            Cache::forget("landing_section_{$content->section}");
-        });
-    }
+    static::deleted(function ($content) {
+        Cache::flush();
+    });
+}
+
 }

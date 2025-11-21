@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\LandingPageContent;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -142,7 +143,7 @@ class LandingPageEditor extends Page implements HasForms
                 ->collapsible(),
 
             Forms\Components\Section::make('🎨 Hero Visual Preview')
-                ->description('Customize the portfolio preview card shown in the hero section.')
+                ->description('Select which user to showcase in the hero section preview card. Their live data will be displayed automatically.')
                 ->schema([
                     Forms\Components\Select::make('visual_type')
                         ->label('Visual Type')
@@ -152,35 +153,106 @@ class LandingPageEditor extends Page implements HasForms
                             'testimonials' => 'Testimonials Carousel (Coming Soon)',
                         ])
                         ->default('portfolio_preview')
-                        ->required(),
+                        ->required()
+                        ->reactive()
+                        ->helperText('Select which preview to show in the hero section'),
+                    
+                    // ✅ User Selection Dropdown
+                    Forms\Components\Select::make('preview_user_id')
+                        ->label('Preview User')
+                        ->options(function () {
+                            return User::whereHas('roles', function ($query) {
+                                $query->whereIn('name', ['free_user', 'premium_user']);
+                            })
+                            ->whereDoesntHave('roles', function ($query) {
+                                $query->where('name', 'super_admin');
+                            })
+                            ->orderBy('full_name')
+                            ->get()
+                            ->mapWithKeys(function ($user) {
+                                return [$user->id => $user->full_name ?: $user->name];
+                            })
+                            ->toArray();
+                        })
+                        ->searchable()
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, $set) {
+                            if ($state) {
+                                $user = User::with(['projects', 'about'])->find($state);
+                                if ($user) {
+                                    // Preview the data that will be shown
+                                    $set('preview_name', $user->full_name ?? $user->name);
+                                    
+                                    $description = $user->description ?? 'Professional Developer';
+                                    $cleanDescription = strip_tags($description);
+                                    $cleanDescription = preg_replace('/\s+/', ' ', $cleanDescription);
+                                    $cleanDescription = trim($cleanDescription);
+                                    if (strlen($cleanDescription) > 100) {
+                                        $cleanDescription = substr($cleanDescription, 0, 97) . '...';
+                                    }
+                                    $set('preview_title', $cleanDescription);
+                                    
+                                    $about = $user->about;
+                                    $bio = $about ? $about->about_description : 'Creating amazing digital experiences';
+                                    $cleanBio = strip_tags($bio);
+                                    $cleanBio = preg_replace('/\s+/', ' ', $cleanBio);
+                                    $cleanBio = preg_replace('/&nbsp;/', ' ', $cleanBio);
+                                    $cleanBio = trim($cleanBio);
+                                    if (strlen($cleanBio) > 200) {
+                                        $cleanBio = substr($cleanBio, 0, 197) . '...';
+                                    }
+                                    $set('preview_bio', $cleanBio);
+                                    
+                                    $set('preview_projects_count', $user->projects()->count());
+                                }
+                            }
+                        })
+                        ->helperText('⚡ Live Preview: When users update their profiles, the landing page automatically shows their latest data!')
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
+                    
+                    // Preview fields (read-only, just for reference)
+                    Forms\Components\Placeholder::make('preview_info')
+                        ->label('Preview Data (Auto-Updated)')
+                        ->content(fn ($get) => 'The landing page will always show the latest data from the selected user\'s profile. The fields below are just a preview of what will be displayed.')
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\TextInput::make('preview_name')
-                        ->label('Preview User Name')
-                        ->maxLength(100)
-                        ->helperText('Example user name for the preview card'),
+                        ->label('Preview: User Name')
+                        ->disabled()
+                        ->dehydrated()
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\TextInput::make('preview_title')
-                        ->label('Preview User Title')
-                        ->maxLength(100)
-                        ->helperText('Example job title/role'),
+                        ->label('Preview: User Title')
+                        ->disabled()
+                        ->dehydrated()
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\Textarea::make('preview_bio')
-                        ->label('Preview Bio')
+                        ->label('Preview: Bio')
                         ->rows(2)
-                        ->maxLength(200),
+                        ->disabled()
+                        ->dehydrated()
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
                     
                     Forms\Components\Grid::make(3)
                         ->schema([
                             Forms\Components\TextInput::make('preview_projects_count')
-                                ->label('Projects Count')
-                                ->maxLength(10),
+                                ->label('Projects (Live Count)')
+                                ->disabled()
+                                ->dehydrated()
+                                ->helperText('Real-time project count'),
                             Forms\Components\TextInput::make('preview_clients_count')
                                 ->label('Clients Count')
-                                ->maxLength(10),
+                                ->default('10+')
+                                ->helperText('You can customize this'),
                             Forms\Components\TextInput::make('preview_awards_count')
                                 ->label('Awards Count')
-                                ->maxLength(10),
-                        ]),
+                                ->default('5')
+                                ->helperText('You can customize this'),
+                        ])
+                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
                 ])
                 ->columns(2)
                 ->collapsible(),

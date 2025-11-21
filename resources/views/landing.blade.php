@@ -1,3 +1,15 @@
+@php
+    // TEMPORARY DEBUG - Remove after testing
+    if (request()->get('debug') == '1') {
+        dd([
+            'preview_user_id' => $data['preview_user_id'] ?? 'NOT SET',
+            'preview_name' => $data['preview_name'] ?? 'NOT SET',
+            'preview_title' => $data['preview_title'] ?? 'NOT SET',
+            'preview_bio' => $data['preview_bio'] ?? 'NOT SET',
+            'preview_has_image' => $data['preview_has_image'] ?? 'NOT SET',
+        ]);
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,6 +83,14 @@
             background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, rgba(180, 83, 9, 0.05) 100%);
             border: 1px solid rgba(217, 119, 6, 0.2);
         }
+        .animated-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
     </style>
 </head>
 <body class="bg-gray-50">
@@ -140,57 +160,75 @@
                     </div>
                 </div>
                 
-                <!-- Right Visual - Dynamic Portfolio Preview -->
-                <div class="hidden md:block relative">
-                    <div class="animated-float">
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
-                            <!-- Profile Header -->
-                            <div class="flex items-center gap-4 mb-6">
-                                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                                    {{ substr($data['preview_name'] ?? 'JD', 0, 1) }}
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-white font-bold text-lg">{{ $data['preview_name'] ?? 'John Doe' }}</h3>
-                                    <p class="text-white/70 text-sm">{{ $data['preview_title'] ?? 'Senior Product Designer' }}</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Bio -->
-                            <p class="text-white/80 text-sm mb-6">
-                                {{ $data['preview_bio'] ?? 'Crafting beautiful digital experiences for over 5 years' }}
-                            </p>
-                            
-                            <!-- Stats Grid -->
-                            <div class="grid grid-cols-3 gap-3 mb-6">
-                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_projects_count'] ?? '24' }}</p>
-                                    <p class="text-white/60 text-xs">Projects</p>
-                                </div>
-                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_clients_count'] ?? '50+' }}</p>
-                                    <p class="text-white/60 text-xs">Clients</p>
-                                </div>
-                                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
-                                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_awards_count'] ?? '12' }}</p>
-                                    <p class="text-white/60 text-xs">Awards</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Project Thumbnails -->
-                            <div class="grid grid-cols-2 gap-3">
-                                <div class="h-24 bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-lg backdrop-blur border border-white/10"></div>
-                                <div class="h-24 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-lg backdrop-blur border border-white/10"></div>
-                            </div>
-                            
-                            <!-- View Portfolio Button -->
-                            <div class="mt-6">
-                                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg py-2 text-center text-white text-sm font-semibold">
-                                    View Full Portfolio
-                                </div>
-                            </div>
-                        </div>
+               <!-- RIGHT VISUAL - Dynamic Portfolio Preview -->
+<div class="hidden md:block relative">
+    <div class="animated-float">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+            <!-- Profile Header -->
+            <div class="flex items-center gap-4 mb-6">
+                <!-- ✅ UPDATED: Show real profile image or initial -->
+                @if(isset($data['preview_has_image']) && $data['preview_has_image'])
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-orange-400 shadow-lg">
+                        <img src="{{ $data['preview_image_url'] }}" 
+                             alt="{{ $data['preview_name'] ?? 'User' }}" 
+                             class="w-full h-full object-cover">
                     </div>
+                @else
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                        {{ $data['preview_initial'] ?? substr($data['preview_name'] ?? 'JD', 0, 1) }}
+                    </div>
+                @endif
+                
+                <div class="flex-1">
+                    <h3 class="text-white font-bold text-lg">{{ $data['preview_name'] ?? 'John Doe' }}</h3>
+                    <p class="text-white/70 text-sm">{{ $data['preview_title'] ?? 'Senior Product Designer' }}</p>
                 </div>
+            </div>
+
+            <!-- Bio -->
+            <p class="text-white/80 text-sm mb-6">
+                {{ $data['preview_bio'] ?? 'Crafting beautiful digital experiences for over 5 years' }}
+            </p>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_projects_count'] ?? '24' }}</p>
+                    <p class="text-white/60 text-xs">Projects</p>
+                </div>
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_clients_count'] ?? '50+' }}</p>
+                    <p class="text-white/60 text-xs">Clients</p>
+                </div>
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur">
+                    <p class="text-orange-200 font-bold text-xl">{{ $data['preview_awards_count'] ?? '12' }}</p>
+                    <p class="text-white/60 text-xs">Awards</p>
+                </div>
+            </div>
+
+            <!-- Project Thumbnails -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="h-24 bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-lg backdrop-blur border border-white/10"></div>
+                <div class="h-24 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-lg backdrop-blur border border-white/10"></div>
+            </div>
+
+            <!-- View Portfolio Button -->
+            <div class="mt-6">
+                @if(isset($data['preview_user_slug']))
+                    <a href="{{ route('portfolio.show', $data['preview_user_slug']) }}" 
+                       target="_blank"
+                       class="block bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg py-2 text-center text-white text-sm font-semibold hover:shadow-lg transition">
+                        View Full Portfolio
+                    </a>
+                @else
+                    <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg py-2 text-center text-white text-sm font-semibold">
+                        View Full Portfolio
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </section>
