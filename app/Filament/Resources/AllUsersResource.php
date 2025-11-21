@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
 
 class AllUsersResource extends Resource
 {
@@ -22,6 +23,18 @@ class AllUsersResource extends Resource
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('super_admin') ?? false;
+    }
+
+    /**
+     * ✅ CRITICAL: EXCLUDE any user who has super_admin role
+     * Only show users who DON'T have super_admin role
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'super_admin');
+            });
     }
 
     public static function form(Form $form): Form
@@ -75,7 +88,12 @@ class AllUsersResource extends Resource
                             ->multiple()
                             ->preload()
                             ->required()
-                            ->helperText('Assign user roles'),
+                            ->helperText('Assign user roles')
+                            // ✅ EXCLUDE super_admin role from options
+                            ->options(function () {
+                                return \Spatie\Permission\Models\Role::where('name', '!=', 'super_admin')
+                                    ->pluck('name', 'id');
+                            }),
 
                         Forms\Components\Select::make('active_theme')
                             ->label('Active Theme')
@@ -106,7 +124,6 @@ class AllUsersResource extends Resource
                 Tables\Columns\BadgeColumn::make('roles.name')
                     ->label('Role')
                     ->colors([
-                        'danger' => 'super_admin',
                         'warning' => 'premium_user',
                         'success' => 'free_user',
                     ]),
@@ -117,18 +134,57 @@ class AllUsersResource extends Resource
                     ->sortable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // ✅ ONLY DELETE ACTION - NO EDIT BUTTON
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete User')
+                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                    ->modalSubheading(fn ($record) => "User: {$record->name} ({$record->email})")
+                    ->successNotificationTitle('User deleted successfully')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete Selected Users')
+                        ->modalDescription('Are you sure you want to delete these users? This action cannot be undone.')
+                        ->successNotificationTitle('Users deleted successfully'),
+                ]),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    /**
+     * ✅ DISABLE CREATE - Users register through landing page
+     */
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    /**
+     * ✅ DISABLE EDIT - Only delete allowed
+     */
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
+
+    /**
+     * ✅ Allow delete only for non-super-admin users
+     */
+    public static function canDelete($record): bool
+    {
+        return !$record->hasRole('super_admin');
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListAllUsers::route('/'),
-            'create' => Pages\CreateAllUsers::route('/create'),
-            'edit' => Pages\EditAllUsers::route('/{record}/edit'),
+            // ✅ No edit or create pages - only list view
         ];
     }
 }

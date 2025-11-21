@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\AllUsersResource\Pages;
 
 use App\Filament\Resources\AllUsersResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListAllUsers extends ListRecords
@@ -12,8 +11,7 @@ class ListAllUsers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        // ✅ NO CREATE BUTTON
+        return [];
     }
 }

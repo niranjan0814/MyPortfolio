@@ -20,79 +20,86 @@ class LandingPageContentResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
-            Forms\Components\Section::make('Content Information')
-                ->schema([
-                    Forms\Components\Select::make('section')
-                        ->required()
-                        ->options([
-                            'hero' => '🎯 Hero Section',
-                            'features' => '⚡ Features Section',
-                            'themes' => '🎨 Themes Showcase',
-                            'contact' => '📧 Contact Section',
-                            'footer' => '🔗 Footer',
-                        ])
-                        ->reactive()
-                        ->columnSpanFull(),
+        return $form
+            ->schema([
+                Forms\Components\Section::make('Content Information')
+                    ->schema([
+                        Forms\Components\Select::make('section')
+                            ->required()
+                            ->options([
+                                'hero' => '🎯 Hero Section',
+                                'features' => '⚡ Features Section',
+                                'themes' => '🎨 Themes Showcase',
+                                'contact' => '📧 Contact Section',
+                                'footer' => '🔗 Footer',
+                            ])
+                            ->reactive()
+                            ->columnSpanFull()
+                            ->helperText('Select which section of the landing page this content belongs to'),
 
-                    Forms\Components\TextInput::make('key')
-                        ->required()
-                        ->maxLength(255)
-                        ->helperText('Unique identifier (e.g., hero_title, feature_1_description)')
-                        ->placeholder('hero_title'),
+                        Forms\Components\TextInput::make('key')
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('Unique identifier (e.g., hero_title, feature_1_description)')
+                            ->placeholder('hero_title')
+                            ->unique(ignoreRecord: true),
 
-                    Forms\Components\Select::make('type')
-                        ->required()
-                        ->options([
-                            'text' => 'Short Text',
-                            'textarea' => 'Long Text / Paragraph',
-                            'image' => 'Image URL',
-                            'boolean' => 'Enable/Disable Toggle',
-                        ])
-                        ->default('text')
-                        ->reactive()
-                        ->helperText('Choose the type of content'),
-                ])->columns(2),
+                        Forms\Components\Select::make('type')
+                            ->required()
+                            ->options([
+                                'text' => 'Short Text',
+                                'textarea' => 'Long Text / Paragraph',
+                                'image' => 'Image URL',
+                                'boolean' => 'Enable/Disable Toggle',
+                            ])
+                            ->default('text')
+                            ->reactive()
+                            ->helperText('Choose the type of content'),
+                    ])->columns(2),
 
-            Forms\Components\Section::make('Content Value')
-                ->schema([
-                    // Text Input
-                    Forms\Components\TextInput::make('value')
-                        ->label('Content')
-                        ->maxLength(65535)
-                        ->visible(fn ($get) => $get('type') === 'text')
-                        ->columnSpanFull()
-                        ->placeholder('Enter text content'),
+                Forms\Components\Section::make('Content Value')
+                    ->schema([
+                        // Text Input
+                        Forms\Components\TextInput::make('value')
+                            ->label('Content')
+                            ->maxLength(65535)
+                            ->visible(fn ($get) => $get('type') === 'text')
+                            ->columnSpanFull()
+                            ->placeholder('Enter text content')
+                            ->required(fn ($get) => $get('type') === 'text'),
 
-                    // Textarea
-                    Forms\Components\Textarea::make('value')
-                        ->label('Content')
-                        ->rows(5)
-                        ->visible(fn ($get) => $get('type') === 'textarea')
-                        ->columnSpanFull()
-                        ->placeholder('Enter paragraph or description'),
+                        // Textarea
+                        Forms\Components\Textarea::make('value')
+                            ->label('Content')
+                            ->rows(5)
+                            ->visible(fn ($get) => $get('type') === 'textarea')
+                            ->columnSpanFull()
+                            ->placeholder('Enter paragraph or description')
+                            ->required(fn ($get) => $get('type') === 'textarea'),
 
-                    // Image URL
-                    Forms\Components\TextInput::make('value')
-                        ->label('Image URL')
-                        ->url()
-                        ->visible(fn ($get) => $get('type') === 'image')
-                        ->columnSpanFull()
-                        ->placeholder('https://example.com/image.jpg'),
+                        // Image URL
+                        Forms\Components\TextInput::make('value')
+                            ->label('Image URL')
+                            ->url()
+                            ->visible(fn ($get) => $get('type') === 'image')
+                            ->columnSpanFull()
+                            ->placeholder('https://example.com/image.jpg')
+                            ->required(fn ($get) => $get('type') === 'image'),
 
-                    // Boolean Toggle
-                    Forms\Components\Toggle::make('value')
-                        ->label('Enabled')
-                        ->visible(fn ($get) => $get('type') === 'boolean')
-                        ->inline(false),
+                        // Boolean Toggle
+                        Forms\Components\Toggle::make('value')
+                            ->label('Enabled')
+                            ->visible(fn ($get) => $get('type') === 'boolean')
+                            ->inline(false)
+                            ->default(true),
 
-                    Forms\Components\TextInput::make('order')
-                        ->numeric()
-                        ->default(0)
-                        ->helperText('Lower numbers appear first')
-                        ->label('Display Order'),
-                ]),
-        ]);
+                        Forms\Components\TextInput::make('order')
+                            ->numeric()
+                            ->default(0)
+                            ->helperText('Lower numbers appear first')
+                            ->label('Display Order'),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -116,12 +123,8 @@ class LandingPageContentResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->copyable()
-                    ->weight('medium'),
-
-                Tables\Columns\TextColumn::make('type')
-                    ->badge()
-                    ->color('info')
-                    ->formatStateUsing(fn ($state) => ucfirst($state)),
+                    ->weight('medium')
+                    ->description(fn ($record) => 'Type: ' . ucfirst($record->type)),
 
                 Tables\Columns\TextColumn::make('value')
                     ->limit(60)
@@ -129,11 +132,19 @@ class LandingPageContentResource extends Resource
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
                         return strlen($state) > 60 ? $state : null;
+                    })
+                    ->formatStateUsing(function ($state, $record) {
+                        if ($record->type === 'boolean') {
+                            return $state ? '✅ Enabled' : '❌ Disabled';
+                        }
+                        return $state;
                     }),
 
                 Tables\Columns\TextColumn::make('order')
                     ->sortable()
-                    ->alignCenter(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color('info'),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('M j, Y')
@@ -162,8 +173,13 @@ class LandingPageContentResource extends Resource
                     ->label('Filter by Type'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton()
+                    ->tooltip('Edit Content'),
+                    
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Delete Content'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
