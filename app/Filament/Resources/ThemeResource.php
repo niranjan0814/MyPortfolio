@@ -1,10 +1,11 @@
 <?php
-// app/Filament/Resources/ThemeResource.php
+// app/Filament/Resources/ThemeResource.php - FULLY ENHANCED VERSION
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ThemeResource\Pages;
 use App\Models\Theme;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,21 +13,25 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use ZipArchive;
+use Filament\Notifications\Notification;
 
 class ThemeResource extends Resource
 {
     protected static ?string $model = Theme::class;
     protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
-    protected static ?string $navigationGroup = 'Theme Management';
+    protected static ?string $navigationGroup = 'Super Admin';
     protected static ?string $navigationLabel = 'Themes';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Theme Information')
+                // ========================================
+                // SECTION 1: THEME INFORMATION
+                // ========================================
+                Forms\Components\Section::make('🎨 Theme Information')
+                    ->description('Basic details about your theme')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -50,28 +55,59 @@ class ThemeResource extends Resource
                             ->maxLength(500)
                             ->helperText('Brief description of the theme'),
 
-                        Forms\Components\TextInput::make('version')
-                            ->default('1.0.0')
-                            ->maxLength(20)
-                            ->helperText('Theme version number'),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('version')
+                                    ->default('1.0.0')
+                                    ->maxLength(20)
+                                    ->helperText('Theme version number'),
 
-                        Forms\Components\TextInput::make('author')
-                            ->maxLength(255)
-                            ->default(auth()->user()->full_name ?? auth()->user()->name),
+                                Forms\Components\TextInput::make('author')
+                                    ->maxLength(255)
+                                    ->default(auth()->user()->full_name ?? auth()->user()->name),
+                            ]),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Theme Files')
+                // ========================================
+                // SECTION 2: THEME FILES
+                // ========================================
+                Forms\Components\Section::make('📦 Theme Files')
+                    ->description('Upload and manage theme files')
                     ->schema([
                         Forms\Components\FileUpload::make('zip_file_path')
                             ->label('Theme ZIP File')
                             ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
                             ->directory('themes/zips')
-                            ->maxSize(10240) // 10MB
-                            ->helperText('Upload theme as ZIP file (Max: 10MB)')
-                            ->afterStateUpdated(function ($state, callable $set, $record) {
-                                if ($state) {
-                                    // Extract theme automatically
-                                    static::extractTheme($state, $record ?? new Theme());
+                            ->maxSize(10240)
+                            ->helperText('Upload theme as ZIP file (Max: 10MB). Must contain all required components.')
+                            ->afterStateUpdated(function ($state, $set, $record) {
+                                if ($state && $record) {
+                                    try {
+                                        $zipPath = Storage::disk('public')->path($state);
+                                        $missing = Theme::validateZip($zipPath);
+                                        
+                                        if (!empty($missing)) {
+                                            Notification::make()
+                                                ->title('Invalid ZIP File')
+                                                ->body('Missing components: ' . implode(', ', $missing))
+                                                ->danger()
+                                                ->send();
+                                            
+                                            $set('zip_file_path', null);
+                                        } else {
+                                            Notification::make()
+                                                ->title('ZIP Validated Successfully')
+                                                ->body('All required components found')
+                                                ->success()
+                                                ->send();
+                                        }
+                                    } catch (\Exception $e) {
+                                        Notification::make()
+                                            ->title('Validation Error')
+                                            ->body($e->getMessage())
+                                            ->danger()
+                                            ->send();
+                                    }
                                 }
                             }),
 
@@ -80,19 +116,37 @@ class ThemeResource extends Resource
                             ->image()
                             ->directory('themes/thumbnails')
                             ->helperText('Preview image (recommended: 600x400px)'),
+
+                        Forms\Components\Placeholder::make('component_status')
+                            ->label('Component Status')
+                            ->content(function ($record) {
+                                if (!$record) {
+                                    return 'Upload ZIP to check components';
+                                }
+                                
+                                return $record->componentsExist() 
+                                    ? '✅ All components installed' 
+                                    : '⚠️ Some components missing - upload ZIP to fix';
+                            }),
                     ]),
 
-                Forms\Components\Section::make('Theme Settings')
+                // ========================================
+                // SECTION 3: THEME SETTINGS
+                // ========================================
+                Forms\Components\Section::make('⚙️ Theme Settings')
+                    ->description('Configure theme availability and features')
                     ->schema([
                         Forms\Components\Toggle::make('is_premium')
                             ->label('Premium Theme')
-                            ->helperText('Only premium users can access this theme')
+                            ->helperText('Only users with premium access can use this theme')
                             ->default(false),
 
                         Forms\Components\Toggle::make('is_active')
                             ->label('Active')
                             ->helperText('Make theme available to users')
-                            ->default(true),
+                            ->default(true)
+                            ->disabled(fn ($record) => $record && $record->slug === 'theme1')
+                            ->hint(fn ($record) => $record && $record->slug === 'theme1' ? '⚠️ Default theme cannot be deactivated' : ''),
 
                         Forms\Components\TextInput::make('sort_order')
                             ->numeric()
@@ -100,7 +154,11 @@ class ThemeResource extends Resource
                             ->helperText('Display order (lower number = first)'),
                     ])->columns(3),
 
-                Forms\Components\Section::make('Theme Features')
+                // ========================================
+                // SECTION 4: THEME FEATURES
+                // ========================================
+                Forms\Components\Section::make('✨ Theme Features')
+                    ->description('Define theme characteristics and color scheme')
                     ->schema([
                         Forms\Components\TagsInput::make('features')
                             ->label('Key Features')
@@ -152,23 +210,36 @@ class ThemeResource extends Resource
                     ->color('info'),
 
                 Tables\Columns\IconColumn::make('is_premium')
-                    ->label('Premium')
+                    ->label('Type')
                     ->boolean()
                     ->trueIcon('heroicon-o-star')
                     ->falseIcon('heroicon-o-hand-thumb-up')
                     ->trueColor('warning')
-                    ->falseColor('success'),
+                    ->falseColor('success')
+                    ->tooltip(fn ($record) => $record->is_premium ? 'Premium' : 'Free'),
 
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('Active')
                     ->onColor('success')
-                    ->offColor('gray'),
+                    ->offColor('gray')
+                    ->disabled(fn ($record) => $record->slug === 'theme1')
+                    ->beforeStateUpdated(function ($record, $state) {
+                        if ($record->slug === 'theme1' && !$state) {
+                            Notification::make()
+                                ->title('Cannot Deactivate Default Theme')
+                                ->body('theme1 must always remain active as the fallback')
+                                ->danger()
+                                ->send();
+                            return false;
+                        }
+                    }),
 
                 Tables\Columns\TextColumn::make('users_count')
                     ->counts('users')
                     ->label('Users')
                     ->badge()
-                    ->color('primary'),
+                    ->color('primary')
+                    ->tooltip('Number of users with access'),
 
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created By')
@@ -194,21 +265,48 @@ class ThemeResource extends Resource
                     ->native(false),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('preview')
                     ->label('Preview')
                     ->icon('heroicon-o-eye')
+                    ->color('info')
                     ->url(fn ($record) => route('portfolio.show', [
                         'user' => auth()->user()->slug,
                         'preview' => true,
                         'theme' => $record->slug,
                     ]))
                     ->openUrlInNewTab(),
+
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-o-pencil')
+                    ->color('warning'),
+
+                Tables\Actions\DeleteAction::make()
+                    ->before(function ($record, $action) {
+                        if ($record->slug === 'theme1') {
+                            Notification::make()
+                                ->title('Cannot Delete Default Theme')
+                                ->body('theme1 is the system fallback and cannot be removed')
+                                ->danger()
+                                ->send();
+                            
+                            $action->cancel();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function ($records, $action) {
+                            if ($records->contains('slug', 'theme1')) {
+                                Notification::make()
+                                    ->title('Cannot Delete Default Theme')
+                                    ->body('theme1 cannot be deleted')
+                                    ->danger()
+                                    ->send();
+                                
+                                $action->cancel();
+                            }
+                        }),
                 ]),
             ]);
     }
@@ -222,24 +320,6 @@ class ThemeResource extends Resource
         ];
     }
 
-    /**
-     * Extract uploaded theme ZIP file
-     */
-    protected static function extractTheme($zipPath, Theme $theme): void
-    {
-        $fullPath = Storage::disk('public')->path($zipPath);
-        $extractTo = resource_path('views/themes/' . ($theme->slug ?? Str::random(10)));
-
-        $zip = new ZipArchive;
-        if ($zip->open($fullPath) === TRUE) {
-            $zip->extractTo($extractTo);
-            $zip->close();
-        }
-    }
-
-    /**
-     * Only super admins can access
-     */
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('super_admin') ?? false;

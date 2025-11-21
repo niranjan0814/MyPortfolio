@@ -28,10 +28,10 @@ class UserResource extends Resource
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $query = parent::getEloquentQuery();
-        
+
         // Everyone only sees their own profile
         $query->where('id', auth()->id());
-        
+
         return $query;
     }
 
@@ -121,7 +121,7 @@ class UserResource extends Resource
                             ->hint(fn($record) => $record?->hasCv() ? '✓ CV uploaded' : 'No CV uploaded'),
                     ])
                     ->hidden($isSuperAdmin), // ✅ Hide for super admin
-                
+
                 Forms\Components\Section::make('Social & Links')
                     ->description('Your online presence')
                     ->icon('heroicon-o-link')
@@ -147,31 +147,110 @@ class UserResource extends Resource
                     ->columns(2)
                     ->hidden($isSuperAdmin), // ✅ Hide for super admin
 
-                Forms\Components\Section::make('Portfolio Theme')
+                Forms\Components\Section::make('🎨 Portfolio Theme')
+                    ->description('Choose how your portfolio looks')
                     ->schema([
                         Forms\Components\Select::make('active_theme')
                             ->label('Active Theme')
-                            ->options([
-                                'theme1' => '🎨 Theme 1 (Current Glass Design)',
-                                'theme2' => '📐 Theme 2 (Alternative Style)',
-                                'theme3' => '🚀 Theme 3 (Another Style)',
-                            ])
-                            ->default('theme1')
+                            ->options(function ($record) {
+                                if (!$record) {
+                                    return ['theme1' => '🎨 Theme 1 (Default)'];
+                                }
+
+                                return $record->availableThemes()
+                                    ->mapWithKeys(function ($theme) {
+                                        $icon = $theme->is_premium ? '💎' : '🎨';
+                                        $status = $theme->slug === 'theme1' ? ' (Default)' : '';
+                                        return [$theme->slug => "$icon {$theme->name}$status"];
+                                    })
+                                    ->toArray();
+                            })
+                            ->required()
                             ->reactive()
-                            ->helperText('Choose your portfolio design style'),
-                        
+                            ->helperText(function ($record) {
+                                if (!$record)
+                                    return 'Select your portfolio design style';
+
+                                $availableCount = $record->availableThemes()->count();
+                                $totalThemes = \App\Models\Theme::active()->count();
+
+                                if ($availableCount === $totalThemes) {
+                                    return "✅ You have access to all $totalThemes themes";
+                                }
+
+                                return "You have access to $availableCount out of $totalThemes themes";
+                            })
+                            ->afterStateUpdated(function ($state, $record) {
+                                if ($record && !$record->canAccessTheme($state)) {
+                                    Notification::make()
+                                        ->title('Access Denied')
+                                        ->body('You don\'t have access to this theme. Switched to default.')
+                                        ->warning()
+                                        ->send();
+
+                                    return 'theme1';
+                                }
+                            }),
+
+                        // Preview Button
                         Forms\Components\Placeholder::make('preview')
                             ->label('')
-                            ->content(fn ($record) => new \Illuminate\Support\HtmlString(
+                            ->content(fn($record) => new \Illuminate\Support\HtmlString(
+                                '<div class="space-y-4">' .
                                 '<a href="/portfolio/' . ($record?->slug ?? 'preview') . '?preview=true&theme=' . ($record?->active_theme ?? 'theme1') . '" target="_blank" 
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                    🔍 Preview Current Theme
-                                </a>'
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    🔍 Preview Current Theme
+                </a>' .
+                                '</div>'
                             )),
+
+                        // Theme Access Info (Show available vs locked themes)
+                        Forms\Components\Placeholder::make('theme_access_info')
+                            ->label('Theme Access')
+                            ->content(function ($record) {
+                                if (!$record) {
+                                    return 'Available themes will appear after registration';
+                                }
+
+                                $available = $record->availableThemes();
+                                $allThemes = \App\Models\Theme::active()->get();
+                                $locked = $allThemes->whereNotIn('slug', $available->pluck('slug'));
+
+                                $html = '<div class="space-y-3">';
+
+                                // Available Themes
+                                $html .= '<div class="bg-green-50 border border-green-200 rounded-lg p-3">';
+                                $html .= '<h4 class="font-semibold text-green-900 mb-2">✅ Available Themes</h4>';
+                                foreach ($available as $theme) {
+                                    $icon = $theme->is_premium ? '💎' : '🎨';
+                                    $html .= "<div class='flex items-center gap-2 text-sm text-green-700'>";
+                                    $html .= "<span>$icon {$theme->name}</span>";
+                                    $html .= "</div>";
+                                }
+                                $html .= '</div>';
+
+                                // Locked Themes
+                                if ($locked->isNotEmpty()) {
+                                    $html .= '<div class="bg-gray-50 border border-gray-200 rounded-lg p-3">';
+                                    $html .= '<h4 class="font-semibold text-gray-900 mb-2">🔒 Locked Themes</h4>';
+                                    foreach ($locked as $theme) {
+                                        $html .= "<div class='flex items-center gap-2 text-sm text-gray-600'>";
+                                        $html .= "<span>💎 {$theme->name}</span>";
+                                        $html .= "<span class='text-xs text-gray-500'>(Premium)</span>";
+                                        $html .= "</div>";
+                                    }
+                                    $html .= '<p class="text-xs text-gray-500 mt-2">Contact admin for premium access</p>';
+                                    $html .= '</div>';
+                                }
+
+                                $html .= '</div>';
+
+                                return new \Illuminate\Support\HtmlString($html);
+                            }),
                     ])
                     ->collapsible()
                     ->collapsed(false)
-                    ->hidden($isSuperAdmin), // ✅ Hide for super admin
+                    ->hidden(fn() => auth()->user()?->hasRole('super_admin')), // ✅ Hide for super admin
             ]);
     }
 
@@ -204,7 +283,7 @@ class UserResource extends Resource
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger')
-                    ->hidden(fn () => auth()->user()?->hasRole('super_admin')),
+                    ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
             ])
             ->actions([
                 Tables\Actions\Action::make('download_cv')
@@ -214,7 +293,7 @@ class UserResource extends Resource
                     ->visible(fn($record) => $record->hasCv())
                     ->url(fn($record) => route('cv.download', $record->id))
                     ->openUrlInNewTab()
-                    ->hidden(fn () => auth()->user()?->hasRole('super_admin')),
+                    ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
 
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-o-pencil')

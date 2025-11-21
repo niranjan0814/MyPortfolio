@@ -1,5 +1,4 @@
 <?php
-// app/Models/User.php - UPDATED VERSION
 
 namespace App\Models;
 
@@ -8,11 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\Permission\Traits\HasRoles; // ✅ ADD THIS
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles; // ✅ ADD HasRoles
+    use HasFactory, Notifiable, HasRoles;
 
     protected $fillable = [
         'name',
@@ -63,23 +62,21 @@ class User extends Authenticatable
                 $base = Str::slug($user->full_name ?: $user->name ?: 'user');
                 $slug = $base;
                 $i = 1;
-
                 while (static::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
                     $slug = $base . '-' . $i++;
                 }
-
                 $user->slug = $slug;
             }
         });
 
-        // Auto-create default portfolio sections + assign role
+        // Auto-create default portfolio sections + assign role + give theme1 access
         static::created(function ($user) {
-            // ✅ Assign default role if not already assigned
+            // Assign default role if not already assigned
             if (!$user->hasAnyRole(['super_admin', 'premium_user', 'free_user'])) {
                 $user->assignRole('free_user');
             }
 
-            // ✅ Give default theme access (theme1)
+            // Give default theme access (theme1) - everyone gets it
             $defaultTheme = \App\Models\Theme::where('slug', 'theme1')->first();
             if ($defaultTheme) {
                 $user->themes()->attach($defaultTheme->id, [
@@ -129,7 +126,7 @@ class User extends Authenticatable
     }
 
     // =================================================================
-    // THEME RELATIONSHIPS
+    // THEME RELATIONSHIPS & ACCESS METHODS
     // =================================================================
 
     /**
@@ -152,7 +149,12 @@ class User extends Authenticatable
             return true;
         }
 
-        // Check if user owns this theme
+        // theme1 is always accessible to everyone
+        if ($themeSlug === 'theme1') {
+            return true;
+        }
+
+        // Check if user owns this theme and it's active
         return $this->themes()
             ->where('slug', $themeSlug)
             ->wherePivot('is_active', true)
@@ -160,7 +162,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get user's available themes
+     * Get user's available themes (for dropdown in profile, etc.)
      */
     public function availableThemes()
     {
@@ -168,11 +170,35 @@ class User extends Authenticatable
             return Theme::active()->get();
         }
 
-        return $this->themes()->wherePivot('is_active', true)->get();
+        // Everyone gets theme1 + any premium themes they own and are active
+        return Theme::where('slug', 'theme1')
+            ->orWhereHas('users', function ($query) {
+                $query->where('users.id', $this->id)
+                      ->where('theme_user.is_active', true);
+            })
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
     }
 
     /**
-     * Check if user is premium
+     * Accessor: active_theme with fallback and auto-correction
+     */
+    public function getActiveThemeAttribute(): string
+    {
+        $theme = $this->attributes['active_theme'] ?? 'theme1';
+
+        // If user no longer has access, fallback to theme1
+        if (!$this->canAccessTheme($theme)) {
+            $this->update(['active_theme' => 'theme1']);
+            return 'theme1';
+        }
+
+        return $theme;
+    }
+
+    /**
+     * Check if user is premium (has premium role)
      */
     public function isPremium(): bool
     {
@@ -187,8 +213,16 @@ class User extends Authenticatable
         return $this->hasRole('super_admin');
     }
 
+    /**
+     * Get count of themes user has access to (accessor)
+     */
+    public function getThemesCountAttribute(): int
+    {
+        return $this->availableThemes()->count();
+    }
+
     // =================================================================
-    // EXISTING RELATIONSHIPS
+    // EXISTING RELATIONSHIPS (unchanged)
     // =================================================================
 
     public function about()

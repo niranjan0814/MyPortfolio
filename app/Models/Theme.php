@@ -1,5 +1,5 @@
 <?php
-// app/Models/Theme.php
+// app/Models/Theme.php - ENHANCED VERSION
 
 namespace App\Models;
 
@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use ZipArchive;
 
 class Theme extends Model
 {
@@ -34,17 +36,15 @@ class Theme extends Model
         'sort_order' => 'integer',
     ];
 
-    /**
-     * Theme belongs to a creator (super admin)
-     */
+    // ============================================
+    // RELATIONSHIPS
+    // ============================================
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Users who have access to this theme
-     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'theme_user')
@@ -52,9 +52,10 @@ class Theme extends Model
             ->withTimestamps();
     }
 
-    /**
-     * Get thumbnail URL
-     */
+    // ============================================
+    // ATTRIBUTE ACCESSORS
+    // ============================================
+
     public function getThumbnailUrlAttribute(): ?string
     {
         return $this->thumbnail_path 
@@ -62,59 +63,255 @@ class Theme extends Model
             : null;
     }
 
-    /**
-     * Get full theme path
-     */
-    public function getThemePathAttribute(): string
+    public function getComponentPathAttribute(): string
     {
-        return resource_path('views/themes/' . $this->slug);
+        return resource_path('views/components/' . $this->slug);
     }
 
-    /**
-     * Check if theme files exist
-     */
-    public function filesExist(): bool
-    {
-        return file_exists($this->theme_path);
-    }
-
-    /**
-     * Scope: Only active themes
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Scope: Only free themes
-     */
-    public function scopeFree($query)
-    {
-        return $query->where('is_premium', false);
-    }
-
-    /**
-     * Scope: Only premium themes
-     */
-    public function scopePremium($query)
-    {
-        return $query->where('is_premium', true);
-    }
-
-    /**
-     * Get badge color based on premium status
-     */
     public function getBadgeColorAttribute(): string
     {
         return $this->is_premium ? 'warning' : 'success';
     }
 
-    /**
-     * Get badge text
-     */
     public function getBadgeTextAttribute(): string
     {
         return $this->is_premium ? 'Premium' : 'Free';
+    }
+
+    // ============================================
+    // THEME FILE MANAGEMENT
+    // ============================================
+
+    /**
+     * Check if theme component files exist
+     */
+    public function componentsExist(): bool
+    {
+        $requiredComponents = [
+            'header.blade.php',
+            'hero.blade.php',
+            'about.blade.php',
+            'projects.blade.php',
+            'skills.blade.php',
+            'experience.blade.php',
+            'education.blade.php',
+            'contact.blade.php',
+            'footer.blade.php',
+            'cv-button.blade.php'
+        ];
+
+        foreach ($requiredComponents as $component) {
+            if (!File::exists($this->component_path . '/' . $component)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Extract uploaded ZIP to component directory
+     */
+    public function extractZip(): bool
+    {
+        if (!$this->zip_file_path) {
+            return false;
+        }
+
+        $zipPath = Storage::disk('public')->path($this->zip_file_path);
+        
+        if (!File::exists($zipPath)) {
+            return false;
+        }
+
+        $extractPath = $this->component_path;
+
+        // Create directory if it doesn't exist
+        if (!File::exists($extractPath)) {
+            File::makeDirectory($extractPath, 0755, true);
+        }
+
+        $zip = new ZipArchive;
+        
+        if ($zip->open($zipPath) === TRUE) {
+            // Extract all files
+            $zip->extractTo($extractPath);
+            $zip->close();
+            
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Validate ZIP contains required components
+     */
+    public static function validateZip(string $zipPath): array
+    {
+        $requiredComponents = [
+            'header.blade.php',
+            'hero.blade.php',
+            'about.blade.php',
+            'projects.blade.php',
+            'skills.blade.php',
+            'experience.blade.php',
+            'education.blade.php',
+            'contact.blade.php',
+            'footer.blade.php',
+            'cv-button.blade.php'
+        ];
+
+        $zip = new ZipArchive;
+        $missing = [];
+
+        if ($zip->open($zipPath) === TRUE) {
+            foreach ($requiredComponents as $component) {
+                if ($zip->locateName($component) === false) {
+                    $missing[] = $component;
+                }
+            }
+            $zip->close();
+        }
+
+        return $missing;
+    }
+
+    /**
+     * Delete theme files from filesystem
+     */
+    public function deleteFiles(): void
+    {
+        // Delete component directory
+        if (File::exists($this->component_path)) {
+            File::deleteDirectory($this->component_path);
+        }
+
+        // Delete ZIP file
+        if ($this->zip_file_path) {
+            Storage::disk('public')->delete($this->zip_file_path);
+        }
+
+        // Delete thumbnail
+        if ($this->thumbnail_path) {
+            Storage::disk('public')->delete($this->thumbnail_path);
+        }
+    }
+
+    // ============================================
+    // USER ASSIGNMENT METHODS
+    // ============================================
+
+    /**
+     * Assign theme to user(s)
+     */
+    public function assignToUser($userId): void
+    {
+        $userIds = is_array($userId) ? $userId : [$userId];
+
+        foreach ($userIds as $id) {
+            $this->users()->syncWithoutDetaching([
+                $id => [
+                    'purchased_at' => now(),
+                    'is_active' => true,
+                ]
+            ]);
+        }
+    }
+
+    /**
+     * Remove theme access from user(s) and switch to theme1
+     */
+    public function removeFromUser($userId): void
+    {
+        $userIds = is_array($userId) ? $userId : [$userId];
+
+        foreach ($userIds as $id) {
+            $this->users()->detach($id);
+
+            // Switch user to default theme if they were using this one
+            $user = User::find($id);
+            if ($user && $user->active_theme === $this->slug) {
+                $user->update(['active_theme' => 'theme1']);
+            }
+        }
+    }
+
+    /**
+     * Get users who have access to this theme
+     */
+    public function getAssignedUsers()
+    {
+        return $this->users()
+            ->wherePivot('is_active', true)
+            ->select(['users.id', 'users.name', 'users.email', 'users.full_name'])
+            ->get();
+    }
+
+    // ============================================
+    // QUERY SCOPES
+    // ============================================
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeFree($query)
+    {
+        return $query->where('is_premium', false);
+    }
+
+    public function scopePremium($query)
+    {
+        return $query->where('is_premium', true);
+    }
+
+    // ============================================
+    // MODEL EVENTS
+    // ============================================
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Before deleting theme
+        static::deleting(function ($theme) {
+            // Can't delete theme1 (default)
+            if ($theme->slug === 'theme1') {
+                throw new \Exception('Cannot delete default theme (theme1)');
+            }
+
+            // Switch all users using this theme to theme1
+            User::where('active_theme', $theme->slug)
+                ->update(['active_theme' => 'theme1']);
+
+            // Remove all user assignments
+            $theme->users()->detach();
+
+            // Delete theme files
+            $theme->deleteFiles();
+        });
+
+        // Before deactivating theme
+        static::updating(function ($theme) {
+            // Can't deactivate theme1
+            if ($theme->slug === 'theme1' && !$theme->is_active) {
+                throw new \Exception('Cannot deactivate default theme (theme1)');
+            }
+
+            // If deactivating, switch affected users to theme1
+            if ($theme->isDirty('is_active') && !$theme->is_active) {
+                User::where('active_theme', $theme->slug)
+                    ->update(['active_theme' => 'theme1']);
+            }
+        });
+
+        // After creating/updating theme with ZIP
+        static::saved(function ($theme) {
+            if ($theme->isDirty('zip_file_path') && $theme->zip_file_path) {
+                $theme->extractZip();
+            }
+        });
     }
 }
