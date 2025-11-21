@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Enums\ActionsPosition; // Make sure this is imported
 
 class LandingPageContentResource extends Resource
 {
@@ -141,10 +142,9 @@ class LandingPageContentResource extends Resource
                     }),
 
                 Tables\Columns\TextColumn::make('order')
+                    ->sortable('info')
                     ->sortable()
-                    ->alignCenter()
-                    ->badge()
-                    ->color('info'),
+                    ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('M j, Y')
@@ -174,12 +174,25 @@ class LandingPageContentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->iconButton()
-                    ->tooltip('Edit Content'),
-                    
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('primary')
+                    ->tooltip('Edit'),
+
                 Tables\Actions\DeleteAction::make()
-                    ->iconButton()
-                    ->tooltip('Delete Content'),
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading(fn ($record) => 'Delete "'.$record->key.'" ?')
+                    ->modalDescription('This action cannot be undone.')
+                    ->tooltip('Delete'),
+            ])
+            ->actionsPosition(ActionsPosition::AfterColumns) // THIS IS THE KEY FIX
+
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Add New Content')
+                    ->icon('heroicon-o-plus')
+                    ->color('success'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -197,9 +210,6 @@ class LandingPageContentResource extends Resource
         ];
     }
 
-    /**
-     * Only Super Admins can access this resource
-     */
     public static function canViewAny(): bool
     {
         return auth()->user()?->hasRole('super_admin') ?? false;
