@@ -17,6 +17,10 @@ class HeroContentResource extends Resource
     protected static ?string $navigationGroup = 'Portfolio';
     protected static ?string $navigationLabel = 'Hero Section';
     protected static ?int $navigationSort = 1;
+    public static function canViewAny(): bool
+    {
+        return !auth()->user()?->hasRole('super_admin');
+    }
 
     public static function form(Form $form): Form
     {

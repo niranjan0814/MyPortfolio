@@ -16,6 +16,10 @@ class SkillResource extends Resource
     protected static ?string $model = Skill::class;
     protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
     protected static ?string $navigationGroup = 'Portfolio';
+    public static function canViewAny(): bool
+    {
+        return !auth()->user()?->hasRole('super_admin');
+    }
 
     public static function form(Forms\Form $form): Forms\Form
     {

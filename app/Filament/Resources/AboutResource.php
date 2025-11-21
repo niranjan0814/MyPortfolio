@@ -16,7 +16,10 @@ class AboutResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-information-circle';
     protected static ?string $navigationGroup = 'Portfolio';
     protected static ?string $navigationLabel = 'About Content';
-
+    public static function canViewAny(): bool
+    {
+        return !auth()->user()?->hasRole('super_admin');
+    }
     public static function form(Form $form): Form
     {
         $user = auth()->user();

@@ -16,6 +16,10 @@ class PageContentResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?string $navigationLabel = 'Page Content';
+    public static function canViewAny(): bool
+    {
+        return !auth()->user()?->hasRole('super_admin');
+    }
 
     public static function form(Form $form): Form
     {

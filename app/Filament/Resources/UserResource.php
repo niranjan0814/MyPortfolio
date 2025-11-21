@@ -15,9 +15,13 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationLabel = 'Users';
-    protected static ?string $modelLabel = 'User';
+   protected static ?string $navigationLabel = 'My Profile';
+    protected static ?string $modelLabel = 'My Profile';
     protected static ?int $navigationSort = 1;
+    public static function canViewAny(): bool
+{
+    return !auth()->user()?->hasRole('super_admin');
+}
 
     // ✅ CRITICAL: Only show current user's profile
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
