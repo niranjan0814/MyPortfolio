@@ -13,6 +13,7 @@ class LandingPageContent extends Model
         'value',
         'type',
         'order',
+        
     ];
 
     protected $casts = [

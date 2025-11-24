@@ -185,6 +185,7 @@ class EditTheme extends EditRecord
                         $action->cancel();
                     }
                 }),
+            
         ];
     }
 

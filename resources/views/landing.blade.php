@@ -262,26 +262,33 @@
     </section>
 
     <!-- Themes Section -->
-    <section id="themes" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
-        <div class="container mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['themes_title'] ?? 'Choose Your Theme' }}</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['themes_subtitle'] ?? 'Select from beautifully designed themes to get started' }}</p>
-            </div>
+   <section id="themes" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+    <div class="container mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['themes_title'] ?? 'Choose Your Theme' }}</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['themes_subtitle'] ?? 'Select from beautifully designed themes to get started' }}</p>
+        </div>
 
-            <form id="themeForm" action="{{ route('landing.select-theme') }}" method="POST" class="max-w-6xl mx-auto">
-                @csrf
+        <form id="themeForm" action="{{ route('landing.select-theme') }}" method="POST" class="max-w-6xl mx-auto">
+            @csrf
 
-                <div class="grid md:grid-cols-3 gap-8 mb-12">
-                    <!-- Theme 1 -->
-                    <div class="theme-card cursor-pointer theme-card-hover" data-theme="theme1">
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition">
-                            <!-- Preview -->
-                            <div class="h-48 hero-gradient relative overflow-hidden">
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                @foreach($availableThemes as $theme)
+                <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}" 
+                     data-theme="{{ $theme->slug }}">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition">
+                        <!-- Theme Preview -->
+                        <div class="h-48 relative overflow-hidden" style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
+                            @if($theme->thumbnail_path)
+                                <img src="{{ asset('storage/' . $theme->thumbnail_path) }}" 
+                                     alt="{{ $theme->name }}" 
+                                     class="w-full h-full object-cover">
+                            @else
+                                <!-- Default preview structure -->
                                 <div class="absolute top-4 left-4 right-4">
                                     <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 hero-gradient rounded-full"></div>
+                                            <div class="w-10 h-10 rounded-full" style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
                                             <div class="flex-1">
                                                 <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
                                                 <div class="h-2 bg-gray-200 rounded w-16"></div>
@@ -289,154 +296,61 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="absolute bottom-4 left-4 right-4 flex gap-2">
-                                    <div class="h-2 flex-1 bg-white/30 rounded"></div>
-                                    <div class="h-2 flex-1 bg-white/20 rounded"></div>
-                                </div>
-                            </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Theme Content -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
+                            <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
                             
-                            <!-- Content -->
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">Modern Professional</h3>
-                                <p class="text-gray-600 text-sm mb-4">Clean, contemporary design with smooth animations and professional typography.</p>
-                                
-                                <!-- Features -->
-                                <div class="space-y-2 mb-6 text-sm text-gray-600">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Glassmorphism effects</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Dark mode support</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Mobile responsive</span>
-                                    </div>
+                            <!-- Features -->
+                            @if($theme->features)
+                            <div class="space-y-2 mb-6 text-sm text-gray-600">
+                                @foreach(array_slice($theme->features, 0, 3) as $feature)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-check text-orange-500"></i>
+                                    <span>{{ $feature }}</span>
                                 </div>
+                                @endforeach
+                            </div>
+                            @endif
+                            
+                            <!-- Badge & Radio -->
+                            <div class="flex items-center justify-between">
+                                @if($theme->is_premium)
+                                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">💎 Premium</span>
+                                @else
+                                    <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
+                                @endif
                                 
-                                <!-- Badge -->
-                                <div class="flex items-center justify-between">
-                                    <span class="inline-block bg-orange-100 text-orange-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Active</span>
+                                @if($theme->is_active)
                                     <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theme 2 -->
-                    <div class="theme-card cursor-pointer theme-card-hover opacity-60 pointer-events-none" data-theme="theme2">
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200">
-                            <!-- Preview -->
-                            <div class="h-48 bg-gradient-to-br from-emerald-500 to-emerald-700 relative overflow-hidden">
-                                <div class="absolute top-4 left-4 right-4">
-                                    <div class="bg-white rounded-lg p-4 shadow-lg">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded"></div>
-                                            <div class="flex-1">
-                                                <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
-                                                <div class="h-2 bg-gray-200 rounded w-16"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Content -->
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">Corporate Clean</h3>
-                                <p class="text-gray-600 text-sm mb-4">Professional business layout with minimalist design principles.</p>
-                                
-                                <!-- Features -->
-                                <div class="space-y-2 mb-6 text-sm text-gray-600">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Minimal design</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Typography focused</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>SEO optimized</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Badge -->
-                                <div class="flex items-center justify-between">
-                                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Coming Soon</span>
-                                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theme 3 -->
-                    <div class="theme-card cursor-pointer theme-card-hover opacity-60 pointer-events-none" data-theme="theme3">
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200">
-                            <!-- Preview -->
-                            <div class="h-48 bg-gradient-to-br from-amber-500 to-orange-700 relative overflow-hidden">
-                                <div class="absolute top-4 left-4 right-4">
-                                    <div class="bg-gray-900 rounded-lg p-4 shadow-lg">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full"></div>
-                                            <div class="flex-1">
-                                                <div class="h-2.5 bg-gray-700 rounded w-24 mb-1.5"></div>
-                                                <div class="h-2 bg-gray-600 rounded w-16"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Content -->
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">Creative Bold</h3>
-                                <p class="text-gray-600 text-sm mb-4">Vibrant and artistic design for creative professionals.</p>
-                                
-                                <!-- Features -->
-                                <div class="space-y-2 mb-6 text-sm text-gray-600">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Bold colors</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Dynamic animations</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i class="fas fa-check text-orange-500"></i>
-                                        <span>Portfolio focused</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Badge -->
-                                <div class="flex items-center justify-between">
-                                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Coming Soon</span>
-                                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer"></div>
-                                </div>
+                                @else
+                                    <span class="text-xs text-gray-500">Coming Soon</span>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
+            </div>
 
-                <input type="hidden" name="theme" id="selectedTheme" value="theme1" required>
+            <input type="hidden" name="theme" id="selectedTheme" value="{{ $availableThemes->where('is_active', true)->first()->slug ?? 'theme1' }}" required>
 
-                <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button type="submit" class="btn-primary text-white px-12 py-4 rounded-lg font-bold text-lg shadow-lg">
-                        Get Started With Theme
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                    <a href="#contact" class="btn-secondary px-12 py-4 rounded-lg font-bold text-center">
-                        Have Questions?
-                    </a>
-                </div>
-            </form>
-        </div>
-    </section>
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button type="submit" class="btn-primary text-white px-12 py-4 rounded-lg font-bold text-lg shadow-lg">
+                    Get Started With Theme
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <a href="#contact" class="btn-secondary px-12 py-4 rounded-lg font-bold text-center">
+                    Have Questions?
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 px-4 bg-white">
@@ -485,7 +399,7 @@
                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 border border-gray-200">
                     <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
                         @csrf
-                        
+                        <input type="hidden" name="portfolio_user_id" value="{{ $admin->id }}">
                         <div>
                             <label class="block text-sm font-semibold text-gray-900 mb-2">Full Name</label>
                             <input type="text" name="name" required class="contact-input-focus w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-900 placeholder-gray-500" placeholder="Your name">

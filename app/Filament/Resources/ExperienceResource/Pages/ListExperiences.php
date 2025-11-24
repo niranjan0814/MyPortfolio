@@ -13,6 +13,18 @@ class ListExperiences extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('preview')
+                ->label('Preview My Portfolio')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->modalHeading('Portfolio Preview')
+                ->modalWidth('7xl')
+                ->modalContent(
+                    view('filament.modals.portfolio-preview')
+                )
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close'),
+
             Actions\CreateAction::make(),
         ];
     }

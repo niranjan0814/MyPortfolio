@@ -1,8 +1,6 @@
 @props([])
 
-@php
-     $user = \App\Models\User::first();
-@endphp
+
 
 <section id="contact" class="section-full py-20 relative overflow-hidden" 
          style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));" 
@@ -245,6 +243,7 @@
 
                     <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
                         @csrf
+                        <input type="hidden" name="portfolio_user_id" value="{{$portfolioOwnerId}}">
                         <div>
                             <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your Name *</label>
                             <input type="text" id="name" name="name" required

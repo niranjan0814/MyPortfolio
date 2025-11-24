@@ -6,6 +6,7 @@ use App\Models\LandingPageContent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Theme;
 
 class LandingPageController extends Controller
 {
@@ -107,8 +108,12 @@ class LandingPageController extends Controller
             $data['preview_initial'] = 'J';
             $data['preview_has_image'] = false;
         }
-
-        return view('landing', compact('data'));
+        $admin = User::find(4); 
+        $availableThemes = Theme::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+        return view('landing', compact('data', 'availableThemes', 'admin'));
+        
     }
 
     /**

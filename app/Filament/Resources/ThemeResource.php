@@ -301,6 +301,29 @@ class ThemeResource extends Resource
                             $action->cancel();
                         }
                     }),
+                Tables\Actions\Action::make('download_zip')
+                    ->label('Download ZIP')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->visible(fn($record) => !empty($record->zip_file_path))
+                    ->action(function ($record) {
+                        $zipPath = Storage::disk('public')->path($record->zip_file_path);
+
+                        if (!file_exists($zipPath)) {
+                            Notification::make()
+                                ->title('ZIP File Missing')
+                                ->body('The theme ZIP file could not be found.')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+
+                        return response()->download(
+                            $zipPath,
+                            $record->slug . '-v' . $record->version . '.zip'
+                        );
+                    }),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

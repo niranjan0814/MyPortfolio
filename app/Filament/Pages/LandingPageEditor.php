@@ -11,6 +11,8 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Filament\Actions;
+
 
 class LandingPageEditor extends Page implements HasForms
 {
@@ -55,7 +57,7 @@ class LandingPageEditor extends Page implements HasForms
 
         // ✅ CRITICAL: Clear ALL cache after saving
         Cache::flush();
-        
+
         // Also clear specific landing page cache keys
         Cache::forget('landing_section_hero');
         Cache::forget('landing_section_features');
@@ -83,24 +85,24 @@ class LandingPageEditor extends Page implements HasForms
                         ->required()
                         ->maxLength(255)
                         ->helperText('First line of the hero title (e.g., "Showcase Your Extraordinary")'),
-                    
+
                     Forms\Components\TextInput::make('hero_title_line2')
                         ->label('Hero Title - Line 2')
                         ->required()
                         ->maxLength(255)
                         ->helperText('Second line in orange color (e.g., "Work")'),
-                    
+
                     Forms\Components\Textarea::make('hero_subtitle')
                         ->label('Hero Subtitle')
                         ->required()
                         ->rows(3)
                         ->maxLength(500),
-                    
+
                     Forms\Components\TextInput::make('hero_cta_primary')
                         ->label('Primary CTA Text')
                         ->required()
                         ->maxLength(50),
-                    
+
                     Forms\Components\TextInput::make('hero_cta_secondary')
                         ->label('Secondary CTA Text')
                         ->required()
@@ -167,7 +169,7 @@ class LandingPageEditor extends Page implements HasForms
                         ->required()
                         ->reactive()
                         ->helperText('Select which preview to show in the hero section'),
-                    
+
                     // ✅ User Selection Dropdown
                     Forms\Components\Select::make('preview_user_id')
                         ->label('Preview User')
@@ -175,15 +177,15 @@ class LandingPageEditor extends Page implements HasForms
                             return User::whereHas('roles', function ($query) {
                                 $query->whereIn('name', ['free_user', 'premium_user']);
                             })
-                            ->whereDoesntHave('roles', function ($query) {
-                                $query->where('name', 'super_admin');
-                            })
-                            ->orderBy('full_name')
-                            ->get()
-                            ->mapWithKeys(function ($user) {
-                                return [$user->id => $user->full_name ?: $user->name];
-                            })
-                            ->toArray();
+                                ->whereDoesntHave('roles', function ($query) {
+                                    $query->where('name', 'super_admin');
+                                })
+                                ->orderBy('full_name')
+                                ->get()
+                                ->mapWithKeys(function ($user) {
+                                    return [$user->id => $user->full_name ?: $user->name];
+                                })
+                                ->toArray();
                         })
                         ->searchable()
                         ->required()
@@ -194,7 +196,7 @@ class LandingPageEditor extends Page implements HasForms
                                 if ($user) {
                                     // Preview the data that will be shown
                                     $set('preview_name', $user->full_name ?? $user->name);
-                                    
+
                                     $description = $user->description ?? 'Professional Developer';
                                     $cleanDescription = strip_tags($description);
                                     $cleanDescription = preg_replace('/\s+/', ' ', $cleanDescription);
@@ -203,7 +205,7 @@ class LandingPageEditor extends Page implements HasForms
                                         $cleanDescription = substr($cleanDescription, 0, 97) . '...';
                                     }
                                     $set('preview_title', $cleanDescription);
-                                    
+
                                     $about = $user->about;
                                     $bio = $about ? $about->about_description : 'Creating amazing digital experiences';
                                     $cleanBio = strip_tags($bio);
@@ -214,36 +216,36 @@ class LandingPageEditor extends Page implements HasForms
                                         $cleanBio = substr($cleanBio, 0, 197) . '...';
                                     }
                                     $set('preview_bio', $cleanBio);
-                                    
+
                                     $set('preview_projects_count', $user->projects()->count());
                                 }
                             }
                         })
                         ->helperText('⚡ Live Preview: When users update their profiles, the landing page automatically shows their latest data!')
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
-                    
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
+
                     // ✅ EDITABLE Preview fields (no longer disabled)
                     Forms\Components\Placeholder::make('preview_info')
                         ->label('Preview Data')
                         ->content('The fields below show what will appear on the landing page. You can manually edit these values, but they will be overridden with live data when the user updates their profile.')
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-                    
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
+
                     Forms\Components\TextInput::make('preview_name')
                         ->label('Preview: User Name')
                         ->helperText('Overridden by user\'s actual name in real-time')
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-                    
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
+
                     Forms\Components\TextInput::make('preview_title')
                         ->label('Preview: User Title')
                         ->helperText('Overridden by user\'s description in real-time')
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-                    
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
+
                     Forms\Components\Textarea::make('preview_bio')
                         ->label('Preview: Bio')
                         ->rows(2)
                         ->helperText('Overridden by user\'s about description in real-time')
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-                    
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
+
                     Forms\Components\Grid::make(3)
                         ->schema([
                             Forms\Components\TextInput::make('preview_projects_count')
@@ -259,12 +261,12 @@ class LandingPageEditor extends Page implements HasForms
                                 ->default('5')
                                 ->helperText('You can customize this'),
                         ])
-                        ->visible(fn ($get) => $get('visual_type') === 'portfolio_preview'),
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
                 ])
-                
+
                 ->columns(2)
                 ->collapsible(),
-                
+
 
             Forms\Components\Section::make('⚡ Features Section')
                 ->description('Manage the feature blocks that highlight what your platform offers.')
@@ -394,4 +396,23 @@ class LandingPageEditor extends Page implements HasForms
     {
         return 'data';
     }
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\Action::make('preview')
+                ->label('Preview Landing Page')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->modalHeading('Landing Page Preview')
+                ->modalWidth('7xl')
+                ->modalContent(
+                    view('filament.modals.landing-preview', [
+                        'data' => $this->form->getState(),
+                    ])
+                )
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close'),
+        ];
+    }
+
 }

@@ -104,6 +104,7 @@ class PortfolioController extends Controller
             'headerContent'   => PageContent::getSection('header', $user->id),
             'footerContent'   => PageContent::getSection('footer', $user->id),
             'contactContent'  => PageContent::getSection('contact', $user->id),
+            'portfolioOwnerId'=> $user->id, // For contact form hidden field
         ]);
     }
 

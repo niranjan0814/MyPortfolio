@@ -245,6 +245,7 @@
 
                     <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
                         @csrf
+                        <input type="hidden" name="portfolio_user_id" value="{{ $portfolio_user_id ?? $user->id }}">
                         <div>
                             <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your Name *</label>
                             <input type="text" id="name" name="name" required

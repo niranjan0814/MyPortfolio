@@ -13,7 +13,19 @@ class EditSkill extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\Action::make('preview')
+                ->label('Preview My Portfolio')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->modalHeading('Portfolio Preview')
+                ->modalWidth('7xl')
+                ->modalContent(
+                    view('filament.modals.portfolio-preview')
+                )
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close'),
+
+            Actions\DeleteAction::make(), // your existing delete action
         ];
     }
     

@@ -26,6 +26,7 @@ class Theme extends Model
         'created_by',
         'features',
         'colors',
+        
     ];
 
     protected $casts = [

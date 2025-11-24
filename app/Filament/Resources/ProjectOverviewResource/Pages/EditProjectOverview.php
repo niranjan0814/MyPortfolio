@@ -13,6 +13,18 @@ class EditProjectOverview extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            // 🔍 Preview My Portfolio Button
+            Actions\Action::make('preview')
+                ->label('Preview My Portfolio')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->modalHeading('Portfolio Preview')
+                ->modalWidth('7xl')
+                ->modalContent(view('filament.modals.portfolio-preview'))
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close'),
+
+            // 🗑 Existing Delete Button
             Actions\DeleteAction::make(),
         ];
     }

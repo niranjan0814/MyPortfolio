@@ -13,6 +13,20 @@ class EditEducation extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            // Preview Button
+            Actions\Action::make('preview')
+                ->label('Preview My Portfolio')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->modalHeading('Portfolio Preview')
+                ->modalWidth('7xl')
+                ->modalContent(
+                    view('filament.modals.portfolio-preview')
+                )
+                ->modalSubmitAction(false)
+                ->modalCancelActionLabel('Close'),
+
+            // Your existing delete action
             Actions\DeleteAction::make(),
         ];
     }

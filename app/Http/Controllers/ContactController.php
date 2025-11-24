@@ -1,8 +1,9 @@
 <?php
-// app/Http/Controllers/ContactController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Enquiry;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -14,15 +15,18 @@ class ContactController extends Controller
             'email' => 'required|email|max:255',
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string',
+            'portfolio_user_id' => 'nullable|exists:users,id', // ✅ NEW: Hidden field for user
         ]);
 
-        // ✅ CRITICAL: Associate enquiry with the WEBSITE OWNER (first user)
-        // This assumes portfolio visitors are submitting enquiries to the site owner
-        $portfolioOwner = \App\Models\User::first();
+        // ✅ FIX: Use provided user_id or fallback to first user
+        $portfolioOwnerId = $validated['portfolio_user_id'] ?? User::first()->id;
         
         Enquiry::create([
-            ...$validated,
-            'user_id' => $portfolioOwner->id ?? null,
+            'user_id' => $portfolioOwnerId,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'] ?? null,
+            'message' => $validated['message'],
         ]);
 
         return redirect()->back()->with('success', 'Thank you for your message! I will get back to you soon.');
