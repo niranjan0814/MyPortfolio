@@ -156,7 +156,7 @@ class LandingPageEditor extends Page implements HasForms
                 ->collapsible(),
 
             Forms\Components\Section::make('🎨 Hero Visual Preview')
-                ->description('Select which user to showcase in the hero section preview card. Their live data will be displayed automatically.')
+                ->description('Configure the portfolio preview card in the hero section. Two options: auto-fill from a real user OR manually edit all fields.')
                 ->schema([
                     Forms\Components\Select::make('visual_type')
                         ->label('Visual Type')
@@ -167,12 +167,13 @@ class LandingPageEditor extends Page implements HasForms
                         ])
                         ->default('portfolio_preview')
                         ->required()
-                        ->reactive()
-                        ->helperText('Select which preview to show in the hero section'),
+                        ->reactive(),
 
-                    // ✅ User Selection Dropdown
+                    // ========================================
+                    // OPTION 1: Auto-Fill from Real User
+                    // ========================================
                     Forms\Components\Select::make('preview_user_id')
-                        ->label('Preview User')
+                        ->label('🔗 Link to Real User (Optional)')
                         ->options(function () {
                             return User::whereHas('roles', function ($query) {
                                 $query->whereIn('name', ['free_user', 'premium_user']);
@@ -183,24 +184,23 @@ class LandingPageEditor extends Page implements HasForms
                                 ->orderBy('full_name')
                                 ->get()
                                 ->mapWithKeys(function ($user) {
-                                    return [$user->id => $user->full_name ?: $user->name];
+                                    return [$user->id => ($user->full_name ?: $user->name) . ' (' . $user->email . ')'];
                                 })
                                 ->toArray();
                         })
                         ->searchable()
-                        ->required()
+                        ->nullable()
                         ->reactive()
                         ->afterStateUpdated(function ($state, $set) {
                             if ($state) {
                                 $user = User::with(['projects', 'about'])->find($state);
                                 if ($user) {
-                                    // Preview the data that will be shown
+                                    // Auto-fill all fields
                                     $set('preview_name', $user->full_name ?? $user->name);
 
                                     $description = $user->description ?? 'Professional Developer';
                                     $cleanDescription = strip_tags($description);
-                                    $cleanDescription = preg_replace('/\s+/', ' ', $cleanDescription);
-                                    $cleanDescription = trim($cleanDescription);
+                                    $cleanDescription = preg_replace('/\s+/', ' ', trim($cleanDescription));
                                     if (strlen($cleanDescription) > 100) {
                                         $cleanDescription = substr($cleanDescription, 0, 97) . '...';
                                     }
@@ -209,64 +209,135 @@ class LandingPageEditor extends Page implements HasForms
                                     $about = $user->about;
                                     $bio = $about ? $about->about_description : 'Creating amazing digital experiences';
                                     $cleanBio = strip_tags($bio);
-                                    $cleanBio = preg_replace('/\s+/', ' ', $cleanBio);
+                                    $cleanBio = preg_replace('/\s+/', ' ', trim($cleanBio));
                                     $cleanBio = preg_replace('/&nbsp;/', ' ', $cleanBio);
-                                    $cleanBio = trim($cleanBio);
                                     if (strlen($cleanBio) > 200) {
                                         $cleanBio = substr($cleanBio, 0, 197) . '...';
                                     }
                                     $set('preview_bio', $cleanBio);
 
                                     $set('preview_projects_count', $user->projects()->count());
+
+                                    // Profile image
+                                    if ($user->profile_image) {
+                                        if (filter_var($user->profile_image, FILTER_VALIDATE_URL)) {
+                                            $set('preview_image_url', $user->profile_image);
+                                        } else {
+                                            $set('preview_image_url', asset('storage/' . $user->profile_image));
+                                        }
+                                    } else {
+                                        $set('preview_image_url', null);
+                                    }
+
+                                    // Portfolio link
+                                    $set('preview_portfolio_url', route('portfolio.show', $user->slug));
                                 }
                             }
                         })
-                        ->helperText('⚡ Live Preview: When users update their profiles, the landing page automatically shows their latest data!')
+                        ->helperText('Select a user to auto-populate fields below. Leave empty to use custom values.')
                         ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
 
-                    // ✅ EDITABLE Preview fields (no longer disabled)
-                    Forms\Components\Placeholder::make('preview_info')
-                        ->label('Preview Data')
-                        ->content('The fields below show what will appear on the landing page. You can manually edit these values, but they will be overridden with live data when the user updates their profile.')
-                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
+                    // ========================================
+                    // INFO BOX
+                    // ========================================
+                    Forms\Components\Placeholder::make('preview_modes')
+                        ->label('How Preview Data Works')
+                        ->content(new \Illuminate\Support\HtmlString('
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="flex-shrink-0">
+                                        <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-sm space-y-2">
+                                        <p class="font-semibold text-gray-900">Two Ways to Configure Preview:</p>
+                                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                            <li><strong>Live User Mode:</strong> Select a user above → fields auto-fill → landing page shows their REAL data</li>
+                                            <li><strong>Manual Mode:</strong> Leave user empty → edit fields below → landing page shows your custom data</li>
+                                        </ul>
+                                        <p class="text-xs text-gray-600 italic mt-2">💡 Tip: You can select a user to auto-fill, then manually edit the fields to override specific values!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        '))
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
 
-                    Forms\Components\TextInput::make('preview_name')
-                        ->label('Preview: User Name')
-                        ->helperText('Overridden by user\'s actual name in real-time')
-                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-
-                    Forms\Components\TextInput::make('preview_title')
-                        ->label('Preview: User Title')
-                        ->helperText('Overridden by user\'s description in real-time')
-                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-
-                    Forms\Components\Textarea::make('preview_bio')
-                        ->label('Preview: Bio')
-                        ->rows(2)
-                        ->helperText('Overridden by user\'s about description in real-time')
-                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview' && $get('preview_user_id')),
-
-                    Forms\Components\Grid::make(3)
+                    // ========================================
+                    // OPTION 2: Manual Editable Fields
+                    // ========================================
+                    Forms\Components\Grid::make(2)
                         ->schema([
-                            Forms\Components\TextInput::make('preview_projects_count')
-                                ->label('Projects (Live Count)')
-                                ->numeric()
-                                ->helperText('Real-time project count from database'),
-                            Forms\Components\TextInput::make('preview_clients_count')
-                                ->label('Clients Count')
-                                ->default('10+')
-                                ->helperText('You can customize this'),
-                            Forms\Components\TextInput::make('preview_awards_count')
-                                ->label('Awards Count')
-                                ->default('5')
-                                ->helperText('You can customize this'),
+                            Forms\Components\TextInput::make('preview_name')
+                                ->label('👤 Preview: Name')
+                                ->default('John Doe')
+                                ->required()
+                                ->maxLength(100)
+                                ->helperText('Display name on preview card'),
+
+                            Forms\Components\TextInput::make('preview_title')
+                                ->label('💼 Preview: Job Title')
+                                ->default('Senior Product Designer')
+                                ->required()
+                                ->maxLength(150)
+                                ->helperText('Professional title or role'),
                         ])
                         ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
-                ])
 
+                    Forms\Components\Textarea::make('preview_bio')
+                        ->label('📝 Preview: Short Bio')
+                        ->default('Crafting beautiful digital experiences for over 5 years')
+                        ->required()
+                        ->rows(2)
+                        ->maxLength(250)
+                        ->helperText('Brief description (max 250 chars)')
+                        ->columnSpanFull()
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
+
+                    Forms\Components\TextInput::make('preview_image_url')
+                        ->label('🖼️ Preview: Profile Image URL')
+                        ->url()
+                        ->placeholder('https://example.com/profile.jpg')
+                        ->helperText('Leave empty to show name initial instead')
+                        ->columnSpanFull()
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
+
+                    // ========================================
+                    // STATS
+                    // ========================================
+                    Forms\Components\Fieldset::make('📊 Preview Statistics')
+                        ->schema([
+                            Forms\Components\TextInput::make('preview_projects_count')
+                                ->label('Projects')
+                                ->default('24')
+                                ->required()
+                                ->helperText('e.g., "24" or "20+"'),
+
+                            Forms\Components\TextInput::make('preview_clients_count')
+                                ->label('Clients')
+                                ->default('50+')
+                                ->required()
+                                ->helperText('e.g., "50+" or "100"'),
+
+                            Forms\Components\TextInput::make('preview_awards_count')
+                                ->label('Awards')
+                                ->default('12')
+                                ->required()
+                                ->helperText('e.g., "12" or "5+"'),
+                        ])
+                        ->columns(3)
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
+
+                    Forms\Components\TextInput::make('preview_portfolio_url')
+                        ->label('🔗 Preview: Portfolio Link (Optional)')
+                        ->url()
+                        ->placeholder('https://example.com/portfolio')
+                        ->helperText('Link to full portfolio or leave empty')
+                        ->columnSpanFull()
+                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
+                ])
                 ->columns(2)
                 ->collapsible(),
-
 
             Forms\Components\Section::make('⚡ Features Section')
                 ->description('Manage the feature blocks that highlight what your platform offers.')
