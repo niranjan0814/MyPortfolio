@@ -191,7 +191,8 @@
             <div class="max-w-7xl mx-auto px-6 md:px-12 py-6">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
                     <p class="text-center md:text-left" style="color: var(--text-muted);">
-                        © {{ date('Y') }} {{ $user->full_name ?? 'Your Name' }}. All Rights Reserved.
+                        Created with Detect ❤️ by {{ $user->full_name ?? 'Your Name' }}. © {{ date('Y') }} All Rights Reserved.
+                    
                     </p>
                     
                 </div>

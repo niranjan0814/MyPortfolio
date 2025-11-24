@@ -17,10 +17,7 @@ class EnquiryResource extends Resource
     protected static ?string $model = Enquiry::class;
     protected static ?string $navigationIcon = 'heroicon-o-envelope';
     protected static ?string $navigationGroup = 'Contact';
-    public static function canViewAny(): bool
-    {
-        return !auth()->user()?->hasRole('super_admin');
-    }
+   
 
     public static function infolist(Infolist $infolist): Infolist
     {
