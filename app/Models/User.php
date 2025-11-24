@@ -144,9 +144,10 @@ class User extends Authenticatable
      */
     public function canAccessTheme(string $themeSlug): bool
     {
-        // Super admins can access all themes
+        // ✅ FIX: Super admins can access all active themes
         if ($this->hasRole('super_admin')) {
-            return true;
+            $theme = \App\Models\Theme::where('slug', $themeSlug)->first();
+            return $theme && $theme->is_active;
         }
 
         // theme1 is always accessible to everyone
@@ -156,7 +157,8 @@ class User extends Authenticatable
 
         // Check if user owns this theme and it's active
         return $this->themes()
-            ->where('slug', $themeSlug)
+            ->where('themes.slug', $themeSlug)
+            ->where('themes.is_active', true)
             ->wherePivot('is_active', true)
             ->exists();
     }
@@ -166,17 +168,22 @@ class User extends Authenticatable
      */
     public function availableThemes()
     {
+        // ✅ FIX: Super admins get ALL active themes
         if ($this->hasRole('super_admin')) {
-            return Theme::active()->get();
+            return \App\Models\Theme::where('themes.is_active', true)
+                ->orderBy('sort_order')
+                ->get();
         }
 
         // Everyone gets theme1 + any premium themes they own and are active
-        return Theme::where('slug', 'theme1')
-            ->orWhereHas('users', function ($query) {
-                $query->where('users.id', $this->id)
-                      ->where('theme_user.is_active', true);
-            })
-            ->where('is_active', true)
+        return \App\Models\Theme::where(function ($query) {
+            $query->where('themes.slug', 'theme1')
+                ->orWhereHas('users', function ($q) {
+                    $q->where('users.id', $this->id)
+                        ->where('theme_user.is_active', true);
+                });
+        })
+            ->where('themes.is_active', true)
             ->orderBy('sort_order')
             ->get();
     }

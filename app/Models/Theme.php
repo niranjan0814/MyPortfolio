@@ -121,6 +121,7 @@ class Theme extends Model
         $zipPath = Storage::disk('public')->path($this->zip_file_path);
         
         if (!File::exists($zipPath)) {
+            \Log::error("ZIP file not found: {$zipPath}");
             return false;
         }
 
@@ -129,25 +130,53 @@ class Theme extends Model
         // Create directory if it doesn't exist
         if (!File::exists($extractPath)) {
             File::makeDirectory($extractPath, 0755, true);
+        } else {
+            // Clean existing files to avoid conflicts
+            File::cleanDirectory($extractPath);
         }
 
         $zip = new ZipArchive;
         
         if ($zip->open($zipPath) === TRUE) {
-            // Extract all files
-            $zip->extractTo($extractPath);
+            // ✅ CRITICAL FIX: Extract files properly
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                
+                // Skip directories
+                if (substr($filename, -1) === '/') {
+                    continue;
+                }
+                
+                // ✅ FIX: Remove any parent folder from the path
+                // Example: "themeb/hero.blade.php" becomes "hero.blade.php"
+                $basename = basename($filename);
+                
+                // Only extract .blade.php files (skip other files)
+                if (pathinfo($basename, PATHINFO_EXTENSION) === 'php') {
+                    $fileContent = $zip->getFromIndex($i);
+                    
+                    if ($fileContent !== false) {
+                        $targetPath = $extractPath . '/' . $basename;
+                        File::put($targetPath, $fileContent);
+                        \Log::info("Extracted: {$basename} to {$targetPath}");
+                    }
+                }
+            }
+            
             $zip->close();
             
+            \Log::info("Theme {$this->slug} extracted successfully to {$extractPath}");
             return true;
         }
 
+        \Log::error("Failed to open ZIP: {$zipPath}");
         return false;
     }
 
     /**
      * Validate ZIP contains required components
      */
-    public static function validateZip(string $zipPath): array
+   public static function validateZip(string $zipPath): array
     {
         $requiredComponents = [
             'header.blade.php',
@@ -167,7 +196,20 @@ class Theme extends Model
 
         if ($zip->open($zipPath) === TRUE) {
             foreach ($requiredComponents as $component) {
-                if ($zip->locateName($component) === false) {
+                $found = false;
+                
+                // Check all files in ZIP
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $basename = basename($filename);
+                    
+                    if ($basename === $component) {
+                        $found = true;
+                        break;
+                    }
+                }
+                
+                if (!$found) {
                     $missing[] = $component;
                 }
             }
