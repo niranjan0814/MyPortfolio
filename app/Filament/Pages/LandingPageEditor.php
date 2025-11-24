@@ -46,10 +46,14 @@ class LandingPageEditor extends Page implements HasForms
         $data = $this->form->getState();
 
         foreach ($data as $key => $value) {
+            // Determine the section based on the key prefix
+            $section = $this->determineSectionFromKey($key);
+            
             LandingPageContent::updateOrCreate(
                 ['key' => $key],
                 [
                     'value' => $value,
+                    'section' => $section,  // ✅ FIX: Add section field
                     'updated_at' => now()
                 ]
             );
@@ -72,6 +76,28 @@ class LandingPageEditor extends Page implements HasForms
 
         // Refresh the form with updated data
         $this->mount();
+    }
+
+    /**
+     * Determine the section name based on the field key
+     */
+    private function determineSectionFromKey(string $key): string
+    {
+        if (str_starts_with($key, 'hero_') || str_starts_with($key, 'stat_')) {
+            return 'hero';
+        } elseif (str_starts_with($key, 'preview_') || str_starts_with($key, 'visual_')) {
+            return 'hero';
+        } elseif (str_starts_with($key, 'feature')) {
+            return 'features';
+        } elseif (str_starts_with($key, 'themes_')) {
+            return 'themes';
+        } elseif (str_starts_with($key, 'contact_')) {
+            return 'contact';
+        } elseif (str_starts_with($key, 'footer_')) {
+            return 'footer';
+        }
+        
+        return 'general';
     }
 
     protected function getFormSchema(): array
@@ -156,7 +182,7 @@ class LandingPageEditor extends Page implements HasForms
                 ->collapsible(),
 
             Forms\Components\Section::make('🎨 Hero Visual Preview')
-                ->description('Configure the portfolio preview card in the hero section. Two options: auto-fill from a real user OR manually edit all fields.')
+                ->description('Configure the portfolio preview card. You can link to a real user OR manually edit all fields.')
                 ->schema([
                     Forms\Components\Select::make('visual_type')
                         ->label('Visual Type')
@@ -167,11 +193,10 @@ class LandingPageEditor extends Page implements HasForms
                         ])
                         ->default('portfolio_preview')
                         ->required()
-                        ->reactive(),
+                        ->reactive()
+                        ->helperText('Select which preview to show in the hero section'),
 
-                    // ========================================
-                    // OPTION 1: Auto-Fill from Real User
-                    // ========================================
+                    // ✅ User Selection Dropdown (OPTIONAL)
                     Forms\Components\Select::make('preview_user_id')
                         ->label('🔗 Link to Real User (Optional)')
                         ->options(function () {
@@ -189,13 +214,13 @@ class LandingPageEditor extends Page implements HasForms
                                 ->toArray();
                         })
                         ->searchable()
-                        ->nullable()
+                        ->nullable()  // ✅ Made optional
                         ->reactive()
                         ->afterStateUpdated(function ($state, $set) {
                             if ($state) {
                                 $user = User::with(['projects', 'about'])->find($state);
                                 if ($user) {
-                                    // Auto-fill all fields
+                                    // Auto-fill fields when user is selected
                                     $set('preview_name', $user->full_name ?? $user->name);
 
                                     $description = $user->description ?? 'Professional Developer';
@@ -218,54 +243,30 @@ class LandingPageEditor extends Page implements HasForms
 
                                     $set('preview_projects_count', $user->projects()->count());
 
-                                    // Profile image
-                                    if ($user->profile_image) {
-                                        if (filter_var($user->profile_image, FILTER_VALIDATE_URL)) {
-                                            $set('preview_image_url', $user->profile_image);
-                                        } else {
-                                            $set('preview_image_url', asset('storage/' . $user->profile_image));
-                                        }
-                                    } else {
-                                        $set('preview_image_url', null);
-                                    }
-
-                                    // Portfolio link
+                                    // Set portfolio URL
                                     $set('preview_portfolio_url', route('portfolio.show', $user->slug));
                                 }
                             }
                         })
-                        ->helperText('Select a user to auto-populate fields below. Leave empty to use custom values.')
+                        ->helperText('💡 Select a user to auto-fill fields, or leave empty to use custom values below')
                         ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
 
-                    // ========================================
-                    // INFO BOX
-                    // ========================================
+                    // ✅ INFO BOX
                     Forms\Components\Placeholder::make('preview_modes')
                         ->label('How Preview Data Works')
                         ->content(new \Illuminate\Support\HtmlString('
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
-                                <div class="flex items-start gap-3">
-                                    <div class="flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <div class="text-sm space-y-2">
-                                        <p class="font-semibold text-gray-900">Two Ways to Configure Preview:</p>
-                                        <ul class="list-disc list-inside space-y-1 text-gray-700">
-                                            <li><strong>Live User Mode:</strong> Select a user above → fields auto-fill → landing page shows their REAL data</li>
-                                            <li><strong>Manual Mode:</strong> Leave user empty → edit fields below → landing page shows your custom data</li>
-                                        </ul>
-                                        <p class="text-xs text-gray-600 italic mt-2">💡 Tip: You can select a user to auto-fill, then manually edit the fields to override specific values!</p>
-                                    </div>
-                                </div>
+                            <div class="text-sm space-y-2">
+                                <p class="font-semibold">Two Ways to Configure Preview:</p>
+                                <ul class="list-disc list-inside space-y-1 ml-2">
+                                    <li><strong>Live User Mode:</strong> Select a user above → fields auto-fill → landing page shows their REAL data</li>
+                                    <li><strong>Manual Mode:</strong> Leave user empty → edit fields below → landing page shows your custom data</li>
+                                </ul>
+                                <p class="text-blue-600 mt-2">💡 Tip: You can select a user to auto-fill, then manually edit the fields to override specific values!</p>
                             </div>
                         '))
                         ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
 
-                    // ========================================
-                    // OPTION 2: Manual Editable Fields
-                    // ========================================
+                    // ✅ FULLY EDITABLE Fields (No longer disabled!)
                     Forms\Components\Grid::make(2)
                         ->schema([
                             Forms\Components\TextInput::make('preview_name')
@@ -274,8 +275,8 @@ class LandingPageEditor extends Page implements HasForms
                                 ->required()
                                 ->maxLength(100)
                                 ->helperText('Display name on preview card'),
-
-                            Forms\Components\TextInput::make('preview_title')
+                            
+                            Forms\Components\TextArea::make('preview_title')
                                 ->label('💼 Preview: Job Title')
                                 ->default('Senior Product Designer')
                                 ->required()
@@ -294,17 +295,7 @@ class LandingPageEditor extends Page implements HasForms
                         ->columnSpanFull()
                         ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
 
-                    Forms\Components\TextInput::make('preview_image_url')
-                        ->label('🖼️ Preview: Profile Image URL')
-                        ->url()
-                        ->placeholder('https://example.com/profile.jpg')
-                        ->helperText('Leave empty to show name initial instead')
-                        ->columnSpanFull()
-                        ->visible(fn($get) => $get('visual_type') === 'portfolio_preview'),
-
-                    // ========================================
-                    // STATS
-                    // ========================================
+                    // ✅ Statistics Fields
                     Forms\Components\Fieldset::make('📊 Preview Statistics')
                         ->schema([
                             Forms\Components\TextInput::make('preview_projects_count')
@@ -312,13 +303,13 @@ class LandingPageEditor extends Page implements HasForms
                                 ->default('24')
                                 ->required()
                                 ->helperText('e.g., "24" or "20+"'),
-
+                            
                             Forms\Components\TextInput::make('preview_clients_count')
                                 ->label('Clients')
                                 ->default('50+')
                                 ->required()
                                 ->helperText('e.g., "50+" or "100"'),
-
+                            
                             Forms\Components\TextInput::make('preview_awards_count')
                                 ->label('Awards')
                                 ->default('12')
@@ -467,6 +458,7 @@ class LandingPageEditor extends Page implements HasForms
     {
         return 'data';
     }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -485,5 +477,4 @@ class LandingPageEditor extends Page implements HasForms
                 ->modalCancelActionLabel('Close'),
         ];
     }
-
 }
