@@ -14,20 +14,22 @@
         @endif
     </title>
 
-    {{-- ✅ FIXED FAVICON SYSTEM --}}
+    {{-- ✅ FIXED FAVICON SYSTEM - Always use $user variable --}}
     @if(isset($user) && $user->hasFavicon())
+        {{-- Custom user favicon --}}
         <link rel="icon" type="image/png" href="{{ $user->favicon_url }}">
+        <link rel="apple-touch-icon" href="{{ $user->favicon_url }}">
     @else
+        {{-- Default favicon from public root --}}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     @endif
 
 
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-oqs5R4U4zGqT9h29VvY8WcN6i/K3PaY5E9O+V1YxDCEV4VpWw2X2gYdEx+kt1/3uzMdGII4XESyqCCptNPTRZA=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-oqs5R4U4zGqT9h29VvY8WcN6i/K3PaY5E9O+V1YxDCEV4VpWw2X2gYdEx+kt1/3uzMdGII4XESyqCCptNPTRZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <!-- Theme-specific CSS -->

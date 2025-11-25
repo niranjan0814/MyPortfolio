@@ -24,7 +24,13 @@ class LandingPageEditor extends Page implements HasForms
     protected static string $view = 'filament.pages.landing-page-editor';
     protected static ?int $navigationSort = 2;
 
+
     public ?array $data = [];
+    public static function canAccess(): bool
+    {
+        return auth()->check() && auth()->user()->hasRole('super_admin');
+    }
+
 
     public function mount(): void
     {
@@ -48,7 +54,7 @@ class LandingPageEditor extends Page implements HasForms
         foreach ($data as $key => $value) {
             // Determine the section based on the key prefix
             $section = $this->determineSectionFromKey($key);
-            
+
             LandingPageContent::updateOrCreate(
                 ['key' => $key],
                 [
@@ -96,7 +102,7 @@ class LandingPageEditor extends Page implements HasForms
         } elseif (str_starts_with($key, 'footer_')) {
             return 'footer';
         }
-        
+
         return 'general';
     }
 
@@ -275,7 +281,7 @@ class LandingPageEditor extends Page implements HasForms
                                 ->required()
                                 ->maxLength(100)
                                 ->helperText('Display name on preview card'),
-                            
+
                             Forms\Components\TextArea::make('preview_title')
                                 ->label('💼 Preview: Job Title')
                                 ->default('Senior Product Designer')
@@ -303,13 +309,13 @@ class LandingPageEditor extends Page implements HasForms
                                 ->default('24')
                                 ->required()
                                 ->helperText('e.g., "24" or "20+"'),
-                            
+
                             Forms\Components\TextInput::make('preview_clients_count')
                                 ->label('Clients')
                                 ->default('50+')
                                 ->required()
                                 ->helperText('e.g., "50+" or "100"'),
-                            
+
                             Forms\Components\TextInput::make('preview_awards_count')
                                 ->label('Awards')
                                 ->default('12')

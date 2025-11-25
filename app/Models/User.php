@@ -299,27 +299,40 @@ class User extends Authenticatable
         }
         return false;
     }
+    /**
+     * Check if user has uploaded a custom favicon
+     */
+    /**
+     * Check if user has uploaded a custom favicon
+     */
     public function hasFavicon(): bool
     {
+        // ✅ First check if favicon_path is not empty
         if (empty($this->favicon_path)) {
             return false;
         }
 
-        // If DB stores full path like: "favicons/xxx.png"
-        $path = $this->favicon_path;
-
-        return Storage::disk('public')->exists($path);
+        // ✅ Then check if file exists in storage
+        return Storage::disk('public')->exists($this->favicon_path);
     }
 
+    /**
+     * Get favicon URL with fallback
+     */
     public function getFaviconUrlAttribute(): string
     {
+        // ✅ Only try to build URL if favicon exists
         if ($this->hasFavicon()) {
             return asset('storage/' . $this->favicon_path);
         }
 
+        // ✅ Fallback to default
         return asset('favicon.ico');
     }
 
+    /**
+     * Delete favicon file from storage
+     */
     public function deleteFavicon(): bool
     {
         if ($this->hasFavicon()) {
@@ -330,6 +343,5 @@ class User extends Authenticatable
         }
         return false;
     }
-
 
 }

@@ -12,6 +12,18 @@ use App\Http\Controllers\LandingPageController;
 | LANDING PAGE ROUTES
 |--------------------------------------------------------------------------
 */
+Route::get('/test-favicon', function() {
+    $user = \App\Models\User::find(4); // Your user ID
+    
+    return [
+        'favicon_path (DB)' => $user->favicon_path,
+        'hasFavicon()' => $user->hasFavicon(),
+        'favicon_url' => $user->favicon_url,
+        'file_exists' => Storage::disk('public')->exists($user->favicon_path),
+        'full_path' => storage_path('app/public/' . $user->favicon_path),
+        'expected_url' => 'http://localhost:8000/storage/' . $user->favicon_path,
+    ];
+});
 Route::get('/', [LandingPageController::class, 'index'])
     ->name('landing.index');
 

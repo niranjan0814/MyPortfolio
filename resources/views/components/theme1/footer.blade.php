@@ -1,8 +1,6 @@
-@props([])
+@props(['user', 'contactContent', 'portfolioOwnerId' => null])
 
-@php
-    $user = \App\Models\User::first();
-@endphp
+
 
 <footer class="relative overflow-hidden"
     style="background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));">
