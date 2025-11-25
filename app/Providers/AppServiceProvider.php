@@ -17,8 +17,13 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        //
-    }
+    public function boot()
+{
+    view()->composer('*', function ($view) {
+        if (auth()->check()) {
+            $view->with('authUser', auth()->user());
+        }
+    });
+}
+
 }

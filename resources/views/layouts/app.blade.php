@@ -1,47 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- DYNAMIC TITLE & META --}}
+    {{-- DYNAMIC TITLE --}}
     <title>
         @hasSection('title')
             @yield('title')
         @else
-            {{ $user->full_name ?? $user->name ?? 'Portfolio' }} | 
-            {{ $heroContent['title'] ?? 'Full-Stack Developer' }}
+            {{ $user->full_name ?? $user->name ?? 'Portfolio' }}
         @endif
     </title>
 
-    <meta name="description" content="{{ 
-        $heroContent['meta_description'] ?? 
-        $aboutContent['meta_description'] ?? 
-        'Full-Stack Developer Portfolio' 
-    }}">
-       {{-- ✨ DYNAMIC FAVICON SYSTEM - START --}}
+    {{-- ✅ FIXED FAVICON SYSTEM --}}
     @if(isset($user) && $user->hasFavicon())
-        {{-- User's Custom Favicon --}}
-        <link rel="icon" type="image/png" sizes="64x64" href="{{ $user->favicon_url }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ $user->favicon_url }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ $user->favicon_url }}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ $user->favicon_url }}">
-        <link rel="shortcut icon" href="{{ $user->favicon_url }}">
+        <link rel="icon" type="image/png" href="{{ $user->favicon_url }}">
     @else
-        {{-- Default Favicon Fallback (when user hasn't uploaded one) --}}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
     @endif
-    {{-- ✨ DYNAMIC FAVICON SYSTEM - END --}}
+
+
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          integrity="sha512-D1xDxkGKfQ3FtA4iO7QdZq6r8N2IoT2EKHFXPhprYyLq4zHTGv7Ew2AZZT1jK8ZCKy9v6gRXH8tK2+gFqM6PlQ=="
-          crossorigin="anonymous" 
-          referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-oqs5R4U4zGqT9h29VvY8WcN6i/K3PaY5E9O+V1YxDCEV4VpWw2X2gYdEx+kt1/3uzMdGII4XESyqCCptNPTRZA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
     <!-- Theme-specific CSS -->
     @php
@@ -52,7 +39,7 @@
     @endphp
 
     {{-- All themes use Tailwind + inline component styling --}}
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Global Base Styles -->
     <style>
@@ -65,7 +52,7 @@
             --container-max-width: 1280px;
         }
 
-        * { 
+        * {
             scroll-behavior: smooth;
             box-sizing: border-box;
         }
@@ -78,49 +65,63 @@
         }
 
         /* Global Animations */
-        .fade-in { 
-            animation: fadeIn 0.8s ease-in; 
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
         }
-        
+
         .slide-up {
             animation: slideUp 0.8s ease-out;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Responsive Section Spacing */
-        .section-full { 
-            min-height: auto; 
-            padding: var(--section-spacing) 1.5rem; 
+        .section-full {
+            min-height: auto;
+            padding: var(--section-spacing) 1.5rem;
         }
-        
-        @media (max-width: 768px) { 
-            .section-full { 
-                padding: 4rem 1.5rem; 
-            } 
-            
+
+        @media (max-width: 768px) {
+            .section-full {
+                padding: 4rem 1.5rem;
+            }
+
             :root {
                 --section-spacing: 4rem;
             }
         }
 
         /* Scrollbar - Theme Aware */
-        .theme-scrollbar::-webkit-scrollbar { 
-            width: 8px; 
+        .theme-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
-        
-        .theme-scrollbar::-webkit-scrollbar-track { 
-            background: transparent; 
+
+        .theme-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
         }
-        
+
         .theme-scrollbar::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb, #cbd5e1);
             border-radius: 4px;
@@ -129,12 +130,15 @@
 
     {{-- Theme-specific additional styles --}}
     @if($activeTheme === 'theme2')
-    <style>
-        /* Corporate theme overrides */
-        body { background: var(--corporate-bg-primary); }
-    </style>
+        <style>
+            /* Corporate theme overrides */
+            body {
+                background: var(--corporate-bg-primary);
+            }
+        </style>
     @endif
 </head>
+
 <body class="theme-scrollbar">
 
     {{-- Theme-aware Header --}}
@@ -150,16 +154,18 @@
 
     <!-- Back to Top Button - Theme Aware -->
     <button id="backToTop"
-            class="fixed bottom-8 right-8 p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50 back-to-top-btn">
+        class="fixed bottom-8 right-8 p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50 back-to-top-btn">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+                d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                clip-rule="evenodd" />
         </svg>
     </button>
 
     <script>
         // Global JavaScript that works for all themes
         const backToTop = document.getElementById('backToTop');
-        
+
         // Back to top functionality
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
@@ -183,7 +189,7 @@
                 if (target) {
                     const headerHeight = document.querySelector('header')?.offsetHeight || 70;
                     const targetPosition = target.offsetTop - headerHeight;
-                    
+
                     window.scrollTo({
                         top: targetPosition,
                         behavior: 'smooth'
@@ -208,12 +214,12 @@
         }
 
         // Initialize theme-based styles
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const activeTheme = '{{ $activeTheme }}';
-            
+
             // Add theme class to body for specific overrides
             document.body.classList.add(activeTheme + '-theme');
-            
+
             // Initialize any theme-specific JS
             if (typeof window[activeTheme + 'Init'] === 'function') {
                 window[activeTheme + 'Init']();
@@ -223,14 +229,15 @@
 
     {{-- Theme-specific scripts --}}
     @if($activeTheme === 'theme2')
-    <script>
-        function theme2Init() {
-            // Corporate theme specific initializations
-            console.log('Corporate theme initialized');
-        }
-    </script>
+        <script>
+            function theme2Init() {
+                // Corporate theme specific initializations
+                console.log('Corporate theme initialized');
+            }
+        </script>
     @endif
 
     @stack('scripts')
 </body>
+
 </html>

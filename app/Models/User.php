@@ -28,6 +28,7 @@ class User extends Authenticatable
         'cv_path',
         'slug',
         'active_theme',
+        'favicon_path',
     ];
 
     protected $hidden = [
@@ -300,25 +301,25 @@ class User extends Authenticatable
     }
     public function hasFavicon(): bool
     {
-        return !empty($this->favicon_path) && Storage::disk('public')->exists($this->favicon_path);
+        if (empty($this->favicon_path)) {
+            return false;
+        }
+
+        // If DB stores full path like: "favicons/xxx.png"
+        $path = $this->favicon_path;
+
+        return Storage::disk('public')->exists($path);
     }
 
-    /**
-     * Get favicon URL or return default
-     */
     public function getFaviconUrlAttribute(): string
     {
         if ($this->hasFavicon()) {
-            return Storage::disk('public')->url($this->favicon_path);
+            return asset('storage/' . $this->favicon_path);
         }
 
-        // Return default favicon
         return asset('favicon.ico');
     }
 
-    /**
-     * Delete user's custom favicon
-     */
     public function deleteFavicon(): bool
     {
         if ($this->hasFavicon()) {
@@ -329,4 +330,6 @@ class User extends Authenticatable
         }
         return false;
     }
+
+
 }
