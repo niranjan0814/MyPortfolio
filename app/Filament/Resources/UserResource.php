@@ -251,6 +251,20 @@ class UserResource extends Resource
                     ->collapsible()
                     ->collapsed(false)
                     ->hidden(fn() => auth()->user()?->hasRole('super_admin')), // ✅ Hide for super admin
+                Forms\Components\Section::make('Website Favicon')
+                    ->description('Upload the browser tab icon')
+                    ->schema([
+                        Forms\Components\FileUpload::make('favicon_path')
+                            ->label('Upload Favicon')
+                            ->image()
+                            ->directory('favicons')
+                            ->visibility('public')
+                            ->maxSize(1024)
+                            ->helperText('Recommended size: 64×64px PNG'),
+                    ])
+                    
+                    ->columns(1),
+
             ]);
     }
 
