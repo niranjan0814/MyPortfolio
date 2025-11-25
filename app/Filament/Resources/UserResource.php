@@ -251,20 +251,61 @@ class UserResource extends Resource
                     ->collapsible()
                     ->collapsed(false)
                     ->hidden(fn() => auth()->user()?->hasRole('super_admin')), // ✅ Hide for super admin
-                Forms\Components\Section::make('Website Favicon')
-                    ->description('Upload the browser tab icon')
+                Forms\Components\Section::make('🖼️ Website Favicon')
+                    ->description('Customize the icon that appears in browser tabs when visitors view your portfolio')
+                    ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\FileUpload::make('favicon_path')
                             ->label('Upload Favicon')
                             ->image()
                             ->directory('favicons')
+                            ->disk('public')
                             ->visibility('public')
-                            ->maxSize(1024)
-                            ->helperText('Recommended size: 64×64px PNG'),
+                            ->maxSize(1024) // 1MB max
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml', 'image/x-icon'])
+                            ->imageResizeMode('cover')
+                            ->imageCropAspectRatio('1:1')
+                            ->imageResizeTargetWidth('64')
+                            ->imageResizeTargetHeight('64')
+                            ->downloadable()
+                            ->previewable()
+                            ->helperText('Recommended: 64×64px PNG or ICO file. Max size: 1MB.')
+                            ->hint(fn($record) => $record?->hasFavicon() ? '✓ Favicon uploaded' : 'No favicon uploaded')
+                            ->hintColor(fn($record) => $record?->hasFavicon() ? 'success' : 'warning')
+                            ->columnSpanFull(),
+                        
+                        Forms\Components\Placeholder::make('favicon_preview')
+                            ->label('Current Favicon')
+                            ->content(function ($record) {
+                                if (!$record || !$record->hasFavicon()) {
+                                    return new \Illuminate\Support\HtmlString(
+                                        '<div class="flex items-center gap-3 text-sm text-gray-500">
+                                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Using default favicon</span>
+                                        </div>'
+                                    );
+                                }
+                                
+                                return new \Illuminate\Support\HtmlString(
+                                    '<div class="flex items-center gap-3">
+                                        <div class="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                                            <img src="' . $record->favicon_url . '" alt="Favicon" class="w-8 h-8 object-contain">
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900">Custom favicon active</p>
+                                            <p class="text-xs text-gray-500">This will appear in browser tabs</p>
+                                        </div>
+                                    </div>'
+                                );
+                            })
+                            ->columnSpanFull(),
                     ])
-                    
-                    ->columns(1),
-
+                    ->collapsible()
+                    ->collapsed(false)
+                    ->columns(1)
+                    ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
             ]);
     }
 

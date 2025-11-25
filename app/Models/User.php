@@ -298,4 +298,35 @@ class User extends Authenticatable
         }
         return false;
     }
+    public function hasFavicon(): bool
+    {
+        return !empty($this->favicon_path) && Storage::disk('public')->exists($this->favicon_path);
+    }
+
+    /**
+     * Get favicon URL or return default
+     */
+    public function getFaviconUrlAttribute(): string
+    {
+        if ($this->hasFavicon()) {
+            return Storage::disk('public')->url($this->favicon_path);
+        }
+
+        // Return default favicon
+        return asset('favicon.ico');
+    }
+
+    /**
+     * Delete user's custom favicon
+     */
+    public function deleteFavicon(): bool
+    {
+        if ($this->hasFavicon()) {
+            Storage::disk('public')->delete($this->favicon_path);
+            $this->favicon_path = null;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
 }
