@@ -85,19 +85,31 @@
 <body class="bg-gray-50">
 
     <!-- Navigation -->
-    <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 hero-gradient rounded-lg flex items-center justify-center">
-                    <i class="fas fa-code text-white text-lg"></i>
-                </div>
-                <span class="text-xl font-bold text-gray-900">{{ $data['footer_company_name'] ?? 'Detech Portfolio' }}</span>
+<nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+
+        <!-- Left: Logo + Name -->
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 flex items-center justify-center -mt-1">
+                <img src="{{ asset('images/detech.png') }}"
+                     class="w-10 h-10 object-contain scale-150"
+                     alt="Detech Icon">
             </div>
-            <a href="/admin/login" class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
-                Sign In
-            </a>
+
+            <span class="text-xl ml-0.5 font-bold text-gray-900">
+                {{ $data['footer_company_name'] ?? 'Detech Portfolio' }}
+            </span>
         </div>
-    </nav>
+
+        <!-- Right: Sign In -->
+        <a href="/admin/login"
+           class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
+            Sign In
+        </a>
+
+    </div>
+</nav>
+
 
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 min-h-screen hero-gradient relative overflow-hidden flex items-center">
@@ -195,11 +207,7 @@
                 </div>
             </div>
 
-            <!-- Project Thumbnails -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="h-24 bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-lg backdrop-blur border border-white/10"></div>
-                <div class="h-24 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-lg backdrop-blur border border-white/10"></div>
-            </div>
+            
 
             <!-- View Portfolio Button -->
             <div class="mt-6">
@@ -274,65 +282,70 @@
 
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 @foreach($availableThemes as $theme)
-                <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}" 
-                     data-theme="{{ $theme->slug }}">
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition">
-                        <!-- Theme Preview -->
-                        <div class="h-48 relative overflow-hidden" style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
-                            @if($theme->thumbnail_path)
-                                <img src="{{ asset('storage/' . $theme->thumbnail_path) }}" 
-                                     alt="{{ $theme->name }}" 
-                                     class="w-full h-full object-cover">
-                            @else
-                                <!-- Default preview structure -->
-                                <div class="absolute top-4 left-4 right-4">
-                                    <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 rounded-full" style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
-                                            <div class="flex-1">
-                                                <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
-                                                <div class="h-2 bg-gray-200 rounded w-16"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <!-- Theme Content -->
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
-                            <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
-                            
-                            <!-- Features -->
-                            @if($theme->features)
-                            <div class="space-y-2 mb-6 text-sm text-gray-600">
-                                @foreach(array_slice($theme->features, 0, 3) as $feature)
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-check text-orange-500"></i>
-                                    <span>{{ $feature }}</span>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
-                            
-                            <!-- Badge & Radio -->
-                            <div class="flex items-center justify-between">
-                                @if($theme->is_premium)
-                                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">💎 Premium</span>
-                                @else
-                                    <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
-                                @endif
-                                
-                                @if($theme->is_active)
-                                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
-                                @else
-                                    <span class="text-xs text-gray-500">Coming Soon</span>
-                                @endif
+                <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}"
+     data-theme="{{ $theme->slug }}">
+
+    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition flex flex-col h-full">
+
+        <!-- Preview -->
+        <div class="h-48 relative overflow-hidden"
+             style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
+            @if($theme->thumbnail_path)
+                <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
+                     alt="{{ $theme->name }}"
+                     class="w-full h-full object-cover">
+            @else
+                <div class="absolute top-4 left-4 right-4">
+                    <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full"
+                                 style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
+                            <div class="flex-1">
+                                <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
+                                <div class="h-2 bg-gray-200 rounded w-16"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            @endif
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 flex flex-col flex-grow">
+
+            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
+            <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
+
+            @if($theme->features)
+                <div class="space-y-2 mb-6 text-sm text-gray-600">
+                    @foreach(array_slice($theme->features, 0, 3) as $feature)
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-orange-500"></i>
+                            <span>{{ $feature }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Push this to the bottom so all cards equal height -->
+            <div class="mt-auto flex justify-between items-center">
+                @if($theme->is_premium)
+                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">💎 Premium</span>
+                @else
+                    <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
+                @endif
+
+                @if($theme->is_active)
+                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
+                @else
+                    <span class="text-xs text-gray-500">Coming Soon</span>
+                @endif
+            </div>
+
+        </div>
+    </div>
+</div>
+
                 @endforeach
             </div>
 
@@ -364,7 +377,7 @@
                     <!-- Contact Info -->
                     <div class="space-y-4">
                         <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-3 flex-shrink-0">
                                 <i class="fas fa-envelope text-orange-600"></i>
                             </div>
                             <div>
@@ -374,7 +387,7 @@
                         </div>
                         
                         <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-3 flex-shrink-0">
                                 <i class="fas fa-phone text-orange-600"></i>
                             </div>
                             <div>
@@ -384,7 +397,7 @@
                         </div>
                         
                         <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-3 flex-shrink-0">
                                 <i class="fas fa-map-marker-alt text-orange-600"></i>
                             </div>
                             <div>
@@ -436,9 +449,9 @@
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 hero-gradient rounded-lg flex items-center justify-center">
-                            <i class="fas fa-code text-white"></i>
-                        </div>
+                            <img src="{{ asset('images/detech.png') }}"
+                            class="w-10 h-10 object-contain scale-150 mb-1 "
+                            alt="Detech Icon">
                         <span class="text-xl font-bold text-white">{{ $data['footer_company_name'] ?? 'Detech' }}</span>
                     </div>
                     <p class="text-sm">{{ $data['footer_tagline'] ?? 'Build stunning portfolios effortlessly.' }}</p>
