@@ -6,6 +6,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CVController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ThemeOverviewController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -94,3 +96,17 @@ Route::post('/admin/reset-password', [PasswordResetController::class, 'resetToDe
 
 Route::get('/password/login/reset', [PasswordResetController::class, 'directReset'])
     ->name('password.direct.reset');
+// Theme Overview Routes
+Route::get('/themes/{theme}/overview', [ThemeOverviewController::class, 'show'])
+    ->name('themes.overview');
+
+Route::get('/themes/{theme}/preview', [ThemeOverviewController::class, 'preview'])
+    ->name('themes.preview');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/themes/{theme}/comment', [ThemeOverviewController::class, 'storeComment'])
+        ->name('themes.comment.store');
+    
+    Route::delete('/themes/{theme}/comment', [ThemeOverviewController::class, 'deleteComment'])
+        ->name('themes.comment.delete');
+});

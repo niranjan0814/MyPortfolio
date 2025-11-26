@@ -26,7 +26,7 @@ class Theme extends Model
         'created_by',
         'features',
         'colors',
-        
+
     ];
 
     protected $casts = [
@@ -59,7 +59,7 @@ class Theme extends Model
 
     public function getThumbnailUrlAttribute(): ?string
     {
-        return $this->thumbnail_path 
+        return $this->thumbnail_path
             ? Storage::disk('public')->url($this->thumbnail_path)
             : null;
     }
@@ -120,7 +120,7 @@ class Theme extends Model
         }
 
         $zipPath = Storage::disk('public')->path($this->zip_file_path);
-        
+
         if (!File::exists($zipPath)) {
             \Log::error("ZIP file not found: {$zipPath}");
             return false;
@@ -137,25 +137,25 @@ class Theme extends Model
         }
 
         $zip = new ZipArchive;
-        
+
         if ($zip->open($zipPath) === TRUE) {
             // ✅ CRITICAL FIX: Extract files properly
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
-                
+
                 // Skip directories
                 if (substr($filename, -1) === '/') {
                     continue;
                 }
-                
+
                 // ✅ FIX: Remove any parent folder from the path
                 // Example: "themeb/hero.blade.php" becomes "hero.blade.php"
                 $basename = basename($filename);
-                
+
                 // Only extract .blade.php files (skip other files)
                 if (pathinfo($basename, PATHINFO_EXTENSION) === 'php') {
                     $fileContent = $zip->getFromIndex($i);
-                    
+
                     if ($fileContent !== false) {
                         $targetPath = $extractPath . '/' . $basename;
                         File::put($targetPath, $fileContent);
@@ -163,9 +163,9 @@ class Theme extends Model
                     }
                 }
             }
-            
+
             $zip->close();
-            
+
             \Log::info("Theme {$this->slug} extracted successfully to {$extractPath}");
             return true;
         }
@@ -177,7 +177,7 @@ class Theme extends Model
     /**
      * Validate ZIP contains required components
      */
-   public static function validateZip(string $zipPath): array
+    public static function validateZip(string $zipPath): array
     {
         $requiredComponents = [
             'header.blade.php',
@@ -198,18 +198,18 @@ class Theme extends Model
         if ($zip->open($zipPath) === TRUE) {
             foreach ($requiredComponents as $component) {
                 $found = false;
-                
+
                 // Check all files in ZIP
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     $filename = $zip->getNameIndex($i);
                     $basename = basename($filename);
-                    
+
                     if ($basename === $component) {
                         $found = true;
                         break;
                     }
                 }
-                
+
                 if (!$found) {
                     $missing[] = $component;
                 }
@@ -356,5 +356,29 @@ class Theme extends Model
                 $theme->extractZip();
             }
         });
+    }
+    // Add this method to the existing Theme model
+
+    public function comments()
+    {
+        return $this->hasMany(ThemeComment::class);
+    }
+
+    public function approvedComments()
+    {
+        return $this->comments()->approved()->recent();
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->comments()
+            ->approved()
+            ->whereNotNull('rating')
+            ->avg('rating') ?? 0;
+    }
+
+    public function getCommentsCountAttribute(): int
+    {
+        return $this->comments()->approved()->count();
     }
 }

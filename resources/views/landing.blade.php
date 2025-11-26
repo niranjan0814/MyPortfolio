@@ -282,88 +282,120 @@
 
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 @foreach($availableThemes as $theme)
-                <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}"
-     data-theme="{{ $theme->slug }}">
+                    <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}"
+                         data-theme="{{ $theme->slug }}">
+                        
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition flex flex-col h-full">
+                            
+                            <!-- Preview - Clickable to Theme Overview -->
+                            <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
+                               class="{{ !$theme->is_active ? 'pointer-events-none' : '' }} block h-48 relative overflow-hidden"
+                               style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
+                               
+                                @if($theme->thumbnail_path)
+                                    <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
+                                         alt="{{ $theme->name }}"
+                                         class="w-full h-full object-cover">
+                                @else
+                                    <div class="absolute top-4 left-4 right-4">
+                                        <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-10 h-10 rounded-full"
+                                                     style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
+                                                <div class="flex-1">
+                                                    <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
+                                                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
 
-    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition flex flex-col h-full">
+                                <!-- "View Details" overlay on hover -->
+                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition flex items-center justify-center">
+                                    <span class="text-white font-semibold opacity-0 hover:opacity-100 transition">
+                                        <i class="fas fa-eye mr-2"></i> View Details
+                                    </span>
+                                </div>
+                            </a>
 
-        <!-- Preview -->
-        <div class="h-48 relative overflow-hidden"
-             style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
-            @if($theme->thumbnail_path)
-                <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
-                     alt="{{ $theme->name }}"
-                     class="w-full h-full object-cover">
-            @else
-                <div class="absolute top-4 left-4 right-4">
-                    <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full"
-                                 style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
-                            <div class="flex-1">
-                                <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
-                                <div class="h-2 bg-gray-200 rounded w-16"></div>
+                            <!-- Card Content -->
+                            <div class="p-6 flex flex-col flex-grow">
+                                <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
+                                   class="hover:text-orange-600 transition">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
+                                </a>
+                                <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
+
+                                @if($theme->features)
+                                    <div class="space-y-2 mb-6 text-sm text-gray-600">
+                                        @foreach(array_slice($theme->features, 0, 3) as $feature)
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-check text-orange-500"></i>
+                                                <span>{{ $feature }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                <!-- Bottom section: Badge + Radio (selection) -->
+                                <div class="mt-auto flex justify-between items-center">
+                                    @if($theme->is_premium)
+                                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Premium</span>
+                                    @else
+                                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
+                                    @endif
+
+                                    @if($theme->is_active)
+                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
+                                    @else
+                                        <span class="text-xs text-gray-500">Coming Soon</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endif
-        </div>
-
-        <!-- Content -->
-        <div class="p-6 flex flex-col flex-grow">
-
-            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
-            <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
-
-            @if($theme->features)
-                <div class="space-y-2 mb-6 text-sm text-gray-600">
-                    @foreach(array_slice($theme->features, 0, 3) as $feature)
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-check text-orange-500"></i>
-                            <span>{{ $feature }}</span>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            <!-- Push this to the bottom so all cards equal height -->
-            <div class="mt-auto flex justify-between items-center">
-                @if($theme->is_premium)
-                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">💎 Premium</span>
-                @else
-                    <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
-                @endif
-
-                @if($theme->is_active)
-                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
-                @else
-                    <span class="text-xs text-gray-500">Coming Soon</span>
-                @endif
-            </div>
-
-        </div>
-    </div>
-</div>
-
                 @endforeach
             </div>
 
-            <input type="hidden" name="theme" id="selectedTheme" value="{{ $availableThemes->where('is_active', true)->first()->slug ?? 'theme1' }}" required>
+            <!-- Hidden input to store selected theme -->
+            <input type="hidden" name="theme" id="selectedTheme" value="{{ $availableThemes->where('is_active', true)->first()->slug ?? '' }}" required>
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button type="submit" class="btn-primary text-white px-12 py-4 rounded-lg font-bold text-lg shadow-lg">
+                <button type="submit" class="btn-primary text-white px-12 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition">
                     Get Started With Theme
                     <i class="fas fa-arrow-right ml-2"></i>
                 </button>
-                <a href="#contact" class="btn-secondary px-12 py-4 rounded-lg font-bold text-center">
+                <a href="#contact" class="btn-secondary px-12 py-4 rounded-lg font-bold text-center border-2 border-gray-300 hover:border-orange-500 transition">
                     Have Questions?
                 </a>
             </div>
         </form>
     </div>
 </section>
+
+<!-- Optional: Keep your existing JS for theme selection if you have it -->
+<script>
+    document.querySelectorAll('.theme-card').forEach(card => {
+        card.addEventListener('click', function () {
+            if (!this.classList.contains('pointer-events-none')) {
+                document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('ring-4', 'ring-orange-500', 'border-orange-500'));
+                this.classList.add('ring-4', 'ring-orange-500');
+                document.querySelectorAll('.theme-radio').forEach(r => r.classList.remove('bg-orange-500', 'border-orange-500'));
+                this.querySelector('.theme-radio')?.classList.add('bg-orange-500', 'border-orange-500');
+                document.getElementById('selectedTheme').value = this.dataset.theme;
+            }
+        });
+    });
+
+    // Set initial selected theme visually
+    document.querySelectorAll('.theme-card').forEach(card => {
+        if (card.dataset.theme === document.getElementById('selectedTheme').value) {
+            card.click();
+        }
+    });
+</script>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 px-4 bg-white">
