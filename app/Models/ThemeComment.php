@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ThemeComment extends Model
 {
     protected $fillable = [
         'theme_id',
         'user_id',
+        'parent_id', 
         'comment',
         'rating',
         'is_approved',
-        'category', // ✅ ADD THIS
+        'category',
     ];
 
     protected $casts = [
@@ -22,7 +24,7 @@ class ThemeComment extends Model
         'created_at' => 'datetime',
     ];
 
-    // Relationships
+    // ✅ Relationships
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);
@@ -33,7 +35,19 @@ class ThemeComment extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Scopes
+    // ✅ NEW: Parent comment (the comment this is replying to)
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(ThemeComment::class, 'parent_id');
+    }
+
+    // ✅ NEW: Child comments (replies to this comment)
+    public function replies(): HasMany
+    {
+        return $this->hasMany(ThemeComment::class, 'parent_id')->with('user')->orderBy('created_at', 'asc');
+    }
+
+    // ✅ Scopes
     public function scopeApproved($query)
     {
         return $query->where('is_approved', true);
@@ -44,15 +58,19 @@ class ThemeComment extends Model
         return $query->orderBy('created_at', 'desc');
     }
 
-    // ✅ NEW: Scope for theme comments only
     public function scopeThemeComments($query)
     {
         return $query->where('category', 'theme');
     }
 
-    // ✅ NEW: Scope for blog comments only
     public function scopeBlogComments($query)
     {
         return $query->where('category', 'blog');
+    }
+
+    // ✅ NEW: Get only top-level comments (no parent)
+    public function scopeTopLevel($query)
+    {
+        return $query->whereNull('parent_id');
     }
 }

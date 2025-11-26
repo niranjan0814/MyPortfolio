@@ -228,7 +228,11 @@ class User extends Authenticatable
     {
         return $this->availableThemes()->count();
     }
-
+ // app/Models/User.php
+public function themeComments()
+{
+    return $this->hasMany(ThemeComment::class);
+}
     // =================================================================
     // EXISTING RELATIONSHIPS (unchanged)
     // =================================================================

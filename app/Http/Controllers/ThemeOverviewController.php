@@ -13,85 +13,80 @@ class ThemeOverviewController extends Controller
     /**
      * Show theme overview page
      */
-public function show(Theme $theme)
+    public function show(Theme $theme)
+    {
+        // ✅ Load approved TOP-LEVEL comments with their replies
+        $theme->load([
+            'approvedComments' => function($query) {
+                $query->topLevel()->with(['user', 'replies.user']);
+            },
+            'creator'
+        ]);
+
+        // Get user's access status
+        $hasAccess = false;
+        $canComment = false;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $hasAccess = $user->canAccessTheme($theme->slug);
+            $canComment = true;
+        }
+
+        // ✅ Get ALL of the current user's comments (both top-level and replies)
+        $userComments = collect();
+        if (Auth::check()) {
+            $userComments = ThemeComment::where('theme_id', $theme->id)
+                ->where('user_id', Auth::id())
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return view('theme-overview', [
+            'theme' => $theme,
+            'hasAccess' => $hasAccess,
+            'canComment' => $canComment,
+            'userComments' => $userComments,
+            'averageRating' => $theme->average_rating,
+            'commentsCount' => $theme->comments_count,
+        ]);
+    }
+
+    /**
+     * Store a new comment OR reply
+     */
+public function storeComment(Request $request, Theme $theme)
 {
-    // ✅ Load approved comments with users
-    $theme->load(['approvedComments', 'creator']);
-
-    // Get user's access status
-    $hasAccess = false;
-    $canComment = false;
-
-    if (Auth::check()) {
-        $user = Auth::user();
-        $hasAccess = $user->canAccessTheme($theme->slug);
-        $canComment = true;
+    if (!Auth::check()) {
+        return redirect()->route('filament.admin.auth.login')
+            ->with('error', 'Please login to leave a comment');
     }
 
-    // ✅ Get ALL of the current user's comments on this theme
-    $userComments = collect(); // Empty collection by default
-    if (Auth::check()) {
-        $userComments = ThemeComment::where('theme_id', $theme->id)
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
-    // ✅ ADD THIS: Check if user has already reviewed
-    $userHasReviewed = $userComments->isNotEmpty();
-
-    return view('theme-overview', [
-        'theme' => $theme,
-        'hasAccess' => $hasAccess,
-        'canComment' => $canComment,
-        'userComments' => $userComments,
-        'userHasReviewed' => $userHasReviewed, // ✅ ADD THIS LINE
-        'averageRating' => $theme->average_rating,
-        'commentsCount' => $theme->comments_count,
+    $validated = $request->validate([
+        'comment'   => 'required|string|min:10|max:1000',
+        'rating'    => 'nullable|integer|min:1|max:5',
+        'parent_id' => 'nullable|integer|exists:theme_comments,id',
     ]);
+
+    // Use the relationship – this fixes the "Undefined array key parent_id" error
+    Auth::user()->themeComments()->create([
+        'theme_id'    => $theme->id,
+        'comment'     => $validated['comment'],
+        'rating'      => $request->filled('parent_id') ? null : ($validated['rating'] ?? null),
+        'parent_id'   => $request->filled('parent_id') ? $validated['parent_id'] : null,
+        'category'    => 'theme',
+        'is_approved' => true,
+    ]);
+
+    $message = $request->filled('parent_id') ? 'Reply posted!' : 'Review posted!';
+
+    return back()->with('success', $message);
 }
 
     /**
-     * Store a new comment
+     * Delete user's own comment (and all its replies)
      */
-    public function storeComment(Request $request, Theme $theme)
-    {
-        // ✅ CHECK: User must be authenticated
-        if (!Auth::check()) {
-            return redirect()->route('filament.admin.auth.login')
-                ->with('error', 'Please login to leave a comment');
-        }
-
-        // ✅ VALIDATE: Comment data
-        $validated = $request->validate([
-            'comment' => 'required|string|min:10|max:1000',
-            'rating' => 'nullable|integer|min:1|max:5',
-        ]);
-
-        try {
-            // ✅ CREATE: New comment (allow multiple comments per user)
-            ThemeComment::create([
-                'theme_id' => $theme->id,
-                'user_id' => Auth::id(),
-                'comment' => $validated['comment'],
-                'rating' => $validated['rating'] ?? null,
-                'category' => 'theme', // ✅ Set category
-                'is_approved' => true, // Auto-approve (can be changed for moderation)
-            ]);
-
-            return redirect()->back()->with('success', 'Thank you for your feedback!');
-            
-        } catch (\Exception $e) {
-            \Log::error('Comment insertion failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to save comment. Please try again.');
-        }
-    }
-
-
-    /**
-     * Delete user's own comment
-     */
-   public function deleteComment(Request $request, Theme $theme)
+    public function deleteComment(Request $request, Theme $theme)
     {
         if (!Auth::check()) {
             return redirect()->back()->with('error', 'Unauthorized');
@@ -107,6 +102,7 @@ public function show(Theme $theme)
             ->first();
 
         if ($comment) {
+            // ✅ Cascade delete will automatically remove all replies
             $comment->delete();
             return redirect()->back()->with('success', 'Comment deleted successfully');
         }
@@ -140,6 +136,10 @@ public function show(Theme $theme)
             'theme' => $theme->slug,
         ]);
     }
+
+    /**
+     * Activate theme
+     */
     public function activate(Request $request, Theme $theme)
     {
         // Must be logged in
@@ -171,5 +171,4 @@ public function show(Theme $theme)
 
         return back()->with('success', '"' . $theme->name . '" has been successfully activated!');
     }
-
 }
