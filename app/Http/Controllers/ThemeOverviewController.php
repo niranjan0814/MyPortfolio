@@ -135,4 +135,36 @@ class ThemeOverviewController extends Controller
             'theme' => $theme->slug,
         ]);
     }
+    public function activate(Request $request, Theme $theme)
+    {
+        // Must be logged in
+        if (!Auth::check()) {
+            return redirect()->route('filament.admin.auth.login')
+                ->with('error', 'Please log in to activate a theme.');
+        }
+
+        $user = Auth::user();
+
+        // If theme is "coming soon"
+        if (!$theme->is_active) {
+            return back()->with('error', 'This theme is not available yet.');
+        }
+
+        // Premium theme access check
+        if ($theme->is_premium && !$user->canAccessTheme($theme->slug)) {
+            return back()->with('error', 'You need premium access to activate this theme.');
+        }
+
+        // If already active
+        if ($user->active_theme === $theme->slug) {
+            return back()->with('success', 'This theme is already active.');
+        }
+
+        // Activate theme
+        $user->active_theme = $theme->slug;
+        $user->save();
+
+        return back()->with('success', '"' . $theme->name . '" has been successfully activated!');
+    }
+
 }
