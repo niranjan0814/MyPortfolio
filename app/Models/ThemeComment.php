@@ -1,5 +1,4 @@
 <?php
-// app/Models/ThemeComment.php
 
 namespace App\Models;
 
@@ -14,6 +13,7 @@ class ThemeComment extends Model
         'comment',
         'rating',
         'is_approved',
+        'category', // ✅ ADD THIS
     ];
 
     protected $casts = [
@@ -42,5 +42,17 @@ class ThemeComment extends Model
     public function scopeRecent($query)
     {
         return $query->orderBy('created_at', 'desc');
+    }
+
+    // ✅ NEW: Scope for theme comments only
+    public function scopeThemeComments($query)
+    {
+        return $query->where('category', 'theme');
+    }
+
+    // ✅ NEW: Scope for blog comments only
+    public function scopeBlogComments($query)
+    {
+        return $query->where('category', 'blog');
     }
 }

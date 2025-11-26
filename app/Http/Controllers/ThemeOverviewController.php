@@ -13,92 +13,97 @@ class ThemeOverviewController extends Controller
     /**
      * Show theme overview page
      */
-    public function show(Theme $theme)
-    {
-        // Load theme with comments and users
-        $theme->load(['approvedComments.user', 'creator']);
+public function show(Theme $theme)
+{
+    // ✅ Load approved comments with users
+    $theme->load(['approvedComments', 'creator']);
 
-        // Get user's access status
-        $hasAccess = false;
-        $canComment = false;
+    // Get user's access status
+    $hasAccess = false;
+    $canComment = false;
 
-        if (Auth::check()) {
-            $user = Auth::user();
-            $hasAccess = $user->canAccessTheme($theme->slug);
-            $canComment = true; // All logged-in users can comment
-        }
-
-        // Check if user already commented
-        $userComment = null;
-        if (Auth::check()) {
-            $userComment = ThemeComment::where('theme_id', $theme->id)
-                ->where('user_id', Auth::id())
-                ->first();
-        }
-
-        return view('theme-overview', [
-            'theme' => $theme,
-            'hasAccess' => $hasAccess,
-            'canComment' => $canComment,
-            'userComment' => $userComment,
-            'averageRating' => $theme->average_rating,
-            'commentsCount' => $theme->comments_count,
-        ]);
+    if (Auth::check()) {
+        $user = Auth::user();
+        $hasAccess = $user->canAccessTheme($theme->slug);
+        $canComment = true;
     }
+
+    // ✅ Get ALL of the current user's comments on this theme
+    $userComments = collect(); // Empty collection by default
+    if (Auth::check()) {
+        $userComments = ThemeComment::where('theme_id', $theme->id)
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    // ✅ ADD THIS: Check if user has already reviewed
+    $userHasReviewed = $userComments->isNotEmpty();
+
+    return view('theme-overview', [
+        'theme' => $theme,
+        'hasAccess' => $hasAccess,
+        'canComment' => $canComment,
+        'userComments' => $userComments,
+        'userHasReviewed' => $userHasReviewed, // ✅ ADD THIS LINE
+        'averageRating' => $theme->average_rating,
+        'commentsCount' => $theme->comments_count,
+    ]);
+}
 
     /**
      * Store a new comment
      */
     public function storeComment(Request $request, Theme $theme)
     {
+        // ✅ CHECK: User must be authenticated
         if (!Auth::check()) {
             return redirect()->route('filament.admin.auth.login')
                 ->with('error', 'Please login to leave a comment');
         }
 
-        $request->validate([
+        // ✅ VALIDATE: Comment data
+        $validated = $request->validate([
             'comment' => 'required|string|min:10|max:1000',
             'rating' => 'nullable|integer|min:1|max:5',
         ]);
 
-        // Check if user already commented
-        $existingComment = ThemeComment::where('theme_id', $theme->id)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        if ($existingComment) {
-            // Update existing comment
-            $existingComment->update([
-                'comment' => $request->comment,
-                'rating' => $request->rating,
+        try {
+            // ✅ CREATE: New comment (allow multiple comments per user)
+            ThemeComment::create([
+                'theme_id' => $theme->id,
+                'user_id' => Auth::id(),
+                'comment' => $validated['comment'],
+                'rating' => $validated['rating'] ?? null,
+                'category' => 'theme', // ✅ Set category
+                'is_approved' => true, // Auto-approve (can be changed for moderation)
             ]);
 
-            return redirect()->back()->with('success', 'Your comment has been updated!');
+            return redirect()->back()->with('success', 'Thank you for your feedback!');
+            
+        } catch (\Exception $e) {
+            \Log::error('Comment insertion failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to save comment. Please try again.');
         }
-
-        // Create new comment
-        ThemeComment::create([
-            'theme_id' => $theme->id,
-            'user_id' => Auth::id(),
-            'comment' => $request->comment,
-            'rating' => $request->rating,
-            'is_approved' => true, // Auto-approve (can be changed for moderation)
-        ]);
-
-        return redirect()->back()->with('success', 'Thank you for your feedback!');
     }
+
 
     /**
      * Delete user's own comment
      */
-    public function deleteComment(Theme $theme)
+   public function deleteComment(Request $request, Theme $theme)
     {
         if (!Auth::check()) {
             return redirect()->back()->with('error', 'Unauthorized');
         }
 
-        $comment = ThemeComment::where('theme_id', $theme->id)
+        // ✅ FIXED: Delete specific comment by ID
+        $commentId = $request->input('comment_id');
+        
+        $comment = ThemeComment::where('id', $commentId)
+            ->where('theme_id', $theme->id)
             ->where('user_id', Auth::id())
+            ->where('category', 'theme')
             ->first();
 
         if ($comment) {

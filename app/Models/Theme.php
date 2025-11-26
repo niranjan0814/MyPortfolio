@@ -310,6 +310,60 @@ class Theme extends Model
         return $query->where('is_premium', true);
     }
 
+
+    // ============================================
+// COMMENTS & RATINGS
+// ============================================
+
+    /**
+     * All comments for this theme
+     */
+    public function comments()
+    {
+        return $this->hasMany(ThemeComment::class);
+    }
+
+    /**
+     * Only theme-category comments (if you want to filter by category)
+     */
+    public function themeComments()
+    {
+        return $this->hasMany(ThemeComment::class)
+            ->where('category', 'theme');
+    }
+
+    /**
+     * Only approved comments with user data eager loaded
+     */
+    public function approvedComments()
+    {
+        return $this->hasMany(ThemeComment::class)
+            ->where('is_approved', true)
+            ->orderBy('created_at', 'desc')
+            ->with('user');
+    }
+
+    /**
+     * Calculate average rating from approved comments
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->comments()
+            ->where('is_approved', true)
+            ->whereNotNull('rating')
+            ->avg('rating') ?? 0;
+    }
+
+    /**
+     * Count total approved comments
+     */
+    public function getCommentsCountAttribute(): int
+    {
+        return $this->comments()
+            ->where('is_approved', true)
+            ->count();
+    }
+
     // ============================================
     // MODEL EVENTS
     // ============================================
@@ -359,26 +413,7 @@ class Theme extends Model
     }
     // Add this method to the existing Theme model
 
-    public function comments()
-    {
-        return $this->hasMany(ThemeComment::class);
-    }
 
-    public function approvedComments()
-    {
-        return $this->comments()->approved()->recent();
-    }
 
-    public function getAverageRatingAttribute(): float
-    {
-        return $this->comments()
-            ->approved()
-            ->whereNotNull('rating')
-            ->avg('rating') ?? 0;
-    }
 
-    public function getCommentsCountAttribute(): int
-    {
-        return $this->comments()->approved()->count();
-    }
 }
