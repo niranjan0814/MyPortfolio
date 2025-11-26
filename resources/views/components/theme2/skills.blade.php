@@ -1,131 +1,95 @@
 @props(['skills'])
 
-<section id="skills" class="section-full relative overflow-hidden theme2-skills-v2">
+<section id="skills" class="py-24 bg-neutral-950 text-white border-t border-neutral-900 relative overflow-hidden">
     
-    <!-- Animated Background -->
-    <div class="absolute inset-0 -z-10">
-        <div class="skills-grid-bg"></div>
-        <div class="skills-gradient-orbs"></div>
-    </div>
+    <!-- Background accent -->
+    <div class="absolute top-1/2 right-0 w-96 h-96 bg-lime-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-    <div class="container mx-auto max-w-7xl relative z-10 px-4 md:px-6">
+    <div class="container mx-auto px-6 relative z-10">
         
         <!-- Section Header -->
-        <div class="text-center mb-20 lg:mb-24 animate-fade-in">
-            <!-- Badge -->
-            
-            
-            <!-- Title -->
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 skills-title">
-                Technical Skills
+        <div class="mb-20">
+            <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-4">
+                Skills<span class="text-lime-400">.</span>
             </h2>
-            
-            <!-- Divider -->
-            <div class="flex items-center justify-center gap-4 max-w-xs mx-auto">
-                <div class="h-px flex-1 max-w-24 skills-divider"></div>
-                <div class="w-2.5 h-2.5 rounded-full skills-dot"></div>
-                <div class="h-px flex-1 max-w-24 skills-divider"></div>
-            </div>
+            <div class="w-full h-[1px] bg-neutral-800"></div>
         </div>
 
         @if($skills->isEmpty())
-            <!-- Empty State -->
-            <div class="text-center py-20 animate-fade-in">
-                <div class="inline-flex items-center justify-center w-32 h-32 rounded-3xl mb-8 skills-empty-icon">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                    </svg>
-                </div>
-                <h3 class="text-2xl md:text-3xl font-bold mb-4 skills-empty-title">No Skills Added Yet</h3>
-                <p class="text-lg max-w-md mx-auto skills-empty-text">Skills will appear here once added through the admin panel.</p>
+            <div class="p-12 border border-dashed border-neutral-800 text-center">
+                <p class="text-neutral-500 font-mono">No skills data available.</p>
             </div>
         @else
             @php
                 $categories = [
-                    'frontend' => [
-                        'title' => 'Frontend Development',
-                        'icon' => 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
-                        'color' => 'blue'
-                    ],
-                    'backend' => [
-                        'title' => 'Backend Development',
-                        'icon' => 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
-                        'color' => 'green'
-                    ],
-                    'database' => [
-                        'title' => 'Database & Storage',
-                        'icon' => 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4',
-                        'color' => 'purple'
-                    ],
-                    'tools' => [
-                        'title' => 'Tools & Technologies',
-                        'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z',
-                        'color' => 'orange'
-                    ],
+                    'frontend' => 'Frontend Development',
+                    'backend' => 'Backend Development',
+                    'database' => 'Database & Storage',
+                    'tools' => 'Tools & Technologies',
                 ];
                 
                 $groupedSkills = $skills->groupBy('category');
             @endphp
 
-            <!-- Categories -->
-            <div class="space-y-16 md:space-y-20">
-                @foreach($categories as $categoryKey => $categoryData)
+            <div class="space-y-16">
+                @foreach($categories as $categoryKey => $categoryTitle)
                     @if($groupedSkills->has($categoryKey) && $groupedSkills[$categoryKey]->isNotEmpty())
-                        <div class="category-section animate-slide-up" style="animation-delay: {{ $loop->index * 0.1 }}s">
-                            
+                        <div class="group">
                             <!-- Category Header -->
-                            <div class="flex items-center gap-5 mb-12 md:mb-14">
-                                <div class="category-icon-wrapper category-{{ $categoryData['color'] }}">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $categoryData['icon'] }}"/>
-                                    </svg>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="category-title">{{ $categoryData['title'] }}</h3>
-                                    <p class="category-count">
-                                        {{ $groupedSkills[$categoryKey]->count() }} 
-                                        {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
-                                    </p>
-                                </div>
+                            <div class="flex items-center gap-4 mb-8">
+                                <h3 class="text-2xl md:text-3xl font-bold text-white group-hover:text-lime-400 transition-colors">
+                                    {{ $categoryTitle }}
+                                </h3>
+                                <div class="flex-1 h-[1px] bg-neutral-800 group-hover:bg-lime-400/30 transition-colors"></div>
+                                <span class="text-sm font-mono text-neutral-600">
+                                    {{ $groupedSkills[$categoryKey]->count() }} {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
+                                </span>
                             </div>
 
                             <!-- Skills Grid -->
-                            <div class="skills-grid">
-                                @foreach($groupedSkills[$categoryKey] as $index => $skill)
-                                    <div class="skill-card" style="animation-delay: {{ $index * 0.05 }}s">
-                                        <div class="skill-card-inner">
-                                            
-                                            <!-- Glow Effect -->
-                                            <div class="skill-glow"></div>
-                                            
-                                            <!-- Icon -->
-                                            <div class="skill-icon-container">
-                                                @if($skill->url && filter_var($skill->url, FILTER_VALIDATE_URL))
-                                                    <img src="{{ $skill->url }}" 
-                                                         alt="{{ $skill->name }}" 
-                                                         class="skill-icon-image"
-                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                @endif
-                                                
-                                                <!-- Fallback Icon -->
-                                                <div class="skill-icon-fallback" style="display: {{ $skill->url && filter_var($skill->url, FILTER_VALIDATE_URL) ? 'none' : 'flex' }};">
-                                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                                    </svg>
-                                                </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                @foreach($groupedSkills[$categoryKey] as $skill)
+                                    <div class="group/skill relative bg-neutral-900 border border-neutral-800 p-6 hover:border-lime-400 hover:bg-neutral-950 transition-all duration-300 cursor-default">
+                                        
+                                        <!-- Skill Icon -->
+                                        @php
+                                            $iconUrl = $skill->url;
+                                            $hasValidUrl = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
+                                        @endphp
+
+                                        @if($hasValidUrl)
+                                            <div class="flex justify-center mb-4">
+                                                <img src="{{ $iconUrl }}" 
+                                                     alt="{{ $skill->name }}" 
+                                                     class="w-12 h-12 object-contain opacity-80 group-hover/skill:opacity-100 group-hover/skill:scale-110 transition-all duration-300"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                             </div>
-                                            
-                                            <!-- Content -->
-                                            <div class="skill-content">
-                                                <h4 class="skill-name">{{ $skill->name }}</h4>
-                                                @if($skill->level)
-                                                    <p class="skill-level">{{ $skill->level }}</p>
-                                                @endif
+                                        @endif
+
+                                        <!-- Fallback Icon -->
+                                        <div class="{{ $hasValidUrl ? 'hidden' : '' }} flex justify-center mb-4">
+                                            <div class="w-12 h-12 flex items-center justify-center bg-neutral-800 border border-neutral-700 group-hover/skill:border-lime-400 transition-colors">
+                                                <svg class="w-6 h-6 text-neutral-600 group-hover/skill:text-lime-400 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M13 7H7v6h6V7z"/>
+                                                    <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd"/>
+                                                </svg>
                                             </div>
-                                            
-                                            <!-- Hover Border -->
-                                            <div class="skill-border"></div>
                                         </div>
+
+                                        <!-- Skill Name -->
+                                        <h4 class="text-center text-sm font-mono text-neutral-400 group-hover/skill:text-white transition-colors">
+                                            {{ $skill->name }}
+                                        </h4>
+
+                                        <!-- Level (if available) -->
+                                        @if($skill->level)
+                                            <p class="text-center text-xs text-neutral-600 mt-1 font-mono">
+                                                {{ $skill->level }}
+                                            </p>
+                                        @endif
+
+                                        <!-- Corner accent -->
+                                        <div class="absolute top-0 right-0 w-0 h-0 border-t-[8px] border-r-[8px] border-t-transparent border-r-neutral-800 group-hover/skill:border-r-lime-400 transition-colors"></div>
                                     </div>
                                 @endforeach
                             </div>
@@ -136,429 +100,3 @@
         @endif
     </div>
 </section>
-
-<style>
-/* ============================================
-   THEME 2 SKILLS - DUAL THEME SUPPORT
-   ============================================ */
-
-/* Light Theme Variables */
-[data-theme="light"] {
-    --skills-bg: #f8fafc;
-    --skills-text-primary: #0f172a;
-    --skills-text-secondary: #475569;
-    --skills-text-muted: #64748b;
-    --skills-card-bg: #ffffff;
-    --skills-card-border: #e2e8f0;
-    --skills-card-hover-border: #3b82f6;
-    --skills-accent: #3b82f6;
-    --skills-accent-secondary: #8b5cf6;
-    --skills-grid-color: rgba(59, 130, 246, 0.03);
-    --skills-glow-color: rgba(59, 130, 246, 0.15);
-    --skills-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    --skills-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    --skills-blue: #3b82f6;
-    --skills-green: #10b981;
-    --skills-purple: #8b5cf6;
-    --skills-orange: #f59e0b;
-}
-
-/* Dark Theme Variables */
-[data-theme="dark"] {
-    --skills-bg: #0f172a;
-    --skills-text-primary: #f1f5f9;
-    --skills-text-secondary: #cbd5e1;
-    --skills-text-muted: #94a3b8;
-    --skills-card-bg: #1e293b;
-    --skills-card-border: #334155;
-    --skills-card-hover-border: #60a5fa;
-    --skills-accent: #60a5fa;
-    --skills-accent-secondary: #a78bfa;
-    --skills-grid-color: rgba(96, 165, 250, 0.05);
-    --skills-glow-color: rgba(96, 165, 250, 0.2);
-    --skills-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-    --skills-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    
-    --skills-blue: #60a5fa;
-    --skills-green: #34d399;
-    --skills-purple: #a78bfa;
-    --skills-orange: #fbbf24;
-}
-
-.theme2-skills-v2 {
-    background: var(--skills-bg);
-    padding: 6rem 0;
-    position: relative;
-}
-
-/* Background */
-.skills-grid-bg {
-    position: absolute;
-    inset: 0;
-    background-image: 
-        radial-gradient(circle at 2px 2px, var(--skills-grid-color) 1px, transparent 0);
-    background-size: 40px 40px;
-}
-
-.skills-gradient-orbs {
-    position: absolute;
-    inset: 0;
-    background: 
-        radial-gradient(circle at 15% 20%, var(--skills-accent) 0%, transparent 40%),
-        radial-gradient(circle at 85% 80%, var(--skills-accent-secondary) 0%, transparent 40%);
-    opacity: 0.05;
-    filter: blur(80px);
-}
-
-/* Section Header */
-.skills-badge {
-    background: var(--skills-card-bg);
-    border: 2px solid var(--skills-card-border);
-    color: var(--skills-accent);
-    backdrop-filter: blur(10px);
-}
-
-.skills-title {
-    color: var(--skills-text-primary);
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-}
-
-.skills-description {
-    color: var(--skills-text-secondary);
-    line-height: 1.6;
-}
-
-.skills-divider {
-    background: linear-gradient(90deg, transparent, var(--skills-accent), transparent);
-    height: 2px;
-}
-
-.skills-dot {
-    background: var(--skills-accent);
-    box-shadow: 0 0 10px var(--skills-accent);
-}
-
-/* Empty State */
-.skills-empty-icon {
-    background: var(--skills-card-bg);
-    border: 2px solid var(--skills-card-border);
-    color: var(--skills-text-muted);
-}
-
-.skills-empty-title {
-    color: var(--skills-text-primary);
-}
-
-.skills-empty-text {
-    color: var(--skills-text-muted);
-    line-height: 1.6;
-}
-
-/* Category Section */
-.category-section {
-    opacity: 0;
-    animation: slideUp 0.6s ease-out forwards;
-}
-
-/* Category Header */
-.category-icon-wrapper {
-    width: 64px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    border: 2px solid;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.category-icon-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.1;
-    transition: opacity 0.3s;
-}
-
-.category-icon-wrapper:hover::before {
-    opacity: 0.2;
-}
-
-.category-blue {
-    color: var(--skills-blue);
-    border-color: var(--skills-blue);
-    background: color-mix(in srgb, var(--skills-blue) 10%, transparent);
-}
-
-.category-blue::before {
-    background: var(--skills-blue);
-}
-
-.category-green {
-    color: var(--skills-green);
-    border-color: var(--skills-green);
-    background: color-mix(in srgb, var(--skills-green) 10%, transparent);
-}
-
-.category-green::before {
-    background: var(--skills-green);
-}
-
-.category-purple {
-    color: var(--skills-purple);
-    border-color: var(--skills-purple);
-    background: color-mix(in srgb, var(--skills-purple) 10%, transparent);
-}
-
-.category-purple::before {
-    background: var(--skills-purple);
-}
-
-.category-orange {
-    color: var(--skills-orange);
-    border-color: var(--skills-orange);
-    background: color-mix(in srgb, var(--skills-orange) 10%, transparent);
-}
-
-.category-orange::before {
-    background: var(--skills-orange);
-}
-
-.category-title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--skills-text-primary);
-    line-height: 1.2;
-    letter-spacing: -0.025em;
-    margin-bottom: 0.25rem;
-}
-
-.category-count {
-    color: var(--skills-text-muted);
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-/* Skills Grid */
-.skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Skill Card */
-.skill-card {
-    opacity: 0;
-    animation: fadeInScale 0.5s ease-out forwards;
-}
-
-.skill-card-inner {
-    position: relative;
-    height: 100%;
-    background: var(--skills-card-bg);
-    border: 2px solid var(--skills-card-border);
-    border-radius: 20px;
-    padding: 1.75rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-}
-
-.skill-card:hover .skill-card-inner {
-    transform: translateY(-8px);
-    border-color: var(--skills-card-hover-border);
-    box-shadow: var(--skills-shadow-hover);
-}
-
-/* Glow Effect */
-.skill-glow {
-    position: absolute;
-    inset: -50%;
-    background: conic-gradient(
-        from 0deg at 50% 50%,
-        transparent 0deg,
-        var(--skills-glow-color) 90deg,
-        transparent 180deg
-    );
-    opacity: 0;
-    transition: opacity 0.4s, transform 0.4s;
-    animation: rotate 4s linear infinite;
-    animation-play-state: paused;
-}
-
-.skill-card:hover .skill-glow {
-    opacity: 1;
-    animation-play-state: running;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Icon Container */
-.skill-icon-container {
-    width: 64px;
-    height: 64px;
-    position: relative;
-    z-index: 1;
-}
-
-.skill-icon-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s;
-}
-
-.skill-card:hover .skill-icon-image {
-    transform: scale(1.15) rotate(5deg);
-}
-
-.skill-icon-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--skills-accent), var(--skills-accent-secondary));
-    color: white;
-}
-
-/* Content */
-.skill-content {
-    text-align: center;
-    z-index: 1;
-    width: 100%;
-}
-
-.skill-name {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--skills-text-primary);
-    margin-bottom: 0.25rem;
-    line-height: 1.3;
-}
-
-.skill-level {
-    font-size: 0.75rem;
-    color: var(--skills-text-muted);
-    font-weight: 500;
-    line-height: 1.4;
-}
-
-/* Hover Border */
-.skill-border {
-    position: absolute;
-    inset: -2px;
-    border-radius: 20px;
-    padding: 2px;
-    background: linear-gradient(45deg, var(--skills-accent), var(--skills-accent-secondary));
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.skill-card:hover .skill-border {
-    opacity: 1;
-}
-
-/* Animations */
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.8s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .theme2-skills-v2 {
-        padding: 4rem 0;
-    }
-    
-    .skills-title {
-        font-size: 2.5rem;
-    }
-    
-    .category-title {
-        font-size: 1.5rem;
-    }
-    
-    .skills-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 1rem;
-    }
-    
-    .skill-card-inner {
-        padding: 1.5rem 1rem;
-        gap: 1rem;
-    }
-    
-    .skill-icon-container {
-        width: 56px;
-        height: 56px;
-    }
-    
-    .category-icon-wrapper {
-        width: 56px;
-        height: 56px;
-    }
-    
-    .category-section .flex.items-center {
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .skills-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    }
-    
-    .skill-card-inner {
-        padding: 1.25rem 0.75rem;
-    }
-    
-    .skill-icon-container {
-        width: 48px;
-        height: 48px;
-    }
-}
-</style>

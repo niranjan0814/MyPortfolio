@@ -20,7 +20,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
-
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -28,7 +27,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration()// ✅ ADD THIS LINE
+            ->registration() // ✅ Registration enabled
+            ->loginRouteSlug('login')
+            ->homeUrl('/') // ✅ FIXED: Use URL string instead of route() helper
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -40,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                \App\Filament\Widgets\SuperAdminStatsOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -55,10 +56,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->widgets([
-                Widgets\AccountWidget::class,
-                \App\Filament\Widgets\SuperAdminStatsOverview::class, // ✅ ADD THIS
             ]);
     }
 }

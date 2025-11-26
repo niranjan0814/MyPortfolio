@@ -1,4 +1,5 @@
 <?php
+// app/Filament/Resources/AllUsersResource.php - FIXED VERSION
 
 namespace App\Filament\Resources;
 
@@ -26,8 +27,7 @@ class AllUsersResource extends Resource
     }
 
     /**
-     * ✅ CRITICAL: EXCLUDE any user who has super_admin role
-     * Only show users who DON'T have super_admin role
+     * ✅ CRITICAL: EXCLUDE super_admins from the list
      */
     public static function getEloquentQuery(): Builder
     {
@@ -60,13 +60,12 @@ class AllUsersResource extends Resource
                             ->dehydrated(fn($state) => filled($state))
                             ->dehydrateStateUsing(fn($state) => Hash::make($state))
                             ->label('New Password')
-                            ->hint('Leave blank to keep current'),
+                            ->hint('Leave blank to keep current password'),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Profile Details')
                     ->schema([
                         Forms\Components\TextInput::make('full_name')
-                            ->required()
                             ->maxLength(255),
 
                         Forms\Components\Textarea::make('description')
@@ -80,6 +79,7 @@ class AllUsersResource extends Resource
                             ->maxLength(255),
                     ])->columns(2),
 
+                // ✅ FIXED: Role Management Section
                 Forms\Components\Section::make('Role Management')
                     ->schema([
                         Forms\Components\Select::make('roles')
@@ -88,8 +88,8 @@ class AllUsersResource extends Resource
                             ->multiple()
                             ->preload()
                             ->required()
-                            ->helperText('Assign user roles')
-                            // ✅ EXCLUDE super_admin role from options
+                            ->helperText('⚠️ Assign free_user or premium_user role')
+                            // ✅ EXCLUDE super_admin from options
                             ->options(function () {
                                 return \Spatie\Permission\Models\Role::where('name', '!=', 'super_admin')
                                     ->pluck('name', 'id');
@@ -97,12 +97,12 @@ class AllUsersResource extends Resource
 
                         Forms\Components\Select::make('active_theme')
                             ->label('Active Theme')
-                            ->options([
-                                'theme1' => 'Theme 1',
-                                'theme2' => 'Theme 2',
-                                'theme3' => 'Theme 3',
-                            ])
-                            ->default('theme1'),
+                            ->options(function () {
+                                return \App\Models\Theme::where('is_active', true)
+                                    ->pluck('name', 'slug');
+                            })
+                            ->default('theme1')
+                            ->helperText('Set user\'s current active theme'),
                     ])->columns(2),
             ]);
     }
@@ -126,7 +126,13 @@ class AllUsersResource extends Resource
                     ->colors([
                         'warning' => 'premium_user',
                         'success' => 'free_user',
-                    ]),
+                    ])
+                    ->formatStateUsing(fn ($state) => ucfirst(str_replace('_', ' ', $state))),
+
+                Tables\Columns\TextColumn::make('active_theme')
+                    ->label('Theme')
+                    ->badge()
+                    ->color('info'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Joined')
@@ -134,12 +140,15 @@ class AllUsersResource extends Resource
                     ->sortable(),
             ])
             ->actions([
-                // ✅ ONLY DELETE ACTION - NO EDIT BUTTON
+                // ✅ NOW WE HAVE EDIT ACTION
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-o-pencil')
+                    ->color('warning'),
+
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
                     ->modalHeading('Delete User')
                     ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
-                    ->modalSubheading(fn ($record) => "User: {$record->name} ({$record->email})")
                     ->successNotificationTitle('User deleted successfully')
                     ->icon('heroicon-o-trash')
                     ->color('danger'),
@@ -147,10 +156,7 @@ class AllUsersResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->modalHeading('Delete Selected Users')
-                        ->modalDescription('Are you sure you want to delete these users? This action cannot be undone.')
-                        ->successNotificationTitle('Users deleted successfully'),
+                        ->requiresConfirmation(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -165,11 +171,12 @@ class AllUsersResource extends Resource
     }
 
     /**
-     * ✅ DISABLE EDIT - Only delete allowed
+     * ✅ NOW ALLOW EDIT for Super Admins
      */
     public static function canEdit($record): bool
     {
-        return false;
+        // Super admins can edit any non-super-admin user
+        return auth()->user()?->hasRole('super_admin') && !$record->hasRole('super_admin');
     }
 
     /**
@@ -184,7 +191,7 @@ class AllUsersResource extends Resource
     {
         return [
             'index' => Pages\ListAllUsers::route('/'),
-            // ✅ No edit or create pages - only list view
+            'edit' => Pages\EditAllUsers::route('/{record}/edit'), // ✅ RE-ENABLE EDIT PAGE
         ];
     }
 }

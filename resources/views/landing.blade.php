@@ -1,56 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $data['footer_company_name'] ?? 'Detech Portfolio System' }} - Get Started</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        
+
         .animated-float {
             animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
-        
+
         .hero-gradient {
             background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
         }
-        
+
         .theme-card-hover {
             transition: all 0.3s ease;
         }
-        
+
         .theme-card-hover:hover {
             transform: translateY(-8px);
         }
-        
+
         .floating-shape {
             position: absolute;
             opacity: 0.05;
             animation: float 4s ease-in-out infinite;
         }
-        
+
         .contact-input-focus:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
             border-color: #D97706;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(217, 119, 6, 0.3);
@@ -85,6 +93,8 @@
 <body class="bg-gray-50">
 
     <!-- Navigation -->
+
+<!-- Navigation -->
 <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
 
@@ -101,11 +111,70 @@
             </span>
         </div>
 
-        <!-- Right: Sign In -->
-        <a href="/admin/login"
-           class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
-            Sign In
-        </a>
+        <!-- Right: Conditional Buttons -->
+        <div class="flex items-center gap-3">
+            @auth
+                <!-- Dashboard Button (shown when logged in) -->
+                <a href="/admin"
+                   class="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- User Profile Dropdown -->
+                @php
+                    $landingUser = auth()->user();
+                    $landingNameSource = $landingUser->full_name ?: ($landingUser->name ?: $landingUser->email);
+                    $landingInitial = strtoupper(substr($landingNameSource, 0, 1));
+                    $landingHasProfileImage = $landingUser->profile_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($landingUser->profile_image);
+                @endphp
+                <div class="relative group">
+                    <button class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition">
+                        @if($landingHasProfileImage)
+                            <img src="{{ asset('storage/' . $landingUser->profile_image) }}" 
+                                 alt="{{ $landingUser->name ?? $landingUser->full_name ?? 'Profile' }}"
+                                 class="w-9 h-9 rounded-full object-cover border-2 border-orange-500 shadow-sm">
+                        @else
+                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                {{ $landingInitial }}
+                            </div>
+                        @endif
+                        <div class="text-left hidden sm:block">
+                            <p class="text-xs uppercase text-gray-500">Profile</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ $landingUser->full_name ?? $landingUser->name ?? 'User' }}</p>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-2">
+                            <a href="{{ route('portfolio.show', auth()->user()->slug) }}" 
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                <i class="fas fa-user mr-2"></i> My Portfolio
+                            </a>
+                            <a href="/admin" 
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <hr class="my-2 border-gray-200">
+                            <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <!-- Sign In Button (shown when not logged in) -->
+                <a href="/admin/login"
+                   class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
+                    Sign In
+                </a>
+            @endauth
+        </div>
 
     </div>
 </nav>
@@ -282,97 +351,97 @@
 
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 @foreach($availableThemes as $theme)
-                    <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}"
-                         data-theme="{{ $theme->slug }}">
-                        
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition flex flex-col h-full">
-                            
-                            <!-- Preview - Clickable to Theme Overview -->
-                            <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
-                               class="{{ !$theme->is_active ? 'pointer-events-none' : '' }} block h-48 relative overflow-hidden"
-                               style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
-                               
-                                @if($theme->thumbnail_path)
-                                    <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
-                                         alt="{{ $theme->name }}"
-                                         class="w-full h-full object-cover">
-                                @else
-                                    <div class="absolute top-4 left-4 right-4">
-                                        <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-10 h-10 rounded-full"
-                                                     style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
-                                                <div class="flex-1">
-                                                    <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
-                                                    <div class="h-2 bg-gray-200 rounded w-16"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
+                                    <div class="theme-card cursor-pointer theme-card-hover {{ !$theme->is_active ? 'opacity-60 pointer-events-none' : '' }}"
+                                         data-theme="{{ $theme->slug }}">
 
-                                <!-- "View Details" overlay on hover -->
-                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition flex items-center justify-center">
-                                    <span class="text-white font-semibold opacity-0 hover:opacity-100 transition">
-                                        <i class="fas fa-eye mr-2"></i> View Details
+                                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 hover:border-orange-500 transition flex flex-col h-full">
+
+                                            <!-- Preview - Clickable to Theme Overview -->
+                                            <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
+                                               class="{{ !$theme->is_active ? 'pointer-events-none' : '' }} block h-48 relative overflow-hidden"
+                                               style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
+
+                                                @if($theme->thumbnail_path)
+                                                    <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
+                                                         alt="{{ $theme->name }}"
+                                                         class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="absolute top-4 left-4 right-4">
+                                                        <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
+                                                            <div class="flex items-center space-x-3">
+                                                                <div class="w-10 h-10 rounded-full"
+                                                                     style="background: {{ $theme->colors['accent'] ?? '#F59E0B' }}"></div>
+                                                                <div class="flex-1">
+                                                                    <div class="h-2.5 bg-gray-300 rounded w-24 mb-1.5"></div>
+                                                                    <div class="h-2 bg-gray-200 rounded w-16"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                <!-- "View Details" overlay on hover -->
+                                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-40 transition flex items-center justify-center">
+                                                    <span class="text-white font-semibold opacity-0 hover:opacity-100 transition">
+                                                        <i class="fas fa-eye mr-2"></i> View Details
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <!-- Card Content -->
+                                            <div class="p-6 flex flex-col flex-grow">
+                                                <!-- ✅ ADD THIS NEW SECTION AT THE TOP -->
+                                                <div class="flex items-start justify-between mb-2">
+                                                    <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
+                                                        class="hover:text-orange-600 transition flex-1">
+                                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
+                                                 </a>
+
+                        <!-- ✅ ACTIVE THEME INDICATOR -->
+                        @auth
+                            @if(auth()->user()->active_theme === $theme->slug)
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
+                                        <i class="fas fa-check-circle"></i>
+                                        Active
                                     </span>
                                 </div>
-                            </a>
-
-                            <!-- Card Content -->
-                            <div class="p-6 flex flex-col flex-grow">
-                                <!-- ✅ ADD THIS NEW SECTION AT THE TOP -->
-                                <div class="flex items-start justify-between mb-2">
-                                    <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
-                                        class="hover:text-orange-600 transition flex-1">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
-                                 </a>
-        
-        <!-- ✅ ACTIVE THEME INDICATOR -->
-        @auth
-            @if(auth()->user()->active_theme === $theme->slug)
-                <div class="flex items-center gap-2">
-                    <span class="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
-                        <i class="fas fa-check-circle"></i>
-                        Active
-                    </span>
-                </div>
-            @endif
-        @endauth
-    </div>
-                                <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
-
-                                @if($theme->features)
-                                    <div class="space-y-2 mb-6 text-sm text-gray-600">
-                                        @foreach(array_slice($theme->features, 0, 3) as $feature)
-                                            <div class="flex items-center gap-2">
-                                                <i class="fas fa-check text-orange-500"></i>
-                                                <span>{{ $feature }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                <!-- Bottom section: Badge + Radio (selection) -->
-                                <div class="mt-auto flex justify-between items-center">
-                                    @if($theme->is_premium)
-                                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Premium</span>
-                                    @else
-                                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
-                                    @endif
-
-                                    @if($theme->is_active)
-                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
-                                    @else
-                                        <span class="text-xs text-gray-500">Coming Soon</span>
-                                    @endif
-                                </div>
-                                
-                            </div>
-                            
-                        </div>
-                        
+                            @endif
+                        @endauth
                     </div>
+                                                <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
+
+                                                @if($theme->features)
+                                                    <div class="space-y-2 mb-6 text-sm text-gray-600">
+                                                        @foreach(array_slice($theme->features, 0, 3) as $feature)
+                                                            <div class="flex items-center gap-2">
+                                                                <i class="fas fa-check text-orange-500"></i>
+                                                                <span>{{ $feature }}</span>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+
+                                                <!-- Bottom section: Badge + Radio (selection) -->
+                                                <div class="mt-auto flex justify-between items-center">
+                                                    @if($theme->is_premium)
+                                                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Premium</span>
+                                                    @else
+                                                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">✓ Free</span>
+                                                    @endif
+
+                                                    @if($theme->is_active)
+                                                        <div class="w-5 h-5 rounded-full border-2 border-gray-300 theme-radio cursor-pointer hover:border-orange-500 transition"></div>
+                                                    @else
+                                                        <span class="text-xs text-gray-500">Coming Soon</span>
+                                                    @endif
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
                 @endforeach
             </div>
 
@@ -504,33 +573,35 @@
                             alt="Detech Icon">
                         <span class="text-xl font-bold text-white">{{ $data['footer_company_name'] ?? 'Detech' }}</span>
                     </div>
-                    <p class="text-sm">{{ $data['footer_tagline'] ?? 'Build stunning portfolios effortlessly.' }}</p>
+                    <p class="text-sm">{{ $data['footer_tagline'] ?? 'Revolutionize your business with platform-focused engineering.' }}</p>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Product</h4>
+                    <h4 class="text-white font-semibold mb-4">Services</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Features</a></li>
-                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
-                        <li><a href="#" class="hover:text-white transition">Security</a></li>
+                        <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">Platform Engineering</a></li>
+                        <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">AI & Cloud Engineering</a></li>
+                        <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">Web & Mobile Development</a></li>
+                        <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">AR & VR Experiences</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Company</h4>
+                    <h4 class="text-white font-semibold mb-4">Our Work</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition">About</a></li>
-                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">VolunTrack Nexus</a></li>
+                        <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">Authentz</a></li>
+                        <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">Kunam Dry Fish</a></li>
+                        <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">100 Bucks</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Legal</h4>
+                    <h4 class="text-white font-semibold mb-4">Get in Touch</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Privacy</a></li>
-                        <li><a href="#" class="hover:text-white transition">Terms</a></li>
-                        <li><a href="#" class="hover:text-white transition">Cookies</a></li>
+                        <li><a href="mailto:kingshipmena@gmail.com" class="hover:text-white transition">kingshipmena@gmail.com</a></li>
+                        <li><a href="https://www.detech.live#pricing" target="_blank" class="hover:text-white transition">Plans & Pricing</a></li>
+                        <li><a href="https://www.detech.live#contact" target="_blank" class="hover:text-white transition">Schedule a Meeting</a></li>
                     </ul>
                 </div>
             </div>
@@ -538,9 +609,9 @@
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-sm">{{ $data['footer_copyright'] ?? '© 2025 Detech Company. All rights reserved.' }}</p>
                 <div class="flex gap-6 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-github"></i></a>
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.linkedin.com/company/detech" target="_blank" class="hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com" target="_blank" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:kingshipmena@gmail.com" class="hover:text-white transition"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
