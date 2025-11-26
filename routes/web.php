@@ -109,4 +109,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::delete('/themes/{theme}/comment', [ThemeOverviewController::class, 'deleteComment'])
         ->name('themes.comment.delete');
+    Route::post('/themes/{theme}/activate', [ThemeOverviewController::class, 'activate'])
+        ->name('themes.activate');
 });

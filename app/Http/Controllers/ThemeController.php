@@ -66,4 +66,34 @@ class ThemeController extends Controller
             'message' => 'User not authenticated'
         ], 401);
     }
+    public function activate(Theme $theme)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('filament.admin.auth.login')
+                ->with('error', 'Please login to activate a theme');
+        }
+
+        $user = Auth::user();
+
+        // Check if user has access to this theme
+        if (!$user->canAccessTheme($theme->slug)) {
+            return redirect()->back()->with('error', 'You don\'t have access to this theme. Please upgrade to premium.');
+        }
+
+        // Check if theme is active
+        if (!$theme->is_active) {
+            return redirect()->back()->with('error', 'This theme is not available yet.');
+        }
+
+        // Update user's active theme
+        $user->update([
+            'active_theme' => $theme->slug
+        ]);
+
+        // Log the change (optional)
+        \Log::info("User {$user->id} ({$user->email}) activated theme: {$theme->slug}");
+
+        return redirect()->route('portfolio.show', $user->slug)
+            ->with('success', "Theme '{$theme->name}' activated successfully! Your portfolio has been updated.");
+    }
 }

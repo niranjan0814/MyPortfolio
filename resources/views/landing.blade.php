@@ -321,10 +321,25 @@
 
                             <!-- Card Content -->
                             <div class="p-6 flex flex-col flex-grow">
-                                <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
-                                   class="hover:text-orange-600 transition">
+                                <!-- ✅ ADD THIS NEW SECTION AT THE TOP -->
+                                <div class="flex items-start justify-between mb-2">
+                                    <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
+                                        class="hover:text-orange-600 transition flex-1">
                                     <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $theme->name }}</h3>
-                                </a>
+                                 </a>
+        
+        <!-- ✅ ACTIVE THEME INDICATOR -->
+        @auth
+            @if(auth()->user()->active_theme === $theme->slug)
+                <div class="flex items-center gap-2">
+                    <span class="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
+                        <i class="fas fa-check-circle"></i>
+                        Active
+                    </span>
+                </div>
+            @endif
+        @endauth
+    </div>
                                 <p class="text-gray-600 text-sm mb-4">{{ $theme->description }}</p>
 
                                 @if($theme->features)
@@ -352,8 +367,11 @@
                                         <span class="text-xs text-gray-500">Coming Soon</span>
                                     @endif
                                 </div>
+                                
                             </div>
+                            
                         </div>
+                        
                     </div>
                 @endforeach
             </div>
