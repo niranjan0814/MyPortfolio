@@ -90,9 +90,15 @@
         @endif
 
         <!-- Social Links - FIXED ICON VISIBILITY -->
-        @if (!empty($heroContent['social_links'] ?? []))
+        @php
+            $socialLinks = $heroContent['social_links'] ?? [];
+            if (is_string($socialLinks)) {
+                $socialLinks = json_decode($socialLinks, true) ?? [];
+            }
+        @endphp
+        @if (!empty($socialLinks))
             <div class="flex justify-center gap-6 mb-12 mt-8">
-                @foreach ($heroContent['social_links'] as $social)
+                @foreach ($socialLinks as $social)
                     @if (!empty($social['url'] ?? ''))
                         <a href="{{ $social['url'] }}" target="_blank" class="water-drop group relative">
 

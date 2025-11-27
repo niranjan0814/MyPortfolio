@@ -7,6 +7,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\CVController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ThemeOverviewController;
+use App\Http\Controllers\BlogController;
 
 
 /*
@@ -14,9 +15,9 @@ use App\Http\Controllers\ThemeOverviewController;
 | LANDING PAGE ROUTES
 |--------------------------------------------------------------------------
 */
-Route::get('/test-favicon', function() {
+Route::get('/test-favicon', function () {
     $user = \App\Models\User::find(4); // Your user ID
-    
+
     return [
         'favicon_path (DB)' => $user->favicon_path,
         'hasFavicon()' => $user->hasFavicon(),
@@ -41,6 +42,15 @@ Route::post('/select-theme', [LandingPageController::class, 'selectTheme'])
 Route::get('/portfolio/{user}', [PortfolioController::class, 'show'])
     ->name('portfolio.show')
     ->where('user', '[A-Za-z0-9\-]+'); // Matches slugs only
+
+// Blog section (premium users only)
+Route::get('/portfolio/{user}/blog', [BlogController::class, 'index'])
+    ->name('portfolio.blog.index')
+    ->where('user', '[A-Za-z0-9\-]+');
+
+Route::get('/portfolio/{user}/blog/{blog}', [BlogController::class, 'show'])
+    ->name('portfolio.blog.show')
+    ->where('user', '[A-Za-z0-9\-]+');
 
 /*
 |--------------------------------------------------------------------------
@@ -68,10 +78,10 @@ Route::get('/project/{project}/overview', [PortfolioController::class, 'showProj
 Route::middleware(['auth'])->group(function () {
     Route::get('/cv/download/{user}', [CVController::class, 'download'])
         ->name('cv.download');
-    
+
     Route::get('/cv/view/{user}', [CVController::class, 'view'])
         ->name('cv.view');
-    
+
     Route::get('/cv/my-cv/download', [CVController::class, 'downloadOwn'])
         ->name('cv.download.own');
 });
@@ -106,7 +116,7 @@ Route::get('/themes/{theme}/preview', [ThemeOverviewController::class, 'preview'
 Route::middleware(['auth'])->group(function () {
     Route::post('/themes/{theme}/comment', [ThemeOverviewController::class, 'storeComment'])
         ->name('themes.comment.store');
-    
+
     Route::delete('/themes/{theme}/comment', [ThemeOverviewController::class, 'deleteComment'])
         ->name('themes.comment.delete');
     Route::post('/themes/{theme}/activate', [ThemeOverviewController::class, 'activate'])

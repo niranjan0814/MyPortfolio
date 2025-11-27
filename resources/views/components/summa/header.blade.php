@@ -18,6 +18,9 @@
                 <li><a href="{{ $baseUrl }}#skills" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Skills</a></li>
                 <li><a href="{{ $baseUrl }}#experience" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Experience</a></li>
                 <li><a href="{{ $baseUrl }}#education" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Education</a></li>
+                @if($user && $user->isPremium())
+                    <li><a href="{{ route('portfolio.blog.index', $user->slug) }}" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Blog</a></li>
+                @endif
                 <li><a href="{{ $baseUrl }}#contact" class="font-medium transition-colors hover:opacity-80" style="color: var(--text-secondary);">Contact</a></li>
 
                 <li>
@@ -41,6 +44,9 @@
             <a href="#skills" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80" style="color: var(--text-secondary);">Skills</a>
             <a href="#experience" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80" style="color: var(--text-secondary);">Experience</a>
             <a href="#education" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80" style="color: var(--text-secondary);">Education</a>
+            @if($user && $user->isPremium())
+                <a href="{{ route('portfolio.blog.index', $user->slug) }}" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80" style="color: var(--text-secondary);">Blog</a>
+            @endif
             <a href="#contact" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80" style="color: var(--text-secondary);">Contact</a>
 
             <button class="theme-toggle-btn w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all mt-4"
