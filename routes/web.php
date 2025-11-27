@@ -52,6 +52,11 @@ Route::get('/portfolio/{user}/blog/{blog}', [BlogController::class, 'show'])
     ->name('portfolio.blog.show')
     ->where('user', '[A-Za-z0-9\-]+');
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/portfolio/{user}/blog/{blog}/comment', [BlogController::class, 'storeComment'])->name('portfolio.blog.comment.store');
+    Route::delete('/portfolio/{user}/blog/{blog}/comment', [BlogController::class, 'deleteComment'])->name('portfolio.blog.comment.delete');
+});
+
 /*
 |--------------------------------------------------------------------------
 | CONTACT & ENQUIRY

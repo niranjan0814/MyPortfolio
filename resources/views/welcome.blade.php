@@ -2,18 +2,14 @@
 
 @section('content')
     @php
-        // Get theme from user settings or default to theme1
         $theme = $user->active_theme ?? 'theme1';
-
-        // Allow preview mode
         if (request('preview') && request('theme')) {
             $theme = request('theme');
         }
     @endphp
 
     {{-- Hero Section --}}
-    <x-dynamic-component :component="$theme . '.hero'" :heroContent="$heroContent" :techStackSkills="$techStackSkills"
-        :user="$user" />
+    <x-dynamic-component :component="$theme . '.hero'" :heroContent="$heroContent" :techStackSkills="$techStackSkills" :user="$user" />
 
     {{-- About Section --}}
     <x-dynamic-component :component="$theme . '.about'" :aboutContent="$aboutContent" :user="$user" />
@@ -30,8 +26,8 @@
     {{-- Education Section --}}
     <x-dynamic-component :component="$theme . '.education'" :educations="$educations" :user="$user" />
 
-    {{-- Blog Section (All users with published blogs) --}}
-    @if(isset($blogPosts) && $blogPosts->isNotEmpty())
+    {{-- ✅ Blog Section - MUST come AFTER Education --}}
+    @if($user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
         <x-dynamic-component :component="$theme . '.blog'" :posts="$blogPosts" :user="$user" />
     @endif
 

@@ -1,4 +1,4 @@
-@props(['user' => null])
+@props(['user' => null, 'blogPosts' => null])
 
 @php
     // Super safe fallback — if no $user, use the first user with a slug (or empty string)
@@ -24,8 +24,8 @@
                         style="color: var(--text-secondary);">Experience</a></li>
                 <li><a href="{{ $baseUrl }}#education" class="font-medium transition-colors hover:opacity-80"
                         style="color: var(--text-secondary);">Education</a></li>
-                @if($user && $user->isPremium())
-                    <li><a href="{{ route('portfolio.blog.index', $user->slug) }}"
+                @if($user && $user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
+                    <li><a href="{{ $baseUrl }}#blog"
                             class="font-medium transition-colors hover:opacity-80"
                             style="color: var(--text-secondary);">Blog</a></li>
                 @endif
@@ -60,8 +60,8 @@
                 style="color: var(--text-secondary);">Experience</a>
             <a href="#education" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
                 style="color: var(--text-secondary);">Education</a>
-            @if($user && $user->isPremium())
-                <a href="{{ route('portfolio.blog.index', $user->slug) }}"
+            @if($user && $user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
+                <a href="#blog"
                     class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
                     style="color: var(--text-secondary);">Blog</a>
             @endif

@@ -10,6 +10,7 @@ class ThemeComment extends Model
 {
     protected $fillable = [
         'theme_id',
+        'blog_id', // ✅ Added blog_id
         'user_id',
         'parent_id', 
         'comment',
@@ -28,6 +29,11 @@ class ThemeComment extends Model
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);
+    }
+
+    public function blog(): BelongsTo
+    {
+        return $this->belongsTo(Blog::class);
     }
 
     public function user(): BelongsTo

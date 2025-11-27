@@ -26,9 +26,15 @@ class Blog extends Model
         'published_at' => 'datetime',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     protected static function booted(): void
     {
         static::saving(function (Blog $blog) {
+            // Auto-generate slug if empty
             if (empty($blog->slug)) {
                 $base = Str::slug($blog->title ?: 'post');
                 $slug = $base;
@@ -40,12 +46,25 @@ class Blog extends Model
 
                 $blog->slug = $slug;
             }
+
+            // Auto-set published_at to now() if published but no timestamp set
+            if ($blog->is_published && empty($blog->published_at)) {
+                $blog->published_at = now();
+            }
         });
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ThemeComment::class, 'blog_id')
+            ->where('category', 'blog')
+            ->whereNull('parent_id') // Only top-level comments
+            ->orderBy('created_at', 'desc');
     }
 
     public function scopePublished($query)

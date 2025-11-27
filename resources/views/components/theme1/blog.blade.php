@@ -1,13 +1,12 @@
 @props(['posts', 'user'])
 
 @if($user && $user->isPremium() && $posts->isNotEmpty())
+    {{-- ✅ CRITICAL: This id="blog" is what the nav link targets --}}
     <section id="blog" class="section-full relative overflow-hidden" style="background: var(--bg-primary);">
         <!-- Background decoration -->
         <div class="absolute inset-0 opacity-5 normal-theme-only">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl">
-            </div>
-            <div class="absolute bottom-20 right-10 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl">
-            </div>
+            <div class="absolute top-20 left-10 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
         </div>
 
         <!-- Monochrome particles -->
@@ -91,3 +90,64 @@
         </div>
     </section>
 @endif
+
+<style>
+    /* Gradient text effect */
+    .gradient-text {
+        background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent !important;
+        display: inline-block;
+        padding: 0 4px;
+    }
+
+    /* Line clamp for excerpt */
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Glass card effects */
+    .glass-card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    [data-theme="light"] .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(229, 231, 235, 0.8);
+    }
+
+    [data-theme="dark"] .glass-card {
+        background: rgba(30, 30, 30, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Theme-specific visibility */
+    [data-theme="dark"] .normal-theme-only {
+        display: none !important;
+    }
+
+    [data-theme="light"] .hero-particles {
+        display: none !important;
+    }
+
+    /* Fade in animation */
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

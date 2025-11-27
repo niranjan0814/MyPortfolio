@@ -144,7 +144,7 @@
 <body class="theme-scrollbar">
 
     {{-- Theme-aware Header --}}
-    <x-dynamic-component :component="$activeTheme . '.header'" :user="$user" />
+    <x-dynamic-component :component="$activeTheme . '.header'" :user="$user" :blogPosts="$blogPosts ?? collect()" />
 
     {{-- Page Content --}}
     <main>

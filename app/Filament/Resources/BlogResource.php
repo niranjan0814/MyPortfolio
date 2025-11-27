@@ -84,12 +84,24 @@ class BlogResource extends Resource
                 ->schema([
                     Forms\Components\Toggle::make('is_published')
                         ->label('Published')
-                        ->default(false),
+                        ->default(false)
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set, $get) {
+                            // Auto-set published_at to now when toggled to published (if empty)
+                            if ($state && !$get('published_at')) {
+                                $set('published_at', now());
+                            }
+                        }),
 
                     Forms\Components\DateTimePicker::make('published_at')
                         ->label('Published At')
-                        ->helperText('If empty, it will be set to now when you mark as published.')
-                        ->seconds(false),
+                        ->helperText('Leave empty to publish immediately. Timezone: ' . config('app.timezone'))
+                        ->seconds(false)
+                        ->default(now())
+                        ->native(false)
+                        ->displayFormat('M d, Y H:i')
+                        ->maxDate(now()->addYears(1))
+                        ->minDate(now()->subYears(1)),
 
                     Forms\Components\FileUpload::make('hero_image_path')
                         ->label('Hero Image')
