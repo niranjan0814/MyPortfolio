@@ -41,44 +41,6 @@ class AllUsersResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Account Information')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255)
-                            ->label('Username'),
-
-                        Forms\Components\TextInput::make('email')
-                            ->email()
-                            ->required()
-                            ->unique(User::class, 'email', ignoreRecord: true)
-                            ->maxLength(255),
-
-                        Forms\Components\TextInput::make('password')
-                            ->password()
-                            ->revealable()
-                            ->dehydrated(fn($state) => filled($state))
-                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                            ->label('New Password')
-                            ->hint('Leave blank to keep current password'),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Profile Details')
-                    ->schema([
-                        Forms\Components\TextInput::make('full_name')
-                            ->maxLength(255),
-
-                        Forms\Components\Textarea::make('description')
-                            ->rows(3)
-                            ->maxLength(1000),
-
-                        Forms\Components\TextInput::make('phone')
-                            ->tel(),
-
-                        Forms\Components\TextInput::make('location')
-                            ->maxLength(255),
-                    ])->columns(2),
-
                 // ✅ FIXED: Role Management Section
                 Forms\Components\Section::make('Role Management')
                     ->schema([

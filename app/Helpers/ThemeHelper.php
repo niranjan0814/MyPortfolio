@@ -1,5 +1,5 @@
 <?php
-// app/Helpers/ThemeHelper.php - FIXED VERSION
+// app/Helpers/ThemeHelper.php - UPDATED FOR PREVIEW
 
 namespace App\Helpers;
 
@@ -11,17 +11,17 @@ class ThemeHelper
 {
     /**
      * Get the active theme for a user with fallback protection
-     * ✅ FIXED: Super admins can preview ANY theme
+     * ✅ UPDATED: Allow anyone to preview themes (not just super admins)
      */
     public static function getActiveTheme(User $user, ?string $previewTheme = null): string
     {
-        // ✅ FIX 1: Super admins can preview ANY active theme
+        // ✅ FIX: Allow ANYONE to preview ANY active theme (remove super admin check)
         if ($previewTheme) {
             $themeModel = Theme::where('slug', $previewTheme)->first();
             
-            // Allow super admins to preview any active theme
-            if ($user->hasRole('super_admin') && $themeModel && $themeModel->is_active) {
-                \Log::info("Super admin previewing theme: {$previewTheme}");
+            // Allow preview if theme exists and is active
+            if ($themeModel && $themeModel->is_active) {
+                \Log::info("User {$user->id} previewing theme: {$previewTheme}");
                 
                 // Verify files exist
                 if (self::themeFilesExist($previewTheme)) {
@@ -30,11 +30,6 @@ class ThemeHelper
                     \Log::error("Theme files missing for: {$previewTheme}");
                     return 'theme1';
                 }
-            }
-            
-            // Regular users need access
-            if ($user->canAccessTheme($previewTheme)) {
-                return $previewTheme;
             }
         }
 
@@ -48,7 +43,7 @@ class ThemeHelper
             return 'theme1';
         }
 
-        // ✅ FIX 2: Super admins bypass access checks
+        // Super admins bypass access checks for their own theme
         if (!$user->hasRole('super_admin')) {
             // Verify user has access
             if (!$user->canAccessTheme($theme)) {

@@ -24,8 +24,7 @@ class ListHeroContents extends ListRecords
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close'),
 
-            // ➕ Create Button
-            Actions\CreateAction::make(),
+            
         ];
     }
 }

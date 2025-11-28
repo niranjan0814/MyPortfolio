@@ -34,30 +34,30 @@ class EditTheme extends EditRecord
             // ========================================
             // RE-EXTRACT ZIP ACTION
             // ========================================
-            Actions\Action::make('re_extract')
-                ->label('Re-extract ZIP')
-                ->icon('heroicon-o-arrow-path')
-                ->color('warning')
-                ->requiresConfirmation()
-                ->modalHeading('Re-extract Theme Files')
-                ->modalDescription('This will replace all existing component files with the contents of the uploaded ZIP.')
-                ->modalSubmitActionLabel('Re-extract')
-                ->action(function () {
-                    if ($this->record->extractZip()) {
-                        Notification::make()
-                            ->title('ZIP Extracted Successfully')
-                            ->body('Theme components have been updated')
-                            ->success()
-                            ->send();
-                    } else {
-                        Notification::make()
-                            ->title('Extraction Failed')
-                            ->body('Could not extract ZIP file')
-                            ->danger()
-                            ->send();
-                    }
-                })
-                ->visible(fn () => $this->record->zip_file_path),
+            // Actions\Action::make('re_extract')
+            //     ->label('Re-extract ZIP')
+            //     ->icon('heroicon-o-arrow-path')
+            //     ->color('warning')
+            //     ->requiresConfirmation()
+            //     ->modalHeading('Re-extract Theme Files')
+            //     ->modalDescription('This will replace all existing component files with the contents of the uploaded ZIP.')
+            //     ->modalSubmitActionLabel('Re-extract')
+            //     ->action(function () {
+            //         if ($this->record->extractZip()) {
+            //             Notification::make()
+            //                 ->title('ZIP Extracted Successfully')
+            //                 ->body('Theme components have been updated')
+            //                 ->success()
+            //                 ->send();
+            //         } else {
+            //             Notification::make()
+            //                 ->title('Extraction Failed')
+            //                 ->body('Could not extract ZIP file')
+            //                 ->danger()
+            //                 ->send();
+            //         }
+            //     })
+            //     ->visible(fn () => $this->record->zip_file_path),
 
             // ========================================
             // MANAGE USERS ACTION (MODAL)

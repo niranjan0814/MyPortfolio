@@ -55,33 +55,33 @@ class ThemeOverviewController extends Controller
     /**
      * Store a new comment OR reply
      */
-public function storeComment(Request $request, Theme $theme)
-{
-    if (!Auth::check()) {
-        return redirect()->route('filament.admin.auth.login')
-            ->with('error', 'Please login to leave a comment');
+    public function storeComment(Request $request, Theme $theme)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('filament.admin.auth.login')
+                ->with('error', 'Please login to leave a comment');
+        }
+
+        $validated = $request->validate([
+            'comment'   => 'required|string|min:10|max:1000',
+            'rating'    => 'nullable|integer|min:1|max:5',
+            'parent_id' => 'nullable|integer|exists:theme_comments,id',
+        ]);
+
+        // Use the relationship
+        Auth::user()->themeComments()->create([
+            'theme_id'    => $theme->id,
+            'comment'     => $validated['comment'],
+            'rating'      => $request->filled('parent_id') ? null : ($validated['rating'] ?? null),
+            'parent_id'   => $request->filled('parent_id') ? $validated['parent_id'] : null,
+            'category'    => 'theme',
+            'is_approved' => true,
+        ]);
+
+        $message = $request->filled('parent_id') ? 'Reply posted!' : 'Review posted!';
+
+        return back()->with('success', $message);
     }
-
-    $validated = $request->validate([
-        'comment'   => 'required|string|min:10|max:1000',
-        'rating'    => 'nullable|integer|min:1|max:5',
-        'parent_id' => 'nullable|integer|exists:theme_comments,id',
-    ]);
-
-    // Use the relationship – this fixes the "Undefined array key parent_id" error
-    Auth::user()->themeComments()->create([
-        'theme_id'    => $theme->id,
-        'comment'     => $validated['comment'],
-        'rating'      => $request->filled('parent_id') ? null : ($validated['rating'] ?? null),
-        'parent_id'   => $request->filled('parent_id') ? $validated['parent_id'] : null,
-        'category'    => 'theme',
-        'is_approved' => true,
-    ]);
-
-    $message = $request->filled('parent_id') ? 'Reply posted!' : 'Review posted!';
-
-    return back()->with('success', $message);
-}
 
     /**
      * Delete user's own comment (and all its replies)
@@ -92,7 +92,6 @@ public function storeComment(Request $request, Theme $theme)
             return redirect()->back()->with('error', 'Unauthorized');
         }
 
-        // ✅ FIXED: Delete specific comment by ID
         $commentId = $request->input('comment_id');
         
         $comment = ThemeComment::where('id', $commentId)
@@ -102,7 +101,6 @@ public function storeComment(Request $request, Theme $theme)
             ->first();
 
         if ($comment) {
-            // ✅ Cascade delete will automatically remove all replies
             $comment->delete();
             return redirect()->back()->with('success', 'Comment deleted successfully');
         }
@@ -111,16 +109,13 @@ public function storeComment(Request $request, Theme $theme)
     }
 
     /**
-     * Preview theme in iframe
+     * ✅ FIXED: Preview theme - PUBLIC ACCESS (No authentication/permission check)
      */
     public function preview(Theme $theme)
     {
-        // For premium themes, check access
-        if ($theme->is_premium && !Auth::user()?->canAccessTheme($theme->slug)) {
-            abort(403, 'You need premium access to preview this theme');
-        }
-
-        // Get demo user for preview
+        // ✅ REMOVED: Premium access check - everyone can preview all themes
+        
+        // Get demo user for preview (any user will do)
         $demoUser = \App\Models\User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['free_user', 'premium_user']);
         })->first();
@@ -138,7 +133,7 @@ public function storeComment(Request $request, Theme $theme)
     }
 
     /**
-     * Activate theme
+     * Activate theme (requires authentication + access)
      */
     public function activate(Request $request, Theme $theme)
     {
