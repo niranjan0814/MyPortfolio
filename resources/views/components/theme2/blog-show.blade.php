@@ -36,17 +36,23 @@
         background-color: var(--t2-bg);
         color: var(--t2-text-main);
         min-height: 100vh;
-        padding: 6rem 0 12rem;
+        padding: 6rem 0 4rem;
         font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+
+    .t2-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
     }
 
     .t2-breadcrumbs {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin-bottom: 3rem;
         font-size: 0.9rem;
         color: var(--t2-text-sub);
-        margin-bottom: 3rem;
     }
 
     .t2-breadcrumbs a {
@@ -269,6 +275,21 @@
         padding-left: 1rem;
         border-left: 2px solid var(--t2-border);
     }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .t2-blog-title {
+            font-size: 2rem;
+        }
+
+        .t2-breadcrumbs {
+            font-size: 0.8rem;
+        }
+    }
 </style>
 
 <section class="t2-blog-show">
@@ -276,10 +297,10 @@
         <!-- Breadcrumbs -->
         <div class="t2-breadcrumbs">
             <a href="{{ route('portfolio.show', $user->slug) }}">Home</a>
-            <span>/</span>
+            <span>›</span>
             <a href="{{ route('portfolio.show', $user->slug) }}#blog">Blog</a>
-            <span>/</span>
-            <span style="color: var(--t2-text-main);">{{ $post->title }}</span>
+            <span>›</span>
+            <span style="color: var(--t2-text-main); font-weight: 600;">{{ $post->title }}</span>
         </div>
 
         <!-- Header -->
@@ -352,7 +373,8 @@
                             <form id="replyForm{{ $comment->id }}" 
                                   action="{{ route('portfolio.blog.comment.store', ['user' => $user->slug, 'blog' => $post->slug]) }}" 
                                   method="POST" 
-                                  class="t2-reply-form hidden">
+                                  class="t2-reply-form hidden"
+                                  style="display: none;">
                                 @csrf
                                 <input type="hidden" name="parent_id" value="{{ $comment->id }}">
                                 <div style="margin-bottom: 1rem;">

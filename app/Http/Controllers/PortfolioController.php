@@ -142,12 +142,23 @@ public function show(User $user)
         $previewTheme = request('preview') ? request('theme') : null;
         $activeTheme = ThemeHelper::getActiveTheme($currentUser, $previewTheme);
 
+        // Get blog posts for header navigation
+        $blogPosts = collect();
+        if ($currentUser->isPremium()) {
+            $blogPosts = Blog::published()
+                ->where('user_id', $currentUser->id)
+                ->orderByDesc('published_at')
+                ->take(6)
+                ->get();
+        }
+
         return view('project-overview-master', [
             'user' => $currentUser,
             'project' => $project,
             'overview' => $overview,
             'techStackSkills' => $techStackSkills,
             'theme' => $activeTheme, // ✅ Pass theme to view
+            'blogPosts' => $blogPosts, // ✅ Pass blog posts for header
             'headerContent' => PageContent::getSection('header', $currentUser->id),
             'footerContent' => PageContent::getSection('footer', $currentUser->id),
         ]);

@@ -163,7 +163,7 @@
         letter-spacing: 0.05em;
     }
 
-    /* Skills Card - Wide */
+    /* Skills Card - Full Width */
     .t2-bento-skills {
         grid-column: span 12;
         min-height: auto;
@@ -189,10 +189,11 @@
     }
 
     .t2-skills-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1.5rem;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
 
 
 .t2-skill-pill {
@@ -204,13 +205,13 @@
     backdrop-filter: blur(18px);
 
     display: flex;
-    flex-direction: column;     /* stack icon + text */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1rem;
 
     width: 100%;
-    min-height: 150px;          /* tall like your stat cards */
+    min-height: 150px;
     text-align: center;
 
     transition: all 0.3s ease;
@@ -222,9 +223,12 @@
     background: rgba(233, 155, 12, 0.07);
 }
 .t2-skill-pill span {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--t2-text-main);
+    white-space: nowrap;
+    word-break: break-word;
+    padding: 0 0.5rem;
 }
 .t2-skill-icon-wrapper {
     width: 60px;
@@ -375,7 +379,7 @@
         }
 
         .t2-skills-grid {
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .t2-cta-section {
@@ -385,6 +389,12 @@
         .t2-btn {
             width: 100%;
             justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t2-skills-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
