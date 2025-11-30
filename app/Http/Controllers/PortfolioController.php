@@ -22,10 +22,13 @@ class PortfolioController extends Controller
      * Public portfolio page: /portfolio/niru
      * Automatically resolves the correct user via slug
      */
- public function show(User $user)
+public function show(User $user)
 {
     $previewTheme = request('preview') ? request('theme') : null;
     $activeTheme = ThemeHelper::getActiveTheme($user, $previewTheme);
+
+    // 🚀 NEW: Theme 2 background removal (auto cached)
+    $finalProfileImage = $user->getCleanProfileImageForTheme2();
 
     $hero = $user->heroContents()->first();
     $about = $user->abouts()->first() ?? $user->about;
@@ -61,12 +64,12 @@ class PortfolioController extends Controller
 
     $aboutContent = $about ? array_merge($about->toArray(), [
         'user' => $user,
-        'profile_image' => $user->profile_image,
+        'profile_image' => $finalProfileImage, // 🔥 UPDATED: Use cleaned image
     ]) : [
         'about_greeting' => "Hi, I'm {$user->full_name}!",
         'about_description' => $user->description ?? 'Passionate developer building amazing things.',
         'profile_name' => $user->full_name,
-        'profile_image' => $user->profile_image,
+        'profile_image' => $finalProfileImage, // 🔥 UPDATED
         'user' => $user,
         'profile_gpa_badge' => 'GPA 3.79',
         'profile_degree_badge' => 'BSc(Hons)SE',
@@ -80,8 +83,7 @@ class PortfolioController extends Controller
         ->limit($techStackCount)
         ->get();
 
-    // ✅ FIXED: Load blog posts ONLY if user is premium
-    $blogPosts = collect(); // Default empty collection
+    $blogPosts = collect();
     if ($user->isPremium()) {
         $blogPosts = Blog::published()
             ->where('user_id', $user->id)
@@ -97,16 +99,20 @@ class PortfolioController extends Controller
         'aboutContent' => $aboutContent,
         'techStackSkills' => $techStackSkills,
         'projects' => $user->projects()->with('overview')->latest()->get(),
-        'skills' => $user->skills()->orderBy('category', 'asc')->orderBy('name', 'asc')->get(),
+        'skills' => $user->skills()->orderBy('category')->orderBy('name')->get(),
         'experiences' => $user->experiences()->orderByDesc('created_at')->get(),
         'educations' => $user->educations()->orderByDesc('year')->get(),
-        'blogPosts' => $blogPosts, // ✅ Always pass this (empty or with data)
+        'blogPosts' => $blogPosts,
         'headerContent' => PageContent::getSection('header', $user->id),
         'footerContent' => PageContent::getSection('footer', $user->id),
         'contactContent' => PageContent::getSection('contact', $user->id),
         'portfolioOwnerId' => $user->id,
+
+        // 🚀 PASS CLEANED IMAGE FOR THEME2 HERO
+        'finalProfileImage' => $finalProfileImage,
     ])->with('user', $user);
 }
+
 
     /**
      * Project detail page: /project/5/overview

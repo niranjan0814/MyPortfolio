@@ -29,6 +29,7 @@ class User extends Authenticatable
         'slug',
         'active_theme',
         'favicon_path',
+        'clean_profile_image',
     ];
 
     protected $hidden = [
@@ -347,5 +348,56 @@ public function themeComments()
         }
         return false;
     }
+    public function getCleanProfileImageForTheme2()
+{
+    // Only apply background removal if user is using Theme 2
+    if ($this->active_theme !== 'theme2') {
+        return $this->profile_image;
+    }
+
+    // If background already cleaned once → reuse cached image
+    if (!empty($this->clean_profile_image)) {
+        return $this->clean_profile_image;
+    }
+
+    // If no profile image URL
+    if (empty($this->profile_image)) {
+        return null;
+    }
+
+    $apiKey = env('REMOVEBG_API_KEY');
+
+    try {
+        $client = new \GuzzleHttp\Client();
+
+        // Send the image URL to remove.bg
+       $response = $client->post('https://api.remove.bg/v1.0/removebg', [
+    'form_params' => [
+        'image_url' => $this->profile_image,
+        'size' => 'auto',
+    ],
+    'headers' => [
+        'X-Api-Key' => $apiKey,
+    ]
+]);
+
+
+        $cleaned = $response->getBody();
+
+        // Save cleaned transparent PNG
+        $fileName = 'clean_profile_' . $this->id . '_' . time() . '.png';
+        Storage::disk('public')->put($fileName, $cleaned);
+
+        // Save path in DB
+        $this->clean_profile_image = '/storage/' . $fileName;
+        $this->save();
+
+        return $this->clean_profile_image;
+
+    } catch (\Exception $e) {
+        // If API fails → return original image safely
+        return $this->profile_image;
+    }
+}
 
 }

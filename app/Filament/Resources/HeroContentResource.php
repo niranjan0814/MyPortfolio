@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Closure as BaseClosure;
 
 class HeroContentResource extends Resource
 {
@@ -49,11 +50,23 @@ class HeroContentResource extends Resource
                         ->default("Hi, I'm")
                         ->placeholder("Hi, I'm"),
 
-                    Forms\Components\RichEditor::make('description')
-                        ->label('Description')
-                        ->toolbarButtons(['bold', 'italic', 'link', 'bulletList'])
-                        ->default("I'm {$user->name}, a passionate developer.")
-                        ->placeholder('Transforming ideas into elegant, scalable digital solutions...'),
+
+Forms\Components\RichEditor::make('description')
+    ->label('Description')
+    ->toolbarButtons(['bold', 'italic', 'link', 'bulletList'])
+    ->default("I'm {$user->name}, a passionate developer.")
+    ->placeholder('Transforming ideas into elegant, scalable digital solutions...')
+    ->rule(function () {
+        return function (string $attribute, $value, BaseClosure $fail) {
+            $wordCount = str_word_count(strip_tags($value));
+
+            if ($wordCount > 30) {
+                $fail("The {$attribute} must not exceed 30 words. (Currently: {$wordCount})");
+            }
+        };
+    }),
+
+
 
                     Forms\Components\Repeater::make('typing_texts')
                         ->label('Typing Animation Texts')

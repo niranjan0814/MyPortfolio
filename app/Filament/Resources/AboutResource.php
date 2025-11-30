@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Closure as BaseClosure;
 
 class AboutResource extends Resource
 {
@@ -37,10 +38,24 @@ class AboutResource extends Resource
                             ->placeholder("Hi, I'm Niranjan!"),
 
                         Forms\Components\RichEditor::make('about_description')
-                            ->label('Description')
-                            ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
-                            ->default("I'm {$user->name}, a passionate Software Engineering undergraduate at SLIIT.")
-                            ->placeholder('Driven and innovative undergraduate specializing in Software Engineering...'),
+    ->label('Description')
+    ->toolbarButtons(['bold', 'italic', 'link', 'bulletList', 'orderedList'])
+    ->default("I'm {$user->name}, a passionate Software Engineering undergraduate at SLIIT.")
+    ->placeholder('Driven and innovative undergraduate specializing in Software Engineering...')
+    ->rule(function () {
+        return function (string $attribute, $value, BaseClosure $fail) {
+            // Remove HTML tags added by RichEditor
+            $cleanText = strip_tags($value);
+
+            // Count words
+            $wordCount = str_word_count($cleanText);
+
+            // Limit: 33 words
+            if ($wordCount > 33) {
+                $fail("The {$attribute} must not exceed 33 words. (Currently: {$wordCount})");
+            }
+        };
+    }),
 
                         Forms\Components\TextInput::make('profile_name')
                             ->label('Profile Name')
@@ -118,6 +133,9 @@ class AboutResource extends Resource
                             ->label('Soft Skills')
                             ->keyLabel('Skill')
                             ->valueLabel('Icon URL')
+                            ->addable(true)
+                            ->deletable(true)
+                            ->reorderable(true)
                             ->helperText('Add soft skills and their icon URLs (e.g., Communication → https://example.com/icon.png)'),
                     ]),
             ]);

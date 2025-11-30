@@ -1,101 +1,365 @@
 @props(['skills'])
 
-<section id="skills" class="py-24 bg-neutral-950 text-white border-t border-neutral-900 relative overflow-hidden">
-    
-    <!-- Background accent -->
-    <div class="absolute top-1/2 right-0 w-96 h-96 bg-lime-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+<style>
+    /* Reuse Theme 2 Variables */
+    :root {
+        --t2-bg: #F8F9FA;
+        --t2-text-main: #2C2E3E;
+        --t2-text-sub: #6B7280;
+        --t2-accent: #E89B0C;
+        --t2-accent-hover: #D97706;
+        --t2-surface: #FFFFFF;
+        --t2-border: rgba(44, 46, 62, 0.08);
+        --t2-card-bg: #FFFFFF;
+        --t2-glass-border: rgba(44, 46, 62, 0.05);
+        --t2-shadow: 0 20px 60px rgba(233, 155, 12, 0.12);
+        --t2-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+    }
 
-    <div class="container mx-auto px-6 relative z-10">
+    [data-theme="dark"] {
+        --t2-bg: #2C2E3E;
+        --t2-text-main: #FFFFFF;
+        --t2-text-sub: #E5E7EB;
+        --t2-accent: #F5A623;
+        --t2-accent-hover: #E09612;
+        --t2-surface: rgba(255, 255, 255, 0.05);
+        --t2-border: rgba(255, 255, 255, 0.1);
+        --t2-card-bg: rgba(255, 255, 255, 0.03);
+        --t2-glass-border: rgba(255, 255, 255, 0.1);
+        --t2-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        --t2-gradient: linear-gradient(135deg, #F5A623 0%, #D97706 100%);
+    }
+
+    .t2-skills-section {
+        background-color: var(--t2-bg);
+        color: var(--t2-text-main);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+
+    .t2-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Hero-style Title */
+    .t2-title-wrapper {
+        margin-bottom: 5rem;
+        text-align: center;
+    }
+
+    .t2-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: var(--t2-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .t2-subtitle {
+        color: var(--t2-text-sub);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Decorative Elements */
+    .t2-decoration-circle {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: var(--t2-gradient);
+        opacity: 0.05;
+        filter: blur(80px);
+        pointer-events: none;
+    }
+
+    .t2-decoration-1 { top: 0; right: -150px; }
+    .t2-decoration-2 { bottom: 0; left: -150px; }
+
+    /* BENTO GRID LAYOUT */
+    .t2-bento-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .t2-bento-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .t2-bento-grid {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, auto);
+        }
         
-        <!-- Section Header -->
-        <div class="mb-20">
-            <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-4">
-                Skills<span class="text-lime-400">.</span>
-            </h2>
-            <div class="w-full h-[1px] bg-neutral-800"></div>
+        /* Specific Card Placements for Desktop */
+        .t2-card-frontend { grid-column: span 2; grid-row: span 1; }
+        .t2-card-backend { grid-column: span 1; grid-row: span 2; }
+        .t2-card-database { grid-column: span 1; grid-row: span 1; }
+        .t2-card-tools { grid-column: span 1; grid-row: span 1; }
+        .t2-card-other { grid-column: span 3; grid-row: span 1; }
+    }
+
+    .t2-category-card {
+        background: var(--t2-card-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 24px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--t2-shadow);
+    }
+
+    .t2-category-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--t2-accent);
+    }
+
+    /* Category Headers */
+    .t2-cat-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--t2-glass-border);
+    }
+
+    .t2-cat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--t2-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--t2-accent);
+        border: 1px solid var(--t2-glass-border);
+    }
+
+    .t2-cat-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--t2-text-main);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Skill Pills Cloud */
+    .t2-skill-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-content: flex-start;
+        justify-content: center; /* Center the grid of skills */
+    }
+
+    .t2-skill-pill {
+        display: inline-flex;
+        flex-direction: column; /* Stack icon and text */
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1.5rem 1rem;
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 16px;
+        color: var(--t2-text-main);
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 110px; /* Fixed width */
+        height: 110px; /* Fixed height */
+        text-align: center;
+    }
+
+    .t2-skill-pill:hover {
+        background: var(--t2-accent);
+        color: white;
+        border-color: var(--t2-accent);
+        transform: scale(1.05);
+    }
+
+    .t2-pill-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .t2-pill-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    /* Empty State */
+    .t2-empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem;
+        color: var(--t2-text-sub);
+    }
+</style>
+
+<section id="skills" class="t2-skills-section">
+    <!-- Decorative Elements -->
+    <div class="t2-decoration-circle t2-decoration-1"></div>
+    <div class="t2-decoration-circle t2-decoration-2"></div>
+
+    <div class="t2-container">
+        <div class="t2-title-wrapper">
+            <h2 class="t2-title">Technical Skills</h2>
+            <div class="t2-subtitle">A comprehensive ecosystem of my technical expertise.</div>
         </div>
 
         @if($skills->isEmpty())
-            <div class="p-12 border border-dashed border-neutral-800 text-center">
-                <p class="text-neutral-500 font-mono">No skills data available.</p>
+            <div class="t2-empty-state">
+                <p class="text-xl">No skills added yet.</p>
             </div>
         @else
             @php
-                $categories = [
-                    'frontend' => 'Frontend Development',
-                    'backend' => 'Backend Development',
-                    'database' => 'Database & Storage',
-                    'tools' => 'Tools & Technologies',
-                ];
-                
                 $groupedSkills = $skills->groupBy('category');
             @endphp
 
-            <div class="space-y-16">
-                @foreach($categories as $categoryKey => $categoryTitle)
-                    @if($groupedSkills->has($categoryKey) && $groupedSkills[$categoryKey]->isNotEmpty())
-                        <div class="group">
-                            <!-- Category Header -->
-                            <div class="flex items-center gap-4 mb-8">
-                                <h3 class="text-2xl md:text-3xl font-bold text-white group-hover:text-lime-400 transition-colors">
-                                    {{ $categoryTitle }}
-                                </h3>
-                                <div class="flex-1 h-[1px] bg-neutral-800 group-hover:bg-lime-400/30 transition-colors"></div>
-                                <span class="text-sm font-mono text-neutral-600">
-                                    {{ $groupedSkills[$categoryKey]->count() }} {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
-                                </span>
-                            </div>
-
-                            <!-- Skills Grid -->
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                @foreach($groupedSkills[$categoryKey] as $skill)
-                                    <div class="group/skill relative bg-neutral-900 border border-neutral-800 p-6 hover:border-lime-400 hover:bg-neutral-950 transition-all duration-300 cursor-default">
-                                        
-                                        <!-- Skill Icon -->
-                                        @php
-                                            $iconUrl = $skill->url;
-                                            $hasValidUrl = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
-                                        @endphp
-
-                                        @if($hasValidUrl)
-                                            <div class="flex justify-center mb-4">
-                                                <img src="{{ $iconUrl }}" 
-                                                     alt="{{ $skill->name }}" 
-                                                     class="w-12 h-12 object-contain opacity-80 group-hover/skill:opacity-100 group-hover/skill:scale-110 transition-all duration-300"
-                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                            </div>
-                                        @endif
-
-                                        <!-- Fallback Icon -->
-                                        <div class="{{ $hasValidUrl ? 'hidden' : '' }} flex justify-center mb-4">
-                                            <div class="w-12 h-12 flex items-center justify-center bg-neutral-800 border border-neutral-700 group-hover/skill:border-lime-400 transition-colors">
-                                                <svg class="w-6 h-6 text-neutral-600 group-hover/skill:text-lime-400 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M13 7H7v6h6V7z"/>
-                                                    <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <!-- Skill Name -->
-                                        <h4 class="text-center text-sm font-mono text-neutral-400 group-hover/skill:text-white transition-colors">
-                                            {{ $skill->name }}
-                                        </h4>
-
-                                        <!-- Level (if available) -->
-                                        @if($skill->level)
-                                            <p class="text-center text-xs text-neutral-600 mt-1 font-mono">
-                                                {{ $skill->level }}
-                                            </p>
-                                        @endif
-
-                                        <!-- Corner accent -->
-                                        <div class="absolute top-0 right-0 w-0 h-0 border-t-[8px] border-r-[8px] border-t-transparent border-r-neutral-800 group-hover/skill:border-r-lime-400 transition-colors"></div>
-                                    </div>
-                                @endforeach
-                            </div>
+            <div class="t2-bento-grid">
+                <!-- Frontend (Featured - Wide) -->
+                @if(isset($groupedSkills['frontend']))
+                <div class="t2-category-card t2-card-frontend">
+                    <div class="t2-cat-header">
+                        <div class="t2-cat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
-                    @endif
-                @endforeach
+                        <h3 class="t2-cat-title">Frontend Development</h3>
+                    </div>
+                    <div class="t2-skill-cloud">
+                        @foreach($groupedSkills['frontend'] as $skill)
+                            <div class="t2-skill-pill">
+                                @if($skill->url)
+                                    <div class="t2-pill-icon">
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    </div>
+                                @endif
+                                {{ $skill->name }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Backend (Tall) -->
+                @if(isset($groupedSkills['backend']))
+                <div class="t2-category-card t2-card-backend">
+                    <div class="t2-cat-header">
+                        <div class="t2-cat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <h3 class="t2-cat-title">Backend</h3>
+                    </div>
+                    <div class="t2-skill-cloud">
+                        @foreach($groupedSkills['backend'] as $skill)
+                            <div class="t2-skill-pill">
+                                @if($skill->url)
+                                    <div class="t2-pill-icon">
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    </div>
+                                @endif
+                                {{ $skill->name }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Database -->
+                @if(isset($groupedSkills['database']))
+                <div class="t2-category-card t2-card-database">
+                    <div class="t2-cat-header">
+                        <div class="t2-cat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                        </div>
+                        <h3 class="t2-cat-title">Database</h3>
+                    </div>
+                    <div class="t2-skill-cloud">
+                        @foreach($groupedSkills['database'] as $skill)
+                            <div class="t2-skill-pill">
+                                @if($skill->url)
+                                    <div class="t2-pill-icon">
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    </div>
+                                @endif
+                                {{ $skill->name }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Tools -->
+                @if(isset($groupedSkills['tools']))
+                <div class="t2-category-card t2-card-tools">
+                    <div class="t2-cat-header">
+                        <div class="t2-cat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>
+                        <h3 class="t2-cat-title">Tools</h3>
+                    </div>
+                    <div class="t2-skill-cloud">
+                        @foreach($groupedSkills['tools'] as $skill)
+                            <div class="t2-skill-pill">
+                                @if($skill->url)
+                                    <div class="t2-pill-icon">
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    </div>
+                                @endif
+                                {{ $skill->name }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <!-- Other (Full Width if needed) -->
+                @if(isset($groupedSkills['other']))
+                <div class="t2-category-card t2-card-other">
+                    <div class="t2-cat-header">
+                        <div class="t2-cat-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                        </div>
+                        <h3 class="t2-cat-title">Other Skills</h3>
+                    </div>
+                    <div class="t2-skill-cloud">
+                        @foreach($groupedSkills['other'] as $skill)
+                            <div class="t2-skill-pill">
+                                @if($skill->url)
+                                    <div class="t2-pill-icon">
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    </div>
+                                @endif
+                                {{ $skill->name }}
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
         @endif
     </div>

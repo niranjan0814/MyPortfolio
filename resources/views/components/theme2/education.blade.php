@@ -1,54 +1,171 @@
 @props(['educations'])
 
-<section id="education" class="py-24 bg-neutral-900 text-white border-t border-neutral-800">
-    <div class="container mx-auto px-6">
-        
-        <!-- Section Header -->
-        <div class="mb-20">
-            <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-4">
-                Education<span class="text-lime-400">.</span>
-            </h2>
-            <div class="w-full h-[1px] bg-neutral-800"></div>
+<style>
+    /* Reuse Theme 2 Variables */
+    :root {
+        --t2-bg: #F8F9FA;
+        --t2-text-main: #2C2E3E;
+        --t2-text-sub: #6B7280;
+        --t2-accent: #E89B0C;
+        --t2-accent-hover: #D97706;
+        --t2-surface: #FFFFFF;
+        --t2-border: rgba(44, 46, 62, 0.08);
+        --t2-card-bg: #FFFFFF;
+        --t2-glass-border: rgba(44, 46, 62, 0.05);
+        --t2-shadow: 0 20px 60px rgba(233, 155, 12, 0.12);
+        --t2-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+    }
+
+    [data-theme="dark"] {
+        --t2-bg: #2C2E3E;
+        --t2-text-main: #FFFFFF;
+        --t2-text-sub: #E5E7EB;
+        --t2-accent: #F5A623;
+        --t2-accent-hover: #E09612;
+        --t2-surface: rgba(255, 255, 255, 0.05);
+        --t2-border: rgba(255, 255, 255, 0.1);
+        --t2-card-bg: rgba(255, 255, 255, 0.03);
+        --t2-glass-border: rgba(255, 255, 255, 0.1);
+        --t2-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        --t2-gradient: linear-gradient(135deg, #F5A623 0%, #D97706 100%);
+    }
+
+    .t2-education-section {
+        background-color: var(--t2-bg);
+        color: var(--t2-text-main);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+
+    .t2-edu-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .t2-edu-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .t2-edu-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .t2-edu-card {
+        background: var(--t2-card-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: var(--t2-shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .t2-edu-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--t2-accent);
+    }
+
+    .t2-edu-year {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: var(--t2-accent);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-bottom-left-radius: 16px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .t2-edu-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .t2-edu-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .t2-edu-degree {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--t2-text-main);
+        margin-bottom: 0.25rem;
+    }
+
+    .t2-edu-institution {
+        font-size: 1rem;
+        color: var(--t2-text-sub);
+        font-weight: 500;
+    }
+
+    .t2-edu-details {
+        color: var(--t2-text-sub);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        border-top: 1px solid var(--t2-glass-border);
+        padding-top: 1rem;
+    }
+</style>
+
+<section id="education" class="t2-education-section">
+    <div class="t2-container">
+        <div class="t2-title-wrapper">
+            <h2 class="t2-title">Education</h2>
+            <div class="t2-subtitle">My academic background and qualifications.</div>
         </div>
 
         @if($educations->isEmpty())
-            <div class="p-12 border border-dashed border-neutral-800 text-center">
-                <p class="text-neutral-500 font-mono">No education data available.</p>
+            <div class="text-center py-12">
+                <p class="text-xl text-[var(--t2-text-sub)]">No education added yet.</p>
             </div>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="t2-edu-grid">
                 @foreach($educations->sortByDesc('year') as $education)
-                    <div class="group relative bg-neutral-950 border border-neutral-800 p-8 hover:border-lime-400 transition-all duration-300">
+                    <div class="t2-edu-card">
+                        <div class="t2-edu-year">{{ $education->year ?: 'Present' }}</div>
                         
-                        <!-- Year Badge -->
-                        <div class="absolute top-0 right-0 bg-lime-400 text-black px-4 py-1 text-xs font-bold font-mono">
-                            {{ $education->year ?: 'Present' }}
-                        </div>
-
-                        <!-- Icon -->
                         @if($education->icon_url)
-                            <div class="w-16 h-16 mb-6 mt-4 flex items-center justify-center border border-neutral-800 bg-neutral-900 group-hover:border-lime-400 transition-colors">
-                                <img src="{{ $education->icon_url }}" alt="Education Icon" class="w-10 h-10 object-contain opacity-70 group-hover:opacity-100 transition-opacity">
+                            <div class="t2-edu-icon">
+                                <img src="{{ $education->icon_url }}" alt="Institution Logo">
+                            </div>
+                        @else
+                            <div class="t2-edu-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--t2-accent);"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                             </div>
                         @endif
 
-                        <!-- Content -->
-                        <h3 class="text-2xl font-bold mb-3 text-white group-hover:text-lime-400 transition-colors">
-                            {{ $education->degree }}
-                        </h3>
-                        
-                        <p class="text-neutral-400 font-mono text-sm mb-4">
-                            {{ $education->institution }}
-                        </p>
+                        <div>
+                            <h3 class="t2-edu-degree">{{ $education->degree }}</h3>
+                            <div class="t2-edu-institution">{{ $education->institution }}</div>
+                        </div>
 
                         @if($education->details)
-                            <p class="text-neutral-500 text-sm leading-relaxed border-t border-neutral-800 pt-4 mt-4">
+                            <div class="t2-edu-details">
                                 {{ $education->details }}
-                            </p>
+                            </div>
                         @endif
-
-                        <!-- Decorative Corner -->
-                        <div class="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-neutral-800 group-hover:border-lime-400 transition-colors"></div>
                     </div>
                 @endforeach
             </div>

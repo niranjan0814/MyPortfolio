@@ -1,34 +1,60 @@
-{{-- resources/views/components/theme-light/hero.blade.php --}}
+{{-- resources/views/components/theme2/hero.blade.php --}}
 @props(['heroContent', 'user', 'techStackSkills'])
 
 <style>
     /* ============================================
-       PREMIUM HERO COMPONENT - LIGHT THEME
-       Modern, Professional, Award-Winning Design
+       PREMIUM HERO COMPONENT - DUAL THEME
+       Wix-Inspired: Bold, Minimalist, Modern
        ============================================ */
     
-    /* Core Variables */
     :root {
-        --hero-bg: #F8F9FA;
-        --hero-text: #2C2E3E;
-        --hero-accent: #E89B0C;
-        --hero-accent-deep: #D97706;
-        --hero-blue: #3D5CCC;
-        --hero-coral: #E85555;
-        --hero-gray: #6B7280;
-        --hero-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+        /* Light Theme Palette */
+        --hero-bg: #F8F9FA;              /* Soft Cream/Off-White */
+        --hero-text-main: #2C2E3E;       /* Dark Charcoal */
+        --hero-text-sub: #6B7280;        /* Medium Gray */
+        --hero-accent: #E89B0C;          /* Deep Mustard/Amber */
+        --hero-accent-hover: #D97706;
+        --hero-blue: #3D5CCC;            /* Rich Blue */
+        --hero-coral: #E85555;           /* Deep Coral */
+        --hero-surface: #FFFFFF;
+        --hero-border: rgba(44, 46, 62, 0.08);
         --hero-shadow: 0 20px 60px rgba(233, 155, 12, 0.12);
+        --hero-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+        --hero-card-bg: #FFFFFF;
+        --hero-glass-border: rgba(44, 46, 62, 0.05);
+        --hero-blob-opacity: 0.15;
     }
 
-    /* Hero Container */
-    .hero-premium-light {
+    [data-theme="dark"] {
+        /* Dark Theme Palette */
+        --hero-bg: #2C2E3E;              /* Dark Navy/Charcoal */
+        --hero-text-main: #FFFFFF;       /* White */
+        --hero-text-sub: #E5E7EB;        /* Light Gray */
+        --hero-accent: #F5A623;          /* Mustard Yellow */
+        --hero-accent-hover: #E09612;
+        --hero-blue: #4C6FFF;            /* Bright Blue */
+        --hero-coral: #FF6B6B;           /* Coral/Red */
+        --hero-surface: rgba(255, 255, 255, 0.05);
+        --hero-border: rgba(255, 255, 255, 0.1);
+        --hero-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        --hero-gradient: linear-gradient(135deg, #F5A623 0%, #D97706 100%);
+        --hero-card-bg: rgba(255, 255, 255, 0.03);
+        --hero-glass-border: rgba(255, 255, 255, 0.1);
+        --hero-blob-opacity: 0.25;
+    }
+
+    /* Base Layout */
+    .hero-section {
+        background-color: var(--hero-bg);
+        color: var(--hero-text-main);
         min-height: 100vh;
-        background: var(--hero-bg);
         position: relative;
         overflow: hidden;
         display: flex;
         align-items: center;
         padding: 6rem 0;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     /* Animated Background Orbs */
@@ -36,9 +62,10 @@
         position: absolute;
         border-radius: 50%;
         filter: blur(80px);
-        opacity: 0.15;
+        opacity: var(--hero-blob-opacity);
         animation: float 20s infinite ease-in-out;
         pointer-events: none;
+        transition: opacity 0.5s ease;
     }
 
     .hero-orb-1 {
@@ -53,7 +80,7 @@
     .hero-orb-2 {
         width: 500px;
         height: 500px;
-        background: linear-gradient(135deg, #3D5CCC 0%, #4C6FFF 100%);
+        background: radial-gradient(circle, var(--hero-blue) 0%, transparent 70%);
         bottom: -150px;
         left: -150px;
         animation-delay: 7s;
@@ -62,7 +89,7 @@
     .hero-orb-3 {
         width: 400px;
         height: 400px;
-        background: linear-gradient(135deg, #E85555 0%, #FF6B6B 100%);
+        background: radial-gradient(circle, var(--hero-coral) 0%, transparent 70%);
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -76,60 +103,60 @@
     }
 
     /* Content Container */
-    .hero-content {
+    .hero-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
         position: relative;
         z-index: 10;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-
-    /* Grid Layout */
-    .hero-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.2fr 0.8fr;
         gap: 4rem;
         align-items: center;
     }
 
     /* Left Content */
-    .hero-left {
+    .hero-content-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
         animation: slideInLeft 1s ease-out;
     }
 
     @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(-50px); }
+        to { opacity: 1; transform: translateX(0); }
     }
 
     /* Badge */
     .hero-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
         padding: 0.5rem 1.25rem;
-        background: white;
-        border-radius: 50px;
-        box-shadow: 0 4px 12px rgba(44, 46, 62, 0.08);
-        margin-bottom: 1.5rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--hero-text);
-        animation: fadeInDown 1s ease-out 0.2s both;
+        background: var(--hero-surface);
+        border: 1px solid var(--hero-border);
+        border-radius: 100px;
+        width: fit-content;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
     }
 
     .hero-badge-dot {
         width: 8px;
         height: 8px;
-        background: var(--hero-accent);
+        background-color: var(--hero-accent);
         border-radius: 50%;
+        box-shadow: 0 0 10px var(--hero-accent);
         animation: pulse 2s infinite;
+    }
+
+    .hero-badge-text {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--hero-text-sub);
+        letter-spacing: 0.02em;
     }
 
     @keyframes pulse {
@@ -137,61 +164,53 @@
         50% { opacity: 0.6; transform: scale(0.9); }
     }
 
-    /* Greeting Text */
+    /* Typography */
     .hero-greeting {
-        font-size: 1.25rem;
-        color: var(--hero-gray);
+        font-size: 1.5rem;
+        color: var(--hero-text-sub);
         font-weight: 500;
-        margin-bottom: 0.75rem;
-        animation: fadeInDown 1s ease-out 0.3s both;
+        margin-bottom: -1rem;
     }
 
-    /* Name & Typing Animation Container */
-    .hero-title-wrapper {
-        margin-bottom: 1.5rem;
-    }
-
-    .hero-name {
-        font-size: 4rem;
+    .hero-title {
+        font-size: 4.5rem;
         font-weight: 800;
-        background: var(--hero-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1.2;
-        margin-bottom: 0.5rem;
-        animation: fadeInUp 1s ease-out 0.4s both;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: var(--hero-text-main);
     }
 
+    .hero-title-highlight {
+        color: var(--hero-accent);
+        position: relative;
+        display: inline-block;
+    }
+    
     /* Typing Animation */
-    .hero-typing-container {
+    .hero-typing-wrapper {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--hero-text-sub);
         display: flex;
         align-items: center;
         gap: 0.75rem;
         min-height: 3rem;
     }
 
-    .hero-typing-label {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--hero-text);
-    }
-
     .hero-typing-text {
-        font-size: 1.5rem;
-        font-weight: 700;
         color: var(--hero-accent);
-        min-width: 300px;
-        animation: fadeIn 1s ease-out 0.5s both;
+        font-weight: 700;
+        position: relative;
     }
 
     .hero-cursor {
         display: inline-block;
         width: 3px;
-        height: 1.8rem;
-        background: var(--hero-accent);
-        animation: blink 1s infinite;
-        margin-left: 2px;
+        height: 2.2rem;
+        background-color: var(--hero-accent);
+        margin-left: 4px;
+        animation: blink 1s step-end infinite;
     }
 
     @keyframes blink {
@@ -202,39 +221,38 @@
     /* Description */
     .hero-description {
         font-size: 1.125rem;
-        color: var(--hero-gray);
         line-height: 1.8;
-        margin-bottom: 2.5rem;
-        animation: fadeInUp 1s ease-out 0.6s both;
+        color: var(--hero-text-sub);
+        max-width: 90%;
     }
 
-    /* CTA Buttons */
-    .hero-cta-group {
+    /* Buttons */
+    .hero-actions {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
+        margin-top: 1rem;
         flex-wrap: wrap;
-        margin-bottom: 3rem;
-        animation: fadeInUp 1s ease-out 0.7s both;
     }
 
     .hero-btn {
-        padding: 1rem 2rem;
+        padding: 1rem 2.5rem;
         border-radius: 12px;
         font-weight: 600;
         font-size: 1rem;
-        text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        position: relative;
+        overflow: hidden;
     }
 
     .hero-btn-primary {
         background: var(--hero-gradient);
         color: white;
-        box-shadow: 0 8px 24px rgba(233, 155, 12, 0.3);
+        box-shadow: 0 8px 24px rgba(233, 155, 12, 0.25);
+        border: 1px solid transparent;
     }
 
     .hero-btn-primary:hover {
@@ -242,21 +260,17 @@
         box-shadow: 0 12px 32px rgba(233, 155, 12, 0.4);
     }
 
-    .hero-btn-primary:active {
-        transform: translateY(0);
-    }
-
     .hero-btn-secondary {
-        background: white;
-        color: var(--hero-text);
-        border: 2px solid var(--hero-gray);
-        box-shadow: 0 4px 12px rgba(44, 46, 62, 0.08);
+        background: var(--hero-surface);
+        color: var(--hero-text-main);
+        border: 2px solid var(--hero-border);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .hero-btn-secondary:hover {
-        background: var(--hero-text);
-        color: white;
-        border-color: var(--hero-text);
+        border-color: var(--hero-text-main);
+        background: var(--hero-text-main);
+        color: var(--hero-bg); /* Invert colors on hover */
         transform: translateY(-2px);
     }
 
@@ -264,63 +278,59 @@
     .hero-social {
         display: flex;
         gap: 1rem;
-        animation: fadeInUp 1s ease-out 0.8s both;
+        margin-top: 2rem;
     }
 
     .hero-social-link {
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background: white;
+        background: var(--hero-surface);
+        border: 1px solid var(--hero-border);
         display: flex;
         align-items: center;
         justify-content: center;
-        text-decoration: none;
+        color: var(--hero-text-sub);
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(44, 46, 62, 0.08);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .hero-social-link:hover {
+        background: var(--hero-surface);
+        color: var(--hero-accent);
+        border-color: var(--hero-accent);
         transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(44, 46, 62, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
     .hero-social-link svg {
-        width: 24px;
-        height: 24px;
-        fill: var(--hero-gray);
-        transition: fill 0.3s ease;
+        width: 22px;
+        height: 22px;
+        fill: currentColor;
     }
 
-    .hero-social-link:hover svg {
-        fill: var(--hero-accent);
-    }
-
-    /* Right Content - Visual Card */
-    .hero-right {
+    /* Right Content - Glass Card */
+    .hero-content-right {
         position: relative;
-        animation: slideInRight 1s ease-out 0.5s both;
+        animation: slideInRight 1s ease-out 0.2s backwards;
     }
 
     @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(50px); }
+        to { opacity: 1; transform: translateX(0); }
     }
 
-    /* Premium Card */
     .hero-card {
-        background: white;
+        background: var(--hero-card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--hero-glass-border);
         border-radius: 24px;
         padding: 2.5rem;
-        box-shadow: var(--hero-shadow);
         position: relative;
         overflow: hidden;
+        box-shadow: var(--hero-shadow);
+        transition: all 0.5s ease;
     }
 
     .hero-card::before {
@@ -329,24 +339,29 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 6px;
+        height: 4px;
         background: var(--hero-gradient);
     }
 
-    /* Card Content */
     .hero-card-header {
         display: flex;
         align-items: center;
         gap: 1.5rem;
         margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-avatar-wrapper {
+        position: relative;
     }
 
     .hero-avatar {
         width: 80px;
         height: 80px;
         border-radius: 50%;
-        border: 4px solid var(--hero-accent);
         object-fit: cover;
+        border: 4px solid var(--hero-accent);
         box-shadow: 0 8px 24px rgba(233, 155, 12, 0.2);
     }
 
@@ -354,7 +369,6 @@
         width: 80px;
         height: 80px;
         border-radius: 50%;
-        border: 4px solid var(--hero-accent);
         background: var(--hero-gradient);
         display: flex;
         align-items: center;
@@ -362,35 +376,40 @@
         font-size: 2rem;
         font-weight: 700;
         color: white;
+        border: 4px solid var(--hero-accent);
         box-shadow: 0 8px 24px rgba(233, 155, 12, 0.2);
     }
 
     .hero-card-info h3 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--hero-text);
-        margin-bottom: 0.25rem;
+        color: var(--hero-text-main);
+        margin: 0 0 0.25rem 0;
     }
 
     .hero-card-info p {
-        font-size: 0.875rem;
-        color: var(--hero-gray);
+        color: var(--hero-text-sub);
+        font-size: 0.9rem;
+        margin: 0;
+        font-weight: 500;
     }
 
-    /* Tech Stack Preview */
-    .hero-tech-stack {
+    /* Tech Stack Grid */
+    .hero-tech-section {
         margin-top: 2rem;
         padding-top: 2rem;
-        border-top: 2px solid rgba(107, 114, 128, 0.1);
+        border-top: 1px solid var(--hero-border);
+        position: relative;
+        z-index: 1;
     }
 
-    .hero-tech-label {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--hero-gray);
-        margin-bottom: 1rem;
+    .hero-tech-title {
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.1em;
+        color: var(--hero-text-sub);
+        margin-bottom: 1rem;
+        font-weight: 700;
     }
 
     .hero-tech-grid {
@@ -401,222 +420,232 @@
 
     .hero-tech-item {
         aspect-ratio: 1;
-        background: rgba(233, 155, 12, 0.05);
+        background: var(--hero-surface);
+        border: 1px solid var(--hero-border);
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
-        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
     }
 
     .hero-tech-item:hover {
-        background: rgba(233, 155, 12, 0.1);
+        background: var(--hero-surface);
         border-color: var(--hero-accent);
         transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .hero-tech-item img {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         object-fit: contain;
+        transition: all 0.3s ease;
     }
 
-    /* Floating Animation Keyframes */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    .hero-tech-item:hover img {
+        transform: scale(1.1);
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Image Container Styles */
+    .hero-image-container {
+        position: relative;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .hero-main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 24px;
+        box-shadow: var(--hero-shadow);
+        border: 1px solid var(--hero-glass-border);
+        transition: transform 0.5s ease;
     }
 
-    /* Responsive Design */
+    .hero-main-image:hover {
+        transform: scale(1.02);
+    }
+
+    .hero-avatar-placeholder.large {
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+        font-size: 8rem;
+    }
+
+    /* Responsive */
     @media (max-width: 1024px) {
-        .hero-grid {
+        .hero-container {
             grid-template-columns: 1fr;
+            text-align: center;
             gap: 3rem;
         }
 
-        .hero-right {
-            order: -1;
+        .hero-content-left {
+            align-items: center;
         }
 
-        .hero-name {
-            font-size: 3rem;
+        .hero-actions {
+            justify-content: center;
         }
 
-        .hero-typing-text,
-        .hero-typing-label {
-            font-size: 1.25rem;
+        .hero-social {
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+        }
+
+        .hero-content-right {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .hero-card-header {
+            justify-content: center;
+            text-align: left;
         }
     }
 
     @media (max-width: 640px) {
-        .hero-premium-light {
-            padding: 4rem 0;
-        }
-
-        .hero-name {
+        .hero-title {
             font-size: 2.5rem;
         }
 
-        .hero-typing-container {
+        .hero-typing-wrapper {
+            font-size: 1.25rem;
             flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
+            gap: 0;
         }
 
-        .hero-typing-text {
-            min-width: auto;
-        }
-
-        .hero-cta-group {
+        .hero-actions {
             flex-direction: column;
+            width: 100%;
         }
 
         .hero-btn {
             width: 100%;
             justify-content: center;
         }
-
+        
         .hero-tech-grid {
-            grid-template-columns: repeat(4, 1fr);
             gap: 0.75rem;
-        }
-
-        .hero-card {
-            padding: 1.5rem;
-        }
-    }
-
-    /* Print Styles */
-    @media print {
-        .hero-orb,
-        .hero-btn,
-        .hero-social {
-            display: none;
         }
     }
 </style>
 
-<section class="hero-premium-light">
-    <!-- Animated Background Orbs -->
+<section class="hero-section">
+    <!-- Background Glows -->
     <div class="hero-orb hero-orb-1"></div>
     <div class="hero-orb hero-orb-2"></div>
     <div class="hero-orb hero-orb-3"></div>
 
-    <div class="hero-content">
-        <div class="hero-grid">
-            <!-- Left Content -->
-            <div class="hero-left">
-               
-
-                <div class="hero-greeting">
-                    {{ $heroContent['greeting'] ?? "Hi, I'm" }}
-                </div>
-
-                <div class="hero-title-wrapper">
-                    <h1 class="hero-name">
-                        {{ $heroContent['user_name'] ?? $user->full_name ?? $user->name }}
-                    </h1>
-
-                    <div class="hero-typing-container">
-                        <span class="hero-typing-label">I'm a</span>
-                        <span class="hero-typing-text" id="typingText">
-                            <span id="typingContent"></span>
-                            <span class="hero-cursor"></span>
-                        </span>
-                    </div>
-                </div>
-
-               
-
-                @if(($heroContent['btn_contact_enabled'] ?? true) || ($heroContent['btn_projects_enabled'] ?? true))
-                <div class="hero-cta-group">
-                    @if($heroContent['btn_contact_enabled'] ?? true)
-                    <a href="#contact" class="hero-btn hero-btn-primary">
-                        {{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                    @endif
-
-                    @if($heroContent['btn_projects_enabled'] ?? true)
-                    <a href="#projects" class="hero-btn hero-btn-secondary">
-                        {{ $heroContent['btn_projects_text'] ?? 'View My Work' }}
-                    </a>
-                    @endif
-                </div>
-                @endif
-
-                <!-- Social Links -->
-                @if(!empty($heroContent['social_links']))
-                <div class="hero-social">
-                    @foreach($heroContent['social_links'] as $link)
-                    <a href="{{ $link['url'] }}" target="_blank" class="hero-social-link" title="{{ $link['name'] }}">
-                        @if(!empty($link['icon']))
-                        <img src="{{ $link['icon'] }}" alt="{{ $link['name'] }}" style="width: 24px; height: 24px;">
-                        @else
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                        </svg>
-                        @endif
-                    </a>
-                    @endforeach
-                </div>
-                @endif
+    <div class="hero-container">
+        <!-- Left Column -->
+        <div class="hero-content-left">
+            
+            <br>
+            <!-- Greeting -->
+            <div class="hero-greeting">
+                {{ $heroContent['greeting'] ?? "Hi, I'm" }}
             </div>
 
-            <!-- Right Content - Premium Card -->
-            <div class="hero-right">
-                <div class="hero-card">
-                    <div class="hero-card-header">
-                        @if($user->profile_image)
-                        <img src="{{ $user->profile_image }}" alt="{{ $user->full_name ?? $user->name }}" class="hero-avatar">
-                        @else
-                        <div class="hero-avatar-placeholder">
-                            {{ strtoupper(substr($user->full_name ?? $user->name, 0, 1)) }}
-                        </div>
-                        @endif
+            <!-- Main Title -->
+            <h1 class="hero-title">
+                {{ $heroContent['user_name'] ?? $user->full_name ?? $user->name }}
+            </h1>
 
-                        <div class="hero-card-info">
-                            <h3>{{ $user->full_name ?? $user->name }}</h3>
-                            <p>{{ $user->description ?? 'Software Engineer' }}</p>
-                        </div>
-                    </div>
-
-                    
-                </div>
+            <!-- Typing Animation -->
+            <div class="hero-typing-wrapper">
+                <span>I am a</span>
+                <span class="hero-typing-text">
+                    <span id="typingContent"></span><span class="hero-cursor"></span>
+                </span>
             </div>
+
+            <!-- Description -->
+            <div class="hero-description">
+                {!! $heroContent['description'] ?? "I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. Let's turn your vision into reality." !!}
+            </div>
+
+            <!-- CTA Buttons -->
+            @if(($heroContent['btn_contact_enabled'] ?? true) || ($heroContent['btn_projects_enabled'] ?? true))
+            <div class="hero-actions ">
+                @if($heroContent['btn_contact_enabled'] ?? true)
+                <a href="#contact" class="hero-btn hero-btn-primary">
+                    {{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </a>
+                @endif
+
+                @if($heroContent['btn_projects_enabled'] ?? true)
+                <a href="#projects" class="hero-btn hero-btn-secondary">
+                    {{ $heroContent['btn_projects_text'] ?? 'View Projects' }}
+                </a>
+                @endif
+            </div>
+            @endif
+
+            <!-- Social Links -->
+            @if(!empty($heroContent['social_links']))
+            <div class="hero-social">
+                @foreach($heroContent['social_links'] as $link)
+                <a href="{{ $link['url'] }}" target="_blank" class="hero-social-link" title="{{ $link['name'] }}">
+                    @if(!empty($link['icon']))
+                    <img src="{{ $link['icon'] }}" alt="{{ $link['name'] }}" style="width: 20px; height: 20px;">
+                    @else
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    @endif
+                </a>
+                @endforeach
+            </div>
+            @endif
         </div>
+
+        <!-- Right Column (Image Only) -->
+<div class="hero-content-right">
+    <div class="hero-image-container">
+
+        @php
+            // Theme2: use cleaned image
+            $imageToShow = $finalProfileImage ?? ($user->profile_image ?? null);
+        @endphp
+
+        @if(!empty($imageToShow))
+            <img src="{{ $imageToShow }}" 
+                 alt="{{ $user->full_name ?? $user->name }}" 
+                 class="hero-main-image">
+        @else
+            <div class="hero-avatar-placeholder large">
+                {{ strtoupper(substr($user->full_name ?? $user->name, 0, 1)) }}
+            </div>
+        @endif
+
+    </div>
+</div>
+
     </div>
 </section>
 
 <script>
-    // Premium Typing Animation
     document.addEventListener('DOMContentLoaded', function() {
-        const typingTexts = @json($heroContent['typing_texts'] ?? [['text' => 'Developer'], ['text' => 'Creator']]);
+        const typingTexts = @json($heroContent['typing_texts'] ?? [['text' => 'Developer'], ['text' => 'Designer'], ['text' => 'Freelancer']]);
         const typingElement = document.getElementById('typingContent');
         
         if (!typingElement || typingTexts.length === 0) return;
@@ -627,7 +656,8 @@
         let isPaused = false;
 
         function type() {
-            const currentText = typingTexts[textIndex].text || typingTexts[textIndex];
+            const currentItem = typingTexts[textIndex];
+            const currentText = typeof currentItem === 'string' ? currentItem : (currentItem.text || '');
             
             if (!isDeleting && charIndex < currentText.length) {
                 typingElement.textContent += currentText.charAt(charIndex);

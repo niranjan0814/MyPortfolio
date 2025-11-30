@@ -1,90 +1,212 @@
 @props(['user' => null, 'blogPosts' => null])
 
 @php
-    // Super safe fallback — if no $user, use the first user with a slug (or empty string)
     $currentSlug = $user?->slug ?? \App\Models\User::whereNotNull('slug')->value('slug') ?? '';
     $baseUrl = $currentSlug ? route('portfolio.show', $currentSlug) : '/';
 @endphp
 
-<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-    style="background: var(--card-bg); border-bottom: 1px solid var(--border-color); box-shadow: var(--card-shadow);">
-    <nav class="container mx-auto px-6 py-4">
-        <div class="flex items-center justify-between">
-            <a href="#hero" class="text-2xl font-bold transition-colors hover:opacity-80"
-                style="color: var(--text-primary);">NS</a>
+<style>
+    /* Reuse Theme 2 Variables */
+    :root {
+        --t2-bg: #F8F9FA;
+        --t2-text-main: #2C2E3E;
+        --t2-text-sub: #6B7280;
+        --t2-accent: #E89B0C;
+        --t2-accent-hover: #D97706;
+        --t2-surface: #FFFFFF;
+        --t2-border: rgba(44, 46, 62, 0.08);
+        --t2-card-bg: #FFFFFF;
+        --t2-glass-border: rgba(44, 46, 62, 0.05);
+        --t2-shadow: 0 20px 60px rgba(233, 155, 12, 0.12);
+        --t2-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+    }
 
-            <ul class="hidden md:flex space-x-8 items-center">
-                <li><a href="{{ $baseUrl }}#about" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">About</a></li>
-                <li><a href="{{ $baseUrl }}#projects" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">Projects</a></li>
-                <li><a href="{{ $baseUrl }}#skills" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">Skills</a></li>
-                <li><a href="{{ $baseUrl }}#experience" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">Experience</a></li>
-                <li><a href="{{ $baseUrl }}#education" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">Education</a></li>
-                @if($user && $user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
-                    <li><a href="{{ $baseUrl }}#blog"
-                            class="font-medium transition-colors hover:opacity-80"
-                            style="color: var(--text-secondary);">Blog</a></li>
-                @endif
-                <li><a href="{{ $baseUrl }}#contact" class="font-medium transition-colors hover:opacity-80"
-                        style="color: var(--text-secondary);">Contact</a></li>
+    [data-theme="dark"] {
+        --t2-bg: #2C2E3E;
+        --t2-text-main: #FFFFFF;
+        --t2-text-sub: #E5E7EB;
+        --t2-accent: #F5A623;
+        --t2-accent-hover: #E09612;
+        --t2-surface: rgba(255, 255, 255, 0.05);
+        --t2-border: rgba(255, 255, 255, 0.1);
+        --t2-card-bg: rgba(255, 255, 255, 0.03);
+        --t2-glass-border: rgba(255, 255, 255, 0.1);
+        --t2-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        --t2-gradient: linear-gradient(135deg, #F5A623 0%, #D97706 100%);
+    }
 
-                <li>
-                    <button id="theme-toggle"
-                        class="theme-toggle-btn flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all hover:scale-105"
-                        style="color: var(--text-primary); border: 1px solid var(--border-color);">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"></svg>
-                        <span class="theme-label">Dark</span>
-                    </button>
-                </li>
-            </ul>
+    .t2-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--t2-glass-border);
+        transition: all 0.3s ease;
+    }
 
-            <button id="mobile-menu-btn" class="md:hidden text-2xl transition-colors"
-                style="color: var(--text-primary);">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+    [data-theme="dark"] .t2-header {
+        background: rgba(44, 46, 62, 0.8);
+    }
 
-        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 rounded-lg p-4 shadow-lg"
-            style="background: var(--card-bg); border: 1px solid var(--border-color);">
-            <a href="#about" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">About</a>
-            <a href="#projects" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">Projects</a>
-            <a href="#skills" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">Skills</a>
-            <a href="#experience" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">Experience</a>
-            <a href="#education" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">Education</a>
+    .t2-nav-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .t2-brand {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--t2-text-main);
+        text-decoration: none;
+    }
+
+    .t2-brand span {
+        color: var(--t2-accent);
+    }
+
+    .t2-nav-links {
+        display: none;
+        gap: 2rem;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    @media (min-width: 768px) {
+        .t2-nav-links {
+            display: flex;
+        }
+    }
+
+    .t2-nav-link {
+        color: var(--t2-text-sub);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .t2-nav-link:hover {
+        color: var(--t2-accent);
+    }
+
+    .t2-theme-btn {
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        color: var(--t2-text-main);
+        padding: 0.5rem 1rem;
+        border-radius: 100px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .t2-theme-btn:hover {
+        border-color: var(--t2-accent);
+        color: var(--t2-accent);
+    }
+
+    .t2-mobile-btn {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--t2-text-main);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+        .t2-mobile-btn {
+            display: none;
+        }
+    }
+
+    .t2-mobile-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--t2-card-bg);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--t2-glass-border);
+        padding: 1rem 2rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .t2-mobile-menu.active {
+        display: flex;
+    }
+</style>
+
+<header class="t2-header">
+    <nav class="t2-nav-container">
+        <a href="#hero" class="t2-brand">
+            {{ substr($user->name ?? 'Portfolio', 0, 2) }}<span>.</span>
+        </a>
+
+        <ul class="t2-nav-links">
+            <li><a href="{{ $baseUrl }}#about" class="t2-nav-link">About</a></li>
+            <li><a href="{{ $baseUrl }}#projects" class="t2-nav-link">Projects</a></li>
+            <li><a href="{{ $baseUrl }}#skills" class="t2-nav-link">Skills</a></li>
+            <li><a href="{{ $baseUrl }}#experience" class="t2-nav-link">Experience</a></li>
+            <li><a href="{{ $baseUrl }}#education" class="t2-nav-link">Education</a></li>
             @if($user && $user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
-                <a href="#blog"
-                    class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                    style="color: var(--text-secondary);">Blog</a>
+                <li><a href="{{ $baseUrl }}#blog" class="t2-nav-link">Blog</a></li>
             @endif
-            <a href="#contact" class="block py-2 font-medium transition-colors mobile-menu-link hover:opacity-80"
-                style="color: var(--text-secondary);">Contact</a>
+            <li><a href="{{ $baseUrl }}#contact" class="t2-nav-link">Contact</a></li>
+            
+            <li>
+                <button id="theme-toggle" class="t2-theme-btn theme-toggle-btn">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"></svg>
+                    <span class="theme-label">Dark</span>
+                </button>
+            </li>
+        </ul>
 
-            <button
-                class="theme-toggle-btn w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all mt-4"
-                style="color: var(--text-primary); border: 1px solid var(--border-color);">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"></svg>
-                <span class="theme-label">Dark</span>
-            </button>
-        </div>
+        <button id="mobile-menu-btn" class="t2-mobile-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
     </nav>
+
+    <div id="mobile-menu" class="t2-mobile-menu">
+        <a href="#about" class="t2-nav-link mobile-menu-link">About</a>
+        <a href="#projects" class="t2-nav-link mobile-menu-link">Projects</a>
+        <a href="#skills" class="t2-nav-link mobile-menu-link">Skills</a>
+        <a href="#experience" class="t2-nav-link mobile-menu-link">Experience</a>
+        <a href="#education" class="t2-nav-link mobile-menu-link">Education</a>
+        @if($user && $user->isPremium() && isset($blogPosts) && $blogPosts->isNotEmpty())
+            <a href="#blog" class="t2-nav-link mobile-menu-link">Blog</a>
+        @endif
+        <a href="#contact" class="t2-nav-link mobile-menu-link">Contact</a>
+        
+        <button class="t2-theme-btn theme-toggle-btn w-full justify-center">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"></svg>
+            <span class="theme-label">Dark</span>
+        </button>
+    </div>
 </header>
 
 <script>
     document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
-        document.getElementById('mobile-menu')?.classList.toggle('hidden');
+        document.getElementById('mobile-menu')?.classList.toggle('active');
     });
     document.querySelectorAll('.mobile-menu-link').forEach(link => {
         link.addEventListener('click', function () {
-            document.getElementById('mobile-menu')?.classList.add('hidden');
+            document.getElementById('mobile-menu')?.classList.remove('active');
         });
     });
 </script>

@@ -1,213 +1,422 @@
 {{-- resources/views/components/theme2/blog-show.blade.php --}}
 
-@props(['user', 'post', 'headerContent', 'footerContent'])
+@props(['user', 'post', 'headerContent'])
 
-<section class="py-24 bg-neutral-950 text-white min-h-screen">
-    <div class="container mx-auto px-6">
-        
+<style>
+    /* Reuse Theme 2 Variables */
+    :root {
+        --t2-bg: #F8F9FA;
+        --t2-text-main: #2C2E3E;
+        --t2-text-sub: #6B7280;
+        --t2-accent: #E89B0C;
+        --t2-accent-hover: #D97706;
+        --t2-surface: #FFFFFF;
+        --t2-border: rgba(44, 46, 62, 0.08);
+        --t2-card-bg: #FFFFFF;
+        --t2-glass-border: rgba(44, 46, 62, 0.05);
+        --t2-shadow: 0 20px 60px rgba(233, 155, 12, 0.12);
+        --t2-gradient: linear-gradient(135deg, #E89B0C 0%, #D97706 100%);
+    }
+
+    [data-theme="dark"] {
+        --t2-bg: #2C2E3E;
+        --t2-text-main: #FFFFFF;
+        --t2-text-sub: #E5E7EB;
+        --t2-accent: #F5A623;
+        --t2-accent-hover: #E09612;
+        --t2-surface: rgba(255, 255, 255, 0.05);
+        --t2-border: rgba(255, 255, 255, 0.1);
+        --t2-card-bg: rgba(255, 255, 255, 0.03);
+        --t2-glass-border: rgba(255, 255, 255, 0.1);
+        --t2-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        --t2-gradient: linear-gradient(135deg, #F5A623 0%, #D97706 100%);
+    }
+
+    .t2-blog-show {
+        background-color: var(--t2-bg);
+        color: var(--t2-text-main);
+        min-height: 100vh;
+        padding: 6rem 0 12rem;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+
+    .t2-breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--t2-text-sub);
+        margin-bottom: 3rem;
+    }
+
+    .t2-breadcrumbs a {
+        color: var(--t2-text-sub);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .t2-breadcrumbs a:hover {
+        color: var(--t2-accent);
+    }
+
+    .t2-breadcrumbs span {
+        opacity: 0.5;
+    }
+
+    .t2-blog-header {
+        margin-bottom: 3rem;
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .t2-blog-date {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 100px;
+        color: var(--t2-accent);
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .t2-blog-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--t2-text-main);
+        margin-bottom: 1.5rem;
+    }
+
+    .t2-blog-hero-image {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto 4rem;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--t2-shadow);
+        border: 1px solid var(--t2-glass-border);
+    }
+
+    .t2-blog-hero-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .t2-blog-content {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: var(--t2-text-sub);
+    }
+
+    .t2-blog-content h2, .t2-blog-content h3 {
+        color: var(--t2-text-main);
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .t2-blog-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .t2-blog-content a {
+        color: var(--t2-accent);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    .t2-blog-content a:hover {
+        border-color: var(--t2-accent);
+    }
+
+    /* Comments */
+    .t2-comments-section {
+        max-width: 800px;
+        margin: 6rem auto 4rem;
+        padding-top: 3rem;
+        border-top: 1px solid var(--t2-border);
+    }
+
+    .t2-comments-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .t2-comments-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--t2-text-main);
+    }
+
+    .t2-comment-form textarea {
+        width: 100%;
+        padding: 1rem;
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 12px;
+        color: var(--t2-text-main);
+        font-family: inherit;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .t2-comment-form textarea:focus {
+        outline: none;
+        border-color: var(--t2-accent);
+        box-shadow: 0 0 0 3px rgba(233, 155, 12, 0.1);
+    }
+
+    .t2-comment-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--t2-gradient);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .t2-comment-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(233, 155, 12, 0.3);
+    }
+
+    .t2-comment-list {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .t2-comment-item {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .t2-comment-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--t2-surface);
+        border: 1px solid var(--t2-glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: var(--t2-accent);
+        flex-shrink: 0;
+    }
+
+    .t2-comment-body {
+        flex: 1;
+    }
+
+    .t2-comment-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .t2-comment-author {
+        font-weight: 700;
+        color: var(--t2-text-main);
+    }
+
+    .t2-comment-time {
+        font-size: 0.85rem;
+        color: var(--t2-text-sub);
+    }
+
+    .t2-comment-text {
+        color: var(--t2-text-sub);
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .t2-comment-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .t2-action-link {
+        font-size: 0.85rem;
+        color: var(--t2-text-sub);
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .t2-action-link:hover {
+        color: var(--t2-accent);
+    }
+
+    .t2-reply-form {
+        margin-top: 1rem;
+        padding-left: 1rem;
+        border-left: 2px solid var(--t2-border);
+    }
+</style>
+
+<section class="t2-blog-show">
+    <div class="t2-container">
         <!-- Breadcrumbs -->
-        <div class="flex items-center gap-2 text-sm font-mono mb-12 text-neutral-400">
-            <a href="{{ route('portfolio.show', $user->slug) }}" class="hover:text-lime-400 transition-colors">Home</a>
+        <div class="t2-breadcrumbs">
+            <a href="{{ route('portfolio.show', $user->slug) }}">Home</a>
             <span>/</span>
-            <a href="{{ route('portfolio.show', $user->slug) }}#blog" class="hover:text-lime-400 transition-colors">Blog</a>
+            <a href="{{ route('portfolio.show', $user->slug) }}#blog">Blog</a>
             <span>/</span>
-            <span class="text-white">{{ $post->title }}</span>
+            <span style="color: var(--t2-text-main);">{{ $post->title }}</span>
         </div>
 
-        <div class="max-w-4xl mx-auto">
-            
-            <!-- Header -->
-            <div class="mb-12 space-y-6">
-                <div class="flex items-center gap-4">
-                    <span class="px-3 py-1 bg-neutral-900 border border-neutral-800 text-lime-400 font-mono text-xs uppercase tracking-widest">
-                        {{ $post->published_at ? $post->published_at->format('F j, Y') : 'Draft' }}
-                    </span>
-                </div>
+        <!-- Header -->
+        <div class="t2-blog-header">
+            <div class="t2-blog-date">
+                {{ $post->published_at ? $post->published_at->format('F j, Y') : 'Draft' }}
+            </div>
+            <h1 class="t2-blog-title">{{ $post->title }}</h1>
+        </div>
 
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tighter">
-                    {{ $post->title }}<span class="text-lime-400">.</span>
-                </h1>
-                
-                <div class="w-full h-[1px] bg-neutral-800"></div>
+        <!-- Hero Image -->
+        @if($post->hero_image_path)
+            <div class="t2-blog-hero-image">
+                <img src="{{ asset('storage/' . $post->hero_image_path) }}" alt="{{ $post->title }}">
+            </div>
+        @endif
+
+        <!-- Content -->
+        <div class="t2-blog-content">
+            {!! $post->content !!}
+        </div>
+
+        <!-- Comments -->
+        <div class="t2-comments-section">
+            <div class="t2-comments-header">
+                <h2 class="t2-comments-title">Comments ({{ $post->comments->count() }})</h2>
             </div>
 
-            <!-- Hero Image -->
-            @if($post->hero_image_path)
-                <div class="mb-12 relative border border-neutral-800 bg-neutral-900 overflow-hidden group">
-                    <div class="absolute inset-0 bg-lime-400 translate-x-2 translate-y-2 -z-10 group-hover:translate-x-4 group-hover:translate-y-4 transition-transform"></div>
-                    <img src="{{ asset('storage/' . $post->hero_image_path) }}" 
-                         alt="{{ $post->title }}" 
-                         class="w-full aspect-video object-cover">
+            @auth
+                <form action="{{ route('portfolio.blog.comment.store', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST" class="t2-comment-form">
+                    @csrf
+                    <textarea name="comment" rows="4" required placeholder="Share your thoughts..."></textarea>
+                    <button type="submit" class="t2-comment-btn">Post Comment</button>
+                </form>
+            @else
+                <div style="text-align: center; padding: 2rem; background: var(--t2-surface); border-radius: 12px; border: 1px solid var(--t2-glass-border);">
+                    <p style="color: var(--t2-text-sub); margin-bottom: 1rem;">Please login to join the discussion.</p>
+                    <a href="{{ route('filament.admin.auth.login') }}" class="t2-comment-btn" style="text-decoration: none; display: inline-block;">Login</a>
                 </div>
-            @endif
+            @endauth
 
-            <!-- Content -->
-            <div class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-lime-400 prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-img:border prose-img:border-neutral-800">
-                {!! $post->content !!}
-            </div>
-
-            <!-- Comments Section -->
-            <div class="mt-24 pt-12 border-t border-neutral-800">
-                <div class="flex items-center gap-4 mb-12">
-                    <div class="w-12 h-12 bg-neutral-900 border border-neutral-800 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-3xl font-bold tracking-tighter">
-                        Comments <span class="text-neutral-500">({{ $post->comments->count() }})</span>
-                    </h2>
-                </div>
-
-                <!-- Comment Form -->
-                @auth
-                    <form action="{{ route('portfolio.blog.comment.store', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST" class="mb-16">
-                        @csrf
-                        <div class="mb-6">
-                            <textarea name="comment" rows="4" required 
-                                      class="w-full bg-neutral-900 border border-neutral-800 text-white p-4 focus:border-lime-400 focus:outline-none transition-colors font-mono text-sm"
-                                      placeholder="Share your thoughts..."></textarea>
+            <div class="t2-comment-list">
+                @forelse($post->comments as $comment)
+                    <div class="t2-comment-item">
+                        <div class="t2-comment-avatar">
+                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
                         </div>
-                        <button type="submit" 
-                                class="px-8 py-3 bg-lime-400 text-black font-bold hover:bg-lime-500 transition-colors flex items-center gap-2">
-                            Post Comment
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </button>
-                    </form>
-                @else
-                    <div class="mb-16 p-8 bg-neutral-900 border border-neutral-800 text-center">
-                        <p class="text-neutral-400 mb-6 font-mono">Please login to join the discussion.</p>
-                        <a href="{{ route('filament.admin.auth.login') }}" 
-                           class="inline-block px-8 py-3 border border-neutral-700 text-white font-bold hover:border-lime-400 hover:text-lime-400 transition-colors">
-                            Login
-                        </a>
-                    </div>
-                @endauth
-
-                <!-- Comments List -->
-                <div class="space-y-12">
-                    @forelse($post->comments as $comment)
-                        <div class="group">
-                            <div class="flex gap-6">
-                                <div class="w-12 h-12 bg-neutral-800 flex items-center justify-center text-lime-400 font-bold font-mono text-lg flex-shrink-0 border border-neutral-700">
-                                    {{ strtoupper(substr($comment->user->name, 0, 1)) }}
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div>
-                                            <h4 class="font-bold text-white text-lg">
-                                                {{ $comment->user->name }}
-                                            </h4>
-                                            <span class="text-xs font-mono text-neutral-500 uppercase tracking-wider">
-                                                {{ $comment->created_at->diffForHumans() }}
-                                            </span>
-                                        </div>
-                                        @if(auth()->id() === $comment->user_id)
-                                            <form action="{{ route('portfolio.blog.comment.delete', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST">
-                                                @csrf @method('DELETE')
-                                                <input type="hidden" name="comment_id" value="{{ $comment->id }}">
-                                                <button type="submit" class="text-neutral-600 hover:text-red-500 text-xs font-mono uppercase tracking-wider transition-colors">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                    
-                                    <p class="text-neutral-300 leading-relaxed mb-4">
-                                        {{ $comment->comment }}
-                                    </p>
-
-                                    <!-- Reply Button -->
-                                    @auth
-                                        <button onclick="toggleReplyForm('{{ $comment->id }}')" 
-                                                class="text-sm font-mono text-lime-400 hover:text-lime-300 flex items-center gap-2 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
-                                            </svg>
-                                            Reply
-                                        </button>
-                                        
-                                        <!-- Reply Form -->
-                                        <form id="replyForm{{ $comment->id }}" 
-                                              action="{{ route('portfolio.blog.comment.store', ['user' => $user->slug, 'blog' => $post->slug]) }}" 
-                                              method="POST" 
-                                              class="hidden mt-6 ml-6 pl-6 border-l border-neutral-800">
-                                            @csrf
-                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                                            <div class="mb-4">
-                                                <textarea name="comment" rows="3" required 
-                                                          class="w-full bg-neutral-900 border border-neutral-800 text-white p-3 focus:border-lime-400 focus:outline-none transition-colors font-mono text-sm"
-                                                          placeholder="Write a reply..."></textarea>
-                                            </div>
-                                            <div class="flex gap-4">
-                                                <button type="submit" 
-                                                        class="px-6 py-2 bg-white text-black text-sm font-bold hover:bg-lime-400 transition-colors">
-                                                    Reply
-                                                </button>
-                                                <button type="button" onclick="toggleReplyForm('{{ $comment->id }}')"
-                                                        class="px-6 py-2 border border-neutral-800 text-neutral-400 text-sm font-bold hover:text-white transition-colors">
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        </form>
-                                    @endauth
-
-                                    <!-- Nested Replies -->
-                                    @if($comment->replies->count() > 0)
-                                        <div class="mt-8 space-y-8 ml-6 pl-6 border-l border-neutral-800">
-                                            @foreach($comment->replies as $reply)
-                                                <div class="flex gap-4">
-                                                    <div class="w-8 h-8 bg-neutral-900 flex items-center justify-center text-lime-400 font-bold font-mono text-sm flex-shrink-0 border border-neutral-800">
-                                                        {{ strtoupper(substr($reply->user->name, 0, 1)) }}
-                                                    </div>
-                                                    <div class="flex-1">
-                                                        <div class="flex items-center justify-between mb-2">
-                                                            <div>
-                                                                <h5 class="font-bold text-white text-sm">
-                                                                    {{ $reply->user->name }}
-                                                                </h5>
-                                                                <span class="text-xs font-mono text-neutral-500 uppercase tracking-wider">
-                                                                    {{ $reply->created_at->diffForHumans() }}
-                                                                </span>
-                                                            </div>
-                                                            @if(auth()->id() === $reply->user_id)
-                                                                <form action="{{ route('portfolio.blog.comment.delete', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST">
-                                                                    @csrf @method('DELETE')
-                                                                    <input type="hidden" name="comment_id" value="{{ $reply->id }}">
-                                                                    <button type="submit" class="text-neutral-600 hover:text-red-500 text-xs font-mono uppercase tracking-wider transition-colors">
-                                                                        Delete
-                                                                    </button>
-                                                                </form>
-                                                            @endif
-                                                        </div>
-                                                        <p class="text-neutral-400 text-sm">
-                                                            {{ $reply->comment }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
+                        <div class="t2-comment-body">
+                            <div class="t2-comment-meta">
+                                <span class="t2-comment-author">{{ $comment->user->name }}</span>
+                                <span class="t2-comment-time">{{ $comment->created_at->diffForHumans() }}</span>
                             </div>
+                            <div class="t2-comment-text">{{ $comment->comment }}</div>
+                            
+                            <div class="t2-comment-actions">
+                                @auth
+                                    <button onclick="toggleReplyForm('{{ $comment->id }}')" class="t2-action-link">Reply</button>
+                                @endauth
+                                
+                                @if(auth()->id() === $comment->user_id)
+                                    <form action="{{ route('portfolio.blog.comment.delete', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST" style="display: inline;">
+                                        @csrf @method('DELETE')
+                                        <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                                        <button type="submit" class="t2-action-link" style="color: #ef4444;">Delete</button>
+                                    </form>
+                                @endif
+                            </div>
+
+                            <!-- Reply Form -->
+                            <form id="replyForm{{ $comment->id }}" 
+                                  action="{{ route('portfolio.blog.comment.store', ['user' => $user->slug, 'blog' => $post->slug]) }}" 
+                                  method="POST" 
+                                  class="t2-reply-form hidden">
+                                @csrf
+                                <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                <div style="margin-bottom: 1rem;">
+                                    <textarea name="comment" rows="3" required 
+                                              style="width: 100%; padding: 0.75rem; background: var(--t2-surface); border: 1px solid var(--t2-glass-border); border-radius: 8px; color: var(--t2-text-main);"
+                                              placeholder="Write a reply..."></textarea>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="submit" class="t2-comment-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Reply</button>
+                                    <button type="button" onclick="toggleReplyForm('{{ $comment->id }}')"
+                                            style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--t2-border); color: var(--t2-text-sub); border-radius: 8px; cursor: pointer;">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Replies -->
+                            @if($comment->replies->count() > 0)
+                                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                                    @foreach($comment->replies as $reply)
+                                        <div class="t2-comment-item">
+                                            <div class="t2-comment-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">
+                                                {{ strtoupper(substr($reply->user->name, 0, 1)) }}
+                                            </div>
+                                            <div class="t2-comment-body">
+                                                <div class="t2-comment-meta">
+                                                    <span class="t2-comment-author" style="font-size: 0.95rem;">{{ $reply->user->name }}</span>
+                                                    <span class="t2-comment-time" style="font-size: 0.8rem;">{{ $reply->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <div class="t2-comment-text" style="font-size: 0.95rem;">{{ $reply->comment }}</div>
+                                                
+                                                @if(auth()->id() === $reply->user_id)
+                                                    <form action="{{ route('portfolio.blog.comment.delete', ['user' => $user->slug, 'blog' => $post->slug]) }}" method="POST">
+                                                        @csrf @method('DELETE')
+                                                        <input type="hidden" name="comment_id" value="{{ $reply->id }}">
+                                                        <button type="submit" class="t2-action-link" style="color: #ef4444; font-size: 0.8rem;">Delete</button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
-                    @empty
-                        <div class="text-center py-12 border border-dashed border-neutral-800">
-                            <p class="text-neutral-500 font-mono">No comments yet. Be the first to verify this post.</p>
-                        </div>
-                    @endforelse
-                </div>
+                    </div>
+                @empty
+                    <div style="text-align: center; padding: 2rem; border: 1px dashed var(--t2-border); border-radius: 12px;">
+                        <p style="color: var(--t2-text-sub);">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                @endforelse
             </div>
-
-            <script>
-                function toggleReplyForm(id) {
-                    const form = document.getElementById('replyForm' + id);
-                    form.classList.toggle('hidden');
-                }
-            </script>
-
         </div>
     </div>
 </section>
+
+<script>
+    function toggleReplyForm(id) {
+        const form = document.getElementById('replyForm' + id);
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+            form.style.display = 'block';
+        } else {
+            form.classList.add('hidden');
+            form.style.display = 'none';
+        }
+    }
+</script>

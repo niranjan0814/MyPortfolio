@@ -6,7 +6,7 @@
 /* ==========================================
    ROOT VARIABLES - Corporate Color Palette
    ========================================== */
-:root[data-theme="light"] {
+html[data-theme="light"] .theme2-theme {
     /* Primary Brand Colors */
     --corporate-primary: #1e40af;
     --corporate-secondary: #059669;
@@ -14,7 +14,7 @@
     --corporate-warning: #d97706;
     --corporate-danger: #dc2626;
     --corporate-info: #0369a1;
-    
+
     /* Neutral Colors */
     --corporate-white: #ffffff;
     --corporate-gray-50: #f8fafc;
@@ -27,18 +27,18 @@
     --corporate-gray-700: #334155;
     --corporate-gray-800: #1e293b;
     --corporate-gray-900: #0f172a;
-    
+
     /* Backgrounds */
     --corporate-bg-primary: var(--corporate-white);
     --corporate-bg-secondary: var(--corporate-gray-50);
     --corporate-bg-tertiary: var(--corporate-gray-100);
-    
+
     /* Text Colors */
     --corporate-text-primary: var(--corporate-gray-900);
     --corporate-text-secondary: var(--corporate-gray-700);
     --corporate-text-muted: var(--corporate-gray-500);
     --corporate-text-inverse: var(--corporate-white);
-    
+
     /* Borders & Shadows */
     --corporate-border: var(--corporate-gray-200);
     --corporate-border-strong: var(--corporate-gray-300);
@@ -48,14 +48,14 @@
     --corporate-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
-:root[data-theme="dark"] {
+html[data-theme="dark"] .theme2-theme {
     --corporate-primary: #3b82f6;
     --corporate-secondary: #10b981;
     --corporate-accent: #8b5cf6;
     --corporate-warning: #f59e0b;
     --corporate-danger: #ef4444;
     --corporate-info: #0ea5e9;
-    
+
     /* Neutral Colors */
     --corporate-white: #ffffff;
     --corporate-gray-50: #f8fafc;
@@ -68,18 +68,18 @@
     --corporate-gray-700: #334155;
     --corporate-gray-800: #1e293b;
     --corporate-gray-900: #0f172a;
-    
+
     /* Backgrounds */
     --corporate-bg-primary: #0f172a;
     --corporate-bg-secondary: #1e293b;
     --corporate-bg-tertiary: #334155;
-    
+
     /* Text Colors */
     --corporate-text-primary: var(--corporate-white);
     --corporate-text-secondary: var(--corporate-gray-200);
     --corporate-text-muted: var(--corporate-gray-400);
     --corporate-text-inverse: var(--corporate-gray-900);
-    
+
     /* Borders & Shadows */
     --corporate-border: #334155;
     --corporate-border-strong: #475569;
@@ -92,7 +92,7 @@
 /* ==========================================
    BASE STYLES & RESETS
    ========================================== */
-.corporate-theme {
+.theme2-theme {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
     color: var(--corporate-text-primary);
@@ -353,6 +353,7 @@
 }
 
 @media (max-width: 1024px) {
+
     .corporate-grid-3,
     .corporate-grid-4 {
         grid-template-columns: repeat(2, 1fr);
@@ -360,16 +361,17 @@
 }
 
 @media (max-width: 768px) {
+
     .corporate-grid-2,
     .corporate-grid-3,
     .corporate-grid-4 {
         grid-template-columns: 1fr;
     }
-    
+
     .corporate-section-title {
         font-size: 2.5rem;
     }
-    
+
     .corporate-section {
         padding: 4rem 1.5rem;
     }
@@ -488,15 +490,34 @@
 }
 
 /* Text Colors */
-.corporate-text-primary { color: var(--corporate-text-primary); }
-.corporate-text-secondary { color: var(--corporate-text-secondary); }
-.corporate-text-muted { color: var(--corporate-text-muted); }
-.corporate-text-inverse { color: var(--corporate-text-inverse); }
+.corporate-text-primary {
+    color: var(--corporate-text-primary);
+}
+
+.corporate-text-secondary {
+    color: var(--corporate-text-secondary);
+}
+
+.corporate-text-muted {
+    color: var(--corporate-text-muted);
+}
+
+.corporate-text-inverse {
+    color: var(--corporate-text-inverse);
+}
 
 /* Text Alignment */
-.corporate-text-center { text-align: center; }
-.corporate-text-left { text-align: left; }
-.corporate-text-right { text-align: right; }
+.corporate-text-center {
+    text-align: center;
+}
+
+.corporate-text-left {
+    text-align: left;
+}
+
+.corporate-text-right {
+    text-align: right;
+}
 
 /* ==========================================
    ANIMATIONS
@@ -506,6 +527,7 @@
         opacity: 0;
         transform: translateX(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -517,6 +539,7 @@
         opacity: 0;
         transform: translateX(30px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -528,6 +551,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -535,8 +559,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .corporate-animate-slide-left {
@@ -581,20 +610,53 @@
 }
 
 /* Spacing Utilities */
-.corporate-p-0 { padding: 0; }
-.corporate-p-4 { padding: 1rem; }
-.corporate-p-8 { padding: 2rem; }
-.corporate-p-12 { padding: 3rem; }
+.corporate-p-0 {
+    padding: 0;
+}
 
-.corporate-m-0 { margin: 0; }
-.corporate-m-4 { margin: 1rem; }
-.corporate-m-8 { margin: 2rem; }
-.corporate-m-12 { margin: 3rem; }
+.corporate-p-4 {
+    padding: 1rem;
+}
 
-.corporate-mt-4 { margin-top: 1rem; }
-.corporate-mt-8 { margin-top: 2rem; }
-.corporate-mb-4 { margin-bottom: 1rem; }
-.corporate-mb-8 { margin-bottom: 2rem; }
+.corporate-p-8 {
+    padding: 2rem;
+}
+
+.corporate-p-12 {
+    padding: 3rem;
+}
+
+.corporate-m-0 {
+    margin: 0;
+}
+
+.corporate-m-4 {
+    margin: 1rem;
+}
+
+.corporate-m-8 {
+    margin: 2rem;
+}
+
+.corporate-m-12 {
+    margin: 3rem;
+}
+
+.corporate-mt-4 {
+    margin-top: 1rem;
+}
+
+.corporate-mt-8 {
+    margin-top: 2rem;
+}
+
+.corporate-mb-4 {
+    margin-bottom: 1rem;
+}
+
+.corporate-mb-8 {
+    margin-bottom: 2rem;
+}
 
 /* ==========================================
    HOVER EFFECTS
@@ -765,19 +827,19 @@
     .corporate-heading-1 {
         font-size: 3rem;
     }
-    
+
     .corporate-heading-2 {
         font-size: 2.5rem;
     }
-    
+
     .corporate-heading-3 {
         font-size: 1.875rem;
     }
-    
+
     .corporate-body-large {
         font-size: 1.125rem;
     }
-    
+
     .corporate-section-title {
         font-size: 2.5rem;
     }
@@ -787,13 +849,14 @@
    ACCESSIBILITY
    ========================================== */
 @media (prefers-reduced-motion: reduce) {
+
     .corporate-animate-slide-left,
     .corporate-animate-slide-right,
     .corporate-animate-slide-up,
     .corporate-animate-fade {
         animation: none;
     }
-    
+
     .corporate-hover-lift:hover,
     .corporate-hover-scale:hover,
     .corporate-btn:hover,
@@ -814,11 +877,12 @@
    PRINT STYLES
    ========================================== */
 @media print {
+
     .corporate-btn,
     .corporate-nav {
         display: none;
     }
-    
+
     .corporate-card {
         box-shadow: none;
         border: 1px solid #000;
