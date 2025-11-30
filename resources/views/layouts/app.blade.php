@@ -59,11 +59,27 @@
             box-sizing: border-box;
         }
 
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
         }
 
         /* Global Animations */
@@ -133,9 +149,34 @@
     {{-- Theme-specific additional styles --}}
     @if($activeTheme === 'theme2')
         <style>
-            /* Corporate theme overrides */
+            /* Theme 2 - Ensure no white space at bottom */
+            html {
+                background: #1a1c2e;
+            }
+            
             body {
-                background: var(--corporate-bg-primary);
+                background: #F8F9FA;
+            }
+
+            [data-theme="dark"] html {
+                background: #0f1015;
+            }
+
+            [data-theme="dark"] body {
+                background: #2C2E3E;
+            }
+
+            /* Back to top button - ensure it doesn't cause layout issues */
+            .back-to-top-btn {
+                position: fixed !important;
+                bottom: 2rem !important;
+                right: 2rem !important;
+                z-index: 9999 !important;
+                pointer-events: auto;
+            }
+
+            .back-to-top-btn.opacity-0 {
+                pointer-events: none;
             }
         </style>
     @endif
