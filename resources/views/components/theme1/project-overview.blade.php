@@ -1,338 +1,656 @@
-{{-- resources/views/components/theme1/project-overview.blade.php --}}
-
 @props(['user', 'project', 'overview', 'techStackSkills', 'headerContent', 'footerContent'])
 
-<div class="pt-24 pb-16 relative overflow-hidden"
-     style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));">
-    
-    <!-- Background decoration (Normal theme only) -->
-    <div class="absolute inset-0 opacity-5 normal-theme-only pointer-events-none">
-        <div class="absolute top-20 left-10 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-    </div>
+<style>
+    /* ==========================================
+       THEME 1: COSMIC NEON & AURORA SOFT LIGHT
+       Internal Styles for Project Overview
+       ========================================== */
 
-    <!-- Monochrome particles -->
-    <div class="hero-particles absolute inset-0 pointer-events-none"></div>
+    :root {
+        /* DARK THEME (Cosmic Neon) - Default */
+        --t1-bg-primary: #0B0F1A;
+        --t1-bg-secondary: #0F0A21;
+        --t1-surface-card: rgba(26, 16, 51, 0.6);
+        --t1-text-primary: #FFFFFF;
+        --t1-text-secondary: #C7C7D2;
+        --t1-text-muted: #9A9AB3;
+        --t1-accent-primary: #A56BFF;
+        --t1-accent-glow: #C68BFF;
+        --t1-accent-secondary: #F0B54A;
+        --t1-accent-secondary-glow: #F7CA57;
+        --t1-glow-color: rgba(145, 80, 255, 0.35);
+        --t1-icon-glow: rgba(168, 100, 255, 0.6);
+        --t1-btn-glow: rgba(130, 70, 255, 0.4);
+        --t1-card-shadow: 0 8px 32px 0 rgba(120, 60, 255, 0.25);
+        --t1-gradient-primary: linear-gradient(135deg, #A56BFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #FBD16B 0%, #E8A93C 100%);
+        --t1-border-color: rgba(165, 107, 255, 0.2);
+    }
 
-    <!-- Breadcrumbs -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
-        <nav class="flex items-center gap-2 text-sm flex-wrap">
-            <a href="{{ route('portfolio.show', $user->slug) }}" 
-               class="font-medium transition-colors hover:opacity-80"
-               style="color: var(--accent-blue);">
-                Home
-            </a>
-            <svg class="w-4 h-4" style="color: var(--text-muted);" fill="currentColor" viewBox="0 0 20 20">
+    [data-theme="light"] {
+        /* LIGHT THEME (Aurora Soft Light) */
+        --t1-bg-primary: #F8F9FC;
+        --t1-bg-secondary: #FAFBFF;
+        --t1-surface-card: rgba(255, 255, 255, 0.7);
+        --t1-text-primary: #1A1D23;
+        --t1-text-secondary: #6B7280;
+        --t1-text-muted: #9CA3AF;
+        --t1-accent-primary: #7A5AF8;
+        --t1-accent-glow: #8F6BFF;
+        --t1-accent-secondary: #E89B0C;
+        --t1-accent-secondary-glow: #F7B52C;
+        --t1-glow-color: rgba(122, 90, 248, 0.12);
+        --t1-icon-glow: rgba(122, 90, 248, 0.2);
+        --t1-btn-glow: rgba(122, 90, 248, 0.15);
+        --t1-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+        --t1-gradient-primary: linear-gradient(135deg, #8B5CFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #F7C95A 0%, #E8A93C 100%);
+        --t1-border-color: rgba(122, 90, 248, 0.15);
+    }
+
+    /* Page Layout */
+    .t1-project-page {
+        padding: 8rem 0 4rem;
+        background: var(--t1-bg-primary);
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .t1-project-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Breadcrumbs */
+    .t1-breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .t1-breadcrumb-link {
+        color: var(--t1-accent-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.3s ease;
+    }
+
+    .t1-breadcrumb-link:hover {
+        opacity: 0.7;
+    }
+
+    .t1-breadcrumb-separator {
+        color: var(--t1-text-muted);
+        width: 16px;
+        height: 16px;
+    }
+
+    .t1-breadcrumb-current {
+        color: var(--t1-text-secondary);
+        font-weight: 500;
+    }
+
+    /* Hero Card */
+    .t1-hero-card {
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: var(--t1-card-shadow);
+        margin-bottom: 2rem;
+    }
+
+    .t1-project-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--t1-gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .t1-project-description {
+        font-size: 1.125rem;
+        color: var(--t1-text-secondary);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+    /* Buttons */
+    .t1-button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .t1-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .t1-btn-primary {
+        background: var(--t1-gradient-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px var(--t1-btn-glow);
+    }
+
+    .t1-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--t1-btn-glow);
+    }
+
+    .t1-btn-secondary {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--t1-text-primary);
+        border: 1px solid var(--t1-border-color);
+    }
+
+    [data-theme="light"] .t1-btn-secondary {
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .t1-btn-secondary:hover {
+        border-color: var(--t1-accent-primary);
+        background: var(--t1-accent-primary);
+        color: white;
+    }
+
+    /* Stats Grid */
+    .t1-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .t1-stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .t1-stat-card {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .t1-stat-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 8px 20px var(--t1-glow-color);
+    }
+
+    .t1-stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--t1-gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .t1-stat-label {
+        font-size: 0.875rem;
+        color: var(--t1-text-secondary);
+        margin-top: 0.5rem;
+    }
+
+    /* Tabs */
+    .t1-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        background: var(--t1-surface-card);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1rem;
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .t1-tab {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        background: transparent;
+        color: var(--t1-text-secondary);
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .t1-tab:hover {
+        color: var(--t1-text-primary);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .t1-tab.active {
+        background: var(--t1-gradient-primary);
+        color: white;
+        box-shadow: 0 4px 12px var(--t1-btn-glow);
+    }
+
+    /* Content Card */
+    .t1-content-card {
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: var(--t1-card-shadow);
+    }
+
+    .t1-content-section {
+        display: none;
+    }
+
+    .t1-content-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Title */
+    .t1-section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .t1-section-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--t1-gradient-primary);
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    /* Features Grid */
+    .t1-features-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .t1-features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .t1-feature-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1rem;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .t1-feature-card {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .t1-feature-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 12px 30px var(--t1-glow-color);
+    }
+
+    .t1-feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .t1-feature-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .t1-feature-description {
+        color: var(--t1-text-secondary);
+        line-height: 1.6;
+    }
+
+    /* Tech Stack Grid */
+    .t1-tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .t1-tech-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .t1-tech-item {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .t1-tech-item:hover {
+        transform: translateY(-4px) scale(1.05);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 8px 20px var(--t1-glow-color);
+    }
+
+    .t1-tech-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 0.75rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .t1-tech-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .t1-tech-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--t1-text-primary);
+    }
+
+    /* Gallery Grid */
+    .t1-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .t1-gallery-item {
+        border-radius: 1rem;
+        overflow: hidden;
+        border: 1px solid var(--t1-border-color);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .t1-gallery-item:hover {
+        transform: scale(1.05);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 12px 30px var(--t1-glow-color);
+    }
+
+    .t1-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Prose Styling */
+    .t1-prose {
+        color: var(--t1-text-secondary);
+        font-size: 1.125rem;
+        line-height: 1.8;
+    }
+
+    .t1-prose h1, .t1-prose h2, .t1-prose h3 {
+        color: var(--t1-text-primary);
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .t1-prose p {
+        margin-bottom: 1.5rem;
+    }
+
+    .t1-prose a {
+        color: var(--t1-accent-primary);
+        text-decoration: underline;
+    }
+
+    .t1-prose ul, .t1-prose ol {
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+    }
+
+    /* Background Blobs */
+    .t1-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.2;
+        z-index: 0;
+        animation: t1-blob-float 15s infinite alternate;
+    }
+
+    .t1-blob-1 { top: 10%; right: 10%; width: 500px; height: 500px; background: var(--t1-accent-glow); }
+    .t1-blob-2 { bottom: 10%; left: 10%; width: 400px; height: 400px; background: var(--t1-accent-secondary); animation-delay: -7s; }
+
+    @keyframes t1-blob-float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, -40px) scale(1.1); }
+    }
+</style>
+
+<div class="t1-project-page">
+    <!-- Background Elements -->
+    <div class="t1-blob t1-blob-1"></div>
+    <div class="t1-blob t1-blob-2"></div>
+
+    <div class="t1-project-container">
+        <!-- Breadcrumbs -->
+        <nav class="t1-breadcrumbs">
+            <a href="{{ route('portfolio.show', $user->slug) }}" class="t1-breadcrumb-link">Home</a>
+            <svg class="t1-breadcrumb-separator" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
             </svg>
-            <a href="{{ route('portfolio.show', $user->slug) }}#projects" 
-               class="font-medium transition-colors hover:opacity-80"
-               style="color: var(--accent-blue);">
-                Projects
-            </a>
-            <svg class="w-4 h-4" style="color: var(--text-muted);" fill="currentColor" viewBox="0 0 20 20">
+            <a href="{{ route('portfolio.show', $user->slug) }}#projects" class="t1-breadcrumb-link">Projects</a>
+            <svg class="t1-breadcrumb-separator" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
             </svg>
-            <span class="font-medium" style="color: var(--text-secondary);">{{ $project->title }}</span>
+            <span class="t1-breadcrumb-current">{{ $project->title }}</span>
         </nav>
-    </div>
 
-    <main class="relative px-4 sm:px-6 lg:px-8 z-10">
-        <div class="max-w-7xl mx-auto">
-            <!-- Hero Section -->
-            <div class="mb-12 animate-fadeIn">
-                <div class="relative group">
-                    <!-- Glow effect -->
-                    <div class="absolute inset-0 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-110"
-                         style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));"></div>
-                    
-                    <div class="relative rounded-3xl shadow-2xl p-8 md:p-12 glass-card glass-noise"
-                         style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                        <div class="flex flex-col lg:flex-row items-start justify-between gap-8">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-3 mb-4 flex-wrap">
-                                    <div class="p-3 rounded-2xl shadow-lg glass-card"
-                                         style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, transparent);">
-                                        <i class="fas fa-bolt text-white text-2xl"></i>
-                                    </div>
-                                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold gradient-text">
-                                        {{ $project->title }}
-                                    </h1>
-                                </div>
-                                
-                                <p class="text-lg md:text-xl leading-relaxed mb-6" style="color: var(--text-secondary);">
-                                    {{ $project->description }}
-                                </p>
+        <!-- Hero Section -->
+        <div class="t1-hero-card">
+            <h1 class="t1-project-title">{{ $project->title }}</h1>
+            <p class="t1-project-description">{{ $project->description }}</p>
 
-                                <div class="flex flex-wrap gap-3">
-                                    @if($project->link)
-                                        <a href="{{ $project->link }}" 
-                                           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all hover:-translate-y-1 glass-button"
-                                           style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                           target="_blank">
-                                            <i class="fab fa-github"></i>
-                                            View Source
-                                        </a>
-                                    @endif
-                                    
-                                    @if($project->depurl)
-                                        <a href="{{ $project->depurl }}" 
-                                           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all hover:-translate-y-1 theme-btn"
-                                           target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                            Live Demo
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
+            <div class="t1-button-group">
+                @if($project->link)
+                    <a href="{{ $project->link }}" target="_blank" class="t1-btn t1-btn-secondary">
+                        <i class="fab fa-github"></i>
+                        View Source
+                    </a>
+                @endif
+                @if($project->depurl)
+                    <a href="{{ $project->depurl }}" target="_blank" class="t1-btn t1-btn-primary">
+                        <i class="fas fa-external-link-alt"></i>
+                        Live Demo
+                    </a>
+                @endif
+            </div>
 
-                            <!-- Stats Cards -->
-                            <div class="grid grid-cols-2 gap-4 sm:gap-6">
-                                <div class="rounded-2xl p-6 glass-card transition-all hover:shadow-lg hover:-translate-y-1"
-                                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                    <div class="text-3xl md:text-4xl font-bold mb-1" style="color: var(--accent-blue);">
-                                        {{ $techStackSkills->count() }}
-                                    </div>
-                                    <div class="text-sm" style="color: var(--text-secondary);">Technologies</div>
-                                </div>
-                                <div class="rounded-2xl p-6 glass-card transition-all hover:shadow-lg hover:-translate-y-1"
-                                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                    <div class="text-3xl md:text-4xl font-bold mb-1" style="color: var(--accent-purple);">
-                                        {{ is_array($overview->key_features) ? count($overview->key_features) : 0 }}
-                                    </div>
-                                    <div class="text-sm" style="color: var(--text-secondary);">Key Features</div>
-                                </div>
-                            </div>
+            <!-- Stats -->
+            <div class="t1-stats-grid">
+                <div class="t1-stat-card">
+                    <div class="t1-stat-value">{{ $techStackSkills->count() }}</div>
+                    <div class="t1-stat-label">Technologies</div>
+                </div>
+                <div class="t1-stat-card">
+                    <div class="t1-stat-value">{{ is_array($overview->key_features) ? count($overview->key_features) : 0 }}</div>
+                    <div class="t1-stat-label">Key Features</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="t1-tabs">
+            <button class="t1-tab active" onclick="switchTab('overview')" data-tab="overview">
+                <i class="fas fa-book-open"></i>
+                <span>Overview</span>
+            </button>
+            <button class="t1-tab" onclick="switchTab('features')" data-tab="features">
+                <i class="fas fa-sparkles"></i>
+                <span>Features</span>
+            </button>
+            <button class="t1-tab" onclick="switchTab('tech')" data-tab="tech">
+                <i class="fas fa-code"></i>
+                <span>Tech Stack</span>
+            </button>
+            @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
+                <button class="t1-tab" onclick="switchTab('gallery')" data-tab="gallery">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery</span>
+                </button>
+            @endif
+        </div>
+
+        <!-- Content Sections -->
+        <div id="content-container">
+            <!-- Overview Tab -->
+            <div id="overview-content" class="t1-content-section active">
+                <div class="t1-content-card">
+                    <h2 class="t1-section-title">
+                        <div class="t1-section-icon">
+                            <i class="fas fa-book-open"></i>
                         </div>
+                        Project Overview
+                    </h2>
+                    <div class="t1-prose">
+                        {!! $overview->overview_description !!}
                     </div>
                 </div>
             </div>
 
-            <!-- Navigation Tabs -->
-            <div class="mb-8 animate-fadeIn" style="animation-delay: 200ms">
-                <div class="rounded-2xl shadow-lg p-2 inline-flex gap-2 glass-card flex-wrap"
-                     style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                    <button onclick="switchTab('overview')" 
-                            class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all theme-btn" 
-                            data-tab="overview">
-                        <i class="fas fa-book-open"></i>
-                        <span class="hidden sm:inline">Overview</span>
-                    </button>
-                    <button onclick="switchTab('features')" 
-                            class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all glass-button" 
-                            data-tab="features"
-                            style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                        <i class="fas fa-sparkles"></i>
-                        <span class="hidden sm:inline">Features</span>
-                    </button>
-                    <button onclick="switchTab('tech')" 
-                            class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all glass-button" 
-                            data-tab="tech"
-                            style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                        <i class="fas fa-code"></i>
-                        <span class="hidden sm:inline">Tech Stack</span>
-                    </button>
-                    @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
-                        <button onclick="switchTab('gallery')" 
-                                class="tab-button flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all glass-button" 
-                                data-tab="gallery"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                            <i class="fas fa-images"></i>
-                            <span class="hidden sm:inline">Gallery</span>
-                        </button>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Content Sections -->
-            <div id="content-container">
-                <!-- Overview Tab -->
-                <div id="overview-content" class="content-section animate-fadeIn">
-                    <div class="rounded-3xl shadow-xl p-8 md:p-12 glass-card glass-noise"
-                         style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                        <div class="flex items-center gap-4 mb-8 flex-wrap">
-                            <div class="p-4 rounded-2xl shadow-lg glass-card"
-                                 style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, transparent);">
-                                <i class="fas fa-book-open text-white text-2xl md:text-3xl"></i>
-                            </div>
-                            <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--text-primary);">Project Overview</h2>
+            <!-- Features Tab -->
+            <div id="features-content" class="t1-content-section">
+                <div class="t1-content-card">
+                    <h2 class="t1-section-title">
+                        <div class="t1-section-icon">
+                            <i class="fas fa-sparkles"></i>
                         </div>
-                        
-                        <div class="prose prose-lg max-w-none">
-                            <div class="leading-relaxed text-base md:text-lg" style="color: var(--text-secondary);">
-                                {!! $overview->overview_description !!}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Features Tab -->
-                <div id="features-content" class="content-section hidden">
-                    <div class="grid md:grid-cols-2 gap-6">
+                        Key Features
+                    </h2>
+                    <div class="t1-features-grid">
                         @if(is_array($overview->key_features))
                             @foreach($overview->key_features as $featureKey => $featureValue)
-                                <div class="group relative hover:transform hover:-translate-y-2 transition-all duration-300">
-                                    <div class="absolute inset-0 rounded-3xl blur opacity-20 group-hover:opacity-40 transition-opacity"
-                                         style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));"></div>
-                                    <div class="relative rounded-3xl shadow-xl p-6 md:p-8 glass-card glass-noise"
-                                         style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                                        <div class="flex items-start gap-4">
-                                            <div class="text-4xl md:text-5xl flex-shrink-0">
-                                                @if($loop->index == 0) 💬
-                                                @elseif($loop->index == 1) 🔄
-                                                @elseif($loop->index == 2) 🔍
-                                                @else 🛡️
-                                                @endif
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <h3 class="text-lg md:text-xl font-bold mb-2 flex items-center gap-2 flex-wrap"
-                                                    style="color: var(--text-primary);">
-                                                    <span class="break-words">{{ $featureKey }}</span>
-                                                    <i class="fas fa-check-circle flex-shrink-0" style="color: var(--accent-green);"></i>
-                                                </h3>
-                                                <p class="leading-relaxed text-sm md:text-base" style="color: var(--text-secondary);">
-                                                    {{ $featureValue }}
-                                                </p>
-                                            </div>
-                                        </div>
+                                <div class="t1-feature-card">
+                                    <div class="t1-feature-icon">
+                                        @if($loop->index == 0) 💬
+                                        @elseif($loop->index == 1) 🔄
+                                        @elseif($loop->index == 2) 🔍
+                                        @else 🛡️
+                                        @endif
                                     </div>
+                                    <h3 class="t1-feature-title">{{ $featureKey }}</h3>
+                                    <p class="t1-feature-description">{{ $featureValue }}</p>
                                 </div>
                             @endforeach
                         @endif
                     </div>
                 </div>
+            </div>
 
-                <!-- Tech Stack Tab -->
-                <div id="tech-content" class="content-section hidden">
-                    <div class="rounded-3xl shadow-xl p-8 md:p-12 glass-card glass-noise"
-                         style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                        <div class="flex items-center gap-4 mb-8 flex-wrap">
-                            <div class="p-4 rounded-2xl shadow-lg glass-card"
-                                 style="background: var(--glass-bg, linear-gradient(135deg, #f97316, #ef4444)); border: 1px solid var(--glass-border, transparent);">
-                                <i class="fas fa-code text-white text-2xl md:text-3xl"></i>
-                            </div>
-                            <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--text-primary);">Technology Stack</h2>
+            <!-- Tech Stack Tab -->
+            <div id="tech-content" class="t1-content-section">
+                <div class="t1-content-card">
+                    <h2 class="t1-section-title">
+                        <div class="t1-section-icon">
+                            <i class="fas fa-code"></i>
                         </div>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                            @foreach($techStackSkills as $skill)
-                                <div class="group relative hover:transform hover:-translate-y-2 transition-all duration-300">
-                                    <div class="absolute inset-0 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"
-                                         style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));"></div>
-                                    <div class="relative rounded-2xl shadow-lg p-4 md:p-6 glass-card text-center"
-                                         style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                        @if($skill->url)
-                                            <img src="{{ $skill->url }}" 
-                                                 alt="{{ $skill->name }}" 
-                                                 class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 object-contain group-hover:scale-110 transition-transform"
-                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        @endif
-                                        <div class="{{ $skill->url ? 'hidden' : 'flex' }} w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 items-center justify-center rounded-xl glass-card"
-                                             style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, transparent);">
-                                            <i class="fas fa-code text-2xl md:text-3xl" style="color: var(--text-primary);"></i>
-                                        </div>
-                                        <div class="font-bold text-sm md:text-base break-words" style="color: var(--text-primary);">
-                                            {{ $skill->name }}
-                                        </div>
-                                        @if($skill->level)
-                                            <div class="text-xs md:text-sm mt-1" style="color: var(--text-muted);">
-                                                {{ $skill->level }}
-                                            </div>
-                                        @endif
-                                    </div>
+                        Technology Stack
+                    </h2>
+                    <div class="t1-tech-grid">
+                        @foreach($techStackSkills as $skill)
+                            <div class="t1-tech-item">
+                                <div class="t1-tech-icon">
+                                    @if($skill->url)
+                                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}">
+                                    @else
+                                        <i class="fas fa-code" style="font-size: 2rem; color: var(--t1-accent-primary);"></i>
+                                    @endif
+                                </div>
+                                <div class="t1-tech-name">{{ $skill->name }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Tab -->
+            @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
+                <div id="gallery-content" class="t1-content-section">
+                    <div class="t1-content-card">
+                        <h2 class="t1-section-title">
+                            <div class="t1-section-icon">
+                                <i class="fas fa-images"></i>
+                            </div>
+                            Project Gallery
+                        </h2>
+                        <div class="t1-gallery-grid">
+                            @foreach($overview->gallery_images as $image)
+                                <div class="t1-gallery-item">
+                                    <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}" alt="Project Screenshot">
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
-
-                <!-- Gallery Tab -->
-                @if(is_array($overview->gallery_images) && count($overview->gallery_images) > 0)
-                    <div id="gallery-content" class="content-section hidden">
-                        <div class="rounded-3xl shadow-xl p-8 md:p-12 glass-card glass-noise"
-                             style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                            <div class="flex items-center gap-4 mb-8 flex-wrap">
-                                <div class="p-4 rounded-2xl shadow-lg glass-card"
-                                     style="background: var(--glass-bg, linear-gradient(135deg, #ec4899, #8b5cf6)); border: 1px solid var(--glass-border, transparent);">
-                                    <i class="fas fa-images text-white text-2xl md:text-3xl"></i>
-                                </div>
-                                <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--text-primary);">Project Gallery</h2>
-                            </div>
-                            
-                            <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-                                @foreach($overview->gallery_images as $image)
-                                    <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all glass-card"
-                                         style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                        <img src="{{ $image }}" 
-                                             alt="Project Screenshot {{ $loop->iteration }}" 
-                                             class="w-full h-48 md:h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                        <div class="absolute bottom-0 left-0 right-0 p-4"
-                                             style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-                                            <p class="text-white font-medium text-sm md:text-base">Screenshot {{ $loop->iteration }}</p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
+            @endif
         </div>
-    </main>
+    </div>
 </div>
 
 <script>
     function switchTab(tabName) {
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.add('hidden');
-            section.classList.remove('animate-fadeIn');
+        // Hide all content sections
+        document.querySelectorAll('.t1-content-section').forEach(section => {
+            section.classList.remove('active');
         });
-        
-        const selectedContent = document.getElementById(tabName + '-content');
-        selectedContent.classList.remove('hidden');
-        setTimeout(() => selectedContent.classList.add('animate-fadeIn'), 10);
-        
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.classList.remove('theme-btn');
-            button.classList.add('glass-button');
-            button.style.background = 'var(--card-bg)';
-            button.style.color = 'var(--text-primary)';
-            button.style.border = '1px solid var(--border-color)';
+
+        // Remove active class from all tabs
+        document.querySelectorAll('.t1-tab').forEach(tab => {
+            tab.classList.remove('active');
         });
-        
-        const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
-        activeButton.classList.add('theme-btn');
-        activeButton.classList.remove('glass-button');
-        activeButton.style.background = '';
-        activeButton.style.color = '';
-        activeButton.style.border = '';
+
+        // Show selected content
+        document.getElementById(tabName + '-content').classList.add('active');
+
+        // Add active class to clicked tab
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
     }
 </script>
-
-<style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-    
-    .animate-fadeIn { animation: fadeIn 0.8s ease-in; }
-    .animate-blob { animation: blob 7s infinite; }
-    .animation-delay-2000 { animation-delay: 2s; }
-    
-    .gradient-text {
-        background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent !important;
-    }
-    
-    [data-theme="monochrome"] .normal-theme-only {
-        display: none;
-    }
-</style>

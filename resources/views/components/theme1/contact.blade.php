@@ -1,463 +1,539 @@
 @props(['user', 'contactContent', 'portfolioOwnerId' => null])
-<section id="contact" class="section-full py-20 relative overflow-hidden"
-    style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));"
-    aria-labelledby="contact-heading">
 
-    <!-- Background decoration -->
-    <div class="absolute inset-0 opacity-5 normal-theme-only">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl">
-        </div>
-        <div
-            class="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl">
-        </div>
-    </div>
+<style>
+    /* ==========================================
+       THEME 1: COSMIC NEON & AURORA SOFT LIGHT
+       Internal Styles for Contact Component
+       ========================================== */
 
-    <!-- Monochrome particles -->
-    <div class="hero-particles"></div>
+    :root {
+        /* DARK THEME (Cosmic Neon) - Default */
+        --t1-bg-primary: #0B0F1A;
+        --t1-bg-secondary: #0F0A21;
+        --t1-surface-card: rgba(26, 16, 51, 0.6);
+        --t1-text-primary: #FFFFFF;
+        --t1-text-secondary: #C7C7D2;
+        --t1-text-muted: #9A9AB3;
+        --t1-accent-primary: #A56BFF;
+        --t1-accent-glow: #C68BFF;
+        --t1-accent-secondary: #F0B54A;
+        --t1-accent-secondary-glow: #F7CA57;
+        --t1-glow-color: rgba(145, 80, 255, 0.35);
+        --t1-icon-glow: rgba(168, 100, 255, 0.6);
+        --t1-btn-glow: rgba(130, 70, 255, 0.4);
+        --t1-card-shadow: 0 8px 32px 0 rgba(120, 60, 255, 0.25);
+        --t1-gradient-primary: linear-gradient(135deg, #A56BFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #FBD16B 0%, #E8A93C 100%);
+        --t1-border-color: rgba(165, 107, 255, 0.2);
+    }
 
-    <div class="container mx-auto max-w-4xl fade-in px-4 relative z-10">
-        <div class="text-center mb-12">
-            <h2 id="contact-heading" class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Get In Touch</h2>
-            <div class="h-1 w-32 mx-auto rounded-full"
-                style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+    [data-theme="light"] {
+        /* LIGHT THEME (Aurora Soft Light) */
+        --t1-bg-primary: #F8F9FC;
+        --t1-bg-secondary: #FAFBFF;
+        --t1-surface-card: rgba(255, 255, 255, 0.7);
+        --t1-text-primary: #1A1D23;
+        --t1-text-secondary: #6B7280;
+        --t1-text-muted: #9CA3AF;
+        --t1-accent-primary: #7A5AF8;
+        --t1-accent-glow: #8F6BFF;
+        --t1-accent-secondary: #E89B0C;
+        --t1-accent-secondary-glow: #F7B52C;
+        --t1-glow-color: rgba(122, 90, 248, 0.12);
+        --t1-icon-glow: rgba(122, 90, 248, 0.2);
+        --t1-btn-glow: rgba(122, 90, 248, 0.15);
+        --t1-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+        --t1-gradient-primary: linear-gradient(135deg, #8B5CFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #F7C95A 0%, #E8A93C 100%);
+        --t1-border-color: rgba(122, 90, 248, 0.15);
+    }
+
+    /* Section Layout */
+    .t1-contact-section {
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+        background: var(--t1-bg-primary);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .t1-contact-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Title */
+    .t1-title-wrapper {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .t1-section-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        background: var(--t1-gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .t1-title-underline {
+        width: 80px;
+        height: 4px;
+        background: var(--t1-gradient-primary);
+        margin: 0 auto;
+        border-radius: 2px;
+    }
+
+    /* Contact Grid */
+    .t1-contact-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        align-items: start;
+    }
+
+    @media (min-width: 1024px) {
+        .t1-contact-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    /* Contact Info */
+    .t1-contact-info h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .t1-contact-desc {
+        color: var(--t1-text-secondary);
+        font-size: 1.125rem;
+        line-height: 1.8;
+        margin-bottom: 3rem;
+    }
+
+    /* Contact Items */
+    .t1-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .t1-contact-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 1rem;
+        background: var(--t1-surface-card);
+        border: 1px solid var(--t1-border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--t1-accent-primary);
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .t1-contact-item:hover .t1-contact-icon {
+        transform: scale(1.1);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 0 20px var(--t1-icon-glow);
+    }
+
+    .t1-contact-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .t1-contact-details h4 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--t1-text-muted);
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .t1-contact-details p,
+    .t1-contact-details a {
+        font-size: 1.125rem;
+        color: var(--t1-text-primary);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .t1-contact-details a:hover {
+        color: var(--t1-accent-primary);
+    }
+
+    /* Form Reveal Button Area */
+    .t1-form-reveal-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 400px;
+        background: var(--t1-surface-card);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .t1-form-reveal-wrapper:hover {
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 20px var(--t1-glow-color);
+    }
+
+    .t1-reveal-icon {
+        font-size: 3rem;
+        color: var(--t1-accent-primary);
+        margin-bottom: 1.5rem;
+        animation: t1-bounce 2s infinite;
+    }
+
+    @keyframes t1-bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+
+    .t1-reveal-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .t1-reveal-subtext {
+        color: var(--t1-text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .t1-reveal-btn {
+        padding: 1rem 2.5rem;
+        background: var(--t1-gradient-primary);
+        color: white;
+        border: none;
+        border-radius: 99px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px var(--t1-btn-glow);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .t1-reveal-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px var(--t1-btn-glow);
+    }
+
+    /* Form Card (Initially Hidden) */
+    .t1-form-card {
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: var(--t1-card-shadow);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: none; /* Hidden by default */
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .t1-form-card.visible {
+        display: block;
+        animation: t1-fade-in-up 0.6s forwards;
+    }
+
+    @keyframes t1-fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Form Elements */
+    .t1-form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .t1-form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--t1-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .t1-form-input,
+    .t1-form-textarea {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 0.75rem;
+        color: var(--t1-text-primary);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .t1-form-input,
+    [data-theme="light"] .t1-form-textarea {
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .t1-form-input::placeholder,
+    .t1-form-textarea::placeholder {
+        color: var(--t1-text-muted);
+    }
+
+    .t1-form-input:focus,
+    .t1-form-textarea:focus {
+        outline: none;
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 0 0 3px var(--t1-glow-color);
+    }
+
+    .t1-form-textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    /* Submit Button */
+    .t1-submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--t1-gradient-primary);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px var(--t1-btn-glow);
+    }
+
+    .t1-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--t1-btn-glow);
+    }
+
+    /* Alert Messages */
+    .t1-alert {
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 500;
+    }
+
+    .t1-alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #10b981;
+    }
+
+    .t1-alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+    }
+
+    /* Background Blobs */
+    .t1-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.3;
+        z-index: 0;
+        animation: t1-blob-float 15s infinite alternate;
+    }
+
+    .t1-blob-1 { top: 10%; right: 10%; width: 500px; height: 500px; background: var(--t1-accent-glow); }
+    .t1-blob-2 { bottom: 10%; left: 10%; width: 400px; height: 400px; background: var(--t1-accent-secondary); animation-delay: -7s; }
+
+    @keyframes t1-blob-float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, -40px) scale(1.1); }
+    }
+</style>
+
+<section id="contact" class="t1-contact-section">
+    <!-- Background Elements -->
+    <div class="t1-blob t1-blob-1"></div>
+    <div class="t1-blob t1-blob-2"></div>
+
+    <div class="t1-contact-container">
+        <!-- Title -->
+        <div class="t1-title-wrapper">
+            <h2 class="t1-section-title">Get In Touch</h2>
+            <div class="t1-title-underline"></div>
         </div>
 
         <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="mb-6 px-4 py-3 rounded-lg text-center font-medium animate-fade-in glass-card"
-                style="background: var(--glass-bg, #d1fae5); color: #065f46; border: 1px solid var(--glass-border, #10b981);"
-                role="alert">
-                <div class="flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <span>{{ session('success') }}</span>
-                </div>
+            <div class="t1-alert t1-alert-success">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>{{ session('success') }}</span>
             </div>
         @endif
 
         @if($errors->any())
-            <div class="mb-6 px-4 py-3 rounded-lg animate-shake glass-card"
-                style="background: var(--glass-bg, #fee2e2); color: #991b1b; border: 1px solid var(--glass-border, #ef4444);"
-                role="alert">
-                <ul class="list-disc list-inside space-y-1">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <!-- Contact Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            @if($user->email)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                        style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: var(--accent-blue);" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Email Me</h3>
-                    <p class="text-sm break-all" style="color: var(--text-secondary);">{{ $user->email }}</p>
-                </div>
-            @endif
-
-            @if($user->phone)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                        style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: #10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Call Me</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
-                </div>
-            @endif
-
-            @if($user->address)
-                <div class="contact-card p-6 rounded-xl text-center group glass-card transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform glass-card"
-                        style="background: var(--glass-bg, #e9d5ff); border: 1px solid var(--glass-border, transparent);">
-                        <svg class="w-6 h-6" style="color: var(--accent-purple);" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold mb-2" style="color: var(--text-primary);">Location</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">{{ $user->address }}</p>
-                </div>
-            @endif
-        </div>
-
-        <!-- Social Links - GITHUB ICON FIX -->
-        @if($user->linkedin_url || $user->github_url)
-            <div class="text-center mb-12">
-                <h3 class="text-xl font-semibold mb-4" style="color: var(--text-primary);">Follow Me</h3>
-                <div class="flex justify-center gap-4">
-                    @if($user->linkedin_url)
-                        <a href="{{ $user->linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                            class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
-                            <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
-                    @endif
-                    @if($user->github_url)
-                        <a href="{{ $user->github_url }}" target="_blank" rel="noopener noreferrer"
-                            class="social-link-contact p-3 rounded-lg glass-button transition-all duration-300 transform group">
-                            <svg class="w-5 h-5 github-icon" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                        </a>
-                    @endif
-                </div>
-            </div>
-        @endif
-
-        <!-- Open Popup Button -->
-        <div class="text-center">
-            <button id="openPopup"
-                class="theme-btn py-4 px-10 rounded-xl font-bold text-lg transition-all duration-300 transform focus:outline-none focus:ring-4"
-                aria-haspopup="dialog" aria-controls="contactPopup">
-                Send Message
-                <svg class="w-4 h-4 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <div class="t1-alert t1-alert-error">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                 </svg>
-            </button>
-        </div>
-    </div>
+                <div>
+                    @foreach($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
 
-    <!-- Fixed Popup Modal - Moved outside main container -->
-    <div id="contactPopup"
-        class="fixed inset-0 hidden flex items-center justify-center z-[9999] p-4 transition-opacity duration-300"
-        style="background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);" role="dialog" aria-modal="true"
-        aria-labelledby="popup-heading">
+        <!-- Contact Grid -->
+        <div class="t1-contact-grid">
+            <!-- Left: Contact Info -->
+            <div class="t1-contact-info">
+                <h3>Let's Work Together</h3>
+                <p class="t1-contact-desc">
+                    {{ $contactContent['message'] ?? "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!" }}
+                </p>
 
-        <div class="rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 glass-card glass-noise"
-            style="background: var(--card-bg); border: 1px solid var(--border-color);" @click.stop>
+                <div>
+                    @if($user->email)
+                        <div class="t1-contact-item">
+                            <div class="t1-contact-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div class="t1-contact-details">
+                                <h4>Email</h4>
+                                <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                            </div>
+                        </div>
+                    @endif
 
-            <!-- Close Button -->
-            <div class="flex justify-end p-4 sticky top-0 rounded-t-2xl z-10"
-                style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
-                <button id="closePopup"
-                    class="text-3xl font-light transition-colors duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-opacity-10 focus:outline-none focus:ring-2"
-                    style="color: var(--text-muted); hover:background: var(--glass-bg);"
-                    aria-label="Close contact form">
-                    &times;
-                </button>
+                    @if($user->phone)
+                        <div class="t1-contact-item">
+                            <div class="t1-contact-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                </svg>
+                            </div>
+                            <div class="t1-contact-details">
+                                <h4>Phone</h4>
+                                <a href="tel:{{ $user->phone }}">{{ $user->phone }}</a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($user->address)
+                        <div class="t1-contact-item">
+                            <div class="t1-contact-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div class="t1-contact-details">
+                                <h4>Location</h4>
+                                <p>{{ $user->address }}</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8">
-
-                <!-- Left: Contact Info -->
-                <div class="p-6 rounded-xl glass-card"
-                    style="background: var(--glass-bg, var(--bg-gradient-start)); border: 1px solid var(--border-color);">
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="p-3 rounded-xl shadow-md glass-card"
-                            style="background: var(--glass-bg, var(--accent-blue)); border: 1px solid var(--glass-border, transparent);">
-                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 5a2 2 0 012-2h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a2 2 0 01-2 2h-2C7.82 18 2 12.18 2 5V3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 id="popup-heading" class="text-2xl font-bold gradient-text">Let's Connect</h3>
-                            <p class="mt-1" style="color: var(--text-secondary);">I'm always open to discussing new
-                                opportunities and ideas.</p>
-                        </div>
+            <!-- Right: Contact Form / Reveal Button -->
+            <div class="t1-contact-right-col">
+                <!-- Reveal Button Wrapper -->
+                <div id="t1-form-reveal" class="t1-form-reveal-wrapper">
+                    <div class="t1-reveal-icon">
+                        <i class="fas fa-envelope-open-text"></i>
                     </div>
-
-                    <ul class="space-y-5">
-                        @if($user->phone)
-                            <li class="flex items-center justify-between group">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 rounded-lg glass-card"
-                                        style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                        <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium" style="color: var(--text-primary);">Phone</p>
-                                        <p class="text-sm" style="color: var(--text-secondary);">{{ $user->phone }}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        @endif
-
-                        @if($user->email)
-                            <li class="flex items-center justify-between group">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 rounded-lg glass-card"
-                                        style="background: var(--glass-bg, #d1fae5); border: 1px solid var(--glass-border, transparent);">
-                                        <svg class="w-4 h-4" style="color: #10b981;" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium" style="color: var(--text-primary);">Email</p>
-                                        <p class="text-sm break-all" style="color: var(--text-secondary);">
-                                            {{ $user->email }}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        @endif
-                    </ul>
-
-                    <!-- Response Time Info -->
-                    <div class="mt-8 p-4 rounded-lg glass-card"
-                        style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 rounded-lg glass-card"
-                                style="background: var(--glass-bg, #dbeafe); border: 1px solid var(--glass-border, transparent);">
-                                <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-medium text-sm" style="color: var(--text-primary);">Quick Response</p>
-                                <p class="text-xs" style="color: var(--text-secondary);">Typically replies within 24
-                                    hours</p>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="t1-reveal-text">Have a Project in Mind?</h3>
+                    <p class="t1-reveal-subtext">I'm ready to help you build something amazing.</p>
+                    <button id="t1-reveal-btn" class="t1-reveal-btn">
+                        <span>Send Me a Message</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
 
-                <!-- Right: Contact Form -->
-                <div class="p-6 rounded-xl glass-card"
-                    style="background: var(--glass-bg, var(--bg-gradient-end)); border: 1px solid var(--border-color);">
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="p-3 rounded-xl shadow-md glass-card"
-                            style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, transparent);">
-                            <svg class="w-6 h-6" style="color: var(--text-primary);" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold gradient-text">Send a Message</h3>
-                            <p class="mt-1" style="color: var(--text-secondary);">Fill out the form below and I'll get
-                                back to you soon.</p>
-                        </div>
-                    </div>
-
-                    <form action="{{ route('contact.store') }}" method="POST" class="space-y-5" id="contactForm">
+                <!-- Actual Form (Hidden Initially) -->
+                <div id="t1-contact-form" class="t1-form-card">
+                    <form action="{{ route('contact.store') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="portfolio_user_id" value="{{ $user->id }}">
-                        <div>
-                            <label for="name" class="block font-medium mb-2" style="color: var(--text-primary);">Your
-                                Name *</label>
-                            <input type="text" id="name" name="name" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="John Doe" value="{{ old('name') }}" aria-required="true">
+                        <input type="hidden" name="portfolio_user_id" value="{{ $portfolioOwnerId ?? $user->id }}">
+                        
+                        <div class="t1-form-group">
+                            <label for="name" class="t1-form-label">Name</label>
+                            <input type="text" id="name" name="name" class="t1-form-input" required placeholder="John Doe" value="{{ old('name') }}">
                         </div>
 
-                        <div>
-                            <label for="email" class="block font-medium mb-2" style="color: var(--text-primary);">Your
-                                Email *</label>
-                            <input type="email" id="email" name="email" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="john@example.com" value="{{ old('email') }}" aria-required="true">
+                        <div class="t1-form-group">
+                            <label for="email" class="t1-form-label">Email</label>
+                            <input type="email" id="email" name="email" class="t1-form-input" required placeholder="john@example.com" value="{{ old('email') }}">
                         </div>
 
-                        <div>
-                            <label for="subject" class="block font-medium mb-2"
-                                style="color: var(--text-primary);">Subject</label>
-                            <input type="text" id="subject" name="subject"
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="Project Collaboration" value="{{ old('subject') }}">
+                        <div class="t1-form-group">
+                            <label for="subject" class="t1-form-label">Subject</label>
+                            <input type="text" id="subject" name="subject" class="t1-form-input" placeholder="Project Inquiry" value="{{ old('subject') }}">
                         </div>
 
-                        <div>
-                            <label for="message" class="block font-medium mb-2"
-                                style="color: var(--text-primary);">Message *</label>
-                            <textarea id="message" name="message" rows="5" required
-                                class="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 resize-none glass-card"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);"
-                                placeholder="Hi {{ $user->name ?? 'there' }}, I'd love to discuss..."
-                                aria-required="true">{{ old('message') }}</textarea>
+                        <div class="t1-form-group">
+                            <label for="message" class="t1-form-label">Message</label>
+                            <textarea id="message" name="message" rows="5" class="t1-form-textarea" required placeholder="Tell me about your project...">{{ old('message') }}</textarea>
                         </div>
 
-                        <button type="submit" id="submitBtn"
-                            class="theme-btn w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                            <span class="flex items-center justify-center gap-2">
-                                <svg id="submitIcon" class="w-5 h-5" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                                Send Message
-                            </span>
-                        </button>
+                        <button type="submit" class="t1-submit-btn">Send Message</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Enhanced JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const popup = document.getElementById('contactPopup');
-            const openBtn = document.getElementById('openPopup');
-            const closeBtn = document.getElementById('closePopup');
-            const body = document.body;
+        document.addEventListener('DOMContentLoaded', function() {
+            const revealBtn = document.getElementById('t1-reveal-btn');
+            const revealWrapper = document.getElementById('t1-form-reveal');
+            const contactForm = document.getElementById('t1-contact-form');
 
-            function openPopup() {
-                popup.classList.remove('hidden');
-                // Prevent background scrolling
-                body.style.overflow = 'hidden';
-                body.style.position = 'fixed';
-                body.style.width = '100%';
-                body.style.height = '100%';
-
-                setTimeout(() => {
-                    popup.style.opacity = '1';
-                    popup.querySelector('.glass-card').style.transform = 'scale(1)';
-                }, 10);
+            if (revealBtn && revealWrapper && contactForm) {
+                revealBtn.addEventListener('click', function() {
+                    // Hide the reveal wrapper
+                    revealWrapper.style.display = 'none';
+                    
+                    // Show the form with animation
+                    contactForm.classList.add('visible');
+                });
             }
-
-            function closePopup() {
-                popup.style.opacity = '0';
-                popup.querySelector('.glass-card').style.transform = 'scale(0.95)';
-
-                setTimeout(() => {
-                    popup.classList.add('hidden');
-                    // Restore background scrolling
-                    body.style.overflow = '';
-                    body.style.position = '';
-                    body.style.width = '';
-                    body.style.height = '';
-                }, 300);
-            }
-
-            openBtn?.addEventListener('click', openPopup);
-            closeBtn?.addEventListener('click', closePopup);
-
-            popup?.addEventListener('click', (e) => {
-                if (e.target === popup) closePopup();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !popup?.classList.contains('hidden')) {
-                    closePopup();
-                }
-            });
         });
     </script>
-
-    <style>
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fade-in 0.5s ease-out;
-        }
-
-        .animate-shake {
-            animation: shake 0.5s ease-in-out;
-        }
-
-        /* Contact Cards - GlassUI.dev style hover */
-        .contact-card {
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="normal"] .contact-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="monochrome"] .contact-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Social Links - GitHub icon visibility fix */
-        .social-link-contact {
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="normal"] .social-link-contact:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-        }
-
-        [data-theme="monochrome"] .social-link-contact:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(255, 255, 255, 0.15);
-        }
-
-        /* GitHub icon color fix */
-        [data-theme="normal"] .github-icon {
-            color: #1a202c !important;
-        }
-
-        [data-theme="monochrome"] .github-icon {
-            color: #ffffff !important;
-        }
-
-        /* Hide normal theme blobs in monochrome mode */
-        [data-theme="monochrome"] .normal-theme-only {
-            display: none;
-        }
-
-        /* Popup specific styles */
-        #contactPopup {
-            z-index: 9999 !important;
-        }
-
-        #contactPopup .glass-card {
-            z-index: 10000 !important;
-        }
-    </style>
 </section>

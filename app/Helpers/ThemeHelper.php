@@ -53,13 +53,17 @@ class ThemeHelper
         }
 
         // Verify theme files exist
-        if (!self::themeFilesExist($theme)) {
-            \Log::error("Theme files missing for: {$theme}");
+        // ✅ FIX: Map 'golden' to 'theme2' for file check
+        $checkTheme = ($theme === 'golden') ? 'theme2' : $theme;
+
+        if (!self::themeFilesExist($checkTheme)) {
+            \Log::error("Theme files missing for: {$checkTheme} (requested: {$theme})");
             self::switchToDefault($user);
             return 'theme1';
         }
 
-        return $theme;
+        // Return mapped theme if it was golden
+        return ($theme === 'golden') ? 'theme2' : $theme;
     }
 
     /**
@@ -68,6 +72,11 @@ class ThemeHelper
      */
     public static function themeFilesExist(string $themeSlug): bool
     {
+        // ✅ FIX: Map 'golden' to 'theme2'
+        if ($themeSlug === 'golden') {
+            $themeSlug = 'theme2';
+        }
+
         $componentPath = resource_path("views/components/{$themeSlug}");
         
         if (!File::exists($componentPath)) {

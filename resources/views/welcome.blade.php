@@ -2,9 +2,16 @@
 
 @section('content')
     @php
-        $theme = $user->active_theme ?? 'theme1';
+        // Use controller variable if available, otherwise fallback to user's active theme
+        $theme = $theme ?? $user->active_theme ?? 'theme1';
+        
         if (request('preview') && request('theme')) {
             $theme = request('theme');
+        }
+
+        // Safety mapping for view rendering
+        if ($theme === 'golden') {
+            $theme = 'theme2';
         }
     @endphp
 

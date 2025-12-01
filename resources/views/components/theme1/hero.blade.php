@@ -1,757 +1,606 @@
-@props(['heroContent', 'techStackSkills'])
+@props(['heroContent', 'techStackSkills', 'user'])
 
-<section id="hero"
-    class="section-full relative overflow-hidden flex items-center justify-center glass-noise min-h-screen w-full"
-    style="background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));">
+<style>
+    /* ==========================================
+       THEME 1: COSMIC NEON & AURORA SOFT LIGHT
+       Internal Styles for Hero Component
+       ========================================== */
 
-    <!-- Floating Particles (Dark Only) -->
-    <div class="hero-particles absolute inset-0 -z-10 pointer-events-none"></div>
+    :root {
+        /* DARK THEME (Cosmic Neon) - Default */
+        --t1-bg-primary: #0B0F1A;
+        --t1-bg-secondary: #0F0A21;
+        --t1-surface-card: rgba(26, 16, 51, 0.6);
+        --t1-text-primary: #FFFFFF;
+        --t1-text-secondary: #C7C7D2;
+        --t1-text-muted: #9A9AB3;
+        --t1-accent-primary: #A56BFF;
+        --t1-accent-glow: #C68BFF;
+        --t1-accent-secondary: #F0B54A;
+        --t1-accent-secondary-glow: #F7CA57;
+        --t1-glow-color: rgba(145, 80, 255, 0.35);
+        --t1-icon-glow: rgba(168, 100, 255, 0.6);
+        --t1-btn-glow: rgba(130, 70, 255, 0.4);
+        --t1-card-shadow: 0 8px 32px 0 rgba(120, 60, 255, 0.25);
+        --t1-gradient-primary: linear-gradient(135deg, #A56BFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #FBD16B 0%, #E8A93C 100%);
+        --t1-border-color: rgba(165, 107, 255, 0.2);
+    }
 
-    <!-- Background Blobs (Light Only) - Centered, no side shadows -->
-    <div class="absolute inset-0 -z-10 normal-theme-only overflow-hidden">
-        <div
-            class="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
-        </div>
-        <div
-            class="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-20 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
-        </div>
+    [data-theme="light"] {
+        /* LIGHT THEME (Aurora Soft Light) */
+        --t1-bg-primary: #F8F9FC;
+        --t1-bg-secondary: #FAFBFF;
+        --t1-surface-card: rgba(255, 255, 255, 0.7);
+        --t1-text-primary: #1A1D23;
+        --t1-text-secondary: #6B7280;
+        --t1-text-muted: #9CA3AF;
+        --t1-accent-primary: #7A5AF8;
+        --t1-accent-glow: #8F6BFF;
+        --t1-accent-secondary: #E89B0C;
+        --t1-accent-secondary-glow: #F7B52C;
+        --t1-glow-color: rgba(122, 90, 248, 0.12);
+        --t1-icon-glow: rgba(122, 90, 248, 0.2);
+        --t1-btn-glow: rgba(122, 90, 248, 0.15);
+        --t1-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+        --t1-gradient-primary: linear-gradient(135deg, #8B5CFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #F7C95A 0%, #E8A93C 100%);
+        --t1-border-color: rgba(122, 90, 248, 0.15);
+    }
+
+    /* Base Layout */
+    .t1-hero-section {
+        background-color: var(--t1-bg-primary);
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Background Effects */
+    .t1-hero-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        z-index: 0;
+        animation: t1-blob-anim 10s infinite alternate;
+    }
+
+    .t1-hero-blob-1 {
+        top: -10%;
+        left: 20%;
+        width: 40vw;
+        height: 40vw;
+        background: var(--t1-accent-glow);
+    }
+
+    .t1-hero-blob-2 {
+        bottom: -10%;
+        right: 10%;
+        width: 35vw;
+        height: 35vw;
+        background: rgba(240, 181, 74, 0.15);
+        animation-delay: -5s;
+    }
+
+    @keyframes t1-blob-anim {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(20px, -20px) scale(1.1); }
+    }
+
+    .t1-hero-particle {
+        position: absolute;
+        background: var(--t1-text-primary);
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: t1-float 20s linear infinite;
+    }
+
+    @keyframes t1-float {
+        0% { transform: translateY(0) rotate(0deg); }
+        100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    /* Container */
+    .t1-hero-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Typography */
+    .t1-hero-title {
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 800;
+        margin: 4rem 0 1.5rem 0;
+        color: var(--t1-text-primary);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        text-shadow: 0 0 40px var(--t1-glow-color);
+    }
+
+    [data-theme="light"] .t1-hero-title {
+        text-shadow: none;
+    }
+
+    .t1-hero-subtitle-wrapper {
+        font-size: clamp(1.25rem, 3vw, 1.875rem);
+        font-weight: 600;
+        color: var(--t1-text-secondary);
+        margin-bottom: 2rem;
+        min-height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .t1-hero-typing-text {
+        background: var(--t1-gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* Social Links (Water Drops) */
+    .t1-hero-social {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .t1-water-drop {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--t1-border-color);
+        box-shadow: 0 4px 20px var(--t1-card-shadow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: var(--t1-text-primary);
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+
+    .t1-water-drop:hover {
+        transform: translateY(-5px) scale(1.1);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 0 20px var(--t1-icon-glow);
+        color: var(--t1-accent-primary);
+    }
+    
+    .t1-water-drop svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+    }
+
+    /* Buttons */
+    .t1-hero-actions {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 4rem;
+    }
+
+    .t1-btn {
+        padding: 1rem 2.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        backdrop-filter: blur(10px);
+    }
+
+    .t1-btn-primary {
+        background: var(--t1-gradient-primary);
+        color: #FFFFFF;
+        box-shadow: 0 0 20px var(--t1-btn-glow);
+    }
+
+    .t1-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px var(--t1-btn-glow);
+        filter: brightness(1.1);
+    }
+
+    .t1-btn-secondary {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--t1-border-color);
+        color: var(--t1-text-primary);
+    }
+
+    [data-theme="light"] .t1-btn-secondary {
+        background: rgba(255, 255, 255, 0.6);
+    }
+
+    .t1-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--t1-accent-primary);
+        color: var(--t1-accent-primary);
+    }
+
+    [data-theme="light"] .t1-btn-secondary:hover {
+        background: #FFFFFF;
+    }
+
+    /* Tech Stack Marquee */
+    .t1-tech-stack-container {
+        background: var(--t1-surface-card);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 1.5rem;
+        padding: 1.5rem 0;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--t1-card-shadow);
+        max-width: 60rem;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .t1-tech-label {
+        color: var(--t1-text-secondary);
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.8;
+    }
+
+    .t1-tech-marquee-wrapper {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .t1-tech-marquee {
+        display: flex;
+        gap: 2rem;
+        width: max-content;
+        animation: t1-scroll 30s linear infinite;
+        padding: 0 1rem;
+    }
+
+    .t1-tech-marquee:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes t1-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); } /* Move 50% because we duplicate the set once */
+    }
+
+    .t1-tech-item {
+        width: 4rem;
+        height: 4rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+
+    .t1-tech-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+    }
+
+    [data-theme="dark"] .t1-tech-item img {
+        filter: drop-shadow(0 0 8px var(--t1-icon-glow));
+    }
+
+    .t1-tech-item:hover {
+        transform: scale(1.2);
+    }
+
+    .t1-tech-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--t1-gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    /* Scroll Indicator - Bottom Center (Fixed) */
+    .t1-scroll-indicator {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 40;
+        opacity: 0.9;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .t1-scroll-indicator:hover {
+        transform: translateX(-50%) translateY(-5px);
+        opacity: 1;
+    }
+
+    .t1-scroll-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .t1-mouse {
+        width: 26px;
+        height: 42px;
+        border: 2px solid var(--t1-accent-primary);
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 0 15px var(--t1-glow-color);
+    }
+
+    .t1-wheel {
+        width: 4px;
+        height: 8px;
+        background: var(--t1-accent-primary);
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+        animation: t1-scroll-wheel 2s infinite;
+    }
+
+    .t1-scroll-text {
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--t1-accent-primary);
+        font-weight: 600;
+        margin-top: 0.25rem;
+        text-shadow: 0 0 10px var(--t1-glow-color);
+    }
+
+    @keyframes t1-scroll-wheel {
+        0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(15px); }
+    }
+</style>
+
+<section id="hero" class="t1-hero-section">
+    <!-- Background Elements -->
+    <div class="t1-hero-blob t1-hero-blob-1"></div>
+    <div class="t1-hero-blob t1-hero-blob-2"></div>
+    
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        @for($i = 0; $i < 20; $i++)
+            <div class="t1-hero-particle" style="
+                top: {{ rand(0, 100) }}%;
+                left: {{ rand(0, 100) }}%;
+                animation-delay: {{ rand(0, 5) }}s;
+                animation-duration: {{ rand(10, 20) }}s;
+                width: {{ rand(2, 4) }}px;
+                height: {{ rand(2, 4) }}px;
+            "></div>
+        @endfor
     </div>
 
-    <!-- Hero Background Image -->
-    @if (!empty($heroContent['hero_image_url']))
-        <div class="absolute inset-0 -z-20">
-            <img src="{{ $heroContent['hero_image_url'] }}" alt="Hero Background"
-                class="w-full h-full object-cover opacity-10">
-        </div>
-    @endif
-
-    <div class="mx-auto text-center fade-in relative z-10 px-6 md:px-12 lg:px-20 w-full max-w-7xl">
-        <!-- Heading -->
-        <h1 class="text-5xl mt-14 md:text-7xl lg:text-8xl font-bold mb-6 
-           inline-flex gap-4 items-center justify-center flex-wrap"
-            style="color: var(--text-primary); line-height: 1.2;">
-
-            <span class="gradient-text animate-gradient whitespace-nowrap">
-                {{ $heroContent['user_name'] ?? 'Your Name' }}
-            </span>
+    <div class="t1-hero-container">
+        <!-- Main Title -->
+        <h1 class="t1-hero-title">
+            {{ $heroContent['user_name'] ?? $user->full_name ?? $user->name }}
         </h1>
 
-        <!-- TYPING TEXT WITHOUT CURSOR -->
-        @if (!empty($heroContent['typing_texts']) && is_array($heroContent['typing_texts']) && count($heroContent['typing_texts']) > 0)
-            <div class="mb-2 mt-0 md:mt-2 min-h-[40px] flex justify-center items-center">
-                <p class="text-xl md:text-3xl font-semibold" style="color: var(--text-secondary);">
-                    <span id="typed-text" class="min-w-[300px] text-center inline-block"></span>
-                </p>
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const texts = @json(array_map(function ($text) {
-                        return is_array($text) && isset($text['text']) ? $text['text'] : $text;
-                    }, array_values($heroContent['typing_texts'])));
-                    const typedElement = document.getElementById('typed-text');
-                    if (!typedElement || !Array.isArray(texts) || texts.length === 0) {
-                        typedElement && (typedElement.textContent = 'Full-Stack Developer');
-                        return;
-                    }
-
-                    let textIndex = 0, charIndex = 0, isDeleting = false, timeoutId = null;
-
-                    function type() {
-                        const currentText = String(texts[textIndex]);
-                        if (isDeleting) {
-                            typedElement.textContent = currentText.substring(0, charIndex - 1);
-                            charIndex--;
-                        } else {
-                            typedElement.textContent = currentText.substring(0, charIndex + 1);
-                            charIndex++;
-                        }
-
-                        let speed = isDeleting ? 50 : 100;
-                        if (!isDeleting && charIndex === currentText.length) {
-                            speed = 2000; isDeleting = true;
-                        } else if (isDeleting && charIndex === 0) {
-                            isDeleting = false;
-                            textIndex = (textIndex + 1) % texts.length;
-                            speed = 500;
-                        }
-                        timeoutId = setTimeout(type, speed);
-                    }
-
-                    setTimeout(type, 800);
-                    window.addEventListener('beforeunload', () => timeoutId && clearTimeout(timeoutId));
-                });
-            </script>
-        @else
-            <div class="mb-8 mt-2 md:mt-10 ">
-                <p class="text-xl md:text-3xl font-semibold" style="color: var(--text-secondary);">
-                    Problem solver & Innovator
-                </p>
+        <!-- Typing Animation -->
+        @if(!empty($heroContent['typing_texts']))
+            <div class="t1-hero-subtitle-wrapper">
+                <span class="t1-hero-typing-text" id="t1-typing-text"></span>
+                <span class="animate-pulse ml-1" style="color: var(--t1-accent-primary)">|</span>
             </div>
         @endif
 
-        <!-- Social Links - FIXED ICON VISIBILITY -->
+        <!-- Social Links -->
         @php
             $socialLinks = $heroContent['social_links'] ?? [];
-            if (is_string($socialLinks)) {
-                $socialLinks = json_decode($socialLinks, true) ?? [];
+            // Fallback to User model links if hero content links are empty
+            if (empty($socialLinks)) {
+                if (!empty($user->github_url)) $socialLinks['github'] = $user->github_url;
+                if (!empty($user->linkedin_url)) $socialLinks['linkedin'] = $user->linkedin_url;
             }
         @endphp
-        @if (!empty($socialLinks))
-            <div class="flex justify-center gap-6 mb-12 mt-8">
-                @foreach ($socialLinks as $social)
-                    @if (!empty($social['url'] ?? ''))
-                        <a href="{{ $social['url'] }}" target="_blank" class="water-drop group relative">
 
+        @if(!empty($socialLinks))
+            <div class="t1-hero-social">
+                @foreach($socialLinks as $key => $value)
+                    @php
+                        $url = $value;
+                        $platform = $key;
+                        $icon = null;
 
-                            @if (!empty($social['icon'] ?? ''))
-                                <img src="{{ $social['icon'] }}" alt="{{ $social['name'] ?? 'Social' }}"
-                                    class="social-icon w-7 h-7 group-hover:scale-110 transition-transform"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        if (is_array($value)) {
+                            $url = $value['url'] ?? null;
+                            $platform = $value['platform'] ?? $value['name'] ?? $key;
+                            $icon = $value['icon'] ?? null;
+                        }
+                        
+                        // Clean up platform name for comparison
+                        $platformLower = strtolower($platform);
+                        
+                        // If key is numeric (indexed array), and we didn't get a good platform name, try to guess from URL
+                        if (is_numeric($key) && ($platform === $key || $platform === 'link')) {
+                            if (str_contains($url, 'github.com')) $platformLower = 'github';
+                            elseif (str_contains($url, 'linkedin.com')) $platformLower = 'linkedin';
+                            elseif (str_contains($url, 'twitter.com') || str_contains($url, 'x.com')) $platformLower = 'twitter';
+                            elseif (str_contains($url, 'instagram.com')) $platformLower = 'instagram';
+                        }
+                    @endphp
+
+                    @if($url && is_string($url))
+                        <a href="{{ $url }}" target="_blank" class="t1-water-drop" aria-label="{{ ucfirst($platform) }}">
+                            @if(str_contains($platformLower, 'github'))
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.48 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                            @elseif(str_contains($platformLower, 'linkedin'))
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"></path></svg>
+                            @elseif(str_contains($platformLower, 'twitter') || str_contains($platformLower, 'x'))
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
+                            @elseif(str_contains($platformLower, 'instagram'))
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772 4.902 4.902 0 011.772-1.153c.636-.247 1.363-.416 2.427-.465 1.067-.047 1.407-.06 4.123-.06h.08zm0-2c-2.739 0-3.073.01-4.15.059-1.076.05-1.812.22-2.465.474a6.908 6.908 0 00-2.508 1.634 6.908 6.908 0 00-1.634 2.508c-.254.653-.424 1.389-.474 2.465-.049 1.077-.059 1.412-.059 4.15s.01 3.073.059 4.15c.05 1.076.22 1.812.474 2.465a6.908 6.908 0 001.634 2.508 6.908 6.908 0 002.508 1.634c.653.254 1.389.424 2.465.474 1.077.049 1.412.059 4.15.059s3.073-.01 4.15-.059c1.076-.05 1.812-.22 2.465-.474a6.908 6.908 0 002.508-1.634 6.908 6.908 0 001.634-2.508c.254-.653.424-1.389.474-2.465.049-1.077.059-1.412.059-4.15s-.01-3.073-.059-4.15c-.05-1.076-.22-1.812-.474-2.465a6.908 6.908 0 00-1.634-2.508 6.908 6.908 0 00-2.508-1.634c-.653-.254-1.389-.424-2.465-.474-1.077-.049-1.412-.059-4.15-.059H12.315zM12.315 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12.315 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" clip-rule="evenodd"></path></svg>
+                            @elseif($icon)
+                                <img src="{{ $icon }}" alt="{{ $platform }}" style="width: 24px; height: 24px; object-fit: contain;">
+                            @else
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>
                             @endif
-
-                            <svg class="{{ !empty($social['icon']) ? 'hidden' : '' }} w-7 h-7 group-hover:scale-110 transition-transform"
-                                fill="currentColor" style="color: var(--text-primary);" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-
-                            <span
-                                class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs font-medium z-50"
-                                style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                {{ $social['name'] ?? 'Social' }}
-                            </span>
                         </a>
                     @endif
                 @endforeach
             </div>
         @endif
-        <!-- CTA BUTTONS - LIQUID GLASS FINISH -->
-        @if (($heroContent['btn_contact_enabled'] ?? false) || ($heroContent['btn_projects_enabled'] ?? false))
-            <div class="flex flex-col sm:flex-row gap-12 justify-center items-center mb-12 mt-12">
 
-                @if ($heroContent['btn_contact_enabled'] ?? false)
-                    <a href="#contact"
-                        class="hero-cta-primary group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all duration-300 overflow-hidden">
-                        <span class="relative z-10">{{ $heroContent['btn_contact_text'] ?? 'Get In Touch' }}</span>
-                        <svg class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                            fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                        </svg>
-                    </a>
-                @endif
+        <!-- CTA Buttons -->
+        <div class="t1-hero-actions">
+            @if($heroContent['btn_projects_enabled'] ?? true)
+                <a href="#projects" class="t1-btn t1-btn-primary">
+                    {{ $heroContent['btn_projects_text'] ?? 'View Projects' }}
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            @endif
+            
+            @if($heroContent['btn_contact_enabled'] ?? true)
+                <a href="#contact" class="t1-btn t1-btn-secondary">
+                    {{ $heroContent['btn_contact_text'] ?? 'Contact Me' }}
+                    <i class="fas fa-envelope"></i>
+                </a>
+            @endif
+        </div>
 
-                @if ($heroContent['btn_projects_enabled'] ?? false)
-                    <a href="#projects"
-                        class="hero-cta-secondary group inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all duration-300 border-2">
-                        <span>{{ $heroContent['btn_projects_text'] ?? 'View My Work' }}</span>
-                        <svg class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform rotate-180"
-                            fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                        </svg>
-                    </a>
-                @endif
-            </div>
-        @endif
-
-
-
-        <!-- Tech Stack with Running Marquee - FIXED ICON VISIBILITY -->
-        @if (($heroContent['tech_stack_enabled'] ?? false) && $techStackSkills->isNotEmpty())
-            <div class="tech-stack-container inline-flex flex-col items-center gap-4 px-8 py-4 rounded-2xl shadow-lg border mb-12 mt-3 w-full max-w-4xl mx-auto"
-                style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                <span class="text-gray-600 font-medium text-lg" style="color: var(--text-secondary);">Tech Stack:</span>
-                <div class="relative w-full overflow-hidden">
-                    <div class="flex items-center gap-8 animate-marquee whitespace-nowrap">
-                        @foreach ($techStackSkills as $skill)
-                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}">
-                                @if ($skill->url)
-                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
-                                        class="tech-stack-icon w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                @endif
-                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center rounded-full hover:scale-125 transition-transform cursor-pointer"
-                                    style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">
-                                    <i class="fas fa-code text-white text-sm"></i>
+        <!-- Tech Stack Marquee -->
+        @if(($heroContent['tech_stack_enabled'] ?? true) && isset($techStackSkills) && $techStackSkills->isNotEmpty())
+            <div class="t1-tech-stack-container">
+                <span class="t1-tech-label">Tech Stack</span>
+                <div class="t1-tech-marquee-wrapper">
+                    <div class="t1-tech-marquee">
+                        <!-- Duplicate items for seamless loop -->
+                        @for($i = 0; $i < 4; $i++)
+                            @foreach($techStackSkills as $skill)
+                                <div class="t1-tech-item" title="{{ $skill->name }}">
+                                    @if($skill->url)
+                                        <img src="{{ $skill->url }}" 
+                                             alt="{{ $skill->name }}" 
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    @endif
+                                    <div class="{{ $skill->url ? 'hidden' : 'flex' }} t1-tech-fallback">
+                                        <i class="fas fa-code text-sm"></i>
+                                    </div>
                                 </div>
-                                <span
-                                    class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs z-50"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    {{ $skill->name }}
-                                </span>
-                            </div>
-                        @endforeach
-                        @foreach ($techStackSkills as $skill)
-                            <div class="group relative tech-skill flex-shrink-0" data-skill-id="{{ $skill->id }}-dup">
-                                @if ($skill->url)
-                                    <img src="{{ $skill->url }}" alt="{{ $skill->name }}"
-                                        class="tech-stack-icon w-10 h-10 hover:scale-125 transition-transform cursor-pointer"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                @endif
-                                <div class="{{ $skill->url ? 'hidden' : '' }} w-10 h-10 flex items-center justify-center rounded-full hover:scale-125 transition-transform cursor-pointer"
-                                    style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">
-                                    <i class="fas fa-code text-white text-sm"></i>
-                                </div>
-                                <span
-                                    class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs z-50"
-                                    style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    {{ $skill->name }}
-                                </span>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @endfor
                     </div>
                 </div>
             </div>
         @endif
+    </div>
 
-        <!-- Scroll Indicator - FIXED POSITION -->
-        <div class="scroll-indicator animate-bounce fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40">
-            <a href="#about" class="flex flex-col items-center gap-2 transition-all duration-300"
-                style="color: var(--text-muted);">
-                <span class="text-sm font-medium">Scroll to explore</span>
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd" />
-                </svg>
-            </a>
-        </div>
+    <!-- Scroll Indicator -->
+    <div class="t1-scroll-indicator">
+        <a href="#about" class="t1-scroll-link">
+            <div class="t1-mouse">
+                <div class="t1-wheel"></div>
+            </div>
+            <span class="t1-scroll-text">Scroll</span>
+        </a>
     </div>
 </section>
 
-<!-- Floating Particles Script (Dark Only) -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const particlesContainer = document.querySelector('.hero-particles');
-        if (!particlesContainer) return;
+    document.addEventListener('DOMContentLoaded', function() {
+        const texts = @json($heroContent['typing_texts'] ?? []);
+        const typingElement = document.getElementById('t1-typing-text');
+        
+        if (texts.length > 0 && typingElement) {
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typeSpeed = 100;
 
-        function updateParticles() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-            if (isDark && particlesContainer.children.length === 0) {
-                const particleCount = 40;
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'absolute w-1 h-1 bg-white rounded-full opacity-20 animate-float';
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.top = `${Math.random() * 100}%`;
-                    particle.style.animationDelay = `${Math.random() * 5}s`;
-                    particle.style.animationDuration = `${5 + Math.random() * 10}s`;
-                    particlesContainer.appendChild(particle);
+            function type() {
+                const currentTextObj = texts[textIndex];
+                const currentText = typeof currentTextObj === 'string' ? currentTextObj : (currentTextObj.text || '');
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                    typeSpeed = 50;
+                } else {
+                    typingElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                    typeSpeed = 100;
                 }
-            } else if (!isDark) {
-                particlesContainer.innerHTML = '';
+
+                if (!isDeleting && charIndex === currentText.length) {
+                    isDeleting = true;
+                    typeSpeed = 2000; // Pause at end
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    typeSpeed = 500; // Pause before new text
+                }
+
+                setTimeout(type, typeSpeed);
             }
+
+            type();
         }
 
-        updateParticles();
-
-        // Listen for theme changes
-        const observer = new MutationObserver(updateParticles);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
-        });
+        // Hide scroll indicator when footer appears
+        const scrollIndicator = document.querySelector('.t1-scroll-indicator');
+        
+        if (scrollIndicator) {
+            window.addEventListener('scroll', function() {
+                const footer = document.querySelector('footer');
+                if (footer) {
+                    const footerRect = footer.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    
+                    // Hide indicator when footer starts appearing
+                    if (footerRect.top <= windowHeight) {
+                        scrollIndicator.style.opacity = '0';
+                        scrollIndicator.style.pointerEvents = 'none';
+                    } else {
+                        scrollIndicator.style.opacity = '0.9';
+                        scrollIndicator.style.pointerEvents = 'auto';
+                    }
+                }
+            });
+        }
     });
 </script>
-
-<!-- COMPLETE STYLES -->
-<style>
-    @keyframes blob {
-
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-        }
-
-        33% {
-            transform: translate(30px, -50px) scale(1.1);
-        }
-
-        66% {
-            transform: translate(-20px, 20px) scale(0.9);
-        }
-    }
-
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @keyframes marquee {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(0deg);
-        }
-
-        50% {
-            transform: translateY(-20px) rotate(5deg);
-        }
-    }
-
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
-
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
-
-    .animate-gradient {
-        background-size: 200% 200%;
-        animation: gradient 3s ease infinite;
-    }
-
-    .animate-marquee {
-        animation: marquee 25s linear infinite;
-    }
-
-    .animate-marquee:hover {
-        animation-play-state: paused;
-    }
-
-    .animate-float {
-        animation: float linear infinite;
-    }
-
-    .gradient-text {
-        background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent !important;
-        display: inline-block;
-        padding: 0 4px;
-    }
-
-    /* Fix text rendering and prevent clipping */
-    h1 {
-        overflow: visible !important;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    h1 span {
-        display: inline-block;
-        overflow: visible !important;
-    }
-
-    /* ==========================================
-       CTA BUTTONS - LIQUID GLASS FINISH
-       ========================================== */
-    .hero-cta-primary,
-    .hero-cta-secondary {
-        position: relative;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 2px solid rgba(255, 255, 255, 0.18);
-    }
-
-    /* PRIMARY BUTTON - Light Mode */
-    [data-theme="light"] .hero-cta-primary {
-        background: rgba(255, 255, 255, 0.25);
-        box-shadow:
-            0 8px 32px 0 rgba(59, 130, 246, 0.37),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-        color: #1e40af;
-    }
-
-    [data-theme="light"] .hero-cta-primary::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 9999px;
-        padding: 2px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-    }
-
-    [data-theme="light"] .hero-cta-primary:hover {
-        background: rgba(255, 255, 255, 0.35);
-        box-shadow:
-            0 12px 48px 0 rgba(59, 130, 246, 0.5),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* PRIMARY BUTTON - Dark Mode */
-    [data-theme="dark"] .hero-cta-primary {
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.1),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    [data-theme="dark"] .hero-cta-primary::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 9999px;
-        padding: 2px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-    }
-
-    [data-theme="dark"] .hero-cta-primary:hover {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow:
-            0 12px 48px 0 rgba(255, 255, 255, 0.1),
-            inset 0 2px 6px rgba(255, 255, 255, 0.15),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* SECONDARY BUTTON - Light Mode */
-    [data-theme="light"] .hero-cta-secondary {
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.1),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.05);
-        color: #1e293b;
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    [data-theme="light"] .hero-cta-secondary:hover {
-        background: rgba(255, 255, 255, 0.3);
-        box-shadow:
-            0 12px 48px 0 rgba(0, 0, 0, 0.15),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.1);
-        transform: translateY(-3px);
-        border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    /* SECONDARY BUTTON - Dark Mode */
-    [data-theme="dark"] .hero-cta-secondary {
-        background: rgba(255, 255, 255, 0.05);
-        box-shadow:
-            0 8px 32px 0 rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.08),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-        color: #e5e7eb;
-        border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    [data-theme="dark"] .hero-cta-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow:
-            0 12px 48px 0 rgba(255, 255, 255, 0.08),
-            inset 0 2px 6px rgba(255, 255, 255, 0.12),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    /* ==========================================
-       SOCIAL LINKS - FIXED ICON VISIBILITY
-       ========================================== */
-    .social-link {
-        background: var(--card-bg);
-        border-color: var(--border-color);
-    }
-
-    /* Light mode - Make dark icons visible with slight opacity */
-    [data-theme="light"] .social-icon {
-        filter: none !important;
-        opacity: 0.8;
-    }
-
-    [data-theme="light"] .social-link:hover .social-icon {
-        opacity: 1;
-    }
-
-    /* Dark mode - Force bright filter on dark icons */
-    [data-theme="dark"] .social-icon {
-        filter: brightness(0) invert(1) !important;
-        opacity: 0.9;
-    }
-
-    [data-theme="dark"] .social-link:hover .social-icon {
-        opacity: 1;
-    }
-
-    /* Tech Stack Icons - Show in original colors */
-    [data-theme="light"] .tech-stack-icon {
-        filter: none !important;
-        opacity: 0.85;
-    }
-
-    [data-theme="light"] .tech-skill:hover .tech-stack-icon {
-        opacity: 1;
-    }
-
-    /* Dark mode - Keep original colors, just brighten visibility */
-    [data-theme="dark"] .tech-stack-icon {
-        filter: brightness(1.2) !important;
-        opacity: 0.95;
-    }
-
-    [data-theme="dark"] .tech-skill:hover .tech-stack-icon {
-        filter: brightness(1.4) !important;
-        opacity: 1;
-    }
-
-    [data-theme="light"] .social-link:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        border-color: #3b82f6;
-        background: #ffffff;
-    }
-
-    [data-theme="dark"] .social-link {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(12px);
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    [data-theme="dark"] .social-link:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 48px rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* ==========================================
-       SCROLL INDICATOR - FIXED & STABLE
-       ========================================== */
-    .scroll-indicator {
-        pointer-events: auto;
-        position: fixed;
-        bottom: 1.75rem;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 40;
-    }
-
-    .scroll-indicator a {
-        opacity: 1;
-    }
-
-    [data-theme="light"] .scroll-indicator a:hover {
-        color: #3b82f6;
-        transform: translateY(4px);
-    }
-
-    [data-theme="dark"] .scroll-indicator a:hover {
-        color: rgba(255, 255, 255, 0.9);
-        transform: translateY(4px);
-    }
-
-    /* ==========================================
-       TECH STACK - NO EDGE SHADES
-       ========================================== */
-    .tech-stack-container {
-        backdrop-filter: blur(12px);
-    }
-
-    [data-theme="light"] .tech-stack-container {
-        background: rgba(255, 255, 255, 0.7) !important;
-        border-color: rgba(229, 231, 235, 0.8) !important;
-    }
-
-    [data-theme="dark"] .tech-stack-container {
-        background: rgba(255, 255, 255, 0.05) !important;
-        border-color: rgba(255, 255, 255, 0.15) !important;
-    }
-
-    /* Theme-specific visibility */
-    [data-theme="dark"] .normal-theme-only {
-        display: none !important;
-    }
-
-    [data-theme="light"] .hero-particles {
-        display: none !important;
-    }
-
-    /* Glassmorphism */
-    .glass-noise {
-        backdrop-filter: blur(12px) saturate(180%);
-        -webkit-backdrop-filter: blur(12px) saturate(180%);
-    }
-
-    .glass-card,
-    .glass-button {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-
-    [data-theme="light"] .glass-card,
-    [data-theme="light"] .glass-button {
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(229, 231, 235, 0.8);
-    }
-
-    [data-theme="dark"] .glass-card,
-    [data-theme="dark"] .glass-button {
-        background: rgba(30, 30, 30, 0.3);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* ==========================================
-   LIQUID GLASS EFFECT FOR SOCIAL LINKS
-   ========================================== */
-    .liquid-glass-icon {
-        position: relative;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 2px solid rgba(255, 255, 255, 0.18);
-        border-radius: 9999px;
-        /* fully round */
-        overflow: hidden;
-    }
-
-    /* Light Mode */
-    [data-theme="light"] .liquid-glass-icon {
-        background: rgba(255, 255, 255, 0.35);
-        box-shadow:
-            0 8px 32px rgba(59, 130, 246, 0.25),
-            inset 0 2px 4px rgba(255, 255, 255, 0.5),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Dark Mode */
-    [data-theme="dark"] .liquid-glass-icon {
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.5),
-            inset 0 2px 4px rgba(255, 255, 255, 0.1),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Hover */
-    .liquid-glass-icon:hover {
-        transform: translateY(-6px);
-        transition: 0.3s ease;
-    }
-
-    /* Light hover */
-    [data-theme="light"] .liquid-glass-icon:hover {
-        background: rgba(255, 255, 255, 0.45);
-        box-shadow:
-            0 12px 48px rgba(59, 130, 246, 0.35),
-            inset 0 2px 6px rgba(255, 255, 255, 0.6),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Dark hover */
-    [data-theme="dark"] .liquid-glass-icon:hover {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow:
-            0 12px 48px rgba(255, 255, 255, 0.1),
-            inset 0 2px 6px rgba(255, 255, 255, 0.15),
-            inset 0 -2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-   /* ⭐ CRYSTAL CLEAR LIQUID GLASS ICON */
-.water-drop {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-
-    /* Almost fully transparent centre */
-    background: rgba(255, 255, 255, 0.08);
-
-    /* Very low blur = crystal clear */
-    backdrop-filter: blur(6px) saturate(180%);
-    -webkit-backdrop-filter: blur(6px) saturate(180%);
-
-    /* Sharp glossy edges */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-
-    /* Strong glass edge highlight */
-    box-shadow:
-        inset 0 1px 4px rgba(255, 255, 255, 0.4),  /* top highlight */
-        inset 0 -2px 6px rgba(0, 0, 0, 0.3),      /* bottom shadow */
-        0 8px 22px rgba(0, 0, 0, 0.35);           /* outside depth */
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s ease;
-}
-
-/* Curved top highlight (very glassy) */
-.water-drop::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 6px;
-    width: 70%;
-    height: 28%;
-    background: rgba(255, 255, 255, 0.35);
-    filter: blur(6px);
-    border-radius: 50%;
-    opacity: 0.55;
-}
-
-/* Bottom shine */
-.water-drop::after {
-    content: '';
-    position: absolute;
-    bottom: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 26%;
-    height: 16%;
-    background: rgba(255, 255, 255, 0.18);
-    filter: blur(6px);
-    border-radius: 9999px;
-}
-
-/* Hover effect */
-.water-drop:hover {
-    transform: translateY(-5px) scale(1.05);
-    background: rgba(255, 255, 255, 0.12);
-}
-
-/* ICON inside */
-.water-drop img {
-    width: 28px;
-    height: 28px;
-    opacity: 0.95;
-    transition: transform 0.3s ease;
-}
-
-.water-drop:hover img {
-    transform: scale(1.18);
-}
-
-</style>

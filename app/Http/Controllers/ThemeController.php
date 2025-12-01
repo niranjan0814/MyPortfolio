@@ -12,9 +12,10 @@ class ThemeController extends Controller
      */
     public function preview($theme)
     {
-        $validThemes = ['theme1', 'theme2', 'theme3'];
+        // Check if theme exists in DB
+        $themeExists = \App\Models\Theme::where('slug', $theme)->exists();
         
-        if (!in_array($theme, $validThemes)) {
+        if (!$themeExists) {
             abort(404, 'Theme not found');
         }
 
@@ -44,7 +45,7 @@ class ThemeController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'theme' => 'required|in:theme1,theme2,theme3'
+            'theme' => 'required|exists:themes,slug'
         ]);
 
         $user = auth()->user();

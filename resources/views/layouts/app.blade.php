@@ -38,6 +38,11 @@
         if (request('preview') && request('theme')) {
             $activeTheme = request('theme');
         }
+
+        // Safety mapping for view rendering
+        if ($activeTheme === 'golden') {
+            $activeTheme = 'theme2';
+        }
     @endphp
 
     {{-- All themes use Tailwind + inline component styling --}}
@@ -197,23 +202,86 @@
 
     <!-- Back to Top Button - Theme Aware -->
     <button id="backToTop"
-        class="fixed bottom-8 right-8 p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50 back-to-top-btn">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        class="opacity-0 pointer-events-none transition-all duration-300 z-50 back-to-top-btn"
+        style="
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--t1-surface-card, rgba(26, 16, 51, 0.6));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--t1-border-color, rgba(165, 107, 255, 0.2));
+            box-shadow: var(--t1-card-shadow, 0 8px 32px 0 rgba(120, 60, 255, 0.25));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--t1-text-primary, #FFFFFF);
+        ">
+        <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
                 d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
                 clip-rule="evenodd" />
         </svg>
     </button>
 
+    <style>
+        /* Back to Top Button Enhancements */
+        .back-to-top-btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            border-color: var(--t1-accent-primary, #A56BFF) !important;
+            box-shadow: 0 0 30px var(--t1-icon-glow, rgba(168, 100, 255, 0.6)) !important;
+        }
+
+        .back-to-top-btn:active {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Light theme adjustments */
+        [data-theme="light"] .back-to-top-btn {
+            background: rgba(255, 255, 255, 0.7) !important;
+            color: #1A1D23 !important;
+            border-color: rgba(122, 90, 248, 0.15) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+
+        [data-theme="light"] .back-to-top-btn:hover {
+            border-color: #7A5AF8 !important;
+            box-shadow: 0 0 30px rgba(122, 90, 248, 0.2) !important;
+        }
+    </style>
+
     <script>
         // Global JavaScript that works for all themes
         const backToTop = document.getElementById('backToTop');
 
-        // Back to top functionality
+        // Back to top functionality with footer detection
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTop.style.opacity = '1';
-                backToTop.style.pointerEvents = 'auto';
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const footer = document.querySelector('footer');
+            
+            // Show button after scrolling 300px
+            if (scrollPosition > 300) {
+                if (footer) {
+                    // Get footer's position relative to viewport
+                    const footerRect = footer.getBoundingClientRect();
+                    
+                    // Hide button when footer starts entering viewport (top of footer visible)
+                    if (footerRect.top <= windowHeight) {
+                        backToTop.style.opacity = '0';
+                        backToTop.style.pointerEvents = 'none';
+                    } else {
+                        backToTop.style.opacity = '1';
+                        backToTop.style.pointerEvents = 'auto';
+                    }
+                } else {
+                    backToTop.style.opacity = '1';
+                    backToTop.style.pointerEvents = 'auto';
+                }
             } else {
                 backToTop.style.opacity = '0';
                 backToTop.style.pointerEvents = 'none';

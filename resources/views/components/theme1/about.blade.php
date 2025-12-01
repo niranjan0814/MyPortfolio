@@ -1,205 +1,623 @@
 @props(['aboutContent'])
-<!-- resources/views/components/about.blade.php -->
-<section id="about"
-    class="section-full relative overflow-hidden pt-12 pb-16"
-    style="background: linear-gradient(135deg, var(--bg-primary), var(--bg-gradient-start), var(--bg-gradient-end));">
+
+<style>
+    /* ==========================================
+       THEME 1: COSMIC NEON - PROFESSIONAL ABOUT
+       Modern Bento Grid Layout
+       ========================================== */
+
+    :root {
+        /* DARK THEME (Cosmic Neon) - Default */
+        --t1-bg-primary: #0B0F1A;
+        --t1-bg-secondary: #0F0A21;
+        --t1-surface-card: rgba(26, 16, 51, 0.6);
+        --t1-text-primary: #FFFFFF;
+        --t1-text-secondary: #C7C7D2;
+        --t1-text-muted: #9A9AB3;
+        --t1-accent-primary: #A56BFF;
+        --t1-accent-glow: #C68BFF;
+        --t1-accent-secondary: #F0B54A;
+        --t1-accent-secondary-glow: #F7CA57;
+        --t1-glow-color: rgba(145, 80, 255, 0.35);
+        --t1-icon-glow: rgba(168, 100, 255, 0.6);
+        --t1-btn-glow: rgba(130, 70, 255, 0.4);
+        --t1-card-shadow: 0 8px 32px 0 rgba(120, 60, 255, 0.25);
+        --t1-gradient-primary: linear-gradient(135deg, #A56BFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #FBD16B 0%, #E8A93C 100%);
+        --t1-border-color: rgba(165, 107, 255, 0.2);
+    }
+
+    [data-theme="light"] {
+        /* LIGHT THEME (Aurora Soft Light) */
+        --t1-bg-primary: #F8F9FC;
+        --t1-bg-secondary: #FAFBFF;
+        --t1-surface-card: rgba(255, 255, 255, 0.7);
+        --t1-text-primary: #1A1D23;
+        --t1-text-secondary: #6B7280;
+        --t1-text-muted: #9CA3AF;
+        --t1-accent-primary: #7A5AF8;
+        --t1-accent-glow: #8F6BFF;
+        --t1-accent-secondary: #E89B0C;
+        --t1-accent-secondary-glow: #F7B52C;
+        --t1-glow-color: rgba(122, 90, 248, 0.12);
+        --t1-icon-glow: rgba(122, 90, 248, 0.2);
+        --t1-btn-glow: rgba(122, 90, 248, 0.15);
+        --t1-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+        --t1-gradient-primary: linear-gradient(135deg, #8B5CFF 0%, #5E3AE8 100%);
+        --t1-gradient-secondary: linear-gradient(135deg, #F7C95A 0%, #E8A93C 100%);
+        --t1-border-color: rgba(122, 90, 248, 0.15);
+    }
+
+    /* Section Layout */
+    .t1-about-section {
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+        background: var(--t1-bg-secondary);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .t1-about-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Hero Title Section */
+    .t1-about-hero {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .t1-section-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: var(--t1-gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .t1-greeting {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--t1-accent-primary);
+        margin-bottom: 1rem;
+        display: inline-block;
+        position: relative;
+    }
+
+    .t1-greeting::before {
+        content: '👋';
+        position: absolute;
+        left: -3rem;
+        animation: t1-wave 2s infinite;
+    }
+
+    @keyframes t1-wave {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(20deg); }
+        75% { transform: rotate(-20deg); }
+    }
+
+    /* Bento Grid Layout */
+    .t1-bento-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .t1-bento-item {
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 24px;
+        padding: 1.5rem;
+        box-shadow: var(--t1-card-shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .t1-bento-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--t1-gradient-primary);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .t1-bento-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--t1-accent-primary);
+        box-shadow: 0 20px 60px rgba(165, 107, 255, 0.3);
+    }
+
+    .t1-bento-item:hover::before {
+        opacity: 1;
+    }
+
+    /* Profile Image Card */
+    .t1-bento-profile {
+        grid-column: span 4;
+        grid-row: span 2;
+        padding: 0;
+        position: relative;
+    }
+
+    .t1-profile-image-wrapper {
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+    }
+
+    .t1-profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .t1-bento-profile:hover .t1-profile-image {
+        transform: scale(1.05);
+    }
+
+    /* Floating Badges on Profile */
+    .t1-float-badge {
+        position: absolute;
+        padding: 0.5rem 1rem;
+        background: var(--t1-surface-card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 12px;
+        box-shadow: var(--t1-card-shadow);
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .t1-float-badge:hover {
+        transform: scale(1.05);
+        border-color: var(--t1-accent-primary);
+    }
+
+    /* Degree Badge - Bottom Left with Cap Effect */
+    .t1-badge-degree { 
+        bottom: 1.5rem; 
+        left: 1.5rem;
+        padding-left: 3rem; /* Space for the cap */
+        background: var(--t1-surface-card);
+        border-color: var(--t1-accent-primary);
+    }
+
+    .t1-cap-icon {
+        position: absolute;
+        left: -15px;
+        bottom: -5px;
+        width: 50px;
+        height: 50px;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        transform: rotate(-15deg);
+        z-index: 22;
+    }
+
+    /* Description Card - Large */
+    .t1-bento-description {
+        grid-column: span 8;
+        grid-row: span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .t1-description-text {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--t1-text-secondary);
+    }
+
+    /* Stats Cards - Compact */
+    .t1-bento-stat {
+        grid-column: span 3;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 130px;
+        background: var(--t1-surface-card);
+        border: 1px solid var(--t1-border-color);
+    }
+
+    .t1-stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--t1-gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 15px var(--t1-glow-color);
+    }
+
+    .t1-stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--t1-accent-primary);
+        line-height: 1;
+    }
+
+    .t1-stat-label {
+        font-size: 0.875rem;
+        color: var(--t1-text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Skills Card - Full Width */
+    .t1-bento-skills {
+        grid-column: span 12;
+    }
+
+    .t1-skills-header {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--t1-text-primary);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .t1-skills-header::before {
+        content: '';
+        width: 4px;
+        height: 28px;
+        background: var(--t1-gradient-primary);
+        border-radius: 2px;
+    }
+
+    .t1-skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .t1-skill-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--t1-border-color);
+        border-radius: 16px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        min-height: 120px;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .t1-skill-card {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .t1-skill-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--t1-accent-primary);
+        background: var(--t1-surface-card);
+        box-shadow: 0 10px 30px var(--t1-glow-color);
+    }
+
+    .t1-skill-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--t1-gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 20px var(--t1-glow-color);
+    }
+
+    .t1-skill-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+    .t1-skill-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--t1-text-primary);
+        text-align: center;
+    }
+
+    /* CTA Section */
+    .t1-cta-section {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .t1-btn {
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .t1-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .t1-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .t1-btn-primary {
+        background: var(--t1-gradient-primary);
+        color: #FFFFFF;
+        box-shadow: 0 8px 24px var(--t1-btn-glow);
+        border: none;
+    }
+
+    .t1-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px var(--t1-btn-glow);
+    }
+
+    .t1-btn-outline {
+        background: transparent;
+        border: 2px solid var(--t1-border-color);
+        color: var(--t1-text-primary);
+    }
+
+    .t1-btn-outline:hover {
+        border-color: var(--t1-accent-primary);
+        color: var(--t1-accent-primary);
+        background: var(--t1-surface-card);
+        transform: translateY(-3px);
+    }
+
+    .t1-btn span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Background Blobs */
+    .t1-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.25;
+        z-index: 0;
+        animation: t1-blob-float 12s infinite alternate;
+    }
+
+    .t1-blob-1 { 
+        top: -10%; 
+        right: -5%; 
+        width: 600px; 
+        height: 600px; 
+        background: var(--t1-accent-glow); 
+    }
     
-    <!-- Animated background elements -->
-    <div class="absolute inset-0 overflow-hidden normal-theme-only">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-    </div>
+    .t1-blob-2 { 
+        bottom: -10%; 
+        left: -5%; 
+        width: 500px; 
+        height: 500px; 
+        background: var(--t1-accent-secondary); 
+    }
 
-    <!-- Monochrome floating particles -->
-    <div class="hero-particles"></div>
+    @keyframes t1-blob-float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, -40px) scale(1.1); }
+    }
 
-    <div class="container mx-auto max-w-6xl fade-in relative z-10 px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 gradient-text" style="line-height: 1.2;">
-                About Me
-            </h2>
-            <div class="h-1 w-32 mx-auto rounded-full"
-                 style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .t1-bento-profile {
+            grid-column: span 12;
+            grid-row: span 1;
+        }
+
+        .t1-profile-image-wrapper {
+            min-height: 350px;
+        }
+
+        .t1-bento-description {
+            grid-column: span 12;
+        }
+
+        .t1-bento-stat {
+            grid-column: span 6;
+        }
+
+        .t1-section-title {
+            font-size: 3rem;
+        }
+
+        .t1-greeting {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .t1-section-title {
+            font-size: 2.5rem;
+        }
+
+        .t1-greeting {
+            font-size: 1.25rem;
+        }
+
+        .t1-greeting::before {
+            left: -2rem;
+        }
+
+        .t1-bento-stat {
+            grid-column: span 12;
+        }
+
+        .t1-skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .t1-cta-section {
+            flex-direction: column;
+        }
+
+        .t1-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .t1-profile-image-wrapper {
+            min-height: 300px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t1-skills-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section id="about" class="t1-about-section">
+    <!-- Background Elements -->
+    <div class="t1-blob t1-blob-1"></div>
+    <div class="t1-blob t1-blob-2"></div>
+
+    <div class="t1-about-container">
+        <!-- Hero Title Section -->
+        <div class="t1-about-hero">
+            <h2 class="t1-section-title">About Me</h2>
+            <br>
+            <div class="t1-greeting">
+                {{ $aboutContent['about_greeting'] ?? "Hi, I'm Niranjan!" }}
+            </div>
         </div>
 
-        <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-            <!-- Left Side - Profile Image (UPDATED: moved up) -->
-            <div class="flex-shrink-0 -mt-20 lg:-mt-16">
-                <div class="relative group">
-                    <div class="absolute inset-0 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-110"
-                         style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));"></div>
-                    <div class="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700 scale-105 animate-pulse"
-                         style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));"></div>
-
-                    <div class="relative">
-                        <div class="absolute inset-0 rounded-full animate-spin-slow p-1"
-                             style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));">
-                            <div class="w-full h-full rounded-full"
-                                 style="background: var(--bg-primary);"></div>
-                        </div>
-
-                        <div class="relative w-64 h-64 md:w-72 md:h-72 rounded-full overflow-hidden shadow-2xl group hover:scale-105 transition-transform duration-500 mx-auto glass-card"
-                             style="border: 10px solid var(--card-bg);">
-                            <div class="absolute inset-0"
-                                 style="background: linear-gradient(135deg, #f97316, #ec4899, #ef4444);"></div>
-                            <img src="{{ $aboutContent['user']->profile_image ?? '/images/profile.png' }}"
-                                alt="{{ $aboutContent['profile_name'] ?? 'Profile' }}"
-                                class="absolute inset-0 w-full h-full object-cover object-center mix-blend-normal" />
-
-                            <div class="absolute -top-4 right-0 px-4 py-1 rounded-full shadow-md rotate-12 glass-button"
-                                 style="background: var(--glass-bg, var(--accent-blue)); color: var(--text-primary); border: 1px solid var(--glass-border, var(--border-color));">
-                                <span class="text-sm font-semibold">{{ $aboutContent['profile_gpa_badge'] ?? 'GPA 3.79' }}</span>
-                            </div>
-                        </div>
-
-                        <div class="absolute -top-2 -right-2 md:-top-4 md:-right-4 px-4 py-2 md:px-6 md:py-3 rounded-full shadow-lg transform rotate-12 hover:rotate-0 transition-transform duration-300 glass-button"
-                             style="background: var(--glass-bg, linear-gradient(135deg, #10b981, #3b82f6)); color: var(--text-primary); border: 1px solid var(--glass-border, var(--border-color));">
-                            <span class="font-bold text-sm md:text-lg">{{ $aboutContent['profile_degree_badge'] ?? 'BSc(Hons)SE' }}</span>
-                        </div>
+        <!-- Bento Grid Layout -->
+        <div class="t1-bento-grid">
+            <!-- Profile Image Card -->
+            <div class="t1-bento-item t1-bento-profile">
+                <div class="t1-profile-image-wrapper">
+                    <img src="{{ $aboutContent['user']->profile_image ?? '/images/profile.png' }}"
+                         alt="{{ $aboutContent['profile_name'] ?? 'Profile' }}"
+                         class="t1-profile-image" />
+                    
+                    <!-- Degree Badge with Cap -->
+                    <div class="t1-float-badge t1-badge-degree">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4729/4729356.png" class="t1-cap-icon" alt="Graduation Cap">
+                        <span>{{ $aboutContent['profile_degree_badge'] ?? 'BSc(Hons)SE' }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Side - About Content -->
-            <div class="flex-1 max-w-2xl">
-                <div class="space-y-6">
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 mb-4">
-                            
-                            <h3 class="text-2xl md:text-3xl font-bold" style="color: var(--text-primary);">
-                                {{ $aboutContent['about_greeting'] ?? "Hi, I'm Niranjan!" }}
-                            </h3>
-                        </div>
+            <!-- Description Card (Large) -->
+            <div class="t1-bento-item t1-bento-description">
+                <div class="t1-description-text">
+                    {!! $aboutContent['about_description'] ?? 'Driven and innovative undergraduate specializing in Software Engineering.' !!}
+                </div>
+                
+                <!-- CTA Buttons Inside Description -->
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="#contact" class="t1-btn t1-btn-primary">
+                        <span>{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
 
-                        <p class="text-base md:text-lg leading-relaxed" style="color: var(--text-secondary);">
-                            {!! $aboutContent['about_description'] ?? 'Driven and innovative undergraduate specializing in Software Engineering.' !!}
-                        </p>
-                    </div>
-
-                    <!-- Quick Stats -->
-                    <div class="grid grid-cols-2 gap-4 pt-6">
-                        @php
-                            $stats = [
-                                'projects' => ['count' => $aboutContent['stat_projects_count'], 'label' => $aboutContent['stat_projects_label'], 'gradient' => 'from-blue-400 to-blue-600'],
-                                'technologies' => ['count' => $aboutContent['stat_technologies_count'], 'label' => $aboutContent['stat_technologies_label'], 'gradient' => 'from-purple-400 to-purple-600'],
-                                'team' => ['count' => $aboutContent['stat_team_count'], 'label' => $aboutContent['stat_team_label'], 'gradient' => 'from-pink-400 to-pink-600'],
-                                'problem' => ['count' => $aboutContent['stat_problem_count'], 'label' => $aboutContent['stat_problem_label'], 'gradient' => 'from-green-400 to-green-600'],
-                            ];
-                        @endphp
-
-                        @foreach($stats as $key => $stat)
-                            @if($stat['count'] && $stat['label'])
-                                <div class="glass-card p-4 md:p-6 rounded-2xl hover:shadow-lg group transition-all duration-300 hover:-translate-y-1"
-                                     style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform glass-card"
-                                             style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, transparent);">
-                                            <img src="{{ $aboutContent['stats_icon_urls'][$key] ?? 'https://img.icons8.com/?size=100&id=000000&format=png&color=000000' }}"
-                                                alt="{{ $stat['label'] }} Icon" class="w-6 h-6" />
-                                        </div>
-                                    </div>
-                                    <h4 class="text-xl md:text-2xl font-bold mb-1 gradient-text">{{ $stat['count'] }}</h4>
-                                    <p class="font-medium text-sm md:text-base" style="color: var(--text-secondary);">{{ $stat['label'] }}</p>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-
-                    <!-- Soft Skills -->
-                    @if (!empty($aboutContent['soft_skills']))
-                        <div class="pt-6">
-                            <h4 class="text-xl md:text-2xl font-bold mb-4" style="color: var(--text-primary);">Soft Skills</h4>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                                @php
-                                    $skillColors = [
-                                        'Communication' => 'from-blue-400 to-blue-600',
-                                        'Teamwork' => 'from-purple-400 to-purple-600',
-                                        'Problem Solving' => 'from-pink-400 to-pink-600',
-                                        'Leadership' => 'from-green-400 to-green-600',
-                                    ];
-                                @endphp
-
-                                @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
-                                    @php
-                                        $gradient = $skillColors[$skill] ?? 'from-gray-400 to-gray-600';
-                                    @endphp
-
-                                    <div class="glass-card p-4 md:p-5 rounded-2xl hover:shadow-lg group transition-all duration-300 hover:-translate-y-1"
-                                         style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                                        <div class="flex items-center gap-3 mb-2">
-                                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform glass-card"
-                                                 style="background: var(--glass-bg, linear-gradient(135deg, var(--accent-blue), var(--accent-purple))); border: 1px solid var(--glass-border, transparent);">
-                                                <img src="{{ $iconUrl }}" alt="{{ $skill }} Icon" class="w-6 h-6" />
-                                            </div>
-                                        </div>
-                                        <h5 class="text-lg md:text-xl font-bold mb-1 gradient-text">{{ $skill }}</h5>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- CTA Buttons with CV Download -->
-                    <div class="pt-6 flex flex-wrap gap-4">
-                        <!-- Contact Button -->
-                        <a href="#contact"
-                            class="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group theme-btn glass-button">
-                            <span class="relative z-10 drop-shadow-md">{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
-                            <img src="{{ $aboutContent['stats_icon_urls']['cta'] ?? 'https://img.icons8.com/?size=100&id=62vgtZLAw1gl&format=png&color=FFFFFF' }}"
-                                class="w-5 h-5 group-hover:translate-x-2 transition-transform filter brightness-0 invert" />
+                    @if($aboutContent['user']->hasCv())
+                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t1-btn t1-btn-outline" download>
+                            <span>Download CV</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         </a>
-
-                        <!-- CV Download Button -->
-                        @if($aboutContent['user']->hasCv())
-                            <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}"
-                                class="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group glass-button"
-                                style="background: var(--glass-bg, linear-gradient(135deg, #10b981, #14b8a6)); color: var(--text-primary); border: 2px solid var(--glass-border, #10b981);"
-                                download>
-                                <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform drop-shadow-md" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                </svg>
-                                <span class="drop-shadow-md">Download CV</span>
-                            </a>
-
-                            <!-- View CV Button -->
-                            <a href="{{ route('cv.public.view', $aboutContent['user']->id) }}"
-                                target="_blank"
-                                class="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 group glass-card"
-                                style="background: var(--card-bg); border: 2px solid var(--border-color);">
-                                <svg class="w-5 h-5 group-hover:scale-110 transition-transform" style="color: var(--accent-blue);" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                                </svg>
-                                <span style="color: var(--text-primary);">View CV</span>
-                            </a>
-                        @endif
-                    </div>
+                    @endif
                 </div>
             </div>
+
+            <!-- Stats Cards (Compact) -->
+            @php
+                $stats = [
+                    ['count' => $aboutContent['stat_projects_count'], 'label' => $aboutContent['stat_projects_label'], 'icon' => '🚀'],
+                    ['count' => $aboutContent['stat_technologies_count'], 'label' => $aboutContent['stat_technologies_label'], 'icon' => '⚡'],
+                    ['count' => $aboutContent['stat_team_count'], 'label' => $aboutContent['stat_team_label'], 'icon' => '👥'],
+                    ['count' => $aboutContent['stat_problem_count'], 'label' => $aboutContent['stat_problem_label'], 'icon' => '💡'],
+                ];
+            @endphp
+
+            @foreach($stats as $stat)
+                @if($stat['count'])
+                <div class="t1-bento-item t1-bento-stat">
+                    <div class="t1-stat-icon">{{ $stat['icon'] }}</div>
+                    <div class="t1-stat-value">{{ $stat['count'] }}</div>
+                    <div class="t1-stat-label">{{ $stat['label'] }}</div>
+                </div>
+                @endif
+            @endforeach
+
+            <!-- Soft Skills Card (Full Width) -->
+            @if (!empty($aboutContent['soft_skills']))
+            <div class="t1-bento-item t1-bento-skills">
+                <h3 class="t1-skills-header">Core Competencies</h3>
+                <div class="t1-skills-grid">
+                    @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
+                    <div class="t1-skill-card">
+                        @if($iconUrl)
+                        <div class="t1-skill-icon-wrapper">
+                            <img src="{{ $iconUrl }}" alt="{{ $skill }}" class="t1-skill-icon">
+                        </div>
+                        @endif
+                        <div class="t1-skill-name">{{ $skill }}</div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </section>
-
-<style>
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-
-    @keyframes spin-slow {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    .animate-blob { animation: blob 7s infinite; }
-    .animation-delay-2000 { animation-delay: 2s; }
-    .animation-delay-4000 { animation-delay: 4s; }
-    .animate-spin-slow { animation: spin-slow 8s linear infinite; }
-
-    /* Hide normal theme blobs in monochrome mode */
-    [data-theme="monochrome"] .normal-theme-only {
-        display: none;
-    }
-</style>

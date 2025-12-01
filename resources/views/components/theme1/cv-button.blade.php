@@ -3,7 +3,7 @@
                         
                         <!-- Contact Button - Matches existing gradient style -->
                         <a href="#contact"
-                            class="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                            class="btn-glass group relative inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg overflow-hidden">
                             <span class="relative z-10 drop-shadow-lg">
                                 {{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}
                             </span>
@@ -17,7 +17,7 @@
                         <!-- Download CV Button - Green gradient matching app theme -->
                         @if($aboutContent['user']->hasCv())
                             <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}"
-                                class="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                                class="btn-glass group relative inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg overflow-hidden"
                                 download>
                                 <!-- Download Icon -->
                                 <svg class="relative z-10 w-5 h-5 group-hover:translate-y-1 transition-transform drop-shadow-lg" 
@@ -32,7 +32,8 @@
                             <!-- View CV Button - White style matching app theme -->
                             <a href="{{ route('cv.public.view', $aboutContent['user']->id) }}"
                                 target="_blank"
-                                class="group relative inline-flex items-center gap-3 bg-white text-gray-800 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-2 border-gray-300 hover:border-emerald-500 hover:bg-emerald-50">
+                                class="btn-glass group relative inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg"
+                                style="background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--border-color);">
                                 <!-- Eye Icon -->
                                 <svg class="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" 
                                      fill="currentColor" viewBox="0 0 20 20">
@@ -85,6 +86,38 @@
                         /* Ensure toast appears above everything */
                         #cv-toast {
                             z-index: 99999 !important;
+                        }
+
+                        /* CV Button Internal Styles */
+                        /* Glass Button */
+                        .btn-glass {
+                            background: rgba(255, 255, 255, 0.05);
+                            backdrop-filter: blur(20px) saturate(180%);
+                            -webkit-backdrop-filter: blur(20px) saturate(180%);
+                            padding: 0.75rem 2rem;
+                            border-radius: 9999px;
+                            font-weight: 600;
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            position: relative;
+                            overflow: hidden;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: 1px solid var(--border-color);
+                            color: var(--text-primary);
+                        }
+
+                        [data-theme="light"] .btn-glass {
+                            background: rgba(255, 255, 255, 0.6);
+                            color: var(--text-primary);
+                        }
+
+                        .btn-glass:hover {
+                            background: var(--accent-primary);
+                            border-color: var(--accent-primary);
+                            color: white;
+                            box-shadow: 0 0 15px var(--btn-glow);
+                            transform: translateY(-2px);
                         }
                     </style>
 
