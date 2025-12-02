@@ -1,546 +1,639 @@
 @props(['educations'])
 
-<section id="education" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-education">
-    <!-- Background Elements -->
-    <div class="background-pattern absolute inset-0 -z-10"></div>
+<style>
+    /* ============================================
+       THEME 3 EDUCATION - CARD FLIP WITH PROGRESS
+       Impressive 3D Flip Cards with Animated Rings
+       ============================================ */
     
-    <!-- Floating Particles -->
-    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
+    :root {
+        --t3-edu-bg: #f8fafc;
+        --t3-edu-surface: #ffffff;
+        --t3-edu-text: #1a202c;
+        --t3-edu-text-muted: #4a5568;
+        --t3-edu-accent: #00cc7a;
+        --t3-edu-accent-2: #0099cc;
+        --t3-edu-border: rgba(0, 204, 122, 0.15);
+        --t3-edu-shadow: 0 20px 60px rgba(0, 204, 122, 0.15);
+        --t3-edu-gradient: linear-gradient(135deg, #00cc7a 0%, #0099cc 100%);
+    }
 
-    <div class="container mx-auto max-w-7xl relative z-10 px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-                <span class="section-title-primary">Education</span>
-                <span class="section-title-secondary">Journey</span>
+    [data-theme="dark"] {
+        --t3-edu-bg: #0a0a12;
+        --t3-edu-surface: #151522;
+        --t3-edu-text: #ffffff;
+        --t3-edu-text-muted: #b4c6e0;
+        --t3-edu-accent: #00ff9d;
+        --t3-edu-accent-2: #00d4ff;
+        --t3-edu-border: rgba(0, 255, 157, 0.15);
+        --t3-edu-shadow: 0 20px 60px rgba(0, 255, 157, 0.3);
+        --t3-edu-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+    }
+
+    /* Section */
+    .t3-edu-section {
+        background: var(--t3-edu-bg);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated Grid Background - REMOVED */
+    .t3-edu-grid-bg {
+        display: none;
+    }
+
+    /* Floating Orbs */
+    .t3-edu-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--t3-edu-gradient);
+        filter: blur(100px);
+        opacity: 0.08;
+        pointer-events: none;
+        animation: t3OrbFloat 20s ease-in-out infinite;
+    }
+
+    .t3-edu-orb-1 {
+        width: 500px;
+        height: 500px;
+        top: -10%;
+        left: -10%;
+        animation-delay: 0s;
+    }
+
+    .t3-edu-orb-2 {
+        width: 450px;
+        height: 450px;
+        bottom: -10%;
+        right: -10%;
+        animation-delay: 5s;
+    }
+
+    @keyframes t3OrbFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(50px, -50px) scale(1.1); }
+    }
+
+    /* Container */
+    .t3-edu-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Header */
+    .t3-edu-header {
+        text-align: center;
+        margin-bottom: 5rem;
+        position: relative;
+    }
+
+    .t3-edu-title {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        color: var(--t3-edu-text);
+        letter-spacing: -0.03em;
+        position: relative;
+        display: inline-block;
+    }
+
+    .t3-edu-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--t3-edu-gradient);
+        border-radius: 10px;
+        animation: t3TitleUnderline 2s ease-in-out infinite;
+    }
+
+    @keyframes t3TitleUnderline {
+        0%, 100% { transform: scaleX(0.5); opacity: 0.5; }
+        50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    .t3-edu-title-accent {
+        background: var(--t3-edu-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .t3-edu-subtitle {
+        font-size: 1.25rem;
+        color: var(--t3-edu-text-muted);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    /* Cards Grid */
+    .t3-edu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    /* Card Container with 3D Perspective */
+    .t3-edu-card-container {
+        perspective: 1000px;
+        height: 380px;
+    }
+
+    /* Flip Card */
+    .t3-edu-flip-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+    }
+
+    .t3-edu-card-container:hover .t3-edu-flip-card {
+        transform: rotateY(180deg);
+    }
+
+    /* Card Sides */
+    .t3-edu-card-front,
+    .t3-edu-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 24px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        background: var(--t3-edu-surface);
+        border: 1px solid var(--t3-edu-border);
+        box-shadow: var(--t3-edu-shadow);
+    }
+
+    .t3-edu-card-back {
+        transform: rotateY(180deg);
+        background: var(--t3-edu-gradient);
+        color: white;
+        justify-content: center;
+    }
+
+    /* Front Card Design */
+    .t3-edu-progress-ring {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 1.5rem;
+        position: relative;
+    }
+
+    .t3-progress-circle {
+        transform: rotate(-90deg);
+    }
+
+    .t3-progress-bg {
+        fill: none;
+        stroke: rgba(0, 204, 122, 0.1);
+        stroke-width: 8;
+    }
+
+    [data-theme="dark"] .t3-progress-bg {
+        stroke: rgba(0, 255, 157, 0.1);
+    }
+
+    .t3-progress-bar {
+        fill: none;
+        stroke: url(#t3-gradient);
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-dasharray: 295;
+        stroke-dashoffset: 295;
+        animation: t3ProgressFill 2s ease-out forwards;
+    }
+
+    @keyframes t3ProgressFill {
+        to { stroke-dashoffset: 0; }
+    }
+
+    .t3-progress-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 20px rgba(0, 204, 122, 0.25);
+    }
+
+    [data-theme="dark"] .t3-progress-icon {
+        background: var(--t3-edu-surface);
+        box-shadow: 0 6px 20px rgba(0, 255, 157, 0.25);
+    }
+
+    .t3-progress-icon img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        /* Show original icon colors - no filter */
+    }
+
+    .t3-progress-icon i {
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #ff6b6b, #ffa726, #f9ca24, #6c5ce7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .t3-edu-degree {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--t3-edu-text);
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+    }
+
+    .t3-edu-institution {
+        font-size: 1rem;
+        font-weight: 600;
+        background: var(--t3-edu-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .t3-edu-year-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: rgba(0, 204, 122, 0.1);
+        border: 1px solid var(--t3-edu-border);
+        border-radius: 100px;
+        color: var(--t3-edu-accent);
+        font-size: 0.875rem;
+        font-weight: 700;
+        margin: 0 auto;
+    }
+
+    [data-theme="dark"] .t3-edu-year-badge {
+        background: rgba(0, 255, 157, 0.1);
+    }
+
+    /* Back Card Design */
+    .t3-edu-back-content {
+        text-align: center;
+    }
+
+    .t3-edu-back-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        font-size: 2rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .t3-edu-back-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .t3-edu-back-details {
+        font-size: 1.0625rem;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 2rem;
+    }
+
+    .t3-edu-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 100px;
+        color: white;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Flip Hint */
+    .t3-flip-hint {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        color: var(--t3-edu-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.7;
+        animation: t3HintBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes t3HintBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Empty State */
+    .t3-empty-state {
+        text-align: center;
+        padding: 6rem 2rem;
+    }
+
+    .t3-empty-icon {
+        width: 120px;
+        height: 120px;
+        background: var(--t3-edu-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        color: white;
+        font-size: 3rem;
+        animation: t3EmptyPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes t3EmptyPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .t3-empty-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--t3-edu-text);
+        margin-bottom: 1rem;
+    }
+
+    .t3-empty-text {
+        font-size: 1.125rem;
+        color: var(--t3-edu-text-muted);
+        max-width: 500px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .t3-edu-section {
+            padding: 4rem 0;
+        }
+
+        .t3-edu-header {
+            margin-bottom: 3rem;
+        }
+
+        .t3-edu-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .t3-edu-card-container {
+            height: 420px;
+        }
+
+        .t3-edu-card-front,
+        .t3-edu-card-back {
+            padding: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t3-edu-card-container {
+            height: 400px;
+        }
+
+        .t3-edu-degree {
+            font-size: 1.25rem;
+        }
+
+        .t3-edu-institution {
+            font-size: 1rem;
+        }
+
+        .t3-edu-progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+    }
+</style>
+
+<section id="education" class="t3-edu-section">
+    <!-- Animated Grid Background -->
+    <div class="t3-edu-grid-bg"></div>
+
+    <!-- Floating Orbs -->
+    <div class="t3-edu-orb t3-edu-orb-1"></div>
+    <div class="t3-edu-orb t3-edu-orb-2"></div>
+
+    <!-- SVG Gradient Definition -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="t3-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00cc7a;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#0099cc;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="t3-edu-container">
+        <!-- Header -->
+        <div class="t3-edu-header">
+            <h2 class="t3-edu-title">
+                Education <span class="t3-edu-title-accent">Journey</span>
             </h2>
-            <div class="section-divider"></div>
-            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6" style="color: var(--text-secondary);">
-                Academic excellence and continuous learning path
+            <p class="t3-edu-subtitle">
+                Academic excellence and continuous learning - Hover to explore details
             </p>
         </div>
 
         @if($educations->isEmpty())
             <!-- Empty State -->
-            <div class="text-center py-20">
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3 class="empty-title">No Education Added Yet</h3>
-                    <p class="empty-description">Educational background will appear here once added through the admin panel.</p>
+            <div class="t3-empty-state">
+                <div class="t3-empty-icon">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
+                <h3 class="t3-empty-title">No Education Added Yet</h3>
+                <p class="t3-empty-text">
+                    Educational background will appear here once added through the admin panel.
+                </p>
             </div>
         @else
             <!-- Education Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="t3-edu-grid">
                 @foreach($educations->sortByDesc('year') as $index => $education)
-                    <!-- Education Card -->
-                    <div class="education-card group">
-                        <!-- Year Badge -->
-                        <div class="education-year">
-                            <div class="year-badge">
-                                <i class="fas fa-calendar-alt year-icon"></i>
-                                <span class="year-text">{{ $education->year ?: 'Present' }}</span>
-                            </div>
-                        </div>
+                    <div class="t3-edu-card-container">
+                        <div class="t3-edu-flip-card">
+                            <!-- Front Side -->
+                            <div class="t3-edu-card-front">
+                                <!-- Progress Ring -->
+                                <div class="t3-edu-progress-ring">
+                                    <svg class="t3-progress-circle" width="110" height="110">
+                                        <circle class="t3-progress-bg" cx="55" cy="55" r="47"/>
+                                        <circle class="t3-progress-bar" cx="55" cy="55" r="47"/>
+                                    </svg>
+                                    <div class="t3-progress-icon">
+                                        @if($education->icon_url)
+                                            <img src="{{ $education->icon_url }}" alt="{{ $education->institution }}">
+                                        @else
+                                            <i class="fas fa-university"></i>
+                                        @endif
+                                    </div>
+                                </div>
 
-                        <!-- Card Content -->
-                        <div class="education-content">
-                            <!-- Institution Icon -->
-                            <div class="education-icon">
-                                @if($education->icon_url)
-                                    <img src="{{ $education->icon_url }}" alt="{{ $education->institution }}" class="institution-icon">
-                                @else
-                                    <div class="institution-icon-placeholder">
-                                        <i class="fas fa-university"></i>
-                                    </div>
-                                @endif
+                                <!-- Content -->
+                                <h3 class="t3-edu-degree">{{ $education->degree }}</h3>
+                                <p class="t3-edu-institution">{{ $education->institution }}</p>
+
+                                <!-- Year Badge -->
+                                <div class="t3-edu-year-badge">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    {{ $education->year ?: 'Present' }}
+                                </div>
+
+                                <!-- Flip Hint -->
+                                <div class="t3-flip-hint">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Hover to see details
+                                </div>
                             </div>
 
-                            <!-- Degree Information -->
-                            <div class="education-info">
-                                <h3 class="degree-title">{{ $education->degree }}</h3>
-                                <p class="institution-name">{{ $education->institution }}</p>
-                                
-                                @if($education->details)
-                                    <div class="education-details">
-                                        <p class="details-text">{{ $education->details }}</p>
+                            <!-- Back Side -->
+                            <div class="t3-edu-card-back">
+                                <div class="t3-edu-back-content">
+                                    <div class="t3-edu-back-icon">
+                                        <i class="fas fa-graduation-cap"></i>
                                     </div>
-                                @endif
-                            </div>
+                                    <h3 class="t3-edu-back-title">{{ $education->degree }}</h3>
+                                    
+                                    @if($education->details)
+                                        <p class="t3-edu-back-details">{{ $education->details }}</p>
+                                    @else
+                                        <p class="t3-edu-back-details">
+                                            Completed at {{ $education->institution }} in {{ $education->year ?: 'Present' }}
+                                        </p>
+                                    @endif
 
-                            <!-- Status Indicator -->
-                            <div class="education-status">
-                                @if(!$education->year || $education->year == date('Y'))
-                                    <div class="status-badge current">
-                                        <i class="fas fa-spinner"></i>
-                                        <span>Current</span>
-                                    </div>
-                                @else
-                                    <div class="status-badge completed">
-                                        <i class="fas fa-check"></i>
-                                        <span>Completed</span>
-                                    </div>
-                                @endif
+                                    @php
+                                        // Parse the year field to determine if completed
+                                        $isCompleted = false;
+                                        $currentYear = (int)date('Y');
+                                        $currentMonth = (int)date('n');
+                                        
+                                        if ($education->year) {
+                                            $yearStr = trim($education->year);
+                                            
+                                            // Check for "Present" or "Current" - always ongoing
+                                            if (stripos($yearStr, 'present') !== false || stripos($yearStr, 'current') !== false) {
+                                                $isCompleted = false;
+                                            }
+                                            // Check if year contains a range with month (e.g., "May 2019 - February 2022")
+                                            elseif (preg_match('/(\w+)\s+(\d{4})\s*-\s*(\w+)\s+(\d{4})/', $yearStr, $matches)) {
+                                                $endMonth = $matches[3];
+                                                $endYear = (int)$matches[4];
+                                                
+                                                // Convert month name to number
+                                                $endMonthNum = (int)date('n', strtotime($endMonth . ' 1'));
+                                                
+                                                // Check if end date is in the past
+                                                if ($endYear < $currentYear) {
+                                                    $isCompleted = true;
+                                                } elseif ($endYear == $currentYear && $endMonthNum < $currentMonth) {
+                                                    $isCompleted = true;
+                                                }
+                                            }
+                                            // Check if year contains a simple range (e.g., "2020-2024" or "2020 - 2024")
+                                            elseif (preg_match('/(\d{4})\s*-\s*(\d{4})/', $yearStr, $matches)) {
+                                                $endYear = (int)$matches[2];
+                                                $isCompleted = $endYear < $currentYear;
+                                            }
+                                            // Check if it's a single year with month (e.g., "December 2018")
+                                            elseif (preg_match('/(\w+)\s+(\d{4})/', $yearStr, $matches)) {
+                                                $month = $matches[1];
+                                                $year = (int)$matches[2];
+                                                $monthNum = (int)date('n', strtotime($month . ' 1'));
+                                                
+                                                if ($year < $currentYear) {
+                                                    $isCompleted = true;
+                                                } elseif ($year == $currentYear && $monthNum < $currentMonth) {
+                                                    $isCompleted = true;
+                                                }
+                                            }
+                                            // Check if year is just a single year (e.g., "2024")
+                                            elseif (preg_match('/^(\d{4})$/', $yearStr, $matches)) {
+                                                $year = (int)$matches[1];
+                                                $isCompleted = $year < $currentYear;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if($isCompleted)
+                                        <div class="t3-edu-status-badge">
+                                            <i class="fas fa-check-circle"></i>
+                                            Completed
+                                        </div>
+                                    @else
+                                        <div class="t3-edu-status-badge">
+                                            <i class="fas fa-spinner"></i>
+                                            Currently Pursuing
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
         @endif
-
-        
     </div>
 </section>
 
-<style>
-/* ===================================
-   THEME 3 EDUCATION - PROFESSIONAL DESIGN
-   =================================== */
-
-:root {
-    --bg-primary: #0a0a12;
-    --bg-secondary: #151522;
-    --text-primary: #ffffff;
-    --text-secondary: #b4c6e0;
-    --text-muted: #8fa3c7;
-    --accent-primary: #00ff9d;
-    --accent-secondary: #00d4ff;
-    --accent-glow: rgba(0, 255, 157, 0.3);
-    --border-light: rgba(0, 255, 157, 0.2);
-    --card-bg: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="light"] {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --text-muted: #718096;
-    --accent-primary: #00cc7a;
-    --accent-secondary: #0099cc;
-    --accent-glow: rgba(0, 204, 122, 0.2);
-    --border-light: rgba(0, 204, 122, 0.3);
-    --card-bg: rgba(0, 0, 0, 0.03);
-}
-
-.theme3-education {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Background Pattern */
-.background-pattern {
-    background-image: 
-        radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-    opacity: 0.1;
-}
-
-/* Floating Particles */
-.particle-container .floating-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--accent-primary);
-    box-shadow: 0 0 12px var(--accent-primary);
-    animation: particleFloat 25s ease-in-out infinite;
-}
-
-@keyframes particleFloat {
-    0%, 100% { 
-        transform: translate(0, 0) scale(1);
-        opacity: 0.3;
-    }
-    25% { 
-        transform: translate(100px, -80px) scale(1.3);
-        opacity: 0.7;
-    }
-    50% { 
-        transform: translate(-60px, 120px) scale(0.8);
-        opacity: 0.4;
-    }
-    75% { 
-        transform: translate(120px, 60px) scale(1.1);
-        opacity: 0.6;
-    }
-}
-
-/* Section Header */
-.section-title-primary {
-    color: var(--text-primary);
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-.section-title-secondary {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-.section-divider {
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 2px;
-    margin: 0 auto;
-}
-
-/* Education Card */
-.education-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.education-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--accent-primary);
-    box-shadow: 
-        0 20px 40px rgba(0, 255, 157, 0.15),
-        0 0 0 1px rgba(0, 255, 157, 0.1);
-}
-
-.education-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--accent-primary), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-    pointer-events: none;
-}
-
-.education-card:hover::before {
-    opacity: 0.03;
-}
-
-/* Education Year */
-.education-year {
-    padding: 1.5rem 2rem 1rem;
-    text-align: center;
-}
-
-.year-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(0, 255, 157, 0.1);
-    border: 1px solid var(--border-light);
-    border-radius: 20px;
-    color: var(--accent-primary);
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-}
-
-.education-card:hover .year-badge {
-    background: rgba(0, 255, 157, 0.15);
-    transform: scale(1.05);
-}
-
-.year-icon {
-    font-size: 0.875rem;
-}
-
-.year-text {
-    font-weight: 600;
-}
-
-/* Education Content */
-.education-content {
-    padding: 0 2rem 2rem;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-/* Education Icon */
-.education-icon {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.institution-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: rgba(0, 255, 157, 0.1);
-    border: 1.5px solid var(--border-light);
-    padding: 0.75rem;
-    transition: all 0.3s ease;
-}
-
-.education-card:hover .institution-icon {
-    transform: scale(1.1);
-    border-color: var(--accent-primary);
-}
-
-.institution-icon-placeholder {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bg-primary);
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.education-card:hover .institution-icon-placeholder {
-    transform: scale(1.1);
-}
-
-/* Education Info */
-.education-info {
-    text-align: center;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.degree-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.4;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.institution-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--accent-secondary);
-    margin: 0;
-    line-height: 1.4;
-}
-
-.education-details {
-    margin-top: 0.5rem;
-}
-
-.details-text {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Education Status */
-.education-status {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.status-badge.current {
-    background: rgba(0, 255, 157, 0.1);
-    border: 1px solid var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.status-badge.completed {
-    background: rgba(0, 212, 255, 0.1);
-    border: 1px solid var(--accent-secondary);
-    color: var(--accent-secondary);
-}
-
-.status-badge i {
-    font-size: 0.75rem;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-}
-
-.empty-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--card-bg);
-    border: 2px solid var(--border-light);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 2rem;
-    color: var(--text-muted);
-    font-size: 2rem;
-}
-
-.empty-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-}
-
-.empty-description {
-    color: var(--text-secondary);
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* Additional Info */
-.additional-info {
-    padding: 2rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.info-text {
-    font-size: 1.125rem;
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.certifications {
-    display: flex;
-    justify-content: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.cert-badge {
-    padding: 0.5rem 1rem;
-    background: rgba(0, 255, 157, 0.1);
-    border: 1px solid var(--border-light);
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--accent-primary);
-    transition: all 0.3s ease;
-}
-
-.cert-badge:hover {
-    background: rgba(0, 255, 157, 0.15);
-    transform: translateY(-2px);
-}
-
-/* Responsive Design */
-@media (max-width: 1280px) {
-    .grid {
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 1024px) {
-    .education-content {
-        padding: 0 1.5rem 1.5rem;
-    }
-    
-    .education-year {
-        padding: 1.25rem 1.5rem 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .section-title-primary,
-    .section-title-secondary {
-        font-size: 3rem;
-    }
-    
-    .education-card {
-        margin-bottom: 1rem;
-    }
-    
-    .certifications {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .cert-badge {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .section-title-primary,
-    .section-title-secondary {
-        font-size: 2.5rem;
-    }
-    
-    .education-content {
-        padding: 0 1.25rem 1.25rem;
-    }
-    
-    .education-year {
-        padding: 1rem 1.25rem 0.75rem;
-    }
-    
-    .degree-title {
-        font-size: 1.125rem;
-    }
-}
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Floating Particles
-    const particleContainer = document.querySelector('.particle-container');
-    if (particleContainer) {
-        const particleCount = 6;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'floating-particle';
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 10}s`;
-            particleContainer.appendChild(particle);
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate cards on scroll
+        const cards = document.querySelectorAll('.t3-edu-card-container');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) scale(1)';
+                    }, index * 200);
+                }
+            });
+        }, { threshold: 0.1 });
 
-    // Education card animations
-    const educationCards = document.querySelectorAll('.education-card');
-    educationCards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px) scale(0.9)';
+            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(card);
+        });
     });
-});
 </script>

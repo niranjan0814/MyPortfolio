@@ -1,217 +1,278 @@
 @props([])
 
 @php
-     $user = \App\Models\User::first();
+    $user = \App\Models\User::first();
 @endphp
 
-<footer class="relative overflow-hidden" style="background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));">
-    {{-- Animated background --}}
-    <div class="absolute inset-0 opacity-10 normal-theme-only">
-        <div class="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-    </div>
+<style>
+    /* ============================================
+       THEME 3 FOOTER - MODERN CLEAN DESIGN
+       ============================================ */
+    
+    :root {
+        --t3-footer-bg: #f8fafc;
+        --t3-footer-surface: #ffffff;
+        --t3-footer-text: #1a202c;
+        --t3-footer-text-muted: #718096;
+        --t3-footer-accent: #00cc7a;
+        --t3-footer-accent-2: #0099cc;
+        --t3-footer-border: rgba(0, 204, 122, 0.15);
+        --t3-footer-gradient: linear-gradient(135deg, #00cc7a 0%, #0099cc 100%);
+    }
 
-    <!-- Monochrome particles -->
-    <div class="hero-particles"></div>
+    [data-theme="dark"] {
+        --t3-footer-bg: #050508;
+        --t3-footer-surface: #0a0a12;
+        --t3-footer-text: #ffffff;
+        --t3-footer-text-muted: #a0aec0;
+        --t3-footer-accent: #00ff9d;
+        --t3-footer-accent-2: #00d4ff;
+        --t3-footer-border: rgba(0, 255, 157, 0.1);
+        --t3-footer-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+    }
 
-    <div class="relative z-10">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+    .t3-footer {
+        background: var(--t3-footer-bg);
+        border-top: 1px solid var(--t3-footer-border);
+        padding: 5rem 0 2rem;
+        position: relative;
+        overflow: hidden;
+    }
 
-                {{-- Brand & About --}}
-                <div class="lg:col-span-2">
-                    <h2 class="text-3xl font-bold mb-4 gradient-text">
-                        {{ $user->full_name ?? 'Your Name' }}
-                    </h2>
-                    <p class="mb-6 leading-relaxed" style="color: var(--text-secondary);">
-                        {{ $user->description ?? 'Your default description' }}
-                    </p>
+    .t3-footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
 
-                    @if($user->location)
-                    <div class="flex items-center gap-3 text-sm" style="color: var(--text-muted);">
-                        <svg class="w-4 h-4" style="color: var(--accent-blue);" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                        <span>{{ $user->location }}</span>
-                    </div>
+    .t3-footer-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+    }
+
+    /* Brand Column */
+    .t3-footer-brand h3 {
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        background: var(--t3-footer-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+    }
+
+    .t3-footer-desc {
+        color: var(--t3-footer-text-muted);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        max-width: 300px;
+    }
+
+    /* Links Column */
+    .t3-footer-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--t3-footer-text);
+        margin-bottom: 1.5rem;
+    }
+
+    .t3-footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .t3-footer-link {
+        margin-bottom: 0.75rem;
+    }
+
+    .t3-footer-link a {
+        color: var(--t3-footer-text-muted);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .t3-footer-link a:hover {
+        color: var(--t3-footer-accent);
+        transform: translateX(5px);
+    }
+
+    /* Social Icons */
+    .t3-footer-social {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .t3-social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--t3-footer-surface);
+        border: 1px solid var(--t3-footer-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--t3-footer-text-muted);
+        transition: all 0.3s ease;
+    }
+
+    .t3-social-icon:hover {
+        background: var(--t3-footer-gradient);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-3px);
+    }
+
+    /* Bottom Bar */
+    .t3-footer-bottom {
+        border-top: 1px solid var(--t3-footer-border);
+        padding-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .t3-copyright {
+        color: var(--t3-footer-text-muted);
+        font-size: 0.9375rem;
+    }
+
+    .t3-made-with {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--t3-footer-text-muted);
+        font-size: 0.9375rem;
+    }
+
+    .t3-heart {
+        color: #ef4444;
+        animation: heartbeat 1.5s infinite;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .t3-footer-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .t3-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        
+        .t3-footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<footer class="t3-footer">
+    <div class="t3-footer-container">
+        <div class="t3-footer-grid">
+            <!-- Brand -->
+            <div class="t3-footer-brand">
+                <h3>{{ $user->name }}</h3>
+                <p class="t3-footer-desc">
+                    {{ $user->description ?? 'Building digital experiences with passion and precision.' }}
+                </p>
+                <div class="t3-footer-social">
+                    @if($user->github_url)
+                        <a href="{{ $user->github_url }}" target="_blank" class="t3-social-icon" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
                     @endif
-                </div>
-
-                {{-- Quick Links --}}
-                <div>
-                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2" style="color: var(--text-primary);">
-                        <svg class="w-5 h-5" style="color: var(--accent-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                        </svg>
-                        Quick Links
-                    </h3>
-                    <ul class="space-y-3">
-                        @foreach(['About Me|#about','Projects|#projects','Skills|#skills','Contact|#contact'] as $link)
-                            @php [$text, $url] = explode('|', $link) @endphp
-                            <li>
-                                <a href="{{ $url }}" class="transition-colors flex items-center gap-2 group hover:opacity-80"
-                                   style="color: var(--text-secondary);">
-                                    <svg class="w-3 h-3 text-xs group-hover:translate-x-1 transition-transform"
-                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                    {{ $text }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                {{-- Contact Info + Connect With Me (Same Column) --}}
-                <div class="space-y-8">
-                    {{-- Get In Touch --}}
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2" style="color: var(--text-primary);">
-                            <svg class="w-5 h-5" style="color: var(--accent-purple);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
-                            </svg>
-                            Get In Touch
-                        </h3>
-                        <ul class="space-y-4">
-
-                            @if($user->phone)
-                            <li>
-                                <a href="tel:{{ $user->phone }}" class="transition-colors flex items-start gap-3 group hover:opacity-80"
-                                   style="color: var(--text-secondary);">
-                                    <svg class="w-4 h-4 mt-1" style="color: var(--accent-blue);" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-                                    </svg>
-                                    <span>{{ $user->phone }}</span>
-                                </a>
-                            </li>
-                            @endif
-
-                            @if($user->email)
-                            <li>
-                                <a href="mailto:{{ $user->email }}" class="transition-colors flex items-start gap-3 group hover:opacity-80"
-                                   style="color: var(--text-secondary);">
-                                    <svg class="w-4 h-4 mt-1" style="color: var(--accent-purple);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                    <span class="break-all">{{ $user->email }}</span>
-                                </a>
-                            </li>
-                            @endif
-
-                            @if($user->address)
-                            <li class="flex items-start gap-3" style="color: var(--text-secondary);">
-                                <svg class="w-4 h-4 mt-1" style="color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                          clip-rule="evenodd"/>
-                                </svg>
-                                <span>{{ $user->address }}</span>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-
-                    {{-- Connect With Me (Now under Get In Touch) --}}
-                    <div class="mt-8">
-                        <h4 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">Connect With Me</h4>
-                        <div class="flex flex-wrap gap-4">
-
-                            @if($user->github_url)
-                            <a href="{{ $user->github_url }}" target="_blank"
-                               class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
-                               style="background: var(--glass-bg, #1f2937); border: 1px solid var(--glass-border, var(--border-color));">
-                                <svg class="w-5 h-5 group-hover:text-white" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-xs glass-card"
-                                      style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    GitHub
-                                </span>
-                            </a>
-                            @endif
-
-                            @if($user->linkedin_url)
-                            <a href="{{ $user->linkedin_url }}" target="_blank"
-                               class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
-                               style="background: var(--glass-bg, #3b82f6); border: 1px solid var(--glass-border, var(--border-color));">
-                                <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                                </svg>
-                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-xs glass-card"
-                                      style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    LinkedIn
-                                </span>
-                            </a>
-                            @endif
-
-                            @if($user->email)
-                            <a href="mailto:{{ $user->email }}"
-                               class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
-                               style="background: var(--glass-bg, #ef4444); border: 1px solid var(--glass-border, var(--border-color));">
-                                <svg class="w-5 h-5" style="color: var(--text-primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-xs glass-card"
-                                      style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    Email
-                                </span>
-                            </a>
-                            @endif
-
-                            @if($user->phone)
-                            <a href="tel:{{ $user->phone }}"
-                               class="group relative w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg glass-button"
-                               style="background: var(--glass-bg, #10b981); border: 1px solid var(--glass-border, var(--border-color));">
-                                <svg class="w-5 h-5" style="color: var(--text-primary);" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-                                </svg>
-                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none text-xs glass-card"
-                                      style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);">
-                                    Phone
-                                </span>
-                            </a>
-                            @endif
-                        </div>
-                    </div>
+                    @if($user->linkedin_url)
+                        <a href="{{ $user->linkedin_url }}" target="_blank" class="t3-social-icon" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    @endif
+                    @if($user->twitter_url)
+                        <a href="{{ $user->twitter_url }}" target="_blank" class="t3-social-icon" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    @endif
                 </div>
             </div>
 
-            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="t3-footer-title">Quick Links</h4>
+                <ul class="t3-footer-links">
+                    <li class="t3-footer-link"><a href="#about">About Me</a></li>
+                    <li class="t3-footer-link"><a href="#projects">Projects</a></li>
+                    <li class="t3-footer-link"><a href="#skills">Skills</a></li>
+                    <li class="t3-footer-link"><a href="#experience">Experience</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources -->
+            <div>
+                <h4 class="t3-footer-title">Resources</h4>
+                <ul class="t3-footer-links">
+                    <li class="t3-footer-link"><a href="#blog">Blog</a></li>
+                    <li class="t3-footer-link"><a href="#education">Education</a></li>
+                    <li class="t3-footer-link"><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h4 class="t3-footer-title">Contact</h4>
+                <ul class="t3-footer-links">
+                    @if($user->email)
+                        <li class="t3-footer-link">
+                            <a href="mailto:{{ $user->email }}">
+                                <i class="fas fa-envelope" style="color: var(--t3-footer-accent);"></i>
+                                {{ $user->email }}
+                            </a>
+                        </li>
+                    @endif
+                    @if($user->phone)
+                        <li class="t3-footer-link">
+                            <a href="tel:{{ $user->phone }}">
+                                <i class="fas fa-phone-alt" style="color: var(--t3-footer-accent);"></i>
+                                {{ $user->phone }}
+                            </a>
+                        </li>
+                    @endif
+                    @if($user->address)
+                        <li class="t3-footer-link">
+                            <a href="#">
+                                <i class="fas fa-map-marker-alt" style="color: var(--t3-footer-accent);"></i>
+                                {{ $user->address }}
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
         </div>
 
-        {{-- Bottom Bar --}}
-        <div style="border-top: 1px solid var(--border-color); background: var(--bg-secondary);">
-            <div class="max-w-7xl mx-auto px-6 md:px-12 py-6">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-                    <p class="text-center md:text-left" style="color: var(--text-muted);">
-                        Created with Detech ❤️ by {{ $user->full_name ?? 'Your Name' }}. © {{ date('Y') }} All Rights Reserved.
-                    
-                    </p>
-                    
-                </div>
+        <!-- Bottom Bar -->
+        <div class="t3-footer-bottom">
+            <div class="t3-copyright">
+                &copy; {{ date('Y') }} {{ $user->name }}. All rights reserved.
+            </div>
+            <div class="t3-made-with">
+                Made with <i class="fas fa-heart t3-heart"></i> by {{ $user->name }}
             </div>
         </div>
     </div>
 </footer>
-
-<style>
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-    .animate-blob { animation: blob 7s infinite; }
-    .animation-delay-2000 { animation-delay: 2s; }
-
-    /* Hide normal theme blobs in monochrome mode */
-    [data-theme="monochrome"] .normal-theme-only {
-        display: none;
-    }
-</style>

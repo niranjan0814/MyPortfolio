@@ -1,33 +1,420 @@
 @props(['skills'])
 
-<section id="skills" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-skills">
-    <!-- Background Elements -->
-    <div class="background-pattern absolute inset-0 -z-10"></div>
+<style>
+    /* ============================================
+       THEME 3 SKILLS - ENHANCED MODERN DESIGN
+       Matching Hero & About Aesthetic
+       ============================================ */
+    
+    :root {
+        --t3-skills-bg: #f8fafc;
+        --t3-skills-surface: #ffffff;
+        --t3-skills-text: #1a202c;
+        --t3-skills-text-muted: #4a5568;
+        --t3-skills-accent: #00cc7a;
+        --t3-skills-accent-2: #0099cc;
+        --t3-skills-border: rgba(0, 204, 122, 0.15);
+        --t3-skills-shadow: 0 15px 50px rgba(0, 204, 122, 0.12);
+        --t3-skills-gradient: linear-gradient(135deg, #00cc7a 0%, #0099cc 100%);
+        --t3-skills-glow: rgba(0, 204, 122, 0.2);
+    }
 
-    <!-- Floating Particles -->
-    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
+    [data-theme="dark"] {
+        --t3-skills-bg: #0a0a12;
+        --t3-skills-surface: #151522;
+        --t3-skills-text: #ffffff;
+        --t3-skills-text-muted: #b4c6e0;
+        --t3-skills-accent: #00ff9d;
+        --t3-skills-accent-2: #00d4ff;
+        --t3-skills-border: rgba(0, 255, 157, 0.15);
+        --t3-skills-shadow: 0 15px 50px rgba(0, 255, 157, 0.25);
+        --t3-skills-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+        --t3-skills-glow: rgba(0, 255, 157, 0.25);
+    }
 
-    <div class="container mx-auto max-w-7xl relative z-10 px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-                <span class="section-title-primary">Technical</span>
-                <span class="section-title-secondary">Arsenal</span>
+    /* Section */
+    .t3-skills-section {
+        background: var(--t3-skills-bg);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background Orbs */
+    .t3-skills-orbs {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .t3-skills-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--t3-skills-gradient);
+        filter: blur(100px);
+        opacity: 0.06;
+        animation: t3SkillsFloat 25s ease-in-out infinite;
+    }
+
+    .t3-skills-orb-1 {
+        width: 450px;
+        height: 450px;
+        top: -15%;
+        left: -10%;
+        animation-delay: 0s;
+    }
+
+    .t3-skills-orb-2 {
+        width: 400px;
+        height: 400px;
+        bottom: -15%;
+        right: -10%;
+        animation-delay: 8s;
+    }
+
+    @keyframes t3SkillsFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(60px, -60px) scale(1.15); }
+        66% { transform: translate(-60px, 60px) scale(0.85); }
+    }
+
+    /* Container */
+    .t3-skills-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Header */
+    .t3-skills-header {
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .t3-skills-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        margin-bottom: 1.25rem;
+        color: var(--t3-skills-text);
+        letter-spacing: -0.03em;
+    }
+
+    .t3-skills-title-accent {
+        background: var(--t3-skills-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .t3-skills-subtitle {
+        font-size: 1.125rem;
+        color: var(--t3-skills-text-muted);
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    /* Categories */
+    .t3-category-section {
+        margin-bottom: 4rem;
+    }
+
+    .t3-category-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .t3-category-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: var(--t3-skills-gradient);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 25px var(--t3-skills-glow);
+        flex-shrink: 0;
+    }
+
+    .t3-category-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+    }
+
+    .t3-category-info h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--t3-skills-text);
+        margin-bottom: 0.25rem;
+    }
+
+    .t3-category-count {
+        font-size: 0.9375rem;
+        color: var(--t3-skills-text-muted);
+        font-weight: 500;
+    }
+
+    /* Skills Grid */
+    .t3-skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .t3-skill-card {
+        background: var(--t3-skills-surface);
+        border: 1px solid var(--t3-skills-border);
+        border-radius: 20px;
+        padding: 1.75rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .t3-skill-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--t3-skills-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .t3-skill-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--t3-skills-accent);
+        box-shadow: var(--t3-skills-shadow);
+    }
+
+    .t3-skill-card:hover::before {
+        opacity: 1;
+    }
+
+    .t3-skill-icon {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
+
+    .t3-skill-card:hover .t3-skill-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    .t3-skill-fallback {
+        width: 56px;
+        height: 56px;
+        background: var(--t3-skills-gradient);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        transition: transform 0.4s ease;
+    }
+
+    .t3-skill-card:hover .t3-skill-fallback {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    .t3-skill-name {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--t3-skills-text);
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    /* Stats Section */
+    .t3-skills-stats {
+        margin-top: 5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .t3-stat-card {
+        background: var(--t3-skills-surface);
+        border: 1px solid var(--t3-skills-border);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .t3-stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--t3-skills-accent);
+        box-shadow: var(--t3-skills-shadow);
+    }
+
+    .t3-stat-icon {
+        width: 70px;
+        height: 70px;
+        background: var(--t3-skills-gradient);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+    }
+
+    .t3-stat-info {
+        flex: 1;
+    }
+
+    .t3-stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--t3-skills-accent);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .t3-stat-label {
+        font-size: 1rem;
+        color: var(--t3-skills-text-muted);
+        font-weight: 500;
+    }
+
+    /* Empty State */
+    .t3-empty-state {
+        text-align: center;
+        padding: 6rem 2rem;
+    }
+
+    .t3-empty-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--t3-skills-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        color: white;
+        font-size: 2.5rem;
+    }
+
+    .t3-empty-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--t3-skills-text);
+        margin-bottom: 1rem;
+    }
+
+    .t3-empty-text {
+        font-size: 1.0625rem;
+        color: var(--t3-skills-text-muted);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .t3-skills-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .t3-skills-section {
+            padding: 4rem 0;
+        }
+
+        .t3-skills-header {
+            margin-bottom: 3rem;
+        }
+
+        .t3-category-section {
+            margin-bottom: 3rem;
+        }
+
+        .t3-category-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .t3-skills-grid {
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 1rem;
+        }
+
+        .t3-skills-stats {
+            grid-template-columns: 1fr;
+            margin-top: 3rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t3-skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .t3-skill-card {
+            padding: 1.5rem 1rem;
+        }
+
+        .t3-skill-icon,
+        .t3-skill-fallback {
+            width: 48px;
+            height: 48px;
+        }
+    }
+</style>
+
+<section id="skills" class="t3-skills-section">
+    <!-- Background Orbs -->
+    <div class="t3-skills-orbs">
+        <div class="t3-skills-orb t3-skills-orb-1"></div>
+        <div class="t3-skills-orb t3-skills-orb-2"></div>
+    </div>
+
+    <div class="t3-skills-container">
+        <!-- Header -->
+        <div class="t3-skills-header">
+            <h2 class="t3-skills-title">
+                Technical <span class="t3-skills-title-accent">Skills</span>
             </h2>
-            <div class="section-divider"></div>
-            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6" style="color: var(--text-secondary);">
-                Technologies I work with to bring ideas to life
+            <p class="t3-skills-subtitle">
+                Technologies and tools I use to build exceptional digital experiences
             </p>
         </div>
 
         @if($skills->isEmpty())
             <!-- Empty State -->
-            <div class="empty-state">
-                <div class="empty-icon">
+            <div class="t3-empty-state">
+                <div class="t3-empty-icon">
                     <i class="fas fa-code"></i>
                 </div>
-                <h3 class="empty-title">No Skills Added Yet</h3>
-                <p class="empty-description">Skills will appear here once added through the admin panel.</p>
+                <h3 class="t3-empty-title">No Skills Added Yet</h3>
+                <p class="t3-empty-text">
+                    Skills will appear here once added through the admin panel.
+                </p>
             </div>
         @else
             @php
@@ -35,465 +422,89 @@
                     'frontend' => [
                         'title' => 'Frontend Development',
                         'icon' => 'https://img.icons8.com/?size=100&id=wRWcFHf3CbWQ&format=png&color=000000',
-                        'is_image' => true,
                     ],
                     'backend' => [
                         'title' => 'Backend Development',
                         'icon' => 'https://img.icons8.com/?size=100&id=eD9kxQH6h53e&format=png&color=000000',
-                        'is_image' => true,
                     ],
                     'database' => [
                         'title' => 'Database & Storage',
                         'icon' => 'https://logo.svgcdn.com/devicon-plain/sqldeveloper-plain.png',
-                        'is_image' => true,
                     ],
                     'tools' => [
                         'title' => 'Tools & Technologies',
                         'icon' => 'https://img.icons8.com/?size=100&id=46959&format=png&color=000000',
-                        'is_image' => true,
                     ],
                 ];
 
                 $groupedSkills = $skills->groupBy('category');
             @endphp
 
-            <!-- Categories Grid -->
-            <div class="space-y-16">
-                @foreach($categories as $categoryKey => $categoryData)
-                    @if($groupedSkills->has($categoryKey) && $groupedSkills[$categoryKey]->isNotEmpty())
-                        <div class="group">
-                            <!-- Category Header -->
-                            <div class="flex items-center gap-6 mb-12">
-                                <div class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-300 glass-card"
-                                    style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: 1px solid var(--border-light);">
-                                    @if($categoryData['is_image'])
-                                        <img src="{{ $categoryData['icon'] }}" alt="{{ $categoryData['title'] }}"
-                                            class="w-12 h-12 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
-                                    @else
-                                        <i class="{{ $categoryData['icon'] }} text-3xl" style="color: var(--text-primary);"></i>
+            <!-- Categories -->
+            @foreach($categories as $categoryKey => $categoryData)
+                @if($groupedSkills->has($categoryKey) && $groupedSkills[$categoryKey]->isNotEmpty())
+                    <div class="t3-category-section">
+                        <!-- Category Header -->
+                        <div class="t3-category-header">
+                            <div class="t3-category-icon-wrapper">
+                                <img src="{{ $categoryData['icon'] }}" alt="{{ $categoryData['title'] }}" class="t3-category-icon">
+                            </div>
+                            <div class="t3-category-info">
+                                <h3>{{ $categoryData['title'] }}</h3>
+                                <p class="t3-category-count">
+                                    {{ $groupedSkills[$categoryKey]->count() }} {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Skills Grid -->
+                        <div class="t3-skills-grid">
+                            @foreach($groupedSkills[$categoryKey] as $skill)
+                                <div class="t3-skill-card">
+                                    @php
+                                        $iconUrl = $skill->url;
+                                        $hasValidUrl = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
+                                    @endphp
+
+                                    @if($hasValidUrl)
+                                        <img src="{{ $iconUrl }}" alt="{{ $skill->name }}" class="t3-skill-icon"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                     @endif
-                                </div>
-                                <div>
-                                    <h3 class="text-3xl font-bold gradient-text">
-                                        {{ $categoryData['title'] }}
-                                    </h3>
-                                    <p style="color: var(--text-secondary);">
-                                        {{ $groupedSkills[$categoryKey]->count() }}
-                                        {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
-                                    </p>
-                                </div>
-                            </div>
 
-                            <!-- Skills Grid - 6 Icons Per Line -->
-                            <div class="grid gap-6 grid-cols-6">
-                                @foreach($groupedSkills[$categoryKey] as $skill)
-                                    <div class="group/skill relative ">
-
-
-                                        <!-- Skill Card -->
-                                        <div class="relative flex flex-col items-center justify-center rounded-2xl hover:shadow-xl hover:-translate-y-2 transition-all duration-300 glass-card skill-card"
-                                            style="background: var(--card-bg); border: 2px solid var(--border-light);">
-
-                                            @php
-                                                $iconUrl = $skill->url;
-                                                $hasValidUrl = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
-                                            @endphp
-
-                                            @if($hasValidUrl)
-                                                <img src="{{ $iconUrl }}" alt="{{ $skill->name }}"
-                                                    class="w-16 h-16 mb-4 group-hover/skill:scale-110 transition-transform duration-300"
-                                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                            @endif
-
-                                            <!-- Fallback Icon -->
-                                            <div class="{{ $hasValidUrl ? 'hidden' : '' }} w-16 h-16 mb-4 flex items-center justify-center rounded-xl group-hover/skill:scale-110 transition-transform duration-300 glass-card"
-                                                style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: 1px solid transparent;">
-                                                <i class="fas fa-code text-3xl" style="color: var(--text-primary);"></i>
-                                            </div>
-
-                                            <!-- Skill Name -->
-                                            <span class="font-semibold text-center text-sm mb-2" style="color: var(--text-primary);">
-                                                {{ $skill->name }}
-                                            </span>
-
-                                            
-                                        </div>
+                                    <div class="t3-skill-fallback" style="display: {{ $hasValidUrl ? 'none' : 'flex' }};">
+                                        <i class="fas fa-code"></i>
                                     </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
 
-            <!-- Skills Summary -->
-            <div class="skills-summary mt-20">
-                <div class="summary-grid">
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4 class="summary-value">{{ $skills->count() }}+</h4>
-                            <p class="summary-label">Technologies</p>
+                                    <span class="t3-skill-name">{{ $skill->name }}</span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+                @endif
+            @endforeach
 
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4 class="summary-value">{{ count($categories) }}</h4>
-                            <p class="summary-label">Expertise Areas</p>
-                        </div>
+            <!-- Stats -->
+            <div class="t3-skills-stats">
+                <div class="t3-stat-card">
+                    <div class="t3-stat-icon">
+                        <i class="fas fa-layer-group"></i>
                     </div>
+                    <div class="t3-stat-info">
+                        <div class="t3-stat-value">{{ $skills->count() }}+</div>
+                        <div class="t3-stat-label">Technologies</div>
+                    </div>
+                </div>
 
-
+                <div class="t3-stat-card">
+                    <div class="t3-stat-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="t3-stat-info">
+                        <div class="t3-stat-value">{{ $groupedSkills->count() }}</div>
+                        <div class="t3-stat-label">Expertise Areas</div>
+                    </div>
                 </div>
             </div>
         @endif
     </div>
 </section>
-
-<style>
-    /* ===================================
-   THEME 3 SKILLS - MATCHING YOUR THEME
-   =================================== */
-
-    :root {
-        --bg-primary: #0a0a12;
-        --bg-secondary: #151522;
-        --text-primary: #ffffff;
-        --text-secondary: #b4c6e0;
-        --text-muted: #8fa3c7;
-        --accent-primary: #00ff9d;
-        --accent-secondary: #00d4ff;
-        --accent-glow: rgba(0, 255, 157, 0.3);
-        --border-light: rgba(0, 255, 157, 0.2);
-        --card-bg: rgba(255, 255, 255, 0.05);
-    }
-
-    .theme3-skills {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Background Pattern */
-    .background-pattern {
-        background-image:
-            radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-        opacity: 0.1;
-    }
-
-    /* Floating Particles */
-    .particle-container .floating-particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--accent-primary);
-        box-shadow: 0 0 12px var(--accent-primary);
-        animation: particleFloat 25s ease-in-out infinite;
-    }
-
-    @keyframes particleFloat {
-
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.3;
-        }
-
-        25% {
-            transform: translate(100px, -80px) scale(1.3);
-            opacity: 0.7;
-        }
-
-        50% {
-            transform: translate(-60px, 120px) scale(0.8);
-            opacity: 0.4;
-        }
-
-        75% {
-            transform: translate(120px, 60px) scale(1.1);
-            opacity: 0.6;
-        }
-    }
-
-    /* Section Header */
-    .section-title-primary {
-        color: var(--text-primary);
-        font-weight: 900;
-        letter-spacing: -0.02em;
-    }
-
-    .section-title-secondary {
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        font-weight: 900;
-        letter-spacing: -0.02em;
-    }
-
-    .section-divider {
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-        border-radius: 2px;
-        margin: 0 auto;
-    }
-
-    .gradient-text {
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 6rem 2rem;
-    }
-
-    .empty-icon {
-        width: 80px;
-        height: 80px;
-        background: var(--card-bg);
-        border: 2px solid var(--border-light);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 2rem;
-        color: var(--text-muted);
-        font-size: 2rem;
-    }
-
-    .empty-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1rem;
-    }
-
-    .empty-description {
-        color: var(--text-secondary);
-        max-width: 400px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
-
-    /* Glass Card Effect */
-    .glass-card {
-        backdrop-filter: blur(10px);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Category Header */
-    .category-header {
-        margin-bottom: 3rem;
-    }
-
-    /* Skills Grid */
-    .grid-cols-6 {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-
-    /* Skill Card Hover Effects */
-    .group\/skill .glass-card {
-        transition: all 0.3s ease;
-    }
-
-    .group\/skill:hover .glass-card {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 255, 157, 0.15);
-    }
-
-    /* Skill Icons - ORIGINAL COLORS PRESERVED */
-    .group\/skill img {
-        filter: none !important;
-        transition: transform 0.3s ease;
-    }
-
-    .group\/skill:hover img {
-        transform: scale(1.1);
-        filter: none !important;
-        /* Keep original colors */
-    }
-
-    /* Fallback Icon */
-    .group\/skill .fa-code {
-        color: var(--text-primary);
-    }
-
-    /* Skills Summary */
-    .skills-summary {
-        margin-top: 4rem;
-    }
-
-    .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .summary-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-light);
-        border-radius: 16px;
-        padding: 2rem;
-        text-align: center;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-
-    .summary-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--accent-primary);
-        box-shadow: 0 15px 40px rgba(0, 255, 157, 0.15);
-    }
-
-    .summary-icon {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.75rem;
-        color: white;
-        margin: 0 auto 1.5rem;
-    }
-
-    .summary-value {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--accent-primary);
-        margin-bottom: 0.5rem;
-    }
-
-    .summary-label {
-        font-size: 1rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-        .grid-cols-6 {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-        }
-    }
-
-    @media (max-width: 768px) {
-
-        .section-title-primary,
-        .section-title-secondary {
-            font-size: 3rem;
-        }
-
-        .grid-cols-6 {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-
-        .category-header .flex {
-            flex-direction: column;
-            text-align: center;
-            gap: 1rem;
-        }
-
-        .w-20 {
-            width: 4rem;
-        }
-
-        .h-20 {
-            height: 4rem;
-        }
-
-        .summary-grid {
-            grid-template-columns: 1fr;
-            max-width: 400px;
-        }
-    }
-
-    @media (max-width: 480px) {
-
-        .section-title-primary,
-        .section-title-secondary {
-            font-size: 2.5rem;
-        }
-
-        .grid-cols-6 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .gap-6 {
-            gap: 1rem;
-        }
-
-        .p-8 {
-            padding: 1.5rem;
-        }
-
-        .w-16 {
-            width: 3rem;
-        }
-
-        .h-16 {
-            height: 3rem;
-        }
-
-        .text-3xl {
-            font-size: 1.5rem;
-        }
-    }
-
-    /* Smaller Skill Card */
-    .skill-card {
-        width: 110px;
-        height: 130px;
-        /* reduce width */
-        padding: 1rem !important;
-        /* smaller padding */
-    }
-
-    /* Smaller Icons */
-    .skill-card img,
-    .skill-card .fallback-icon {
-        width: 48px !important;
-        /* reduce icon size */
-        height: 48px !important;
-    }
-
-    /* Smaller text */
-    .skill-card span {
-        font-size: 0.75rem !important;
-        /* smaller name text */
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Floating Particles
-        const particleContainer = document.querySelector('.particle-container');
-        if (particleContainer) {
-            const particleCount = 6;
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'floating-particle';
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                particleContainer.appendChild(particle);
-            }
-        }
-    });
-</script>

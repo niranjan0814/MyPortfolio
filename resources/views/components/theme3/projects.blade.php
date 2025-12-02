@@ -1,461 +1,443 @@
 @props(['projects'])
 
-<section id="projects" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-projects">
-    <!-- Background Elements -->
-    <div class="background-pattern absolute inset-0 -z-10"></div>
-    
-    <!-- Floating Particles -->
-    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
-
-    <div class="container mx-auto max-w-7xl relative z-10 px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-                <span class="section-title-primary">My</span>
-                <span class="section-title-secondary">Projects</span>
-            </h2>
-            <div class="section-divider mx-auto mb-6"></div>
-            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6 text-gray-600 dark:text-gray-300">
-                A collection of my latest work and creative solutions
-            </p>
-        </div>
-
-        <!-- Projects Grid - Fixed Structure -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            @forelse ($projects as $project)
-                <!-- Project Card - Fixed Layout -->
-                <div class="project-card group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full">
-                    
-                    <!-- Project Image Section -->
-                    <div class="project-image-container relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-700">
-                        @if ($project->image)
-                            <img src="{{ asset('storage/' . $project->image) }}" 
-                                 alt="{{ $project->title }}" 
-                                 class="project-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        @else
-                            <div class="project-image-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-green-400 to-blue-500">
-                                <i class="fas fa-code text-white text-4xl opacity-80"></i>
-                            </div>
-                        @endif
-                        
-                        <!-- Overlay with Links - COMPLETELY FIXED -->
-                        <div class="project-overlay absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <div class="project-links flex gap-4">
-                                @if ($project->link)
-                                    <a href="{{ $project->link }}" target="_blank" class="project-link w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-gray-700 hover:text-green-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-                                        <i class="fab fa-github text-lg"></i>
-                                    </a>
-                                @endif
-                                @if ($project->depurl)
-                                    <a href="{{ $project->depurl }}" target="_blank" class="project-link w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-gray-700 hover:text-blue-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-                                        <i class="fas fa-external-link-alt text-lg"></i>
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Status Badge -->
-                        <div class="absolute top-4 left-4 z-10">
-                            <span class="status-badge px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full uppercase tracking-wide">
-                                NEW
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Project Content Section - FIXED SIZING -->
-                    <div class="project-content p-6 flex flex-col flex-grow">
-                        <!-- Header with Title and Date -->
-                        <div class="project-header mb-4">
-                            <div class="flex justify-between items-start gap-4">
-                                <h3 class="project-title text-xl font-bold text-gray-900 dark:text-white line-clamp-2 flex-1 min-h-[3rem]">
-                                    {{ $project->title }}
-                                </h3>
-                                @if ($project->created_at)
-                                    <span class="project-date text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0 mt-1">
-                                        {{ $project->created_at->format('M Y') }}
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Description - FIXED HEIGHT -->
-                        <p class="project-description text-gray-600 dark:text-gray-300 line-clamp-3 mb-4 flex-grow min-h-[4.5rem]">
-                            {{ $project->description }}
-                        </p>
-
-                        <!-- Tech Stack - FIXED HEIGHT -->
-                        @if (!empty($project->tags))
-                            <div class="project-tech-stack mb-6 min-h-[2rem]">
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach (array_slice(explode(',', $project->tags), 0, 4) as $tag)
-                                        <span class="tech-tag px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full border border-gray-200 dark:border-gray-600">
-                                            {{ trim($tag) }}
-                                        </span>
-                                    @endforeach
-                                    @if (count(explode(',', $project->tags)) > 4)
-                                        <span class="tech-tag-more px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm rounded-full border border-blue-200 dark:border-blue-700">
-                                            +{{ count(explode(',', $project->tags)) - 4 }} more
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        @else
-                            <div class="project-tech-stack mb-6 min-h-[2rem]"></div>
-                        @endif
-
-                        <!-- Actions - COMPLETELY FIXED VISIBILITY & SIZING -->
-                        <div class="project-actions mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <div class="flex justify-between items-center gap-3">
-                                <!-- Primary Action -->
-                                @if ($project->overview)
-                                    <a href="{{ route('project.overview', $project->id) }}" class="primary-action-btn flex items-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-300 text-sm font-medium flex-1 justify-center shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                                        <span>View Details</span>
-                                        <i class="fas fa-arrow-right text-xs"></i>
-                                    </a>
-                                @else
-                                    <div class="primary-action-btn flex items-center gap-2 px-4 py-3 bg-gray-400 text-white rounded-lg text-sm font-medium flex-1 justify-center cursor-not-allowed opacity-70">
-                                        <span>No Details</span>
-                                        <i class="fas fa-ban text-xs"></i>
-                                    </div>
-                                @endif
-                                
-                                <!-- Secondary Actions - FIXED VISIBILITY -->
-                                <div class="secondary-actions flex gap-2 flex-shrink-0">
-                                    @if ($project->link)
-                                        <a href="{{ $project->link }}" target="_blank" class="secondary-action w-10 h-10 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-green-500 hover:text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-300 shadow-sm bg-white dark:bg-gray-700">
-                                            <i class="fab fa-github text-sm"></i>
-                                        </a>
-                                    @endif
-                                    @if ($project->depurl)
-                                        <a href="{{ $project->depurl }}" target="_blank" class="secondary-action w-10 h-10 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 shadow-sm bg-white dark:bg-gray-700">
-                                            <i class="fas fa-external-link-alt text-sm"></i>
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <!-- Empty State -->
-                <div class="col-span-full text-center py-20">
-                    <div class="empty-state max-w-md mx-auto">
-                        <div class="empty-icon w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <i class="fas fa-folder-open text-3xl text-gray-400"></i>
-                        </div>
-                        <h3 class="empty-title text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                            No Projects Yet
-                        </h3>
-                        <p class="empty-description text-gray-600 dark:text-gray-300">
-                            Projects will be displayed here once they are added to the portfolio.
-                        </p>
-                    </div>
-                </div>
-            @endforelse
-        </div>
-
-        <!-- View More Section -->
-        <div class="text-center mt-16">
-            <div class="view-more-section inline-block bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-8 py-6">
-                <p class="view-more-text text-gray-600 dark:text-gray-300 mb-4">
-                    Interested in seeing more of my work?
-                </p>
-                <a href="#contact" class="view-more-btn inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-all duration-300 font-medium shadow-md hover:-translate-y-0.5">
-                    <span>Get In Touch</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <style>
-/* Fixed CSS with proper spacing and structure */
-.theme3-projects {
-    background: linear-gradient(135deg, #0a0a12 0%, #151522 50%, #0a0a12 100%);
-}
-
-[data-theme="light"] .theme3-projects {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
-}
-
-/* Ensure proper card spacing */
-.project-card {
-    min-height: 520px;
-    display: flex;
-    flex-direction: column;
-}
-
-.project-content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.project-actions {
-    margin-top: auto;
-}
-
-/* Text truncation utilities */
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* FIXED: Overlay positioning and visibility */
-.project-overlay {
-    pointer-events: none;
-    transition: all 0.3s ease;
-}
-
-.project-links {
-    pointer-events: auto;
-}
-
-.project-link {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease 0.1s;
-}
-
-.project-card:hover .project-link {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* FIXED: Consistent image sizing */
-.project-image-container {
-    flex-shrink: 0;
-    position: relative;
-}
-
-/* FIXED: Button visibility and styling - FORCE VISIBLE */
-.primary-action-btn,
-.secondary-action {
-    opacity: 1 !important;
-    visibility: visible !important;
-    z-index: 20;
-    position: relative;
-}
-
-.primary-action-btn {
-    background: linear-gradient(135deg, #10b981, #059669) !important;
-    border: none !important;
-}
-
-.primary-action-btn:hover {
-    background: linear-gradient(135deg, #059669, #047857) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3) !important;
-}
-
-.secondary-action {
-    background: white !important;
-    border: 1px solid #d1d5db !important;
-}
-
-.dark .secondary-action {
-    background: #374151 !important;
-    border-color: #4b5563 !important;
-}
-
-.secondary-action:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* FIXED: Consistent card heights */
-.project-title {
-    min-height: 3rem;
-    display: flex;
-    align-items: center;
-}
-
-.project-description {
-    min-height: 4.5rem;
-}
-
-.project-tech-stack {
-    min-height: 2rem;
-}
-
-/* Proper grid gaps */
-.grid {
-    gap: 2rem;
-}
-
-@media (max-width: 768px) {
-    .grid {
-        gap: 1.5rem;
-    }
+    /* ============================================
+       THEME 3 PROJECTS - MASONRY CARD LAYOUT
+       Unique Pinterest-Style Design
+       ============================================ */
     
-    .project-card {
-        min-height: 480px;
+    :root {
+        --t3-proj-bg: #f8fafc;
+        --t3-proj-surface: #ffffff;
+        --t3-proj-text: #1a202c;
+        --t3-proj-text-muted: #4a5568;
+        --t3-proj-accent: #00cc7a;
+        --t3-proj-accent-2: #0099cc;
+        --t3-proj-border: rgba(0, 204, 122, 0.15);
+        --t3-proj-shadow: 0 15px 50px rgba(0, 204, 122, 0.12);
+        --t3-proj-gradient: linear-gradient(135deg, #00cc7a 0%, #0099cc 100%);
+        --t3-proj-glow: rgba(0, 204, 122, 0.2);
     }
-    
-    /* FIXED: Mobile overlay visibility */
-    .project-overlay {
-        opacity: 1 !important;
-        background: rgba(0, 0, 0, 0.6) !important;
+
+    [data-theme="dark"] {
+        --t3-proj-bg: #0a0a12;
+        --t3-proj-surface: #151522;
+        --t3-proj-text: #ffffff;
+        --t3-proj-text-muted: #b4c6e0;
+        --t3-proj-accent: #00ff9d;
+        --t3-proj-accent-2: #00d4ff;
+        --t3-proj-border: rgba(0, 255, 157, 0.15);
+        --t3-proj-shadow: 0 15px 50px rgba(0, 255, 157, 0.25);
+        --t3-proj-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+        --t3-proj-glow: rgba(0, 255, 157, 0.25);
     }
-    
-    .project-link {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
+
+    /* Section */
+    .t3-projects-section {
+        background: var(--t3-proj-bg);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
     }
-    
-    .project-title {
-        min-height: 2.5rem;
+
+    /* Floating Gradient Orbs */
+    .t3-proj-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--t3-proj-gradient);
+        filter: blur(100px);
+        opacity: 0.06;
+        pointer-events: none;
+        animation: t3FloatOrb 25s ease-in-out infinite;
+    }
+
+    .t3-proj-orb-1 {
+        width: 450px;
+        height: 450px;
+        top: -15%;
+        right: -10%;
+        animation-delay: 0s;
+    }
+
+    .t3-proj-orb-2 {
+        width: 400px;
+        height: 400px;
+        bottom: -15%;
+        left: -10%;
+        animation-delay: 8s;
+    }
+
+    @keyframes t3FloatOrb {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(60px, -60px) scale(1.15); }
+        66% { transform: translate(-60px, 60px) scale(0.85); }
+    }
+
+    /* Container */
+    .t3-proj-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Header with Centered Title */
+    .t3-proj-header {
+        text-align: center;
+        margin-bottom: 5rem;
+        position: relative;
+    }
+
+    .t3-proj-header::before {
+        content: '';
+        position: absolute;
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--t3-proj-gradient);
+        border-radius: 10px;
+    }
+
+    .t3-proj-main-title {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 900;
+        margin-bottom: 1.25rem;
+        color: var(--t3-proj-text);
+        letter-spacing: -0.03em;
+    }
+
+    .t3-proj-title-gradient {
+        background: var(--t3-proj-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .t3-proj-subtitle {
         font-size: 1.125rem;
+        color: var(--t3-proj-text-muted);
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.7;
     }
-    
-    .project-description {
-        min-height: 4rem;
+
+    /* Masonry Grid - 3 Columns */
+    .t3-masonry-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 3rem;
     }
-}
 
-/* Background pattern */
-.background-pattern {
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(0, 255, 157, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
-    opacity: 0.1;
-}
-
-/* Floating particles */
-.particle-container .floating-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #00ff9d;
-    box-shadow: 0 0 12px #00ff9d;
-    animation: particleFloat 25s ease-in-out infinite;
-}
-
-@keyframes particleFloat {
-    0%, 100% { 
-        transform: translate(0, 0) scale(1);
-        opacity: 0.3;
-    }
-    25% { 
-        transform: translate(100px, -80px) scale(1.3);
-        opacity: 0.7;
-    }
-    50% { 
-        transform: translate(-60px, 120px) scale(0.8);
-        opacity: 0.4;
-    }
-    75% { 
-        transform: translate(120px, 60px) scale(1.1);
-        opacity: 0.6;
-    }
-}
-
-/* Section header styles */
-.section-title-primary {
-    color: #ffffff;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-[data-theme="light"] .section-title-primary {
-    color: #1a202c;
-}
-
-.section-title-secondary {
-    background: linear-gradient(135deg, #00ff9d, #00d4ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-.section-divider {
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, #00ff9d, #00d4ff);
-    border-radius: 2px;
-}
-
-/* FIXED: Ensure all buttons are properly visible */
-.project-actions .flex {
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* FIXED: Force button backgrounds */
-.primary-action-btn {
-    background: linear-gradient(135deg, #10b981, #059669) !important;
-}
-
-.secondary-action {
-    background: white !important;
-}
-
-.dark .secondary-action {
-    background: #374151 !important;
-}
-
-/* FIXED: Add clear visual hierarchy */
-.tech-tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-}
-
-.status-badge {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.75rem;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Floating Particles
-    const particleContainer = document.querySelector('.particle-container');
-    if (particleContainer) {
-        const particleCount = 8;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'floating-particle';
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 10}s`;
-            particleContainer.appendChild(particle);
+    @media (max-width: 1024px) {
+        .t3-masonry-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
-    // Add smooth entrance animations
-    const projectCards = document.querySelectorAll('.project-card');
-    projectCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 100);
-    });
+    @media (max-width: 640px) {
+        .t3-masonry-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 
-    // FIXED: Force button visibility on load
-    setTimeout(() => {
-        const buttons = document.querySelectorAll('.primary-action-btn, .secondary-action');
-        buttons.forEach(button => {
-            button.style.opacity = '1';
-            button.style.visibility = 'visible';
-            button.style.transform = 'translateY(0)';
-        });
-    }, 500);
-});
-</script>
+    /* Project Card - Vertical Orientation */
+    .t3-proj-card {
+        background: var(--t3-proj-surface);
+        border: 1px solid var(--t3-proj-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .t3-proj-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--t3-proj-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .t3-proj-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: var(--t3-proj-shadow);
+        border-color: var(--t3-proj-accent);
+    }
+
+    .t3-proj-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Image Section */
+    .t3-proj-image-container {
+        position: relative;
+        width: 100%;
+        height: 280px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(0, 204, 122, 0.1) 0%, rgba(0, 153, 204, 0.1) 100%);
+    }
+
+    [data-theme="dark"] .t3-proj-image-container {
+        background: linear-gradient(135deg, rgba(0, 255, 157, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+    }
+
+    .t3-proj-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .t3-proj-card:hover .t3-proj-image {
+        transform: scale(1.15) rotate(2deg);
+    }
+
+    /* Gradient Overlay on Image */
+    .t3-proj-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .t3-proj-card:hover .t3-proj-image-overlay {
+        opacity: 1;
+    }
+
+    /* Content Section */
+    .t3-proj-content {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        flex: 1;
+    }
+
+    .t3-proj-title {
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: var(--t3-proj-text);
+        line-height: 1.3;
+        margin: 0;
+    }
+
+    .t3-proj-description {
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        color: var(--t3-proj-text-muted);
+        flex: 1;
+    }
+
+    /* Tech Tags - Horizontal Pills */
+    .t3-proj-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .t3-proj-tag {
+        padding: 0.375rem 0.875rem;
+        background: rgba(0, 204, 122, 0.08);
+        border: 1px solid var(--t3-proj-border);
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--t3-proj-accent);
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .t3-proj-tag {
+        background: rgba(0, 255, 157, 0.08);
+    }
+
+    .t3-proj-tag:hover {
+        background: var(--t3-proj-accent);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Action Footer */
+    .t3-proj-footer {
+        padding: 1.5rem 2rem;
+        border-top: 1px solid var(--t3-proj-border);
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .t3-proj-btn {
+        flex: 1;
+        min-width: 120px;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .t3-proj-btn-primary {
+        background: var(--t3-proj-gradient);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px var(--t3-proj-glow);
+    }
+
+    .t3-proj-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px var(--t3-proj-glow);
+    }
+
+    .t3-proj-btn-secondary {
+        background: transparent;
+        color: var(--t3-proj-text);
+        border: 1.5px solid var(--t3-proj-border);
+    }
+
+    .t3-proj-btn-secondary:hover {
+        background: rgba(0, 204, 122, 0.05);
+        border-color: var(--t3-proj-accent);
+        color: var(--t3-proj-accent);
+    }
+
+    [data-theme="dark"] .t3-proj-btn-secondary:hover {
+        background: rgba(0, 255, 157, 0.05);
+    }
+
+    .t3-proj-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Empty State */
+    .t3-empty-state {
+        text-align: center;
+        padding: 6rem 2rem;
+    }
+
+    .t3-empty-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: var(--t3-proj-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+    }
+
+    .t3-empty-text {
+        font-size: 1.25rem;
+        color: var(--t3-proj-text-muted);
+    }
+</style>
+
+<section id="projects" class="t3-projects-section">
+    <!-- Floating Orbs -->
+    <div class="t3-proj-orb t3-proj-orb-1"></div>
+    <div class="t3-proj-orb t3-proj-orb-2"></div>
+
+    <div class="t3-proj-container">
+        <!-- Header -->
+        <div class="t3-proj-header">
+            <h2 class="t3-proj-main-title">
+                My <span class="t3-proj-title-gradient">Projects</span>
+            </h2>
+            <p class="t3-proj-subtitle">
+                Explore my portfolio of innovative solutions and creative implementations
+            </p>
+        </div>
+
+        @if($projects->isEmpty())
+            <div class="t3-empty-state">
+                <div class="t3-empty-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <p class="t3-empty-text">No projects available yet. Check back soon!</p>
+            </div>
+        @else
+            <!-- Masonry Grid -->
+            <div class="t3-masonry-grid">
+                @foreach($projects as $project)
+                    <div class="t3-proj-card">
+                        <!-- Image -->
+                        <div class="t3-proj-image-container">
+                            @if($project->image)
+                                <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}" class="t3-proj-image">
+                            @endif
+                            <div class="t3-proj-image-overlay"></div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="t3-proj-content">
+                            <h3 class="t3-proj-title">{{ $project->title }}</h3>
+                            
+                            @if($project->description)
+                                <p class="t3-proj-description">
+                                    {{ Str::limit(strip_tags($project->description), 120) }}
+                                </p>
+                            @endif
+
+                            @if($project->tags)
+                                <div class="t3-proj-tags">
+                                    @foreach(array_slice(explode(',', $project->tags), 0, 4) as $tech)
+                                        <span class="t3-proj-tag">{{ trim($tech) }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Footer Actions -->
+                        <div class="t3-proj-footer">
+                            @if($project->overview)
+                                <a href="{{ route('project.overview', $project) }}" class="t3-proj-btn t3-proj-btn-primary">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    View
+                                </a>
+                            @endif
+
+                            @if($project->depurl)
+                                <a href="{{ $project->depurl }}" target="_blank" class="t3-proj-btn t3-proj-btn-secondary">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                    </svg>
+                                    Live
+                                </a>
+                            @endif
+
+                            @if($project->link)
+                                <a href="{{ $project->link }}" target="_blank" class="t3-proj-btn t3-proj-btn-secondary">
+                                    <svg fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                    Code
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</section>

@@ -1,601 +1,515 @@
 @props(['experiences'])
 
-<section id="experience" class="section-full relative overflow-hidden py-24 lg:py-32 theme3-experience">
-    <!-- Background Elements -->
-    <div class="background-pattern absolute inset-0 -z-10"></div>
+<style>
+    /* ============================================
+       THEME 3 EXPERIENCE - HORIZONTAL TIMELINE
+       Modern Scrollable Design
+       ============================================ */
     
-    <!-- Floating Particles -->
-    <div class="particle-container absolute inset-0 -z-10 pointer-events-none"></div>
+    :root {
+        --t3-exp-bg: #f8fafc;
+        --t3-exp-surface: #ffffff;
+        --t3-exp-text: #1a202c;
+        --t3-exp-text-muted: #4a5568;
+        --t3-exp-accent: #00cc7a;
+        --t3-exp-accent-2: #0099cc;
+        --t3-exp-border: rgba(0, 204, 122, 0.15);
+        --t3-exp-shadow: 0 15px 50px rgba(0, 204, 122, 0.12);
+        --t3-exp-gradient: linear-gradient(135deg, #00cc7a 0%, #0099cc 100%);
+    }
 
-    <div class="container mx-auto max-w-6xl relative z-10 px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-                <span class="section-title-primary">Career</span>
-                <span class="section-title-secondary">Journey</span>
+    [data-theme="dark"] {
+        --t3-exp-bg: #0a0a12;
+        --t3-exp-surface: #151522;
+        --t3-exp-text: #ffffff;
+        --t3-exp-text-muted: #b4c6e0;
+        --t3-exp-accent: #00ff9d;
+        --t3-exp-accent-2: #00d4ff;
+        --t3-exp-border: rgba(0, 255, 157, 0.15);
+        --t3-exp-shadow: 0 15px 50px rgba(0, 255, 157, 0.25);
+        --t3-exp-gradient: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
+    }
+
+    /* Section */
+    .t3-exp-section {
+        background: var(--t3-exp-bg);
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background Orbs */
+    .t3-exp-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--t3-exp-gradient);
+        filter: blur(100px);
+        opacity: 0.06;
+        pointer-events: none;
+    }
+
+    .t3-exp-orb-1 {
+        width: 450px;
+        height: 450px;
+        top: -15%;
+        left: -10%;
+    }
+
+    .t3-exp-orb-2 {
+        width: 400px;
+        height: 400px;
+        bottom: -15%;
+        right: -10%;
+    }
+
+    /* Container */
+    .t3-exp-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Header */
+    .t3-exp-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .t3-exp-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        margin-bottom: 1.25rem;
+        color: var(--t3-exp-text);
+        letter-spacing: -0.03em;
+    }
+
+    .t3-exp-title-accent {
+        background: var(--t3-exp-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .t3-exp-subtitle {
+        font-size: 1.125rem;
+        color: var(--t3-exp-text-muted);
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    /* Timeline Wrapper */
+    .t3-timeline-wrapper {
+        position: relative;
+        padding: 3rem 0;
+    }
+
+    /* Horizontal Scroll Container */
+    .t3-timeline-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 2rem 0 3rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--t3-exp-accent) transparent;
+    }
+
+    .t3-timeline-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .t3-timeline-scroll::-webkit-scrollbar-track {
+        background: rgba(0, 204, 122, 0.05);
+        border-radius: 10px;
+    }
+
+    .t3-timeline-scroll::-webkit-scrollbar-thumb {
+        background: var(--t3-exp-gradient);
+        border-radius: 10px;
+    }
+
+    [data-theme="dark"] .t3-timeline-scroll::-webkit-scrollbar-track {
+        background: rgba(0, 255, 157, 0.05);
+    }
+
+    /* Timeline Track */
+    .t3-timeline-track {
+        display: flex;
+        gap: 2rem;
+        position: relative;
+        padding: 0 1rem;
+        min-width: min-content;
+    }
+
+    /* Timeline Line */
+    .t3-timeline-line {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--t3-exp-gradient);
+        border-radius: 2px;
+    }
+
+    /* Experience Card */
+    .t3-exp-card {
+        position: relative;
+        background: var(--t3-exp-surface);
+        border: 1px solid var(--t3-exp-border);
+        border-radius: 20px;
+        padding: 2rem;
+        width: 380px;
+        flex-shrink: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .t3-exp-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--t3-exp-gradient);
+        border-radius: 20px 20px 0 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .t3-exp-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--t3-exp-accent);
+        box-shadow: var(--t3-exp-shadow);
+    }
+
+    .t3-exp-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Timeline Node */
+    .t3-exp-node {
+        position: absolute;
+        top: -2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 50px;
+        background: var(--t3-exp-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        box-shadow: 0 8px 25px rgba(0, 204, 122, 0.3);
+        z-index: 10;
+    }
+
+    [data-theme="dark"] .t3-exp-node {
+        box-shadow: 0 8px 25px rgba(0, 255, 157, 0.3);
+    }
+
+    /* Duration Badge */
+    .t3-exp-duration {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(0, 204, 122, 0.08);
+        border: 1px solid var(--t3-exp-border);
+        border-radius: 100px;
+        color: var(--t3-exp-accent);
+        font-size: 0.875rem;
+        font-weight: 600;
+        width: fit-content;
+    }
+
+    [data-theme="dark"] .t3-exp-duration {
+        background: rgba(0, 255, 157, 0.08);
+    }
+
+    .t3-exp-duration i {
+        font-size: 0.75rem;
+    }
+
+    /* Role & Company */
+    .t3-exp-role {
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: var(--t3-exp-text);
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+    }
+
+    .t3-exp-company {
+        font-size: 1.0625rem;
+        font-weight: 600;
+        background: var(--t3-exp-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.4;
+    }
+
+    /* Details */
+    .t3-exp-details {
+        font-size: 0.9375rem;
+        line-height: 1.7;
+        color: var(--t3-exp-text-muted);
+    }
+
+    /* Current Badge */
+    .t3-exp-current {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.375rem 0.875rem;
+        background: linear-gradient(135deg, #ff6b6b, #ffa726);
+        border-radius: 100px;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        animation: t3CurrentPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes t3CurrentPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .t3-exp-current i {
+        font-size: 0.625rem;
+    }
+
+    /* Empty State */
+    .t3-empty-state {
+        text-align: center;
+        padding: 6rem 2rem;
+    }
+
+    .t3-empty-icon {
+        width: 100px;
+        height: 100px;
+        background: var(--t3-exp-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        color: white;
+        font-size: 2.5rem;
+    }
+
+    .t3-empty-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--t3-exp-text);
+        margin-bottom: 1rem;
+    }
+
+    .t3-empty-text {
+        font-size: 1.0625rem;
+        color: var(--t3-exp-text-muted);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Scroll Hint */
+    .t3-scroll-hint {
+        text-align: center;
+        margin-top: 2rem;
+        color: var(--t3-exp-text-muted);
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        animation: t3ScrollHint 2s ease-in-out infinite;
+    }
+
+    @keyframes t3ScrollHint {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(10px); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .t3-exp-section {
+            padding: 4rem 0;
+        }
+
+        .t3-exp-header {
+            margin-bottom: 3rem;
+        }
+
+        .t3-exp-card {
+            width: 320px;
+            padding: 1.5rem;
+        }
+
+        .t3-exp-node {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .t3-timeline-line {
+            top: 50px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t3-exp-card {
+            width: 280px;
+            padding: 1.25rem;
+        }
+
+        .t3-exp-role {
+            font-size: 1.125rem;
+        }
+
+        .t3-exp-company {
+            font-size: 0.9375rem;
+        }
+    }
+</style>
+
+<section id="experience" class="t3-exp-section">
+    <!-- Background Orbs -->
+    <div class="t3-exp-orb t3-exp-orb-1"></div>
+    <div class="t3-exp-orb t3-exp-orb-2"></div>
+
+    <div class="t3-exp-container">
+        <!-- Header -->
+        <div class="t3-exp-header">
+            <h2 class="t3-exp-title">
+                Career <span class="t3-exp-title-accent">Journey</span>
             </h2>
-            <div class="section-divider"></div>
-            <p class="text-lg md:text-xl text-center max-w-2xl mx-auto mt-6" style="color: var(--text-secondary);">
+            <p class="t3-exp-subtitle">
                 My professional growth and career milestones
             </p>
         </div>
 
         @if($experiences->isEmpty())
             <!-- Empty State -->
-            <div class="empty-state">
-                <div class="empty-icon">
+            <div class="t3-empty-state">
+                <div class="t3-empty-icon">
                     <i class="fas fa-briefcase"></i>
                 </div>
-                <h3 class="empty-title">No Experience Added</h3>
-                <p class="empty-description">Professional experience will be displayed here once added to the portfolio.</p>
+                <h3 class="t3-empty-title">No Experience Added</h3>
+                <p class="t3-empty-text">
+                    Professional experience will be displayed here once added to the portfolio.
+                </p>
             </div>
         @else
-            <!-- Timeline Container -->
-            <div class="timeline-container">
-                <!-- Central Timeline Line -->
-                <div class="timeline-line"></div>
+            <!-- Timeline -->
+            <div class="t3-timeline-wrapper">
+                <div class="t3-timeline-scroll">
+                    <div class="t3-timeline-track">
+                        <!-- Timeline Line -->
+                        <div class="t3-timeline-line"></div>
 
-                @foreach($experiences as $index => $experience)
-                    @php
-                        $isEven = $index % 2 === 0;
-                        $isFirst = $index === 0;
-                        $isLast = $index === $experiences->count() - 1;
-                    @endphp
+                        @foreach($experiences as $index => $experience)
+                            <div class="t3-exp-card">
+                                <!-- Timeline Node -->
+                                <div class="t3-exp-node">
+                                    @if($index === 0)
+                                        <i class="fas fa-rocket"></i>
+                                    @elseif($index === $experiences->count() - 1)
+                                        <i class="fas fa-flag-checkered"></i>
+                                    @else
+                                        <i class="fas fa-briefcase"></i>
+                                    @endif
+                                </div>
 
-                    <!-- Timeline Item -->
-                    <div class="timeline-item {{ $isEven ? 'timeline-item-left' : 'timeline-item-right' }}">
-                        <!-- Timeline Node -->
-                        <div class="timeline-node {{ $isFirst ? 'timeline-node-first' : '' }} {{ $isLast ? 'timeline-node-last' : '' }}">
-                            <div class="node-core">
-                                @if($isFirst)
-                                    <i class="fas fa-rocket"></i>
-                                @elseif($isLast)
-                                    <i class="fas fa-flag-checkered"></i>
-                                @else
-                                    <i class="fas fa-circle"></i>
+                                <!-- Current Badge -->
+                                @if($index === 0)
+                                    <div class="t3-exp-current">
+                                        <i class="fas fa-bolt"></i>
+                                        Current
+                                    </div>
+                                @endif
+
+                                <!-- Duration -->
+                                @if($experience->duration)
+                                    <div class="t3-exp-duration">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ $experience->duration }}
+                                    </div>
+                                @endif
+
+                                <!-- Role & Company -->
+                                <div>
+                                    <h3 class="t3-exp-role">{{ $experience->role }}</h3>
+                                    <p class="t3-exp-company">{{ $experience->company }}</p>
+                                </div>
+
+                                <!-- Details -->
+                                @if($experience->details)
+                                    <p class="t3-exp-details">{{ $experience->details }}</p>
                                 @endif
                             </div>
-                            <div class="node-glow"></div>
-                        </div>
-
-                        <!-- Experience Card -->
-                        <div class="experience-card group">
-                            <!-- Current Role Badge -->
-                            @if($isFirst)
-                                <div class="current-badge">
-                                    <i class="fas fa-bolt"></i>
-                                    <span>Current Role</span>
-                                </div>
-                            @endif
-
-                            <!-- Duration -->
-                            @if($experience->duration)
-                                <div class="experience-duration">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>{{ $experience->duration }}</span>
-                                </div>
-                            @endif
-
-                            <!-- Role & Company -->
-                            <div class="experience-header">
-                                <h3 class="experience-role">{{ $experience->role }}</h3>
-                                <p class="experience-company">{{ $experience->company }}</p>
-                            </div>
-
-                            <!-- Details -->
-                            @if($experience->details)
-                                <div class="experience-details">
-                                    <p>{{ $experience->details }}</p>
-                                </div>
-                            @endif
-
-                            <!-- Skills/Tech Used -->
-                            <div class="experience-skills">
-                                <div class="skills-label">
-                                    <i class="fas fa-tools"></i>
-                                    <span>Key Contributions</span>
-                                </div>
-                                <div class="skills-tags">
-                                    <span class="skill-tag">Full Stack</span>
-                                    <span class="skill-tag">Team Leadership</span>
-                                    <span class="skill-tag">Project Management</span>
-                                </div>
-                            </div>
-
-                            <!-- Card Glow Effect -->
-                            <div class="card-glow"></div>
-                        </div>
+                        @endforeach
                     </div>
-                @endforeach
+                </div>
+
+                <!-- Scroll Hint -->
+                <div class="t3-scroll-hint">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Scroll to explore timeline</span>
+                </div>
             </div>
         @endif
     </div>
 </section>
 
-<style>
-/* ===================================
-   THEME 3 EXPERIENCE - PROFESSIONAL DESIGN
-   =================================== */
-
-:root {
-    --bg-primary: #0a0a12;
-    --bg-secondary: #151522;
-    --text-primary: #ffffff;
-    --text-secondary: #b4c6e0;
-    --text-muted: #8fa3c7;
-    --accent-primary: #00ff9d;
-    --accent-secondary: #00d4ff;
-    --accent-glow: rgba(0, 255, 157, 0.3);
-    --border-light: rgba(0, 255, 157, 0.2);
-    --card-bg: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="light"] {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --text-muted: #718096;
-    --accent-primary: #00cc7a;
-    --accent-secondary: #0099cc;
-    --accent-glow: rgba(0, 204, 122, 0.2);
-    --border-light: rgba(0, 204, 122, 0.3);
-    --card-bg: rgba(0, 0, 0, 0.03);
-}
-
-.theme3-experience {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Background Pattern */
-.background-pattern {
-    background-image: 
-        radial-gradient(circle at 20% 80%, var(--accent-glow) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-    opacity: 0.1;
-}
-
-/* Floating Particles */
-.particle-container .floating-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--accent-primary);
-    box-shadow: 0 0 12px var(--accent-primary);
-    animation: particleFloat 25s ease-in-out infinite;
-}
-
-@keyframes particleFloat {
-    0%, 100% { 
-        transform: translate(0, 0) scale(1);
-        opacity: 0.3;
-    }
-    25% { 
-        transform: translate(100px, -80px) scale(1.3);
-        opacity: 0.7;
-    }
-    50% { 
-        transform: translate(-60px, 120px) scale(0.8);
-        opacity: 0.4;
-    }
-    75% { 
-        transform: translate(120px, 60px) scale(1.1);
-        opacity: 0.6;
-    }
-}
-
-/* Section Header */
-.section-title-primary {
-    color: var(--text-primary);
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-.section-title-secondary {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-}
-
-.section-divider {
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 2px;
-    margin: 0 auto;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 6rem 2rem;
-}
-
-.empty-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--card-bg);
-    border: 2px solid var(--border-light);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 2rem;
-    color: var(--text-muted);
-    font-size: 2rem;
-}
-
-.empty-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-}
-
-.empty-description {
-    color: var(--text-secondary);
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/* Timeline Container */
-.timeline-container {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-/* Timeline Line */
-.timeline-line {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(
-        180deg,
-        var(--accent-primary) 0%,
-        var(--accent-secondary) 50%,
-        var(--accent-primary) 100%
-    );
-    border-radius: 2px;
-}
-
-/* Timeline Item */
-.timeline-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 4rem;
-    position: relative;
-    width: 100%;
-}
-
-.timeline-item-left {
-    justify-content: flex-start;
-    padding-right: 50%;
-}
-
-.timeline-item-right {
-    justify-content: flex-end;
-    padding-left: 50%;
-}
-
-/* Timeline Node */
-.timeline-node {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
-
-.node-core {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bg-primary);
-    font-size: 1rem;
-    position: relative;
-    z-index: 2;
-    border: 3px solid var(--bg-primary);
-}
-
-.node-glow {
-    position: absolute;
-    inset: -10px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    border-radius: 50%;
-    filter: blur(12px);
-    opacity: 0.4;
-    z-index: 1;
-    animation: nodePulse 2s ease-in-out infinite;
-}
-
-.timeline-node-first .node-core {
-    background: linear-gradient(135deg, #ff6b6b, #ffa726);
-}
-
-.timeline-node-last .node-core {
-    background: linear-gradient(135deg, #4ecdc4, #556270);
-}
-
-@keyframes nodePulse {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.1); }
-}
-
-/* Experience Card */
-.experience-card {
-    position: relative;
-    background: var(--card-bg);
-    border: 1px solid var(--border-light);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 500px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-}
-
-.experience-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--accent-primary);
-    box-shadow: 
-        0 20px 40px rgba(0, 255, 157, 0.15),
-        0 0 0 1px rgba(0, 255, 157, 0.1);
-}
-
-.card-glow {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--accent-primary), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 16px;
-    pointer-events: none;
-}
-
-.experience-card:hover .card-glow {
-    opacity: 0.05;
-}
-
-/* Current Badge */
-.current-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, #ff6b6b, #ffa726);
-    border-radius: 20px;
-    color: var(--bg-primary);
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    animation: currentPulse 2s ease-in-out infinite;
-}
-
-@keyframes currentPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* Experience Duration */
-.experience-duration {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--accent-primary);
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.experience-duration i {
-    font-size: 0.75rem;
-}
-
-/* Experience Header */
-.experience-header {
-    margin-bottom: 1.5rem;
-}
-
-.experience-role {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.3;
-    margin-bottom: 0.5rem;
-}
-
-.experience-company {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--accent-secondary);
-    line-height: 1.4;
-}
-
-/* Experience Details */
-.experience-details {
-    margin-bottom: 1.5rem;
-}
-
-.experience-details p {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    font-size: 0.95rem;
-}
-
-/* Experience Skills */
-.experience-skills {
-    margin-top: 1.5rem;
-}
-
-.skills-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.skills-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.skill-tag {
-    padding: 0.375rem 0.75rem;
-    background: rgba(0, 255, 157, 0.1);
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--accent-primary);
-    transition: all 0.3s ease;
-}
-
-.skill-tag:hover {
-    background: rgba(0, 255, 157, 0.15);
-    transform: translateY(-1px);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .timeline-item-left,
-    .timeline-item-right {
-        padding: 0;
-        justify-content: center;
-    }
-    
-    .timeline-node {
-        display: none;
-    }
-    
-    .experience-card {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-@media (max-width: 768px) {
-    .section-title-primary,
-    .section-title-secondary {
-        font-size: 3rem;
-    }
-    
-    .experience-card {
-        padding: 1.5rem;
-    }
-    
-    .experience-role {
-        font-size: 1.25rem;
-    }
-    
-    .experience-company {
-        font-size: 1rem;
-    }
-    
-    .timeline-line {
-        left: 30px;
-    }
-    
-    .timeline-node {
-        left: 30px;
-        display: flex;
-    }
-    
-    .timeline-item-left,
-    .timeline-item-right {
-        padding-left: 80px;
-        justify-content: flex-start;
-    }
-}
-
-@media (max-width: 480px) {
-    .section-title-primary,
-    .section-title-secondary {
-        font-size: 2.5rem;
-    }
-    
-    .experience-card {
-        padding: 1.25rem;
-    }
-    
-    .timeline-item {
-        margin-bottom: 3rem;
-    }
-    
-    .timeline-node {
-        width: 50px;
-        height: 50px;
-        left: 25px;
-    }
-    
-    .node-core {
-        width: 32px;
-        height: 32px;
-        font-size: 0.875rem;
-    }
-    
-    .timeline-item-left,
-    .timeline-item-right {
-        padding-left: 60px;
-    }
-}
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Floating Particles
-    const particleContainer = document.querySelector('.particle-container');
-    if (particleContainer) {
-        const particleCount = 6;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'floating-particle';
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 10}s`;
-            particleContainer.appendChild(particle);
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollContainer = document.querySelector('.t3-timeline-scroll');
+        const scrollHint = document.querySelector('.t3-scroll-hint');
+        
+        if (scrollContainer && scrollHint) {
+            // Hide scroll hint when user scrolls
+            scrollContainer.addEventListener('scroll', function() {
+                if (scrollContainer.scrollLeft > 50) {
+                    scrollHint.style.opacity = '0';
+                    scrollHint.style.pointerEvents = 'none';
+                } else {
+                    scrollHint.style.opacity = '1';
+                    scrollHint.style.pointerEvents = 'auto';
+                }
+            });
         }
-    }
 
-    // Animate timeline items on scroll
-    const timelineItems = document.querySelectorAll('.timeline-item');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+        // Smooth scroll animation for cards
+        const cards = document.querySelectorAll('.t3-exp-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1, root: document.querySelector('.t3-timeline-scroll') });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
         });
-    }, { threshold: 0.1 });
-
-    timelineItems.forEach((item, index) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(30px)';
-        item.style.transition = `all 0.6s ease ${index * 0.2}s`;
-        observer.observe(item);
     });
-});
 </script>
