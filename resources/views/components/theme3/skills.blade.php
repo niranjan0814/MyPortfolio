@@ -32,6 +32,7 @@
         --t3-skills-glow: rgba(0, 255, 157, 0.25);
     }
 
+    
     /* Section */
     .t3-skills-section {
         background: var(--t3-skills-bg);
@@ -39,6 +40,10 @@
         position: relative;
         overflow: hidden;
     }
+    .t3-skills-section {
+    border-radius: 0 !important;
+}
+
 
     /* Background Orbs */
     .t3-skills-orbs {
@@ -92,6 +97,7 @@
     .t3-skills-header {
         text-align: center;
         margin-bottom: 5rem;
+        position: relative;
     }
 
     .t3-skills-title {
@@ -400,9 +406,7 @@
             <h2 class="t3-skills-title">
                 Technical <span class="t3-skills-title-accent">Skills</span>
             </h2>
-            <p class="t3-skills-subtitle">
-                Technologies and tools I use to build exceptional digital experiences
-            </p>
+            
         </div>
 
         @if($skills->isEmpty())
@@ -487,7 +491,7 @@
             <div class="t3-skills-stats">
                 <div class="t3-stat-card">
                     <div class="t3-stat-icon">
-                        <i class="fas fa-layer-group"></i>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                     </div>
                     <div class="t3-stat-info">
                         <div class="t3-stat-value">{{ $skills->count() }}+</div>
@@ -497,7 +501,7 @@
 
                 <div class="t3-stat-card">
                     <div class="t3-stat-icon">
-                        <i class="fas fa-project-diagram"></i>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 15v4"></path><path d="M12 5v4"></path><path d="M5 12h4"></path><path d="M15 12h4"></path></svg>
                     </div>
                     <div class="t3-stat-info">
                         <div class="t3-stat-value">{{ $groupedSkills->count() }}</div>

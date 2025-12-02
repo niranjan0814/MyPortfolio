@@ -405,7 +405,7 @@
             <!-- Empty State -->
             <div class="t3-empty-state">
                 <div class="t3-empty-icon">
-                    <i class="fas fa-briefcase"></i>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                 </div>
                 <h3 class="t3-empty-title">No Experience Added</h3>
                 <p class="t3-empty-text">
@@ -425,18 +425,18 @@
                                 <!-- Timeline Node -->
                                 <div class="t3-exp-node">
                                     @if($index === 0)
-                                        <i class="fas fa-rocket"></i>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
                                     @elseif($index === $experiences->count() - 1)
-                                        <i class="fas fa-flag-checkered"></i>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
                                     @else
-                                        <i class="fas fa-briefcase"></i>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                                     @endif
                                 </div>
 
                                 <!-- Current Badge -->
                                 @if($index === 0)
                                     <div class="t3-exp-current">
-                                        <i class="fas fa-bolt"></i>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                                         Current
                                     </div>
                                 @endif
@@ -444,7 +444,7 @@
                                 <!-- Duration -->
                                 @if($experience->duration)
                                     <div class="t3-exp-duration">
-                                        <i class="fas fa-calendar-alt"></i>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                         {{ $experience->duration }}
                                     </div>
                                 @endif
@@ -466,7 +466,7 @@
 
                 <!-- Scroll Hint -->
                 <div class="t3-scroll-hint">
-                    <i class="fas fa-arrow-right"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     <span>Scroll to explore timeline</span>
                 </div>
             </div>

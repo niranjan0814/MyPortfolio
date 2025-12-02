@@ -253,6 +253,12 @@
         background-clip: text;
     }
 
+    .t3-progress-icon svg {
+        color: var(--t3-edu-accent);
+        width: 32px;
+        height: 32px;
+    }
+
     .t3-edu-degree {
         font-size: 1.25rem;
         font-weight: 700;
@@ -442,6 +448,8 @@
             height: 120px;
         }
     }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
 
 <section id="education" class="t3-edu-section">
@@ -477,7 +485,7 @@
             <!-- Empty State -->
             <div class="t3-empty-state">
                 <div class="t3-empty-icon">
-                    <i class="fas fa-graduation-cap"></i>
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                 </div>
                 <h3 class="t3-empty-title">No Education Added Yet</h3>
                 <p class="t3-empty-text">
@@ -502,7 +510,7 @@
                                         @if($education->icon_url)
                                             <img src="{{ $education->icon_url }}" alt="{{ $education->institution }}">
                                         @else
-                                            <i class="fas fa-university"></i>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                                         @endif
                                     </div>
                                 </div>
@@ -513,13 +521,13 @@
 
                                 <!-- Year Badge -->
                                 <div class="t3-edu-year-badge">
-                                    <i class="fas fa-calendar-alt"></i>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                     {{ $education->year ?: 'Present' }}
                                 </div>
 
                                 <!-- Flip Hint -->
                                 <div class="t3-flip-hint">
-                                    <i class="fas fa-sync-alt"></i>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                     Hover to see details
                                 </div>
                             </div>
@@ -528,7 +536,7 @@
                             <div class="t3-edu-card-back">
                                 <div class="t3-edu-back-content">
                                     <div class="t3-edu-back-icon">
-                                        <i class="fas fa-graduation-cap"></i>
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                                     </div>
                                     <h3 class="t3-edu-back-title">{{ $education->degree }}</h3>
                                     
@@ -595,12 +603,12 @@
 
                                     @if($isCompleted)
                                         <div class="t3-edu-status-badge">
-                                            <i class="fas fa-check-circle"></i>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                             Completed
                                         </div>
                                     @else
                                         <div class="t3-edu-status-badge">
-                                            <i class="fas fa-spinner"></i>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 2s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
                                             Currently Pursuing
                                         </div>
                                     @endif

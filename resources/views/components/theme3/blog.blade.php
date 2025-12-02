@@ -160,8 +160,8 @@
         /* Date Badge */
         .t3-blog-date {
             position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
+            bottom: 1.5rem;
+            right: 1.5rem;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             padding: 0.5rem 1rem;

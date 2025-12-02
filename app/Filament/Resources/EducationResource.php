@@ -8,6 +8,7 @@ use App\Models\Education;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
+use Closure as BaseClosure;
 
 class EducationResource extends Resource
 {
@@ -30,7 +31,19 @@ class EducationResource extends Resource
             Forms\Components\TextInput::make('institution')->required(),
             Forms\Components\TextInput::make('degree')->required(),
             Forms\Components\TextInput::make('year'),
-            Forms\Components\Textarea::make('details')->rows(3),
+            Forms\Components\Textarea::make('details')
+                ->rows(2)
+                ->helperText('Maximum 12 words allowed.')
+                ->rule(function () {
+                    return function (string $attribute, $value, \Closure $fail) {
+                        if ($value) {
+                            $wordCount = str_word_count($value);
+                            if ($wordCount > 11) {
+                                $fail("The {$attribute} must not exceed 12 words. (Currently: {$wordCount})");
+                            }
+                        }
+                    };
+                }),
             Forms\Components\TextInput::make('icon_url')
                 ->label('Icon URL')
                 ->url()
