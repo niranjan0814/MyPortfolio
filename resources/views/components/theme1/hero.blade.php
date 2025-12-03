@@ -338,7 +338,7 @@
     /* Scroll Indicator - Bottom Center (Fixed) */
     .t1-scroll-indicator {
         position: fixed;
-        bottom: 2rem;
+        bottom: 0.25rem;
         left: 50%;
         transform: translateX(-50%);
         z-index: 40;

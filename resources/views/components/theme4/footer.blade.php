@@ -177,9 +177,12 @@
 
         <div class="t2-footer-bottom">
             <div class="t2-copyright">
-                © {{ date('Y') }}  All rights reserved made with 💛 Detech by {{ $user->name }}.
+                © {{ date('Y') }} {{ $user->name ?? 'Portfolio' }}. All rights reserved.
             </div>
-            
+            <div class="t2-legal-links">
+                <a href="#" class="t2-footer-link" style="font-size: 0.85rem;">Privacy Policy</a>
+                <a href="#" class="t2-footer-link" style="font-size: 0.85rem;">Terms of Service</a>
+            </div>
         </div>
     </div>
 </footer>

@@ -162,8 +162,23 @@ class ThemeResource extends Resource
 
                         Forms\Components\TextInput::make('sort_order')
                             ->numeric()
-                            ->default(0)
-                            ->helperText('Display order (lower number = first)'),
+                            ->default(fn () => Theme::max('sort_order') + 1)
+                            ->minValue(1)
+                            ->helperText('Display order (1 = first)')
+                            ->live(onBlur: true)
+                            ->rules([
+                                function ($record) {
+                                    return function (string $attribute, $value, \Closure $fail) use ($record) {
+                                        $existingTheme = Theme::where('sort_order', $value)
+                                            ->when($record, fn($q) => $q->where('id', '!=', $record->id))
+                                            ->first();
+
+                                        if ($existingTheme) {
+                                            $fail("\"{$existingTheme->name}\" is already in order {$value}.");
+                                        }
+                                    };
+                                },
+                            ]),
                     ])->columns(3),
 
                 // ========================================

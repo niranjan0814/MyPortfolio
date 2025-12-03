@@ -111,17 +111,32 @@ class ThemeOverviewController extends Controller
     /**
      * ✅ FIXED: Preview theme - PUBLIC ACCESS (No authentication/permission check)
      */
+    /**
+     * Preview theme - PUBLIC ACCESS
+     * Logic:
+     * 1. If user is logged in -> Show preview with THEIR data
+     * 2. If visitor (not logged in) -> Show preview with SUPER ADMIN's data (as demo)
+     */
     public function preview(Theme $theme)
     {
-        // ✅ REMOVED: Premium access check - everyone can preview all themes
-        
-        // Get demo user for preview (any user will do)
-        $demoUser = \App\Models\User::whereHas('roles', function ($query) {
-            $query->whereIn('name', ['free_user', 'premium_user']);
-        })->first();
+        $demoUser = null;
+
+        // 1. If user is logged in, use them
+        if (Auth::check()) {
+            $demoUser = Auth::user();
+        } else {
+            // 2. If not logged in, find a Super Admin to use as demo
+            // We prefer super admin because they likely have a complete profile
+            $demoUser = \App\Models\User::role('super_admin')->first();
+            
+            // Fallback: If no super admin, just get the first user
+            if (!$demoUser) {
+                 $demoUser = \App\Models\User::first();
+            }
+        }
 
         if (!$demoUser) {
-            abort(404, 'No demo user available for preview');
+            abort(404, 'No user available for preview');
         }
 
         // Redirect to portfolio with preview mode

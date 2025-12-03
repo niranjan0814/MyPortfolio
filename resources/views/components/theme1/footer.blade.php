@@ -426,7 +426,7 @@
         <!-- Bottom Bar -->
         <div class="t1-footer-bottom">
             <p class="t1-footer-copyright">
-                © {{ date('Y') }} {{ $user->full_name ?? 'Your Name' }}. All rights reserved. Built with ❤️
+                © {{ date('Y') }}  All rights reserved. Built with Detech ❤️ by {{ $user->full_name ?? 'Your Name' }}
             </p>
         </div>
     </div>
