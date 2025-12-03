@@ -1,7 +1,7 @@
 @props(['project', 'overview', 'techStackSkills'])
 
 @php
-use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Facades\Storage;
 @endphp
 
 <style>
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
        THEME 3 PROJECT OVERVIEW - VERTICAL SECTIONS
        Sections Flow Like Homepage Components
        ============================================ */
-    
+
     :root {
         --t3-pov-bg: #f8fafc;
         --t3-pov-surface: #ffffff;
@@ -40,7 +40,8 @@ use Illuminate\Support\Facades\Storage;
         padding: 8rem 0 6rem;
         position: relative;
         overflow: hidden;
-        min-height: calc(100vh - 80px); /* Subtract header height */
+        min-height: calc(100vh - 80px);
+        /* Subtract header height */
         display: flex;
         align-items: center;
     }
@@ -375,7 +376,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="t3-pov-container">
         <a href="{{ route('portfolio.show', $project->user) }}#projects" class="t3-pov-back">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             Back to Projects
         </a>
@@ -393,7 +394,8 @@ use Illuminate\Support\Facades\Storage;
                 @if($project->depurl)
                     <a href="{{ $project->depurl }}" target="_blank" class="t3-pov-btn t3-pov-btn-primary">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                         View Live Demo
                     </a>
@@ -402,7 +404,8 @@ use Illuminate\Support\Facades\Storage;
                 @if($project->link)
                     <a href="{{ $project->link }}" target="_blank" class="t3-pov-btn t3-pov-btn-secondary">
                         <svg fill="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                         </svg>
                         Source Code
                     </a>
@@ -412,7 +415,8 @@ use Illuminate\Support\Facades\Storage;
 
         @if($project->image)
             <div class="t3-pov-hero-image">
-                <img src="{{ str_starts_with($project->image, 'http') ? $project->image : asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
+                <img src="{{ str_starts_with($project->image, 'http') ? $project->image : asset('storage/' . $project->image) }}"
+                    alt="{{ $project->title }}">
             </div>
         @endif
     </div>
@@ -438,61 +442,62 @@ use Illuminate\Support\Facades\Storage;
 
 <!-- Tech Stack Section -->
 @if($techStackSkills && $techStackSkills->count() > 0)
-<section class="t3-pov-section">
-    <div class="t3-pov-container">
-        <div class="t3-pov-section-header">
-            <h2 class="t3-pov-section-title">
-                Tech <span class="t3-pov-section-title-accent">Stack</span>
-            </h2>
+    <section class="t3-pov-section">
+        <div class="t3-pov-container">
+            <div class="t3-pov-section-header">
+                <h2 class="t3-pov-section-title">
+                    Tech <span class="t3-pov-section-title-accent">Stack</span>
+                </h2>
+            </div>
+            <div class="t3-tech-grid">
+                @foreach($techStackSkills as $skill)
+                    <div class="t3-tech-card">
+                        @if($skill->url)
+                            <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="t3-tech-icon">
+                        @endif
+                        <div class="t3-tech-name">{{ $skill->name }}</div>
+                    </div>
+                @endforeach
+            </div>
         </div>
-        <div class="t3-tech-grid">
-            @foreach($techStackSkills as $skill)
-                <div class="t3-tech-card">
-                    @if($skill->url)
-                        <img src="{{ $skill->url }}" alt="{{ $skill->name }}" class="t3-tech-icon">
-                    @endif
-                    <div class="t3-tech-name">{{ $skill->name }}</div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
+    </section>
 @endif
 
 <!-- Features Section -->
 @if($overview->key_features && count($overview->key_features) > 0)
-<section class="t3-pov-section">
-    <div class="t3-pov-container">
-        <div class="t3-pov-section-header">
-            <h2 class="t3-pov-section-title">
-                Key <span class="t3-pov-section-title-accent">Features</span>
-            </h2>
+    <section class="t3-pov-section">
+        <div class="t3-pov-container">
+            <div class="t3-pov-section-header">
+                <h2 class="t3-pov-section-title">
+                    Key <span class="t3-pov-section-title-accent">Features</span>
+                </h2>
+            </div>
+            <ul class="t3-features-list">
+                @foreach($overview->key_features as $feature)
+                    <li>{{ $feature }}</li>
+                @endforeach
+            </ul>
         </div>
-        <ul class="t3-features-list">
-            @foreach($overview->key_features as $feature)
-                <li>{{ $feature }}</li>
-            @endforeach
-        </ul>
-    </div>
-</section>
+    </section>
 @endif
 
 <!-- Gallery Section -->
 @if($overview->gallery_images && count($overview->gallery_images) > 0)
-<section class="t3-pov-section">
-    <div class="t3-pov-container">
-        <div class="t3-pov-section-header">
-            <h2 class="t3-pov-section-title">
-                Project <span class="t3-pov-section-title-accent">Gallery</span>
-            </h2>
+    <section class="t3-pov-section">
+        <div class="t3-pov-container">
+            <div class="t3-pov-section-header">
+                <h2 class="t3-pov-section-title">
+                    Project <span class="t3-pov-section-title-accent">Gallery</span>
+                </h2>
+            </div>
+            <div class="t3-gallery-grid">
+                @foreach($overview->gallery_images as $image)
+                    <div class="t3-gallery-item">
+                        <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}"
+                            alt="Gallery Image">
+                    </div>
+                @endforeach
+            </div>
         </div>
-        <div class="t3-gallery-grid">
-            @foreach($overview->gallery_images as $image)
-                <div class="t3-gallery-item">
-                    <img src="{{ str_starts_with($image, 'http') ? $image : asset('storage/' . $image) }}" alt="Gallery Image">
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
+    </section>
 @endif

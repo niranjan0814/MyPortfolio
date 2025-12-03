@@ -82,9 +82,19 @@
     }
 
     @keyframes wave {
-        0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(20deg); }
-        75% { transform: rotate(-20deg); }
+
+        0%,
+        100% {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate(20deg);
+        }
+
+        75% {
+            transform: rotate(-20deg);
+        }
     }
 
     .t2-about-subtitle {
@@ -163,18 +173,16 @@
         letter-spacing: 0.05em;
     }
 
-    /* Skills Card - Full Width */
+    /* Skills Card - Full Width (redesigned like Theme 1) */
     .t2-bento-skills {
         grid-column: span 12;
-        min-height: auto;
-        height: auto;
     }
 
     .t2-skills-header {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--t2-text-main);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
         display: flex;
         align-items: center;
         gap: 0.75rem;
@@ -183,74 +191,61 @@
     .t2-skills-header::before {
         content: '';
         width: 4px;
-        height: 24px;
+        height: 28px;
         background: var(--t2-gradient);
         border-radius: 2px;
     }
 
     .t2-skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
-}
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
 
+    .t2-skill-card {
+        background: var(--t2-card-bg);
+        border: 1px solid var(--t2-glass-border);
+        border-radius: 20px;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        min-height: 140px;
+        box-shadow: var(--t2-shadow);
+        transition: all 0.3s ease;
+    }
 
+    .t2-skill-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--t2-accent);
+        background: var(--t2-surface);
+    }
 
-.t2-skill-pill {
-    background: var(--t2-card-bg);
-    border: 1px solid var(--t2-glass-border);
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    box-shadow: var(--t2-shadow);
-    backdrop-filter: blur(18px);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-
-    width: 100%;
-    min-height: 150px;
-    text-align: center;
-
-    transition: all 0.3s ease;
-}
-
-.t2-skill-pill:hover {
-    transform: translateY(-6px);
-    border-color: var(--t2-accent);
-    background: rgba(233, 155, 12, 0.07);
-}
-.t2-skill-pill span {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--t2-text-main);
-    white-space: nowrap;
-    word-break: break-word;
-    padding: 0 0.5rem;
-}
-.t2-skill-icon-wrapper {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--t2-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 20px rgba(233, 155, 12, 0.25);
-}
-
-
-
+    .t2-skill-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--t2-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 20px rgba(233, 155, 12, 0.25);
+    }
 
     .t2-skill-icon {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+    }
 
-    
-}
+    .t2-skill-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--t2-text-main);
+        text-align: center;
+    }
 
 
     /* CTA Section */
@@ -407,7 +402,7 @@
     <div class="t2-container">
         <!-- Hero Title Section -->
         <div class="t2-about-hero">
-            
+
             <h2 class="t2-about-title">About Me</h2>
             <br>
             <div class="t2-about-greeting">
@@ -422,18 +417,28 @@
                 <div class="t2-bento-description-text">
                     {!! $aboutContent['about_description'] ?? 'Driven and innovative undergraduate specializing in Software Engineering.' !!}
                 </div>
-                
+
                 <!-- CTA Buttons Inside Description -->
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                     <a href="#contact" class="t2-btn t2-btn-primary">
                         <span>{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
 
                     @if($aboutContent['user']->hasCv())
-                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t2-btn t2-btn-outline" download>
+                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t2-btn t2-btn-outline"
+                            download>
                             <span>Download CV</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
                         </a>
                     @endif
                 </div>
@@ -451,31 +456,30 @@
 
             @foreach($stats as $stat)
                 @if($stat['count'])
-                <div class="t2-bento-item t2-bento-stat">
-                    <div class="t2-stat-number">{{ $stat['count'] }}</div>
-                    <div class="t2-stat-label">{{ $stat['label'] }}</div>
-                </div>
+                    <div class="t2-bento-item t2-bento-stat">
+                        <div class="t2-stat-number">{{ $stat['count'] }}</div>
+                        <div class="t2-stat-label">{{ $stat['label'] }}</div>
+                    </div>
                 @endif
             @endforeach
 
-            <!-- Soft Skills Card (Full Width) -->
+            <!-- Soft Skills Card (Full Width, redesigned) -->
             @if (!empty($aboutContent['soft_skills']))
-            <div class="t2-bento-item t2-bento-skills">
-                <h3 class="t2-skills-header">Core Competencies</h3>
-                <div class="t2-skills-grid">
-                    @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
-                    <div class="t2-skill-pill">
-                        @if($iconUrl)
-                        <div class="t2-skill-icon-wrapper">
-    <img src="{{ $iconUrl }}" alt="" class="t2-skill-icon">
-</div>
-
-                        @endif
-                        <span>{{ $skill }}</span>
+                <div class="t2-bento-item t2-bento-skills">
+                    <h3 class="t2-skills-header">Core Competencies</h3>
+                    <div class="t2-skills-grid">
+                        @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
+                            <div class="t2-skill-card">
+                                @if($iconUrl)
+                                    <div class="t2-skill-icon-wrapper">
+                                        <img src="{{ $iconUrl }}" alt="{{ $skill }}" class="t2-skill-icon">
+                                    </div>
+                                @endif
+                                <div class="t2-skill-name">{{ $skill }}</div>
+                            </div>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
-            </div>
             @endif
         </div>
     </div>

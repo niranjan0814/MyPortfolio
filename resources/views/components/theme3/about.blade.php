@@ -5,7 +5,7 @@
        THEME 3 ABOUT - ENHANCED MODERN DESIGN
        Matching Hero Section Aesthetic
        ============================================ */
-    
+
     :root {
         /* Light Theme */
         --t3-about-bg: #f8fafc;
@@ -209,109 +209,148 @@
         font-weight: 500;
     }
 
-    /* Skills Section */
-    .t3-skills-section {
+    /* About Sub-sections (Soft Skills & Tech) */
+    .t3-about-sub-section {
         background: var(--t3-about-surface);
         border: 1px solid var(--t3-about-border);
-        border-radius: 0 !important; /* Explicitly remove rounded corners */
-        padding: 3rem 5rem !important; /* Increased padding for better spacing */
+        border-radius: 24px;
+        padding: 2.5rem;
         box-shadow: var(--t3-about-shadow);
-        box-sizing: border-box;
         width: 100%;
+        text-align: left;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
     }
 
-    .t3-skills-header {
+    .t3-about-sub-header {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        justify-content: flex-start;
+        position: relative;
+        z-index: 2;
     }
 
-    .t3-skills-icon {
-        width: 36px;
-        height: 36px;
+    .t3-about-sub-icon {
+        width: 44px;
+        height: 44px;
         background: var(--t3-about-gradient);
-        border-radius: 10px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 1rem;
+        font-size: 1.25rem;
+        box-shadow: 0 8px 20px var(--t3-about-glow);
     }
 
-    .t3-skills-title {
-        font-size: 1.25rem;
-        font-weight: 700;
+    .t3-about-sub-title {
+        font-size: 1.75rem;
+        font-weight: 800;
         color: var(--t3-about-text);
         margin: 0;
+        letter-spacing: -0.02em;
     }
 
-  .t3-skills-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.25rem;
-    width: 100%;
-    box-sizing: border-box;
-}
+    /* Soft Skills Grid */
+    .t3-about-soft-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1.25rem;
+        position: relative;
+        z-index: 2;
+    }
 
+    .t3-about-soft-card {
+        background: var(--t3-about-bg);
+        border: 1px solid var(--t3-about-border);
+        border-radius: 18px;
+        padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
 
-.t3-skill-badge {
-    background: rgba(0, 255, 157, 0.06);
-    border: 1px solid var(--t3-about-border);
-    border-radius: 16px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    min-height: 140px;   /* VERY IMPORTANT */
-    text-align: center;
-    transition: all 0.3s ease;
+    .t3-about-soft-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--t3-about-gradient);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 0;
+    }
+
+    .t3-about-soft-card:hover {
+        transform: translateY(-5px);
+        border-color: transparent;
+        box-shadow: 0 10px 30px var(--t3-about-glow);
+    }
+
+    .t3-about-soft-card:hover::before {
+        opacity: 0.05;
+    }
+
+    .t3-about-soft-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: var(--t3-about-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 1;
+        border: 1px solid var(--t3-about-border);
+    }
     
-}
-
-
-    [data-theme="light"] .t3-skill-badge {
-        background: rgba(0, 204, 122, 0.05);
+    .t3-about-soft-card:hover .t3-about-soft-icon-wrapper {
+        transform: scale(1.1) rotate(5deg);
+        background: var(--t3-about-gradient);
+        border-color: transparent;
+        box-shadow: 0 8px 20px var(--t3-about-glow);
     }
 
-    .t3-skill-badge:hover {
-        background: rgba(0, 255, 157, 0.1);
-        border-color: var(--t3-about-accent);
-        transform: translateX(5px);
+    .t3-about-soft-icon-wrapper svg,
+    .t3-about-soft-icon-wrapper i {
+        color: var(--t3-about-accent);
+        transition: color 0.3s ease;
     }
 
-    [data-theme="light"] .t3-skill-badge:hover {
-        background: rgba(0, 204, 122, 0.1);
+    .t3-about-soft-card:hover .t3-about-soft-icon-wrapper svg,
+    .t3-about-soft-card:hover .t3-about-soft-icon-wrapper i {
+        color: white;
     }
 
-    .t3-skill-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: var(--t3-about-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 18px var(--t3-about-glow);
-}
-
-
-    .t3-skill-icon img {
-        width: 20px;
-        height: 20px;
+    .t3-about-soft-icon-wrapper img {
+        width: 28px;
+        height: 28px;
         object-fit: contain;
+        transition: filter 0.3s ease;
     }
 
-    .t3-skill-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--t3-about-text);
-    text-align: center;
-}
+    .t3-about-soft-card:hover .t3-about-soft-icon-wrapper img {
+        filter: brightness(0) invert(1);
+    }
+
+    .t3-about-soft-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--t3-about-text);
+        line-height: 1.3;
+        position: relative;
+        z-index: 1;
+    }
 
 
     /* Tech Highlights */
@@ -477,24 +516,25 @@
                     @endphp
 
                     @foreach($stats as $key => $stat)
-                    <div class="t3-stat-card">
-                        <div class="t3-stat-icon">
-                            @php
-                                $statIconUrl = $aboutContent['stats_icon_urls'][$key] ?? null;
-                                $isValidStatIcon = !empty($statIconUrl) && filter_var($statIconUrl, FILTER_VALIDATE_URL);
-                            @endphp
-                            @if($isValidStatIcon)
-                                <img src="{{ $statIconUrl }}" alt="{{ $stat['label'] }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <span style="display:none;">{!! $statFallbackIcons[$key] !!}</span>
-                            @else
-                                {!! $statFallbackIcons[$key] !!}
-                            @endif
+                        <div class="t3-stat-card">
+                            <div class="t3-stat-icon">
+                                @php
+                                    $statIconUrl = $aboutContent['stats_icon_urls'][$key] ?? null;
+                                    $isValidStatIcon = !empty($statIconUrl) && filter_var($statIconUrl, FILTER_VALIDATE_URL);
+                                @endphp
+                                @if($isValidStatIcon)
+                                    <img src="{{ $statIconUrl }}" alt="{{ $stat['label'] }}"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                    <span style="display:none;">{!! $statFallbackIcons[$key] !!}</span>
+                                @else
+                                    {!! $statFallbackIcons[$key] !!}
+                                @endif
+                            </div>
+                            <div class="t3-stat-info">
+                                <div class="t3-stat-number">{{ $stat['count'] }}</div>
+                                <div class="t3-stat-label">{{ $stat['label'] }}</div>
+                            </div>
                         </div>
-                        <div class="t3-stat-info">
-                            <div class="t3-stat-number">{{ $stat['count'] }}</div>
-                            <div class="t3-stat-label">{{ $stat['label'] }}</div>
-                        </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
@@ -503,75 +543,104 @@
             <div>
                 <!-- Soft Skills -->
                 @if(!empty($aboutContent['soft_skills']))
-                <div class="t3-skills-section">
-                    <div class="t3-skills-header">
-                        <div class="t3-skills-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                        </div>
-                        <h3 class="t3-skills-title">Soft Skills</h3>
-                    </div>
-                    <div class="t3-skills-grid">
-                        @php
-                            $fallbackIcons = [
-                                'Communication' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
-                                'Teamwork' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
-                                'Problem Solving' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 16.5 8 4.5 4.5 0 0 0 12 3.5 4.5 4.5 0 0 0 7.5 8c0 1.42.7 2.68 1.91 3.5.76.76 1.23 1.52 1.41 2.5h4.27z"></path></svg>',
-                                'Leadership' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>',
-                                'Creativity' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>',
-                                'Adaptability' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>',
-                                'Time Management' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
-                                'Critical Thinking' => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path></svg>',
-                            ];
-                            $defaultIcon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
-                        @endphp
-                        @foreach($aboutContent['soft_skills'] as $skill => $iconUrl)
-                        <div class="t3-skill-badge">
-                            <div class="t3-skill-icon">
-                                @php
-                                    $isValidSkillIcon = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
-                                @endphp
-                                @if($isValidSkillIcon)
-                                    <img src="{{ $iconUrl }}" alt="{{ $skill }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                    <span style="display:none;">{!! $fallbackIcons[$skill] ?? $defaultIcon !!}</span>
-                                @else
-                                    {!! $fallbackIcons[$skill] ?? $defaultIcon !!}
-                                @endif
+                    <div class="t3-about-sub-section">
+                        <div class="t3-about-sub-header">
+                            <div class="t3-about-sub-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg>
                             </div>
-                            <span class="t3-skill-name">{{ $skill }}</span>
+                            <h3 class="t3-about-sub-title">Soft Skills</h3>
                         </div>
-                        @endforeach
+                        <div class="t3-about-soft-grid">
+                            @php
+                                $fallbackIcons = [
+                                    'Communication' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
+                                    'Teamwork' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+                                    'Problem Solving' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 16.5 8 4.5 4.5 0 0 0 12 3.5 4.5 4.5 0 0 0 7.5 8c0 1.42.7 2.68 1.91 3.5.76.76 1.23 1.52 1.41 2.5h4.27z"></path></svg>',
+                                    'Leadership' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>',
+                                    'Creativity' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>',
+                                    'Adaptability' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>',
+                                    'Time Management' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+                                    'Critical Thinking' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path></svg>',
+                                ];
+                                $defaultIcon = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
+                            @endphp
+                            @foreach($aboutContent['soft_skills'] as $skill => $iconUrl)
+                                <div class="t3-about-soft-card">
+                                    <div class="t3-about-soft-icon-wrapper">
+                                        @php
+                                            $isValidSkillIcon = !empty($iconUrl) && filter_var($iconUrl, FILTER_VALIDATE_URL);
+                                        @endphp
+                                        @if($isValidSkillIcon)
+                                            <img src="{{ $iconUrl }}" alt="{{ $skill }}"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                            <span style="display:none;">{!! $fallbackIcons[$skill] ?? $defaultIcon !!}</span>
+                                        @else
+                                            {!! $fallbackIcons[$skill] ?? $defaultIcon !!}
+                                        @endif
+                                    </div>
+                                    <span class="t3-about-soft-name">{{ $skill }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
                 @endif
 
                 <!-- Tech Highlights -->
                 @if(!empty($aboutContent['tech_highlights']))
-                <div class="t3-skills-section" style="margin-top: 2rem;">
-                    <div class="t3-skills-header">
-                        <div class="t3-skills-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+                    <div class="t3-about-sub-section" style="margin-top: 2rem;">
+                        <div class="t3-about-sub-header">
+                            <div class="t3-about-sub-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                    <rect x="9" y="9" width="6" height="6"></rect>
+                                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                                </svg>
+                            </div>
+                            <h3 class="t3-about-sub-title">Tech Stack</h3>
                         </div>
-                        <h3 class="t3-skills-title">Tech Stack</h3>
+                        <div class="t3-tech-cloud">
+                            @foreach($aboutContent['tech_highlights'] as $tech)
+                                <span class="t3-tech-tag">{{ $tech }}</span>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="t3-tech-cloud">
-                        @foreach($aboutContent['tech_highlights'] as $tech)
-                        <span class="t3-tech-tag">{{ $tech }}</span>
-                        @endforeach
-                    </div>
-                </div>
                 @endif
 
                 <!-- CTA Buttons -->
                 <div class="t3-about-cta">
                     <a href="#contact" class="t3-cta-btn t3-cta-primary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
                         <span>Let's Work Together</span>
                     </a>
                     @if($aboutContent['user']->hasCv())
-                    <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t3-cta-btn t3-cta-secondary" download>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        <span>Download CV</span>
-                    </a>
+                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}"
+                            class="t3-cta-btn t3-cta-secondary" download>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Download CV</span>
+                        </a>
                     @endif
                 </div>
             </div>
