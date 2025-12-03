@@ -15,55 +15,45 @@ class ThemeHelper
      */
     public static function getActiveTheme(User $user, ?string $previewTheme = null): string
     {
-        // ✅ FIX: Allow ANYONE to preview ANY active theme (remove super admin check)
-        if ($previewTheme) {
-            $themeModel = Theme::where('slug', $previewTheme)->first();
-            
-            // Allow preview if theme exists and is active
-            if ($themeModel && $themeModel->is_active) {
-                \Log::info("User {$user->id} previewing theme: {$previewTheme}");
-                
-                // Verify files exist
-                if (self::themeFilesExist($previewTheme)) {
-                    return $previewTheme;
-                } else {
-                    \Log::error("Theme files missing for: {$previewTheme}");
-                    return 'theme1';
-                }
+        // 1. Determine which slug we are trying to load
+        $targetSlug = $previewTheme ?? $user->active_theme ?? 'theme1';
+
+        // 2. Find the Theme model
+        $themeModel = Theme::where('slug', $targetSlug)->first();
+
+        // 3. Validate Theme Existence & Status
+        if (!$themeModel || (!$themeModel->is_active && !$previewTheme)) {
+            // If theme doesn't exist or is inactive (and not in preview mode), fallback
+            if (!$previewTheme) {
+                self::switchToDefault($user);
             }
-        }
-
-        // Get user's active theme
-        $theme = $user->active_theme ?? 'theme1';
-
-        // Verify theme is active
-        $themeModel = Theme::where('slug', $theme)->first();
-        if (!$themeModel || !$themeModel->is_active) {
-            self::switchToDefault($user);
             return 'theme1';
         }
 
-        // Super admins bypass access checks for their own theme
-        if (!$user->hasRole('super_admin')) {
-            // Verify user has access
-            if (!$user->canAccessTheme($theme)) {
+        // 4. Check Permissions (skip for preview mode or super admin)
+        if (!$previewTheme && !$user->hasRole('super_admin')) {
+            if (!$user->canAccessTheme($targetSlug)) {
                 self::switchToDefault($user);
                 return 'theme1';
             }
         }
 
-        // Verify theme files exist
-        // ✅ FIX: Map 'golden' to 'theme2' for file check
-        $checkTheme = ($theme === 'golden') ? 'theme2' : $theme;
+        // 5. Resolve Directory Name (component_path)
+        // Use the DB column 'component_path' if set, otherwise fallback to slug
+        $directoryName = $themeModel->component_path ?? $themeModel->slug;
 
-        if (!self::themeFilesExist($checkTheme)) {
-            \Log::error("Theme files missing for: {$checkTheme} (requested: {$theme})");
-            self::switchToDefault($user);
+        // 6. Verify Files Exist in that Directory
+        if (!self::themeFilesExist($directoryName)) {
+            \Log::error("Theme files missing for slug: {$targetSlug}, directory: {$directoryName}");
+            
+            if (!$previewTheme) {
+                self::switchToDefault($user);
+            }
             return 'theme1';
         }
 
-        // Return mapped theme if it was golden
-        return ($theme === 'golden') ? 'theme2' : $theme;
+        // 7. Return the Directory Name (NOT the slug)
+        return $directoryName;
     }
 
     /**
@@ -72,11 +62,6 @@ class ThemeHelper
      */
     public static function themeFilesExist(string $themeSlug): bool
     {
-        // ✅ FIX: Map 'golden' to 'theme2'
-        if ($themeSlug === 'golden') {
-            $themeSlug = 'theme2';
-        }
-
         $componentPath = resource_path("views/components/{$themeSlug}");
         
         if (!File::exists($componentPath)) {

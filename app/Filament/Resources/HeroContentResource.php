@@ -31,16 +31,6 @@ class HeroContentResource extends Resource
             Forms\Components\Hidden::make('user_id')
                 ->default(fn () => auth()->id()),
 
-            // ── HERO IMAGE ─────────────────────────────────────
-            Forms\Components\Section::make('Hero Image')
-                ->schema([
-                    Forms\Components\FileUpload::make('hero_image_url')
-                        ->label('Background Image')
-                        ->image()
-                        ->directory('hero')
-                        ->placeholder('Upload hero background image')
-                        ->helperText('Optional. Will be used as background in hero section.'),
-                ]),
 
             // ── HERO TEXT ───────────────────────────────────────
             Forms\Components\Section::make('Hero Text')
@@ -129,9 +119,7 @@ Forms\Components\RichEditor::make('description')
                                 ->url()
                                 ->placeholder('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg'),
 
-                            Forms\Components\ColorPicker::make('color')
-                                ->label('Hover Border Color')
-                                ->default('#3b82f6'),
+                            
                         ])
                         ->defaultItems(3)
                         ->maxItems(6)
@@ -140,22 +128,6 @@ Forms\Components\RichEditor::make('description')
                         ->columns(2),
                 ]),
 
-            // ── TECH STACK PREVIEW ───────────────────────────────
-            Forms\Components\Section::make('Tech Stack Preview')
-                ->schema([
-                    Forms\Components\Toggle::make('tech_stack_enabled')
-                        ->label('Show Tech Stack')
-                        ->default(true)
-                        ->reactive(),
-
-                    Forms\Components\TextInput::make('tech_stack_count')
-                        ->label('Number of Icons')
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(10)
-                        ->default(4)
-                        ->visible(fn ($get) => $get('tech_stack_enabled')),
-                ])->columns(2),
         ]);
     }
 

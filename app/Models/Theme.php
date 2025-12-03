@@ -15,6 +15,7 @@ class Theme extends Model
     protected $fillable = [
         'name',
         'slug',
+        'component_path', // ✅ Added component_path
         'description',
         'version',
         'author',
@@ -64,9 +65,15 @@ class Theme extends Model
             : null;
     }
 
-    public function getComponentPathAttribute(): string
+    /**
+     * Get the full filesystem path to the component directory
+     * Uses the 'component_path' column from DB
+     */
+    public function getComponentDirectoryAttribute(): string
     {
-        return resource_path('views/components/' . $this->slug);
+        // Fallback to slug if component_path is empty (for backward compatibility)
+        $dirName = $this->component_path ?? $this->slug;
+        return resource_path('views/components/' . $dirName);
     }
 
     public function getBadgeColorAttribute(): string
@@ -102,7 +109,7 @@ class Theme extends Model
         ];
 
         foreach ($requiredComponents as $component) {
-            if (!File::exists($this->component_path . '/' . $component)) {
+            if (!File::exists($this->component_directory . '/' . $component)) {
                 return false;
             }
         }
@@ -126,7 +133,7 @@ class Theme extends Model
             return false;
         }
 
-        $extractPath = $this->component_path;
+        $extractPath = $this->component_directory;
 
         // Create directory if it doesn't exist
         if (!File::exists($extractPath)) {
@@ -226,8 +233,8 @@ class Theme extends Model
     public function deleteFiles(): void
     {
         // Delete component directory
-        if (File::exists($this->component_path)) {
-            File::deleteDirectory($this->component_path);
+        if (File::exists($this->component_directory)) {
+            File::deleteDirectory($this->component_directory);
         }
 
         // Delete ZIP file

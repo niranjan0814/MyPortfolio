@@ -75,6 +75,13 @@ class ThemeResource extends Resource
                 Forms\Components\Section::make('📦 Theme Files')
                     ->description('Upload and manage theme files')
                     ->schema([
+                        Forms\Components\TextInput::make('component_path')
+                            ->label('Directory Name')
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('Folder name in resources/views/components (e.g., "theme1", "theme2")')
+                            ->default(fn ($state) => $state ?? 'theme' . (Theme::count() + 1)),
+
                         Forms\Components\FileUpload::make('zip_file_path')
                             ->label('Theme ZIP File')
                             ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
@@ -246,9 +253,7 @@ class ThemeResource extends Resource
                     ->color('primary')
                     ->tooltip('Number of users with access'),
 
-                Tables\Columns\TextColumn::make('creator.name')
-                    ->label('Created By')
-                    ->toggleable(),
+                
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('M j, Y')

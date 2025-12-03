@@ -34,15 +34,9 @@
 
     <!-- Theme-specific CSS -->
     @php
+        // Use the theme variable passed from the controller (which is the correct directory name)
+        // Fallback to user's active theme or default if not set
         $activeTheme = $theme ?? $user->active_theme ?? 'theme1';
-        if (request('preview') && request('theme')) {
-            $activeTheme = request('theme');
-        }
-
-        // Safety mapping for view rendering
-        if ($activeTheme === 'golden') {
-            $activeTheme = 'theme2';
-        }
     @endphp
 
     {{-- All themes use Tailwind + inline component styling --}}

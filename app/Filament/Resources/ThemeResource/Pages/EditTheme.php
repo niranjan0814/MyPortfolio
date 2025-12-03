@@ -192,7 +192,7 @@ class EditTheme extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Prevent deactivating theme1
-        if ($this->record->slug === 'theme1' && !$data['is_active']) {
+        if ($this->record->slug === 'theme1' && !($data['is_active'] ?? true)) {
             $data['is_active'] = true;
             
             Notification::make()

@@ -39,11 +39,8 @@
         padding: 6rem 0;
         position: relative;
         overflow: hidden;
+        border: none;
     }
-    .t3-skills-section {
-    border-radius: 0 !important;
-}
-
 
     /* Background Orbs */
     .t3-skills-orbs {
@@ -96,16 +93,18 @@
     /* Header */
     .t3-skills-header {
         text-align: center;
-        margin-bottom: 5rem;
+        margin-bottom: 4rem;
         position: relative;
     }
 
     .t3-skills-title {
         font-size: clamp(2.5rem, 5vw, 4rem);
         font-weight: 900;
-        margin-bottom: 1.25rem;
+        margin-bottom: 0;
         color: var(--t3-skills-text);
         letter-spacing: -0.03em;
+        text-align: center;
+        width: 100%;
     }
 
     .t3-skills-title-accent {
@@ -172,6 +171,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .t3-skill-card {
@@ -189,26 +190,9 @@
         overflow: hidden;
     }
 
-    .t3-skill-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--t3-skills-gradient);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
     .t3-skill-card:hover {
         transform: translateY(-10px);
-        border-color: var(--t3-skills-accent);
         box-shadow: var(--t3-skills-shadow);
-    }
-
-    .t3-skill-card:hover::before {
-        opacity: 1;
     }
 
     .t3-skill-icon {
@@ -406,7 +390,6 @@
             <h2 class="t3-skills-title">
                 Technical <span class="t3-skills-title-accent">Skills</span>
             </h2>
-            
         </div>
 
         @if($skills->isEmpty())

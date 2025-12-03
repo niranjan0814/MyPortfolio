@@ -3,16 +3,8 @@
 @section('content')
     @php
         // Use controller variable if available, otherwise fallback to user's active theme
+        // The controller already handles preview logic and resolves the correct directory name
         $theme = $theme ?? $user->active_theme ?? 'theme1';
-        
-        if (request('preview') && request('theme')) {
-            $theme = request('theme');
-        }
-
-        // Safety mapping for view rendering
-        if ($theme === 'golden') {
-            $theme = 'theme2';
-        }
     @endphp
 
     {{-- Hero Section --}}
