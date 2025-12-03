@@ -227,6 +227,14 @@
         position: relative;
         z-index: 1;
         transition: transform 0.3s ease;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        padding: 6px;
+    }
+
+    [data-theme="light"] .t1-skill-icon-wrapper {
+        background: transparent;
+        padding: 0;
     }
 
     .t1-skill-card:hover .t1-skill-icon-wrapper {

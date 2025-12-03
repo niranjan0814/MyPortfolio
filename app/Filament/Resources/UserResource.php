@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
+use Filament\Notifications\Notification;
 
 class UserResource extends Resource
 {
@@ -159,14 +160,14 @@ class UserResource extends Resource
 
                                 return $record->availableThemes()
                                     ->mapWithKeys(function ($theme) {
-                                        $icon = $theme->is_premium ? '💎' : '🎨';
+                                        
                                         $status = $theme->slug === 'theme1' ? ' (Default)' : '';
-                                        return [$theme->slug => "$icon {$theme->name}$status"];
+                                        return [$theme->slug => "{$theme->name}$status"];
                                     })
                                     ->toArray();
                             })
                             ->required()
-                            ->reactive()
+                            ->live()
                             ->helperText(function ($record) {
                                 if (!$record)
                                     return 'Select your portfolio design style';
@@ -175,7 +176,7 @@ class UserResource extends Resource
                                 $totalThemes = \App\Models\Theme::active()->count();
 
                                 if ($availableCount === $totalThemes) {
-                                    return "✅ You have access to all $totalThemes themes";
+                                    return "You have access to all $totalThemes themes";
                                 }
 
                                 return "You have access to $availableCount out of $totalThemes themes";
@@ -192,17 +193,45 @@ class UserResource extends Resource
                                 }
                             }),
 
-                        // Preview Button
-                        Forms\Components\Placeholder::make('preview')
+                        // Live Preview Button - Using Filament Actions
+                        Forms\Components\Actions::make([
+                            Forms\Components\Actions\Action::make('preview_theme')
+                                ->label('Preview Selected Theme')
+                                ->icon('heroicon-o-eye')
+                                ->color('primary')
+                                ->url(fn($record, $get) => $record 
+                                    ? "/portfolio/{$record->slug}?preview=true&theme=" . ($get('active_theme') ?? $record->active_theme ?? 'theme1')
+                                    : '#'
+                                )
+                                ->openUrlInNewTab()
+                                ->extraAttributes(['class' => 'w-full sm:w-auto']),
+                        ])
+                            ->fullWidth()
+                            ->label('Preview'),
+                        
+                        // Current theme indicator
+                        Forms\Components\Placeholder::make('current_theme_indicator')
                             ->label('')
-                            ->content(fn($record) => new \Illuminate\Support\HtmlString(
-                                '<div class="space-y-4">' .
-                                '<a href="/portfolio/' . ($record?->slug ?? 'preview') . '?preview=true&theme=' . ($record?->active_theme ?? 'theme1') . '" target="_blank" 
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    🔍 Preview Current Theme
-                </a>' .
-                                '</div>'
-                            )),
+                            ->content(function ($record, $get) {
+                                $selectedTheme = $get('active_theme') ?? $record?->active_theme ?? 'theme1';
+                                $themeName = ucfirst(str_replace('_', ' ', $selectedTheme));
+                                
+                                return new \Illuminate\Support\HtmlString("
+                                    <div class='space-y-2'>
+                                        <div class='flex items-center gap-2 text-sm'>
+                                            <span class='font-medium text-gray-700 dark:text-gray-300'>Currently Selected:</span>
+                                            <span class='px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-md font-medium'>{$themeName}</span>
+                                        </div>
+                                        <p class='text-xs text-gray-500 dark:text-gray-400 flex items-start gap-2'>
+                                            <svg class='w-4 h-4 mt-0.5 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                                                <path fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z' clip-rule='evenodd'/>
+                                            </svg>
+                                            <span>Click the preview button above to see how this theme looks. Changes preview instantly when you select a different theme!</span>
+                                        </p>
+                                    </div>
+                                ");
+                            })
+                            ->live(),
 
                         // Theme Access Info (Show available vs locked themes)
                         Forms\Components\Placeholder::make('theme_access_info')
@@ -220,11 +249,11 @@ class UserResource extends Resource
 
                                 // Available Themes
                                 $html .= '<div class="bg-green-50 border border-green-200 rounded-lg p-3">';
-                                $html .= '<h4 class="font-semibold text-green-900 mb-2">✅ Available Themes</h4>';
+                                $html .= '<h4 class="font-semibold text-green-900 mb-2"> Available Themes</h4>';
                                 foreach ($available as $theme) {
-                                    $icon = $theme->is_premium ? '💎' : '🎨';
+                                   
                                     $html .= "<div class='flex items-center gap-2 text-sm text-green-700'>";
-                                    $html .= "<span>$icon {$theme->name}</span>";
+                                    $html .= "<span> {$theme->name}</span>";
                                     $html .= "</div>";
                                 }
                                 $html .= '</div>';
