@@ -851,7 +851,7 @@
 
                 @if(!empty($socialLinks))
                 <div class="t3-social-bottom">
-                    @foreach($socialLinks as $key => $value)
+                    @foreach((array) json_decode($hero->something ?? '[]', true) as $item)
                         @php
                             $url = is_array($value) ? ($value['url'] ?? null) : $value;
                             $platform = is_array($value) ? ($value['platform'] ?? $value['name'] ?? $key) : $key;

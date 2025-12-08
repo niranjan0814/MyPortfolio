@@ -600,7 +600,7 @@
 
         @if(!empty($socialLinks))
             <div class="t1-hero-social">
-                @foreach($socialLinks as $key => $value)
+                @foreach((array) json_decode($hero->something ?? '[]', true) as $item)
                     @php
                         $url = $value;
                         $platform = $key;

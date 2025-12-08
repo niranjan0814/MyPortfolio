@@ -109,7 +109,7 @@ class LandingPageController extends Controller
             $data['preview_has_image'] = false;
         }
         
-        $admin = User::find(4); 
+        $admin = User::find(1); 
         $availableThemes = Theme::where('is_active', true)
             ->orderBy('sort_order')
             ->get();

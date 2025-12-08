@@ -13,6 +13,8 @@ class Experience extends Model
         'company',
         'duration',
         'details',
+        'location',
+        'is_active',
     ];
 
     public function user(): BelongsTo

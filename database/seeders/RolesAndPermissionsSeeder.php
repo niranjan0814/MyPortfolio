@@ -76,23 +76,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage_own_portfolio',
         ]);
 
-        // ========================================
-        // CREATE DEFAULT SUPER ADMIN USER
-        // ========================================
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@detech.com'],
-            [
-                'name' => 'admin',
-                'full_name' => 'Super Administrator',
-                'password' => bcrypt('admin123'), // Change this!
-                'description' => 'System Administrator',
-            ]
-        );
-
-        $admin->assignRole('super_admin');
-
         $this->command->info('✅ Roles and Permissions seeded successfully!');
-        $this->command->info('📧 Super Admin: admin@detech.com');
-        $this->command->info('🔑 Password: admin123 (CHANGE THIS!)');
     }
 }

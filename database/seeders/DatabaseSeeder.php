@@ -14,8 +14,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            DefaultThemesSeeder::class,
+            ThemeSeeder::class,
+            AdminUserSeeder::class,
+            DefaultPageContentSeeder::class,
             LandingPageContentSeeder::class,
+            FixHeroContentRepeaterSeeder::class,
         ]);
 
         $this->command->info('🎉 All seeders completed successfully!');

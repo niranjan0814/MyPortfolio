@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('themes', function (Blueprint $table) {
-            //
+            $table->string('component_path')->nullable()->after('slug');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('themes', function (Blueprint $table) {
-            //
+            $table->dropColumn('component_path');
         });
     }
 };

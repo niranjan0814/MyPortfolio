@@ -36,4 +36,9 @@ class HeroContent extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $attributes = [
+    'typing_texts' => '[]',
+    'social_links' => '[]',
+];
+
 }

@@ -10,136 +10,36 @@ class LandingPageContentSeeder extends Seeder
     public function run(): void
     {
         $contents = [
-
             // ========================================
             // HERO SECTION
             // ========================================
             [
                 'section' => 'hero',
                 'key' => 'hero_title',
-                'value' => 'Showcase Your Extraordinary',
+                'value' => 'Showcase Your Extraordinary Work',
                 'type' => 'text',
                 'order' => 1,
-            ],
-            [
-                'section' => 'hero',
-                'key' => 'hero_title_line2',
-                'value' => 'Work',
-                'type' => 'text',
-                'order' => 2,
             ],
             [
                 'section' => 'hero',
                 'key' => 'hero_subtitle',
                 'value' => 'Create a stunning, professional portfolio in minutes. Impress clients, employers, and collaborators with a portfolio that truly represents your skills and achievements.',
                 'type' => 'textarea',
-                'order' => 3,
+                'order' => 2,
             ],
             [
                 'section' => 'hero',
                 'key' => 'hero_cta_primary',
                 'value' => 'Get Started',
                 'type' => 'text',
-                'order' => 4,
+                'order' => 3,
             ],
             [
                 'section' => 'hero',
                 'key' => 'hero_cta_secondary',
                 'value' => 'Learn More',
                 'type' => 'text',
-                'order' => 5,
-            ],
-
-            // ========================================
-            // STATISTICS SECTION
-            // ========================================
-            [
-                'section' => 'statistics',
-                'key' => 'stat_1_value',
-                'value' => '500+',
-                'type' => 'text',
-                'order' => 1,
-            ],
-            [
-                'section' => 'statistics',
-                'key' => 'stat_1_label',
-                'value' => 'Portfolios Created',
-                'type' => 'text',
-                'order' => 2,
-            ],
-            [
-                'section' => 'statistics',
-                'key' => 'stat_2_value',
-                'value' => '50K+',
-                'type' => 'text',
-                'order' => 3,
-            ],
-            [
-                'section' => 'statistics',
-                'key' => 'stat_2_label',
-                'value' => 'Active Users',
-                'type' => 'text',
                 'order' => 4,
-            ],
-            [
-                'section' => 'statistics',
-                'key' => 'stat_3_value',
-                'value' => '99.9%',
-                'type' => 'text',
-                'order' => 5,
-            ],
-            [
-                'section' => 'statistics',
-                'key' => 'stat_3_label',
-                'value' => 'Uptime',
-                'type' => 'text',
-                'order' => 6,
-            ],
-
-            // ========================================
-            // HERO PREVIEW (Manual/Auto Preview Card)
-            // ========================================
-            [
-                'section' => 'preview',
-                'key' => 'preview_name',
-                'value' => 'Niranjan Sivarasa',
-                'type' => 'text',
-                'order' => 1,
-            ],
-            [
-                'section' => 'preview',
-                'key' => 'preview_title',
-                'value' => 'Software Engineering intern',
-                'type' => 'text',
-                'order' => 2,
-            ],
-            [
-                'section' => 'preview',
-                'key' => 'preview_bio',
-                'value' => 'Crafting beautiful digital ',
-                'type' => 'textarea',
-                'order' => 3,
-            ],
-            [
-                'section' => 'preview',
-                'key' => 'preview_projects_count',
-                'value' => '24',
-                'type' => 'text',
-                'order' => 4,
-            ],
-            [
-                'section' => 'preview',
-                'key' => 'preview_clients_count',
-                'value' => '50+',
-                'type' => 'text',
-                'order' => 5,
-            ],
-            [
-                'section' => 'preview',
-                'key' => 'preview_awards_count',
-                'value' => '12',
-                'type' => 'text',
-                'order' => 6,
             ],
 
             // ========================================
@@ -233,7 +133,7 @@ class LandingPageContentSeeder extends Seeder
             [
                 'section' => 'contact',
                 'key' => 'contact_subtitle',
-                'value' => "Have questions about Detech? We're here to help! Send us a message and we'll respond as soon as possible.",
+                'value' => 'Have questions about Detech? We\'re here to help! Send us a message and we\'ll respond as soon as possible.',
                 'type' => 'textarea',
                 'order' => 2,
             ],
@@ -247,7 +147,7 @@ class LandingPageContentSeeder extends Seeder
             [
                 'section' => 'contact',
                 'key' => 'contact_phone',
-                'value' => '+94764231316',
+                'value' => '+1 (555) 123-4567',
                 'type' => 'text',
                 'order' => 4,
             ],
@@ -283,7 +183,6 @@ class LandingPageContentSeeder extends Seeder
                 'type' => 'text',
                 'order' => 3,
             ],
-
         ];
 
         foreach ($contents as $content) {
@@ -297,5 +196,6 @@ class LandingPageContentSeeder extends Seeder
         }
 
         $this->command->info('✅ Landing page content seeded successfully!');
+        $this->command->info('📋 Sections created: Hero, Features, Themes, Contact, Footer');
     }
 }

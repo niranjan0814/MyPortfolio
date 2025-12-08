@@ -19,7 +19,7 @@ return new class extends Migration
         \App\Models\LandingPageContent::updateOrCreate(
             ['key' => 'preview_user_id'],
             [
-                'value' => null,
+                'value' => 2,
                 'section' => 'hero',
                 'type' => 'text',
                 'order' => 0
