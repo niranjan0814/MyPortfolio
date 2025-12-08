@@ -65,6 +65,8 @@
         padding: 4rem 2rem 0;
         position: relative;
         z-index: 10;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .t1-footer-grid {
@@ -267,6 +269,17 @@
         margin: 0;
     }
 
+    @media (max-width: 640px) {
+        .t1-footer-bottom {
+            padding: 1.5rem 1rem;
+        }
+
+        .t1-footer-copyright {
+            font-size: 0.8125rem;
+            line-height: 1.6;
+        }
+    }
+
     .t1-footer-copyright {
         color: var(--t1-text-muted);
         font-size: 0.875rem;
@@ -291,6 +304,100 @@
     @keyframes t1-blob-float {
         0% { transform: translate(0, 0) scale(1); }
         100% { transform: translate(30px, -30px) scale(1.1); }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-footer-container {
+            padding: 3rem 1rem 0;
+        }
+
+        .t1-footer-grid {
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .t1-footer-brand h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Hide description on mobile */
+        .t1-footer-description {
+            display: none;
+        }
+
+        .t1-footer-location {
+            margin-bottom: 1rem;
+        }
+
+        .t1-social-icons {
+            margin-top: 1rem;
+            gap: 0.75rem;
+        }
+
+        .t1-social-icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .t1-social-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Collapsible Sections */
+        .t1-footer-toggle {
+            width: 100%;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .t1-footer-content {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .t1-footer-content.active {
+            display: block;
+            animation: t1-slide-down 0.3s ease;
+        }
+
+        .t1-footer-icon-rotate {
+            transition: transform 0.3s ease;
+            color: var(--t1-accent-primary);
+            font-size: 1.5rem;
+            transform: rotate(90deg); /* Pointing down/right depending on preferred icon */
+        }
+
+        .t1-footer-toggle.active .t1-footer-icon-rotate {
+            transform: rotate(-90deg);
+        }
+
+        .t1-footer-section {
+            border-bottom: 1px solid var(--t1-border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .t1-footer-section:last-child {
+            border-bottom: none;
+        }
+
+        .t1-footer-section-title {
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+    }
+
+    @keyframes t1-slide-down {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
@@ -326,7 +433,6 @@
                             <span class="t1-tooltip">GitHub</span>
                         </a>
                     @endif
-
                     @if($user->linkedin_url)
                         <a href="{{ $user->linkedin_url }}" target="_blank" class="t1-social-icon">
                             <svg fill="currentColor" viewBox="0 0 24 24">
@@ -335,7 +441,6 @@
                             <span class="t1-tooltip">LinkedIn</span>
                         </a>
                     @endif
-
                     @if($user->email)
                         <a href="mailto:{{ $user->email }}" class="t1-social-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -344,7 +449,6 @@
                             <span class="t1-tooltip">Email</span>
                         </a>
                     @endif
-
                     @if($user->phone)
                         <a href="tel:{{ $user->phone }}" class="t1-social-icon">
                             <svg fill="currentColor" viewBox="0 0 20 20">
@@ -357,69 +461,77 @@
             </div>
 
             <!-- Quick Links -->
-            <div>
-                <h3 class="t1-footer-section-title">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                    </svg>
-                    Quick Links
-                </h3>
-                <ul class="t1-footer-links">
-                    @foreach(['About Me' => '#about', 'Projects' => '#projects', 'Skills' => '#skills', 'Experience' => '#experience', 'Education' => '#education', 'Contact' => '#contact'] as $text => $url)
-                        <li class="t1-footer-link-item">
-                            <a href="{{ $url }}" class="t1-footer-link">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                                {{ $text }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+            <div class="t1-footer-section">
+                <button class="t1-footer-toggle" onclick="toggleFooterSectionT1(this)">
+                    <h3 class="t1-footer-section-title">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                        Quick Links
+                    </h3>
+                    <span class="t1-footer-icon-rotate hidden sm:hidden">›</span>
+                </button>
+                <div class="t1-footer-content">
+                    <ul class="t1-footer-links">
+                        @foreach(['About Me' => '#about', 'Projects' => '#projects', 'Skills' => '#skills', 'Experience' => '#experience', 'Education' => '#education', 'Contact' => '#contact'] as $text => $url)
+                            <li class="t1-footer-link-item">
+                                <a href="{{ $url }}" class="t1-footer-link">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                    {{ $text }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
 
             <!-- Contact Info -->
-            <div>
-                <h3 class="t1-footer-section-title">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                    Get In Touch
-                </h3>
-                <ul class="t1-contact-list">
-                    @if($user->email)
-                        <li class="t1-contact-item">
-                            <a href="mailto:{{ $user->email }}" class="t1-contact-link">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <span style="word-break: break-all;">{{ $user->email }}</span>
-                            </a>
-                        </li>
-                    @endif
-
-                    @if($user->phone)
-                        <li class="t1-contact-item">
-                            <a href="tel:{{ $user->phone }}" class="t1-contact-link">
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-                                </svg>
-                                <span>{{ $user->phone }}</span>
-                            </a>
-                        </li>
-                    @endif
-
-                    @if($user->address)
-                        <li class="t1-contact-item">
-                            <div class="t1-contact-link" style="cursor: default;">
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>{{ $user->address }}</span>
-                            </div>
-                        </li>
-                    @endif
-                </ul>
+            <div class="t1-footer-section">
+                <button class="t1-footer-toggle" onclick="toggleFooterSectionT1(this)">
+                    <h3 class="t1-footer-section-title">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Get In Touch
+                    </h3>
+                    <span class="t1-footer-icon-rotate hidden sm:hidden">›</span>
+                </button>
+                <div class="t1-footer-content">
+                    <ul class="t1-contact-list">
+                        @if($user->email)
+                            <li class="t1-contact-item">
+                                <a href="mailto:{{ $user->email }}" class="t1-contact-link">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span style="word-break: break-all;">{{ $user->email }}</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if($user->phone)
+                            <li class="t1-contact-item">
+                                <a href="tel:{{ $user->phone }}" class="t1-contact-link">
+                                    <svg fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                                    </svg>
+                                    <span>{{ $user->phone }}</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if($user->address)
+                            <li class="t1-contact-item">
+                                <div class="t1-contact-link" style="cursor: default;">
+                                    <svg fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>{{ $user->address }}</span>
+                                </div>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -431,3 +543,47 @@
         </div>
     </div>
 </footer>
+
+<script>
+    function toggleFooterSectionT1(button) {
+        if (window.innerWidth >= 640) return; // Only work on mobile
+
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('.t1-footer-icon-rotate');
+        
+        button.classList.toggle('active');
+        content.classList.toggle('active');
+    }
+
+    // Initialize state on load/resize
+    document.addEventListener('DOMContentLoaded', function() {
+        function checkFooterState() {
+            const isMobile = window.innerWidth < 640;
+            const contents = document.querySelectorAll('.t1-footer-content');
+            const icons = document.querySelectorAll('.t1-footer-icon-rotate');
+            
+            contents.forEach(content => {
+                if (!isMobile) {
+                    content.classList.add('active'); // Always show on desktop
+                    content.style.display = 'block';
+                } else {
+                    if (!content.previousElementSibling.classList.contains('active')) {
+                        content.classList.remove('active');
+                        content.style.display = ''; // Clear inline style to let CSS handle it
+                    }
+                }
+            });
+
+            icons.forEach(icon => {
+                if (isMobile) {
+                    icon.classList.remove('hidden');
+                } else {
+                    icon.classList.add('hidden');
+                }
+            });
+        }
+
+        checkFooterState();
+        window.addEventListener('resize', checkFooterState);
+    });
+</script>

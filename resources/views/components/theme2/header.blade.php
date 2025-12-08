@@ -139,16 +139,61 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: var(--t2-card-bg);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--t2-glass-border);
-        padding: 1rem 2rem;
+        padding: 1.5rem 2rem 2rem;
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] .t2-mobile-menu {
+        background: rgba(44, 46, 62, 0.98);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .t2-mobile-menu.active {
         display: flex;
+    }
+
+    .t2-mobile-menu .t2-nav-link {
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .t2-mobile-menu .t2-nav-link:hover {
+        background: var(--t2-surface);
+        padding-left: 1.5rem;
+    }
+
+    .t2-mobile-menu .t2-theme-btn {
+        margin-top: 0.5rem;
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .t2-theme-btn svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+        .t2-nav-container {
+            padding: 1rem 1.5rem;
+        }
+
+        .t2-mobile-menu {
+            padding: 1.5rem;
+        }
+
+        .t2-brand {
+            font-size: 1.25rem;
+        }
     }
 </style>
 

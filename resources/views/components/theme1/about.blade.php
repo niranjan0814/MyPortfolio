@@ -100,9 +100,19 @@
     }
 
     @keyframes t1-wave {
-        0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(20deg); }
-        75% { transform: rotate(-20deg); }
+
+        0%,
+        100% {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate(20deg);
+        }
+
+        75% {
+            transform: rotate(-20deg);
+        }
     }
 
     /* Bento Grid Layout */
@@ -200,10 +210,11 @@
     }
 
     /* Degree Badge - Bottom Left with Cap Effect */
-    .t1-badge-degree { 
-        bottom: 1.5rem; 
+    .t1-badge-degree {
+        bottom: 1.5rem;
         left: 1.5rem;
-        padding-left: 3rem; /* Space for the cap */
+        padding-left: 3rem;
+        /* Space for the cap */
         background: var(--t1-surface-card);
         border-color: var(--t1-accent-primary);
     }
@@ -214,7 +225,7 @@
         bottom: -5px;
         width: 50px;
         height: 50px;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
         transform: rotate(-15deg);
         z-index: 22;
     }
@@ -435,25 +446,30 @@
         animation: t1-blob-float 12s infinite alternate;
     }
 
-    .t1-blob-1 { 
-        top: -10%; 
-        right: -5%; 
-        width: 600px; 
-        height: 600px; 
-        background: var(--t1-accent-glow); 
+    .t1-blob-1 {
+        top: -10%;
+        right: -5%;
+        width: 600px;
+        height: 600px;
+        background: var(--t1-accent-glow);
     }
-    
-    .t1-blob-2 { 
-        bottom: -10%; 
-        left: -5%; 
-        width: 500px; 
-        height: 500px; 
-        background: var(--t1-accent-secondary); 
+
+    .t1-blob-2 {
+        bottom: -10%;
+        left: -5%;
+        width: 500px;
+        height: 500px;
+        background: var(--t1-accent-secondary);
     }
 
     @keyframes t1-blob-float {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(40px, -40px) scale(1.1); }
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(40px, -40px) scale(1.1);
+        }
     }
 
     /* Responsive Design */
@@ -485,33 +501,84 @@
     }
 
     @media (max-width: 640px) {
+        .t1-about-section {
+            padding: 4rem 0 3rem;
+        }
+
+        .t1-about-container {
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .t1-about-hero {
+            margin-bottom: 2rem;
+        }
+
         .t1-section-title {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin-bottom: 0.75rem;
         }
 
         .t1-greeting {
             font-size: 1.25rem;
+            margin-bottom: 0.75rem;
         }
 
         .t1-greeting::before {
             left: -2rem;
         }
 
+        .t1-bento-grid {
+            gap: 1.5rem;
+        }
+
+        /* Stats Cards - Compact (2 per row) */
         .t1-bento-stat {
-            grid-column: span 12;
+            grid-column: span 6;
+            padding: 1rem;
+            min-height: 110px;
+            gap: 0.5rem;
+        }
+
+        .t1-stat-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+
+        .t1-stat-value {
+            font-size: 1.5rem;
+        }
+
+        .t1-stat-label {
+            font-size: 0.75rem;
+        }
+
+        .t1-bento-item {
+            padding: 1.5rem;
         }
 
         .t1-skills-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .t1-skill-card {
+            padding: 1rem;
+            min-height: 100px;
         }
 
         .t1-cta-section {
             flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 2rem;
         }
 
         .t1-btn {
             width: 100%;
             justify-content: center;
+            padding: 0.875rem 1.5rem;
         }
 
         .t1-profile-image-wrapper {
@@ -547,12 +614,12 @@
             <div class="t1-bento-item t1-bento-profile">
                 <div class="t1-profile-image-wrapper">
                     <img src="{{ $aboutContent['user']->profile_image ?? '/images/profile.png' }}"
-                         alt="{{ $aboutContent['profile_name'] ?? 'Profile' }}"
-                         class="t1-profile-image" />
-                    
+                        alt="{{ $aboutContent['profile_name'] ?? 'Profile' }}" class="t1-profile-image" />
+
                     <!-- Degree Badge with Cap -->
                     <div class="t1-float-badge t1-badge-degree">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4729/4729356.png" class="t1-cap-icon" alt="Graduation Cap">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4729/4729356.png" class="t1-cap-icon"
+                            alt="Graduation Cap">
                         <span>{{ $aboutContent['profile_degree_badge'] ?? 'BSc(Hons)SE' }}</span>
                     </div>
                 </div>
@@ -563,18 +630,28 @@
                 <div class="t1-description-text">
                     {!! $aboutContent['about_description'] ?? 'Driven and innovative undergraduate specializing in Software Engineering.' !!}
                 </div>
-                
+
                 <!-- CTA Buttons Inside Description -->
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                     <a href="#contact" class="t1-btn t1-btn-primary">
                         <span>{{ $aboutContent['cta_button_text'] ?? "Let's Work Together" }}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
 
                     @if($aboutContent['user']->hasCv())
-                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t1-btn t1-btn-outline" download>
+                        <a href="{{ route('cv.public.download', $aboutContent['user']->id) }}" class="t1-btn t1-btn-outline"
+                            download>
                             <span>Download CV</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
                         </a>
                     @endif
                 </div>
@@ -592,31 +669,31 @@
 
             @foreach($stats as $stat)
                 @if($stat['count'])
-                <div class="t1-bento-item t1-bento-stat">
-                    <div class="t1-stat-icon">{{ $stat['icon'] }}</div>
-                    <div class="t1-stat-value">{{ $stat['count'] }}</div>
-                    <div class="t1-stat-label">{{ $stat['label'] }}</div>
-                </div>
+                    <div class="t1-bento-item t1-bento-stat">
+                        <div class="t1-stat-icon">{{ $stat['icon'] }}</div>
+                        <div class="t1-stat-value">{{ $stat['count'] }}</div>
+                        <div class="t1-stat-label">{{ $stat['label'] }}</div>
+                    </div>
                 @endif
             @endforeach
 
             <!-- Soft Skills Card (Full Width) -->
             @if (!empty($aboutContent['soft_skills']))
-            <div class="t1-bento-item t1-bento-skills">
-                <h3 class="t1-skills-header">Core Competencies</h3>
-                <div class="t1-skills-grid">
-                    @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
-                    <div class="t1-skill-card">
-                        @if($iconUrl)
-                        <div class="t1-skill-icon-wrapper">
-                            <img src="{{ $iconUrl }}" alt="{{ $skill }}" class="t1-skill-icon">
-                        </div>
-                        @endif
-                        <div class="t1-skill-name">{{ $skill }}</div>
+                <div class="t1-bento-item t1-bento-skills">
+                    <h3 class="t1-skills-header">Core Competencies</h3>
+                    <div class="t1-skills-grid">
+                        @foreach ($aboutContent['soft_skills'] as $skill => $iconUrl)
+                            <div class="t1-skill-card">
+                                @if($iconUrl)
+                                    <div class="t1-skill-icon-wrapper">
+                                        <img src="{{ $iconUrl }}" alt="{{ $skill }}" class="t1-skill-icon">
+                                    </div>
+                                @endif
+                                <div class="t1-skill-name">{{ $skill }}</div>
+                            </div>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
-            </div>
             @endif
         </div>
     </div>

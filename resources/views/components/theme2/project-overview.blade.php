@@ -260,6 +260,135 @@ use Illuminate\Support\Facades\Storage;
         color: var(--t2-accent);
         background: var(--t2-surface);
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 1024px) {
+        .t2-project-info {
+            position: static;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .t2-project-overview {
+            padding: 4rem 0 6rem;
+        }
+
+        .t2-container {
+            padding: 0 1rem;
+        }
+
+        .t2-breadcrumbs {
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .t2-project-grid {
+            gap: 2rem;
+        }
+
+        .t2-main-image {
+            max-width: 100%;
+        }
+
+        .t2-gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 100%;
+        }
+
+        .t2-project-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .t2-project-desc {
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .t2-tech-stack,
+        .t2-features {
+            margin-bottom: 2rem;
+        }
+
+        .t2-tech-tags {
+            gap: 0.5rem;
+        }
+
+        .t2-tech-tag {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .t2-project-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .t2-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .t2-project-title {
+            font-size: 1.75rem;
+        }
+
+        .t2-tech-tag img {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    /* Mobile Only (< 640px) */
+    @media (max-width: 640px) {
+        .t2-project-grid {
+            /* Kept as default (column) so main image stays top */
+            gap: 3rem;
+        }
+
+        .t2-main-image {
+            margin-bottom: 1rem;
+            border-radius: 16px;
+        }
+
+        /* Horizontal Scroll Gallery */
+        .t2-gallery-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .t2-gallery-grid::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .t2-gallery-grid::-webkit-scrollbar-thumb {
+            background: var(--t2-accent);
+            border-radius: 4px;
+        }
+
+        .t2-gallery-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .t2-gallery-item {
+            min-width: 250px;
+            width: 70%;
+            height: 180px;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            border-radius: 16px;
+        }
+    }
 </style>
 
 <section class="t2-project-overview">
@@ -303,6 +432,22 @@ use Illuminate\Support\Facades\Storage;
                     @endif
                 </div>
 
+                <div class="t2-project-actions">
+                    @if($project->depurl)
+                        <a href="{{ $project->depurl }}" target="_blank" class="t2-btn t2-btn-primary">
+                            Live Demo
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    @endif
+
+                    @if($project->link)
+                        <a href="{{ $project->link }}" target="_blank" class="t2-btn t2-btn-outline">
+                            Source Code
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
+                    @endif
+                </div>
+
                 @if($techStackSkills && $techStackSkills->count() > 0)
                     <div class="t2-tech-stack">
                         <h4 class="t2-tech-label">Technologies</h4>
@@ -329,23 +474,50 @@ use Illuminate\Support\Facades\Storage;
                         </ul>
                     </div>
                 @endif
-
-                <div class="t2-project-actions">
-                    @if($project->depurl)
-                        <a href="{{ $project->depurl }}" target="_blank" class="t2-btn t2-btn-primary">
-                            Live Demo
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        </a>
-                    @endif
-
-                    @if($project->link)
-                        <a href="{{ $project->link }}" target="_blank" class="t2-btn t2-btn-outline">
-                            Source Code
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                        </a>
-                    @endif
-                </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const galleryGrid = document.querySelector('.t2-gallery-grid');
+        const projectGallery = document.querySelector('.t2-project-gallery');
+        const projectInfo = document.querySelector('.t2-project-info');
+        
+        if (!galleryGrid || !projectGallery || !projectInfo) return;
+
+        function handleGalleryPosition() {
+            const isMobile = window.innerWidth <= 640;
+            
+            if (isMobile) {
+                // Move gallery grid to after project info (bottom of page)
+                if (galleryGrid.parentElement !== projectInfo.parentElement) {
+                    projectInfo.parentElement.appendChild(galleryGrid);
+                    galleryGrid.style.marginTop = '0';
+                    galleryGrid.style.marginBottom = '2rem';
+                } else if (galleryGrid.nextElementSibling !== null) {
+                    // Ensure it's the last child
+                    projectInfo.parentElement.appendChild(galleryGrid);
+                }
+            } else {
+                // Move gallery grid back to project gallery container
+                if (galleryGrid.parentElement !== projectGallery) {
+                    projectGallery.appendChild(galleryGrid);
+                    galleryGrid.style.marginTop = '';
+                    galleryGrid.style.marginBottom = '';
+                }
+            }
+        }
+
+        // Run on load
+        handleGalleryPosition();
+
+        // Run on resize with debounce
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleGalleryPosition, 250);
+        });
+    });
+</script>

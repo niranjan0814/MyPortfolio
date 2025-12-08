@@ -34,11 +34,18 @@ class HeroContentResource extends Resource
 
             // ── HERO TEXT ───────────────────────────────────────
             Forms\Components\Section::make('Hero Text')
+                ->collapsible()
                 ->schema([
-                    Forms\Components\TextInput::make('greeting')
-                        ->label('Greeting')
-                        ->default("Hi, I'm")
-                        ->placeholder("Hi, I'm"),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('greeting')
+                                ->label('Greeting')
+                                ->default("Hi, I'm")
+                                ->placeholder("Hi, I'm"),
+                        ]),
 
 
 Forms\Components\RichEditor::make('description')
@@ -54,7 +61,8 @@ Forms\Components\RichEditor::make('description')
                 $fail("The {$attribute} must not exceed 30 words. (Currently: {$wordCount})");
             }
         };
-    }),
+    })
+    ->columnSpanFull(),
 
 
 
@@ -70,62 +78,77 @@ Forms\Components\RichEditor::make('description')
                         ->maxItems(6)
                         ->collapsible()
                         ->cloneable()
-                        ->helperText('Texts that rotate in typing animation'),
-                ])->columns(1),
+                        ->helperText('Texts that rotate in typing animation')
+                        ->columnSpanFull(),
+                ]),
 
             // ── CTA BUTTONS ─────────────────────────────────────
             Forms\Components\Section::make('Call-to-Action Buttons')
+                ->collapsible()
                 ->schema([
-                    Forms\Components\Toggle::make('btn_contact_enabled')
-                        ->label('Enable "Get In Touch" Button')
-                        ->default(true)
-                        ->reactive(),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\Toggle::make('btn_contact_enabled')
+                                ->label('Enable "Get In Touch" Button')
+                                ->default(true)
+                                ->reactive(),
 
-                    Forms\Components\TextInput::make('btn_contact_text')
-                        ->label('Button Text')
-                        ->default('Get In Touch')
-                        ->visible(fn ($get) => $get('btn_contact_enabled')),
+                            Forms\Components\TextInput::make('btn_contact_text')
+                                ->label('Button Text')
+                                ->default('Get In Touch')
+                                ->visible(fn ($get) => $get('btn_contact_enabled')),
 
-                    Forms\Components\Toggle::make('btn_projects_enabled')
-                        ->label('Enable "View My Work" Button')
-                        ->default(true)
-                        ->reactive(),
+                            Forms\Components\Toggle::make('btn_projects_enabled')
+                                ->label('Enable "View My Work" Button')
+                                ->default(true)
+                                ->reactive(),
 
-                    Forms\Components\TextInput::make('btn_projects_text')
-                        ->label('Button Text')
-                        ->default('View My Work')
-                        ->visible(fn ($get) => $get('btn_projects_enabled')),
-                ])->columns(2),
+                            Forms\Components\TextInput::make('btn_projects_text')
+                                ->label('Button Text')
+                                ->default('View My Work')
+                                ->visible(fn ($get) => $get('btn_projects_enabled')),
+                        ]),
+                ]),
 
             // ── SOCIAL LINKS ────────────────────────────────────
             Forms\Components\Section::make('Social Links')
+                ->collapsible()
                 ->schema([
                     Forms\Components\Repeater::make('social_links')
                         ->label('Social Profiles')
                         ->schema([
-                            Forms\Components\TextInput::make('name')
-                                ->label('Platform')
-                                ->required()
-                                ->placeholder('GitHub'),
+                            Forms\Components\Grid::make([
+                                'default' => 1,
+                                'sm' => 2,
+                            ])
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')
+                                        ->label('Platform')
+                                        ->required()
+                                        ->placeholder('GitHub'),
 
-                            Forms\Components\TextInput::make('url')
-                                ->label('Profile URL')
-                                ->url()
-                                ->required()
-                                ->placeholder('https://github.com/username'),
+                                    Forms\Components\TextInput::make('url')
+                                        ->label('Profile URL')
+                                        ->url()
+                                        ->required()
+                                        ->placeholder('https://github.com/username'),
+                                ]),
 
                             Forms\Components\TextInput::make('icon')
                                 ->label('Icon URL')
                                 ->url()
-                                ->placeholder('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg'),
+                                ->placeholder('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg')
+                                ->columnSpanFull(),
 
                             
                         ])
                         ->defaultItems(3)
                         ->maxItems(6)
                         ->collapsible()
-                        ->cloneable()
-                        ->columns(2),
+                        ->cloneable(),
                 ]),
 
         ]);
@@ -135,27 +158,35 @@ Forms\Components\RichEditor::make('description')
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('User'),
-                Tables\Columns\TextColumn::make('greeting')->limit(20),
+                Tables\Columns\TextColumn::make('user.name')->label('User')->toggleable()->visibleFrom('md'),
+                Tables\Columns\TextColumn::make('greeting')->limit(20)->toggleable(),
                 Tables\Columns\BadgeColumn::make('btn_contact_enabled')
                     ->label('Contact Btn')
                     ->colors(['success' => true, 'danger' => false])
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                    ->toggleable()
+                    ->visibleFrom('md'),
                 Tables\Columns\BadgeColumn::make('btn_projects_enabled')
                     ->label('Projects Btn')
                     ->colors(['success' => true, 'danger' => false])
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                    ->toggleable()
+                    ->visibleFrom('md'),
                 Tables\Columns\TextColumn::make('social_links')
                     ->label('Social Links')
-                    ->getStateUsing(fn ($record) => $record->social_links ? count($record->social_links) : 0),
-                Tables\Columns\TextColumn::make('tech_stack_count')->default('—'),
+                    ->getStateUsing(fn ($record) => $record->social_links ? count($record->social_links) : 0)
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
+                Tables\Columns\TextColumn::make('tech_stack_count')->default('—')->toggleable(isToggledHiddenByDefault: true)->visibleFrom('lg'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('btn_contact_enabled'),
                 Tables\Filters\TernaryFilter::make('btn_projects_enabled'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

@@ -320,6 +320,57 @@
         0% { transform: translate(0, 0) scale(1); }
         100% { transform: translate(40px, -40px) scale(1.1); }
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-skills-section {
+            padding: 4rem 0;
+        }
+
+        .t1-skills-container {
+            padding: 0 1rem;
+        }
+
+        .t1-section-title {
+            font-size: 2.5rem;
+        }
+
+        .t1-categories-wrapper {
+            gap: 2rem;
+        }
+
+        .t1-category-header {
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .t1-category-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .t1-category-icon img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .t1-category-info h3 {
+            font-size: 1.25rem;
+        }
+
+        .t1-skills-grid {
+            gap: 0.75rem;
+        }
+
+        .t1-skill-card {
+            padding: 1rem;
+            min-height: 100px;
+        }
+
+        .t1-skill-name {
+            font-size: 0.8rem;
+        }
+    }
 </style>
 
 <section id="skills" class="t1-skills-section">

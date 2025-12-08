@@ -203,9 +203,22 @@
     }
 
     @keyframes t1-bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
     }
 
     .t1-reveal-text {
@@ -250,7 +263,8 @@
         padding: 3rem;
         box-shadow: var(--t1-card-shadow);
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        display: none; /* Hidden by default */
+        display: none;
+        /* Hidden by default */
         opacity: 0;
         transform: translateY(20px);
     }
@@ -265,6 +279,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -372,12 +387,92 @@
         animation: t1-blob-float 15s infinite alternate;
     }
 
-    .t1-blob-1 { top: 10%; right: 10%; width: 500px; height: 500px; background: var(--t1-accent-glow); }
-    .t1-blob-2 { bottom: 10%; left: 10%; width: 400px; height: 400px; background: var(--t1-accent-secondary); animation-delay: -7s; }
+    .t1-blob-1 {
+        top: 10%;
+        right: 10%;
+        width: 500px;
+        height: 500px;
+        background: var(--t1-accent-glow);
+    }
+
+    .t1-blob-2 {
+        bottom: 10%;
+        left: 10%;
+        width: 400px;
+        height: 400px;
+        background: var(--t1-accent-secondary);
+        animation-delay: -7s;
+    }
 
     @keyframes t1-blob-float {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(40px, -40px) scale(1.1); }
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(40px, -40px) scale(1.1);
+        }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-contact-section {
+            padding: 4rem 0 3rem;
+        }
+
+        .t1-contact-container {
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .t1-section-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin-bottom: 2rem;
+        }
+
+        .t1-contact-grid {
+            gap: 2rem;
+        }
+
+        .t1-contact-info h3 {
+            font-size: 1.75rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Hide description and items on mobile to reduce clutter (Theme 2 technique) */
+        .t1-contact-desc,
+        .t1-contact-item {
+            display: none;
+        }
+
+        .t1-contact-info {
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .t1-form-reveal-wrapper {
+            min-height: 300px;
+            padding: 1.5rem;
+        }
+
+        .t1-reveal-icon {
+            font-size: 2.5rem;
+        }
+
+        .t1-reveal-text {
+            font-size: 1.25rem;
+        }
+
+        .t1-form-card {
+            padding: 1.5rem;
+        }
+
+        .t1-submit-btn {
+            padding: 0.875rem;
+            width: 100%;
+        }
     }
 </style>
 
@@ -397,7 +492,9 @@
         @if(session('success'))
             <div class="t1-alert t1-alert-success">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
                 </svg>
                 <span>{{ session('success') }}</span>
             </div>
@@ -406,7 +503,9 @@
         @if($errors->any())
             <div class="t1-alert t1-alert-error">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd" />
                 </svg>
                 <div>
                     @foreach($errors->all() as $error)
@@ -430,7 +529,8 @@
                         <div class="t1-contact-item">
                             <div class="t1-contact-icon">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
                             <div class="t1-contact-details">
@@ -444,7 +544,8 @@
                         <div class="t1-contact-item">
                             <div class="t1-contact-icon">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
                             </div>
                             <div class="t1-contact-details">
@@ -458,8 +559,10 @@
                         <div class="t1-contact-item">
                             <div class="t1-contact-icon">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </div>
                             <div class="t1-contact-details">
@@ -491,25 +594,29 @@
                     <form action="{{ route('contact.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="portfolio_user_id" value="{{ $portfolioOwnerId ?? $user->id }}">
-                        
+
                         <div class="t1-form-group">
                             <label for="name" class="t1-form-label">Name</label>
-                            <input type="text" id="name" name="name" class="t1-form-input" required placeholder="John Doe" value="{{ old('name') }}">
+                            <input type="text" id="name" name="name" class="t1-form-input" required
+                                placeholder="John Doe" value="{{ old('name') }}">
                         </div>
 
                         <div class="t1-form-group">
                             <label for="email" class="t1-form-label">Email</label>
-                            <input type="email" id="email" name="email" class="t1-form-input" required placeholder="john@example.com" value="{{ old('email') }}">
+                            <input type="email" id="email" name="email" class="t1-form-input" required
+                                placeholder="john@example.com" value="{{ old('email') }}">
                         </div>
 
                         <div class="t1-form-group">
                             <label for="subject" class="t1-form-label">Subject</label>
-                            <input type="text" id="subject" name="subject" class="t1-form-input" placeholder="Project Inquiry" value="{{ old('subject') }}">
+                            <input type="text" id="subject" name="subject" class="t1-form-input"
+                                placeholder="Project Inquiry" value="{{ old('subject') }}">
                         </div>
 
                         <div class="t1-form-group">
                             <label for="message" class="t1-form-label">Message</label>
-                            <textarea id="message" name="message" rows="5" class="t1-form-textarea" required placeholder="Tell me about your project...">{{ old('message') }}</textarea>
+                            <textarea id="message" name="message" rows="5" class="t1-form-textarea" required
+                                placeholder="Tell me about your project...">{{ old('message') }}</textarea>
                         </div>
 
                         <button type="submit" class="t1-submit-btn">Send Message</button>
@@ -520,16 +627,16 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const revealBtn = document.getElementById('t1-reveal-btn');
             const revealWrapper = document.getElementById('t1-form-reveal');
             const contactForm = document.getElementById('t1-contact-form');
 
             if (revealBtn && revealWrapper && contactForm) {
-                revealBtn.addEventListener('click', function() {
+                revealBtn.addEventListener('click', function () {
                     // Hide the reveal wrapper
                     revealWrapper.style.display = 'none';
-                    
+
                     // Show the form with animation
                     contactForm.classList.add('visible');
                 });

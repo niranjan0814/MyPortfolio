@@ -31,6 +31,7 @@ class ProjectOverviewResource extends Resource
                 ->default(fn () => auth()->id()),
 
             Forms\Components\Section::make('Project Selection')
+                ->collapsible()
                 ->schema([
                     Forms\Components\Select::make('project_id')
                         ->label('Select Project')
@@ -41,6 +42,7 @@ class ProjectOverviewResource extends Resource
                 ]),
 
             Forms\Components\Section::make('Overview Description')
+                ->collapsible()
                 ->schema([
                     Forms\Components\RichEditor::make('overview_description')
                         ->label('Project Overview')
@@ -59,6 +61,7 @@ class ProjectOverviewResource extends Resource
                 ]),
 
             Forms\Components\Section::make('Key Features')
+                ->collapsible()
                 ->schema([
                     Forms\Components\KeyValue::make('key_features')
                         ->label('Key Features')
@@ -70,6 +73,7 @@ class ProjectOverviewResource extends Resource
                 ]),
 
             Forms\Components\Section::make('Project Gallery')
+                ->collapsible()
                 ->schema([
                     Forms\Components\Textarea::make('gallery_images')
                         ->label('Gallery Image URLs')
@@ -82,6 +86,7 @@ class ProjectOverviewResource extends Resource
                 ]),
 
             Forms\Components\Section::make('Technology Stack')
+                ->collapsible()
                 ->schema([
                     Forms\Components\Select::make('tech_stack')
                         ->label('Tech Stack')
@@ -98,35 +103,48 @@ class ProjectOverviewResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('project.image')
+                    ->label('Image')
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('project.title')
                     ->label('Project')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('key_features')
                     ->label('Features')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? count($state) . ' features' : '0 features')
+                    ->state(fn (ProjectOverview $record) => array_keys($record->key_features ?? []))
                     ->badge()
-                    ->color('success'),
-
-                Tables\Columns\TextColumn::make('gallery_images')
-                    ->label('Gallery')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? count($state) . ' images' : '0 images')
-                    ->badge()
-                    ->color('info'),
+                    ->color('success')
+                    ->limitList(2)
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('tech_stack')
                     ->label('Tech Stack')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? count($state) . ' technologies' : '0 technologies')
+                    ->state(function (ProjectOverview $record) {
+                        return $record->getTechStackSkills()->pluck('name')->toArray();
+                    })
                     ->badge()
-                    ->color('warning'),
+                    ->color('info')
+                    ->limitList(3)
+                    ->toggleable(),
+
+                Tables\Columns\ImageColumn::make('gallery_images')
+                    ->label('Gallery')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Last Updated')
                     ->dateTime('M j, Y')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
             ])
             ->defaultSort('updated_at', 'desc')
             ->filters([
@@ -135,8 +153,10 @@ class ProjectOverviewResource extends Resource
                     ->options(fn() => Project::where('user_id', auth()->id())->pluck('title', 'id')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

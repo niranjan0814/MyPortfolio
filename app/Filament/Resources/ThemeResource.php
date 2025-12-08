@@ -32,31 +32,42 @@ class ThemeResource extends Resource
                 // ========================================
                 Forms\Components\Section::make('🎨 Theme Information')
                     ->description('Basic details about your theme')
+                    ->collapsible()
                     ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(
-                                fn($state, callable $set) =>
-                                $set('slug', Str::slug($state))
-                            )
-                            ->helperText('e.g., "Modern Professional"'),
+                        Forms\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 2,
+                        ])
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(
+                                        fn($state, callable $set) =>
+                                        $set('slug', Str::slug($state))
+                                    )
+                                    ->helperText('e.g., "Modern Professional"'),
 
-                        Forms\Components\TextInput::make('slug')
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255)
-                            ->helperText('URL-friendly identifier (auto-generated)')
-                            ->disabled()
-                            ->dehydrated(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255)
+                                    ->helperText('URL-friendly identifier (auto-generated)')
+                                    ->disabled()
+                                    ->dehydrated(),
+                            ]),
 
                         Forms\Components\Textarea::make('description')
                             ->rows(3)
                             ->maxLength(500)
-                            ->helperText('Brief description of the theme'),
+                            ->helperText('Brief description of the theme')
+                            ->columnSpanFull(),
 
-                        Forms\Components\Grid::make(2)
+                        Forms\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 2,
+                        ])
                             ->schema([
                                 Forms\Components\TextInput::make('version')
                                     ->default('1.0.0')
@@ -67,20 +78,22 @@ class ThemeResource extends Resource
                                     ->maxLength(255)
                                     ->default(auth()->user()->full_name ?? auth()->user()->name),
                             ]),
-                    ])->columns(2),
+                    ]),
 
                 // ========================================
                 // SECTION 2: THEME FILES
                 // ========================================
                 Forms\Components\Section::make('📦 Theme Files')
                     ->description('Upload and manage theme files')
+                    ->collapsible()
                     ->schema([
                         Forms\Components\TextInput::make('component_path')
                             ->label('Directory Name')
                             ->required()
                             ->maxLength(255)
                             ->helperText('Folder name in resources/views/components (e.g., "theme1", "theme2")')
-                            ->default(fn ($state) => $state ?? 'theme' . (Theme::count() + 1)),
+                            ->default(fn ($state) => $state ?? 'theme' . (Theme::count() + 1))
+                            ->columnSpanFull(),
 
                         Forms\Components\FileUpload::make('zip_file_path')
                             ->label('Theme ZIP File')
@@ -121,13 +134,15 @@ class ThemeResource extends Resource
                                             ->send();
                                     }
                                 }
-                            }),
+                            })
+                            ->columnSpanFull(),
 
                         Forms\Components\FileUpload::make('thumbnail_path')
                             ->label('Theme Thumbnail')
                             ->image()
                             ->directory('themes/thumbnails')
-                            ->helperText('Preview image (recommended: 600x400px)'),
+                            ->helperText('Preview image (recommended: 600x400px)')
+                            ->columnSpanFull(),
 
                         Forms\Components\Placeholder::make('component_status')
                             ->label('Component Status')
@@ -139,7 +154,8 @@ class ThemeResource extends Resource
                                 return $record->componentsExist()
                                     ? '✅ All components installed'
                                     : '⚠️ Some components missing - upload ZIP to fix';
-                            }),
+                            })
+                            ->columnSpanFull(),
                     ]),
 
                 // ========================================
@@ -147,45 +163,53 @@ class ThemeResource extends Resource
                 // ========================================
                 Forms\Components\Section::make('⚙️ Theme Settings')
                     ->description('Configure theme availability and features')
+                    ->collapsible()
                     ->schema([
-                        Forms\Components\Toggle::make('is_premium')
-                            ->label('Premium Theme')
-                            ->helperText('Only users with premium access can use this theme')
-                            ->default(false),
+                        Forms\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 3,
+                        ])
+                            ->schema([
+                                Forms\Components\Toggle::make('is_premium')
+                                    ->label('Premium Theme')
+                                    ->helperText('Only users with premium access can use this theme')
+                                    ->default(false),
 
-                        Forms\Components\Toggle::make('is_active')
-                            ->label('Active')
-                            ->helperText('Make theme available to users')
-                            ->default(true)
-                            ->disabled(fn($record) => $record && $record->slug === 'theme1')
-                            ->hint(fn($record) => $record && $record->slug === 'theme1' ? '⚠️ Default theme cannot be deactivated' : ''),
+                                Forms\Components\Toggle::make('is_active')
+                                    ->label('Active')
+                                    ->helperText('Make theme available to users')
+                                    ->default(true)
+                                    ->disabled(fn($record) => $record && $record->slug === 'theme1')
+                                    ->hint(fn($record) => $record && $record->slug === 'theme1' ? '⚠️ Default theme cannot be deactivated' : ''),
 
-                        Forms\Components\TextInput::make('sort_order')
-                            ->numeric()
-                            ->default(fn () => Theme::max('sort_order') + 1)
-                            ->minValue(1)
-                            ->helperText('Display order (1 = first)')
-                            ->live(onBlur: true)
-                            ->rules([
-                                function ($record) {
-                                    return function (string $attribute, $value, \Closure $fail) use ($record) {
-                                        $existingTheme = Theme::where('sort_order', $value)
-                                            ->when($record, fn($q) => $q->where('id', '!=', $record->id))
-                                            ->first();
+                                Forms\Components\TextInput::make('sort_order')
+                                    ->numeric()
+                                    ->default(fn () => Theme::max('sort_order') + 1)
+                                    ->minValue(1)
+                                    ->helperText('Display order (1 = first)')
+                                    ->live(onBlur: true)
+                                    ->rules([
+                                        function ($record) {
+                                            return function (string $attribute, $value, \Closure $fail) use ($record) {
+                                                $existingTheme = Theme::where('sort_order', $value)
+                                                    ->when($record, fn($q) => $q->where('id', '!=', $record->id))
+                                                    ->first();
 
-                                        if ($existingTheme) {
-                                            $fail("\"{$existingTheme->name}\" is already in order {$value}.");
-                                        }
-                                    };
-                                },
+                                                if ($existingTheme) {
+                                                    $fail("\"{$existingTheme->name}\" is already in order {$value}.");
+                                                }
+                                            };
+                                        },
+                                    ]),
                             ]),
-                    ])->columns(3),
+                    ]),
 
                 // ========================================
                 // SECTION 4: THEME FEATURES
                 // ========================================
                 Forms\Components\Section::make('✨ Theme Features')
                     ->description('Define theme characteristics and color scheme')
+                    ->collapsible()
                     ->schema([
                         Forms\Components\TagsInput::make('features')
                             ->label('Key Features')
@@ -198,7 +222,8 @@ class ThemeResource extends Resource
                                 'Fast Loading',
                                 'Glassmorphism Effects',
                                 'Smooth Animations',
-                            ]),
+                            ])
+                            ->columnSpanFull(),
 
                         Forms\Components\KeyValue::make('colors')
                             ->label('Color Scheme')
@@ -209,7 +234,8 @@ class ThemeResource extends Resource
                                 'primary' => '#3B82F6',
                                 'secondary' => '#8B5CF6',
                                 'accent' => '#F59E0B',
-                            ]),
+                            ])
+                            ->columnSpanFull(),
                     ]),
 
                 Forms\Components\Hidden::make('created_by')
@@ -224,17 +250,22 @@ class ThemeResource extends Resource
                 Tables\Columns\ImageColumn::make('thumbnail_path')
                     ->label('Preview')
                     ->square()
-                    ->size(60),
+                    ->size(60)
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
 
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn($record) => $record->slug),
+                    ->description(fn($record) => $record->slug)
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('version')
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
 
                 Tables\Columns\IconColumn::make('is_premium')
                     ->label('Type')
@@ -243,7 +274,9 @@ class ThemeResource extends Resource
                     ->falseIcon('heroicon-o-hand-thumb-up')
                     ->trueColor('warning')
                     ->falseColor('success')
-                    ->tooltip(fn($record) => $record->is_premium ? 'Premium' : 'Free'),
+                    ->tooltip(fn($record) => $record->is_premium ? 'Premium' : 'Free')
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
 
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('Active')
@@ -259,21 +292,25 @@ class ThemeResource extends Resource
                                 ->send();
                             return false;
                         }
-                    }),
+                    })
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('users_count')
                     ->counts('users')
                     ->label('Users')
                     ->badge()
                     ->color('primary')
-                    ->tooltip('Number of users with access'),
+                    ->tooltip('Number of users with access')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
 
                 
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('M j, Y')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
@@ -290,60 +327,62 @@ class ThemeResource extends Resource
                     ->native(false),
             ])
             ->actions([
-                Tables\Actions\Action::make('preview')
-                    ->label('Preview')
-                    ->icon('heroicon-o-eye')
-                    ->color('info')
-                    ->url(fn($record) => route('portfolio.show', [
-                        'user' => auth()->user()->slug,
-                        'preview' => true,
-                        'theme' => $record->slug,
-                    ]))
-                    ->openUrlInNewTab(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('preview')
+                        ->label('Preview')
+                        ->icon('heroicon-o-eye')
+                        ->color('info')
+                        ->url(fn($record) => route('portfolio.show', [
+                            'user' => auth()->user()->slug,
+                            'preview' => true,
+                            'theme' => $record->slug,
+                        ]))
+                        ->openUrlInNewTab(),
 
-                Tables\Actions\EditAction::make()
-                    ->label('Edit')
-                    ->icon('heroicon-o-pencil')
-                    ->color('warning'),
+                    Tables\Actions\EditAction::make()
+                        ->label('Edit')
+                        ->icon('heroicon-o-pencil')
+                        ->color('warning'),
 
-                Tables\Actions\DeleteAction::make()
-                    ->label('Delete')
-                    ->icon('heroicon-o-trash')
-                    ->color('danger')
-                    ->before(function ($record, $action) {
-                        if ($record->slug === 'theme1') {
-                            Notification::make()
-                                ->title('Cannot Delete Default Theme')
-                                ->body('theme1 is the system fallback and cannot be removed')
-                                ->danger()
-                                ->send();
+                    Tables\Actions\DeleteAction::make()
+                        ->label('Delete')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->before(function ($record, $action) {
+                            if ($record->slug === 'theme1') {
+                                Notification::make()
+                                    ->title('Cannot Delete Default Theme')
+                                    ->body('theme1 is the system fallback and cannot be removed')
+                                    ->danger()
+                                    ->send();
 
-                            $action->cancel();
-                        }
-                    }),
-                Tables\Actions\Action::make('download_zip')
-                    ->label('Download ZIP')
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success')
-                    ->visible(fn($record) => !empty($record->zip_file_path))
-                    ->action(function ($record) {
-                        $zipPath = Storage::disk('public')->path($record->zip_file_path);
+                                $action->cancel();
+                            }
+                        }),
+                        
+                    Tables\Actions\Action::make('download_zip')
+                        ->label('Download ZIP')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->color('success')
+                        ->visible(fn($record) => !empty($record->zip_file_path))
+                        ->action(function ($record) {
+                            $zipPath = Storage::disk('public')->path($record->zip_file_path);
 
-                        if (!file_exists($zipPath)) {
-                            Notification::make()
-                                ->title('ZIP File Missing')
-                                ->body('The theme ZIP file could not be found.')
-                                ->danger()
-                                ->send();
-                            return;
-                        }
+                            if (!file_exists($zipPath)) {
+                                Notification::make()
+                                    ->title('ZIP File Missing')
+                                    ->body('The theme ZIP file could not be found.')
+                                    ->danger()
+                                    ->send();
+                                return;
+                            }
 
-                        return response()->download(
-                            $zipPath,
-                            $record->slug . '-v' . $record->version . '.zip'
-                        );
-                    }),
-
+                            return response()->download(
+                                $zipPath,
+                                $record->slug . '-v' . $record->version . '.zip'
+                            );
+                        }),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

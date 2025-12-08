@@ -24,25 +24,44 @@ class ExperienceResource extends Resource
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
-            Forms\Components\Hidden::make('user_id')
-                ->default(fn () => auth()->id()),
+            Forms\Components\Section::make('Experience Details')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => auth()->id()),
 
-            Forms\Components\TextInput::make('role')->required(),
-            Forms\Components\TextInput::make('company')->required(),
-            Forms\Components\TextInput::make('duration')->label('Period'),
-            Forms\Components\Textarea::make('details')->rows(3),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('role')
+                                ->required()
+                                ->maxLength(52),
+                            Forms\Components\TextInput::make('company')
+                                ->required()
+                                ->maxLength(52),
+                            Forms\Components\TextInput::make('duration')->label('Period'),
+                        ]),
+
+                    Forms\Components\Textarea::make('details')
+                        ->rows(3)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('role')->sortable()->searchable(),
-            Tables\Columns\TextColumn::make('company'),
-            Tables\Columns\TextColumn::make('duration'),
+            Tables\Columns\TextColumn::make('role')->sortable()->searchable()->toggleable(),
+            Tables\Columns\TextColumn::make('company')->toggleable(),
+            Tables\Columns\TextColumn::make('duration')->toggleable()->visibleFrom('md'),
         ])->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ActionGroup::make([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ]),
         ])->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),

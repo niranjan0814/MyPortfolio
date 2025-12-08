@@ -101,6 +101,8 @@
         padding: 0 2rem;
         position: relative;
         z-index: 10;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Split Layout */
@@ -567,12 +569,28 @@
     /* Responsive Design */
     @media (max-width: 1024px) {
         .t3-hero-split {
-            grid-template-columns: 1fr;
-            gap: 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
         }
 
         .t3-hero-left {
             text-align: center;
+        }
+
+        /* Mobile order: name/typing (order: 1), image (order: 2), tech stack (order: 3) */
+        .t3-hero-title-wrapper {
+            order: 1;
+        }
+
+        .t3-hero-right {
+            order: 2;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .t3-tech-vertical {
+            order: 3;
         }
 
         .t3-hero-description {
@@ -586,45 +604,187 @@
         .t3-social-links {
             justify-content: center;
         }
-
-        .t3-hero-right {
-            max-width: 500px;
-            margin: 0 auto;
-        }
     }
 
     @media (max-width: 640px) {
         .t3-hero {
-            padding: 6rem 0 3rem;
+            padding: 8rem 0 2rem; /* Increased top padding to prevent header overlap */
+            min-height: auto;
+        }
+
+        .t3-hero-container {
+            padding: 0 1rem;
         }
 
         .t3-hero-split {
-            gap: 3rem;
+            gap: 1.5rem;
         }
 
-        .t3-typing-container {
+        /* Ensure proper mobile ordering */
+        .t3-hero-title-wrapper {
+            order: 1;
+            margin-top: 3rem; /* Push name down from header */
+        }
+
+        .t3-hero-right {
+            order: 2;
+            max-width: 100%;
+            width: 100%;
+            display: block;
+        }
+
+        .t3-tech-vertical {
+            order: 3;
+        }
+
+        .t3-status-badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .t3-hero-greeting {
+            font-size: 1.125rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .t3-hero-title {
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: 1rem;
+        }
+
+        .t3-role-container {
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            min-height: auto;
+        }
+
+        .t3-role-prefix,
+        .t3-role-text {
+            font-size: 1.25rem;
+        }
+
+        .t3-hero-description {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            padding: 0 0.5rem;
+        }
+
+        .t3-tech-vertical {
+            display: none; /* Hide tech stack on mobile */
+        }
+
+        .t3-tech-label {
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .t3-tech-list {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.625rem;
+        }
+
+        .t3-tech-vertical-item {
+            padding: 0.75rem 0.875rem;
+            gap: 0.5rem;
+        }
+
+        .t3-tech-vertical-item img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .t3-tech-vertical-item span {
+            font-size: 0.8125rem;
+        }
+
+        .t3-tech-fallback-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 0.625rem;
         }
 
         .t3-hero-actions {
             flex-direction: column;
             width: 100%;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
         }
 
         .t3-btn {
             width: 100%;
             justify-content: center;
-        }
-
-        .t3-tech-grid {
-            grid-template-columns: repeat(3, 1fr);
+            padding: 0.875rem 1.5rem;
+            font-size: 0.9375rem;
         }
 
         .t3-social-links {
-            flex-direction: column;
-            gap: 1rem;
+            flex-direction: row;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .t3-social-link {
+            width: 44px;
+            height: 44px;
+        }
+
+        .t3-social-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .t3-image-wrapper {
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .t3-actions-bottom {
+            gap: 0.75rem;
+        }
+
+        .t3-social-bottom {
+            gap: 0.75rem;
+        }
+
+        /* Adjust background shapes for mobile */
+        .t3-shape-1 {
+            width: 250px;
+            height: 250px;
+            top: 5%;
+            right: -10%;
+        }
+
+        .t3-shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 5%;
+            left: -10%;
+        }
+    }
+
+    @media (max-width: 375px) {
+        .t3-hero {
+            padding: 3rem 0 1.5rem;
+        }
+
+        .t3-hero-container {
+            padding: 0 0.75rem;
+        }
+
+        .t3-hero-title {
+            font-size: 1.75rem;
+        }
+
+        .t3-tech-list {
+            grid-template-columns: 1fr;
+        }
+
+        .t3-social-links {
+            flex-wrap: wrap;
         }
     }
 </style>
@@ -725,22 +885,25 @@
             <!-- Left Content (Now on Right) -->
             <div class="t3-hero-left">
                 
-                <!-- Main Title -->
-                <h1 class="t3-hero-title">
-                    <span class="t3-hero-title-accent">{{ $heroContent['user_name'] ?? $user->full_name ?? $user->name }}</span>
-                </h1>
+                <!-- Title and Typing Animation Wrapper (for mobile ordering) -->
+                <div class="t3-hero-title-wrapper">
+                    <!-- Main Title -->
+                    <h1 class="t3-hero-title">
+                        <span class="t3-hero-title-accent">{{ $heroContent['user_name'] ?? $user->full_name ?? $user->name }}</span>
+                    </h1>
 
-                <!-- Role Animation -->
-                @if(!empty($heroContent['typing_texts']))
-                <div class="t3-role-container">
-                    <span class="t3-role-prefix">I'm a</span>
-                    <span class="t3-role-text" id="t3-role-text">
-                        {{ is_array($heroContent['typing_texts'][0]) ? $heroContent['typing_texts'][0]['text'] : $heroContent['typing_texts'][0] }}
-                    </span>
+                    <!-- Role Animation -->
+                    @if(!empty($heroContent['typing_texts']))
+                    <div class="t3-role-container">
+                        <span class="t3-role-prefix">I'm a</span>
+                        <span class="t3-role-text" id="t3-role-text">
+                            {{ is_array($heroContent['typing_texts'][0]) ? $heroContent['typing_texts'][0]['text'] : $heroContent['typing_texts'][0] }}
+                        </span>
+                    </div>
+                    @endif
                 </div>
-                @endif
 
-                <!-- Tech Stack Grid -->
+                <!-- Tech Stack Grid (separate for mobile ordering) -->
                 @if(($heroContent['tech_stack_enabled'] ?? true) && isset($techStackSkills) && $techStackSkills->isNotEmpty())
                 <div class="t3-tech-vertical">
                     <div class="t3-tech-label">Tech Stack</div>
@@ -774,6 +937,37 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Mobile image repositioning (640px and below)
+        function repositionImageOnMobile() {
+            const isMobile = window.innerWidth <= 640;
+            const imageContainer = document.querySelector('.t3-hero-right');
+            const roleContainer = document.querySelector('.t3-role-container');
+            const techStack = document.querySelector('.t3-tech-vertical');
+            const heroLeft = document.querySelector('.t3-hero-left');
+            
+            if (isMobile && imageContainer && roleContainer && techStack) {
+                // Insert image after typing animation (before tech stack)
+                heroLeft.insertBefore(imageContainer, techStack);
+            } else if (!isMobile && imageContainer) {
+                // Move it back to original position (first child of hero-split)
+                const heroSplit = document.querySelector('.t3-hero-split');
+                if (heroSplit && heroSplit.firstChild !== imageContainer) {
+                    heroSplit.insertBefore(imageContainer, heroSplit.firstChild);
+                }
+            }
+        }
+
+        // Run on load
+        repositionImageOnMobile();
+
+        // Run on resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(repositionImageOnMobile, 250);
+        });
+
+        // Typing animation
         const roleTexts = @json($heroContent['typing_texts'] ?? []);
         const roleElement = document.getElementById('t3-role-text');
         

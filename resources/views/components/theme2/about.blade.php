@@ -357,6 +357,14 @@
     }
 
     @media (max-width: 640px) {
+        .t2-about-section {
+            padding: 4rem 0;
+        }
+
+        .t2-container {
+            padding: 0 1rem;
+        }
+
         .t2-about-title {
             font-size: 2.5rem;
         }
@@ -369,12 +377,60 @@
             left: -2rem;
         }
 
+        .t2-about-hero {
+            margin-bottom: 3rem;
+        }
+
+        .t2-bento-grid {
+            gap: 1rem;
+        }
+
+        /* Make stats more compact - 2 per row */
         .t2-bento-stat {
-            grid-column: span 12;
+            grid-column: span 6;
+            padding: 1rem;
+        }
+
+        .t2-stat-number {
+            font-size: 1.75rem;
+        }
+
+        .t2-stat-label {
+            font-size: 0.7rem;
+            line-height: 1.2;
+        }
+
+        .t2-bento-description {
+            padding: 1.5rem;
+        }
+
+        .t2-bento-description-text {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .t2-skills-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .t2-skill-card {
+            padding: 1rem;
+            min-height: 120px;
+        }
+
+        .t2-skill-icon-wrapper {
+            width: 48px;
+            height: 48px;
+        }
+
+        .t2-skill-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .t2-skill-name {
+            font-size: 0.9rem;
         }
 
         .t2-cta-section {
@@ -384,6 +440,8 @@
         .t2-btn {
             width: 100%;
             justify-content: center;
+            padding: 0.875rem 2rem;
+            font-size: 0.95rem;
         }
     }
 

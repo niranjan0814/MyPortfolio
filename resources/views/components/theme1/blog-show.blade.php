@@ -423,6 +423,50 @@
             font-size: 2rem;
         }
     }
+
+    @media (max-width: 640px) {
+        .t1-blog-show-page {
+            padding: 5rem 0 2rem;
+        }
+
+        .t1-blog-show-container {
+            padding: 0 1rem;
+        }
+
+        .t1-blog-header {
+            margin-bottom: 2rem;
+        }
+
+        .t1-post-title {
+            font-size: 1.75rem;
+        }
+
+        .t1-blog-content {
+            font-size: 1rem;
+        }
+
+        .t1-hero-image {
+            margin-bottom: 2rem;
+        }
+
+        .t1-comments-section {
+            margin-top: 3rem;
+        }
+
+        .t1-comment-item {
+            gap: 0.75rem;
+        }
+
+        .t1-comment-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+
+        .t1-comment-body {
+            padding: 1rem;
+        }
+    }
 </style>
 
 <div class="t1-blog-show-page">
@@ -480,7 +524,7 @@
             @else
                 <div style="text-align: center; padding: 2rem; background: var(--t1-surface-card); border-radius: 1rem; border: 1px solid var(--t1-border-color);">
                     <p style="color: var(--t1-text-secondary); margin-bottom: 1rem;">Please login to join the discussion.</p>
-                    <a href="{{ route('login') }}" class="t1-submit-btn" style="text-decoration: none; display: inline-block;">Login</a>
+                    <a href="{{ route('filament.admin.auth.login') }}" class="t1-submit-btn" style="text-decoration: none; display: inline-block;">Login</a>
                 </div>
             @endauth
 

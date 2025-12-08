@@ -23,20 +23,28 @@ class EnquiryResource extends Resource
     {
         return $infolist->schema([
             Infolists\Components\Section::make('Contact Information')
+                ->collapsible()
                 ->schema([
-                    Infolists\Components\TextEntry::make('name')
-                        ->label('Name')
-                        ->icon('heroicon-o-user'),
-                    Infolists\Components\TextEntry::make('email')
-                        ->label('Email')
-                        ->icon('heroicon-o-envelope')
-                        ->copyable(),
-                    Infolists\Components\TextEntry::make('subject')
-                        ->label('Subject')
-                        ->icon('heroicon-o-chat-bubble-left-right'),
-                ])->columns(3),
+                    Infolists\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 3,
+                    ])
+                        ->schema([
+                            Infolists\Components\TextEntry::make('name')
+                                ->label('Name')
+                                ->icon('heroicon-o-user'),
+                            Infolists\Components\TextEntry::make('email')
+                                ->label('Email')
+                                ->icon('heroicon-o-envelope')
+                                ->copyable(),
+                            Infolists\Components\TextEntry::make('subject')
+                                ->label('Subject')
+                                ->icon('heroicon-o-chat-bubble-left-right'),
+                        ]),
+                ]),
             
             Infolists\Components\Section::make('Message')
+                ->collapsible()
                 ->schema([
                     Infolists\Components\TextEntry::make('message')
                         ->label('')
@@ -44,12 +52,13 @@ class EnquiryResource extends Resource
                 ]),
             
             Infolists\Components\Section::make('Metadata')
+                ->collapsible()
                 ->schema([
                     Infolists\Components\TextEntry::make('created_at')
                         ->label('Submitted At')
-                        ->dateTime('F j, Y \a\t g:i A')
+                        ->dateTime('F j, Y \\a\\t g:i A')
                         ->icon('heroicon-o-clock'),
-                ])->columns(1),
+                ]),
         ]);
     }
 
@@ -59,14 +68,18 @@ class EnquiryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable()
-                    ->copyable(),
+                    ->copyable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable()
-                    ->limit(30),
+                    ->limit(30)
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
                 Tables\Columns\TextColumn::make('message')
                     ->limit(40)
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
@@ -75,17 +88,22 @@ class EnquiryResource extends Resource
                             return null;
                         }
                         return $state;
-                    }),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Submitted')
                     ->dateTime('M j, Y')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

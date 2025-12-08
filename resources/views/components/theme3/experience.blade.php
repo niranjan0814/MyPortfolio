@@ -68,6 +68,8 @@
         margin: 0 auto;
         padding: 0 2rem;
         position: relative;
+        width: 100%;
+        box-sizing: border-box;
         z-index: 10;
     }
 
@@ -346,15 +348,26 @@
     /* Responsive */
     @media (max-width: 768px) {
         .t3-exp-section {
-            padding: 4rem 0;
+            padding: 4rem 0 3rem;
+        }
+
+        .t3-exp-container {
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .t3-exp-header {
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .t3-exp-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
         }
 
         .t3-exp-card {
-            width: 320px;
+            width: 100%;
+            max-width: 100%;
             padding: 1.5rem;
         }
 
@@ -369,18 +382,96 @@
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
+        .t3-exp-section {
+            padding: 3rem 0 2.5rem;
+        }
+
+        .t3-exp-container {
+            padding: 0 1rem;
+        }
+
+        .t3-exp-header {
+            margin-bottom: 2rem;
+        }
+
+        .t3-exp-title {
+            font-size: clamp(1.75rem, 7vw, 2.25rem);
+            margin-bottom: 1rem;
+        }
+
+        .t3-exp-subtitle {
+            font-size: 0.9375rem;
+            padding: 0 0.5rem;
+            line-height: 1.6;
+        }
+
+        .t3-timeline-wrapper {
+            padding: 2rem 0;
+        }
+
         .t3-exp-card {
             width: 280px;
-            padding: 1.25rem;
+            padding: 1.5rem;
+        }
+
+        .t3-exp-node {
+            width: 36px;
+            height: 36px;
+            font-size: 0.875rem;
+        }
+
+        .t3-timeline-line {
+            top: 48px;
         }
 
         .t3-exp-role {
             font-size: 1.125rem;
+            margin-bottom: 0.375rem;
         }
 
         .t3-exp-company {
             font-size: 0.9375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .t3-exp-details {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            /* Hide description on mobile to reduce card width */
+            display: none;
+        }
+
+        .t3-exp-duration {
+            font-size: 0.8125rem;
+            padding: 0.4rem 0.875rem;
+        }
+
+        .t3-scroll-hint {
+            font-size: 0.8125rem;
+            margin-top: 1.5rem;
+        }
+    }
+
+    @media (max-width: 375px) {
+        .t3-exp-section {
+            padding: 3rem 0 2rem;
+        }
+
+        .t3-exp-container {
+            padding: 0 0.75rem;
+        }
+
+        .t3-exp-card {
+            padding: 1rem;
+        }
+
+        .t3-exp-role {
+            font-size: 1rem;
+        }
+
+        .t3-exp-company {
+            font-size: 0.875rem;
         }
     }
 </style>

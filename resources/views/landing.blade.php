@@ -96,7 +96,7 @@
 
 <!-- Navigation -->
 <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <div class="container mx-auto px-6 md:px-12 py-3 md:py-4 flex justify-between items-center">
 
         <!-- Left: Logo + Name -->
         <div class="flex items-center space-x-3">
@@ -106,7 +106,7 @@
                      alt="Detech Icon">
             </div>
 
-            <span class="text-xl ml-0.5 font-bold text-gray-900">
+            <span class="hidden md:block text-lg md:text-xl ml-0.5 font-bold text-gray-900">
                 {{ $data['footer_company_name'] ?? 'Detech Portfolio' }}
             </span>
         </div>
@@ -116,8 +116,8 @@
             @auth
                 <!-- Dashboard Button (shown when logged in) -->
                 <a href="/admin"
-                   class="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2">
-                    <i class="fas fa-th-large"></i>
+                   class="hidden md:flex px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md hover:shadow-lg items-center gap-2">
+                    <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
 
@@ -149,14 +149,15 @@
                     <!-- Dropdown Menu -->
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-2">
-                            <a href="{{ route('portfolio.show', auth()->user()->slug) }}" 
+                        <a href="/admin" 
+                           class="block md:hidden px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                        <a href="{{ route('portfolio.show', auth()->user()->slug) }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
                                 <i class="fas fa-user mr-2"></i> My Portfolio
                             </a>
-                            <a href="/admin" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                                <i class="fas fa-cog mr-2"></i> Settings
-                            </a>
+                            
                             <hr class="my-2 border-gray-200">
                             <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
                                 @csrf
@@ -170,8 +171,9 @@
             @else
                 <!-- Sign In Button (shown when not logged in) -->
                 <a href="/admin/login"
-                   class="px-6 py-2 text-gray-700 font-medium hover:text-gray-900 transition">
-                    Sign In
+                   class="px-4 py-2 md:px-6 text-gray-700 font-medium hover:text-gray-900 transition flex items-center gap-2">
+                    <span class="hidden md:inline">Sign In</span>
+                    <i class="fas fa-sign-in-alt md:hidden text-xl"></i>
                 </a>
             @endauth
         </div>
@@ -181,7 +183,7 @@
 
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 px-4 min-h-screen hero-gradient relative overflow-hidden flex items-center">
+    <section class="pt-24 pb-12 md:pt-24 lg:pt-32 md:pb-20 px-6 md:px-12 min-h-screen hero-gradient relative overflow-hidden flex items-center">
         <!-- Floating Background Shapes -->
         <div class="floating-shape w-96 h-96 rounded-full -top-48 -left-48 bg-white"></div>
         <div class="floating-shape w-80 h-80 rounded-full bottom-10 -right-40 bg-white" style="animation-delay: 2s;"></div>
@@ -194,12 +196,12 @@
                         <p class="text-sm font-medium">✨ Build Your Online Presence</p>
                     </div>
                     
-                    <h1 class="text-5xl md:text-6xl font-bold leading-tight">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                         {{ $data['hero_title'] ?? 'Showcase Your Extraordinary' }}
                         <span class="block text-orange-100">{{ $data['hero_title_line2'] ?? 'Work' }}</span>
                     </h1>
                     
-                    <p class="text-lg text-white/90 max-w-lg">
+                    <p class="text-base md:text-lg text-white/90 max-w-lg">
                         {{ $data['hero_subtitle'] ?? 'Create a stunning, professional portfolio in minutes. Impress clients, employers, and collaborators with a portfolio that truly represents your skills and achievements.' }}
                     </p>
                     
@@ -214,24 +216,24 @@
                     </div>
                     
                     <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-6 pt-8">
-                        <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_1_value'] ?? '500+' }}</p>
-                            <p class="text-sm text-white/80">{{ $data['stat_1_label'] ?? 'Portfolios Created' }}</p>
+                    <div class="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 pt-8">
+                        <div class="stat-card p-2 md:p-3 lg:p-4 rounded-lg text-center md:text-left">
+                            <p class="text-lg md:text-xl lg:text-3xl font-bold text-orange-100 whitespace-nowrap">{{ $data['stat_1_value'] ?? '500+' }}</p>
+                            <p class="text-xs md:text-xs lg:text-sm text-white/80">{{ $data['stat_1_label'] ?? 'Portfolios Created' }}</p>
                         </div>
-                        <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_2_value'] ?? '50K+' }}</p>
-                            <p class="text-sm text-white/80">{{ $data['stat_2_label'] ?? 'Active Users' }}</p>
+                        <div class="stat-card p-2 md:p-3 lg:p-4 rounded-lg text-center md:text-left">
+                            <p class="text-lg md:text-xl lg:text-3xl font-bold text-orange-100 whitespace-nowrap">{{ $data['stat_2_value'] ?? '50K+' }}</p>
+                            <p class="text-xs md:text-xs lg:text-sm text-white/80">{{ $data['stat_2_label'] ?? 'Active Users' }}</p>
                         </div>
-                        <div class="stat-card p-4 rounded-lg">
-                            <p class="text-3xl font-bold text-orange-100">{{ $data['stat_3_value'] ?? '99.9%' }}</p>
-                            <p class="text-sm text-white/80">{{ $data['stat_3_label'] ?? 'Uptime' }}</p>
+                        <div class="stat-card p-2 md:p-3 lg:p-4 rounded-lg text-center md:text-left">
+                            <p class="text-lg md:text-xl lg:text-3xl font-bold text-orange-100 whitespace-nowrap">{{ $data['stat_3_value'] ?? '99.9%' }}</p>
+                            <p class="text-xs md:text-xs lg:text-sm text-white/80">{{ $data['stat_3_label'] ?? 'Uptime' }}</p>
                         </div>
                     </div>
                 </div>
                 
                <!-- RIGHT VISUAL - Dynamic Portfolio Preview -->
-<div class="hidden md:block relative">
+<div class="block mt-12 md:mt-0 relative">
     <div class="animated-float">
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
             <!-- Profile Header -->
@@ -300,10 +302,10 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 px-4 bg-white">
+    <section class="py-12 md:py-20 px-4 bg-white">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['features_title'] ?? 'Why Choose Detech?' }}</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ $data['features_title'] ?? 'Why Choose Detech?' }}</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['features_subtitle'] ?? 'Everything you need to build and manage your professional portfolio' }}</p>
             </div>
             
@@ -339,10 +341,10 @@
     </section>
 
     <!-- Themes Section -->
-   <section id="themes" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+   <section id="themes" class="py-12 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
     <div class="container mx-auto">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">{{ $data['themes_title'] ?? 'Choose Your Theme' }}</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ $data['themes_title'] ?? 'Choose Your Theme' }}</h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ $data['themes_subtitle'] ?? 'Select from beautifully designed themes to get started' }}</p>
         </div>
 
@@ -358,13 +360,13 @@
 
                                             <!-- Preview - Clickable to Theme Overview -->
                                             <a href="{{ $theme->is_active ? route('themes.overview', $theme) : '#' }}"
-                                               class="{{ !$theme->is_active ? 'pointer-events-none' : '' }} block h-48 relative overflow-hidden"
+                                               class="{{ !$theme->is_active ? 'pointer-events-none' : '' }} block aspect-video relative overflow-hidden"
                                                style="background: linear-gradient(135deg, {{ $theme->colors['primary'] ?? '#3B82F6' }}, {{ $theme->colors['secondary'] ?? '#8B5CF6' }})">
 
                                                 @if($theme->thumbnail_path)
                                                     <img src="{{ asset('storage/' . $theme->thumbnail_path) }}"
                                                          alt="{{ $theme->name }}"
-                                                         class="w-full h-full object-cover">
+                                                         class="w-full h-full object-cover object-top">
                                                 @else
                                                     <div class="absolute top-4 left-4 right-4">
                                                         <div class="bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
@@ -485,12 +487,12 @@
 </script>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 px-4 bg-white">
+    <section id="contact" class="py-12 md:py-20 px-6 md:px-12 bg-white">
         <div class="container mx-auto">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Left Content -->
                 <div class="space-y-6">
-                    <h2 class="text-4xl font-bold text-gray-900">{{ $data['contact_title'] ?? 'Get in Touch' }}</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $data['contact_title'] ?? 'Get in Touch' }}</h2>
                     <p class="text-lg text-gray-600">{{ $data['contact_subtitle'] ?? "Have questions about Detech? We're here to help! Send us a message and we'll respond as soon as possible." }}</p>
                     
                     <!-- Contact Info -->
@@ -563,22 +565,25 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+    <footer class="bg-gray-900 text-gray-400 py-8 md:py-12 px-6 md:px-12">
         <div class="container mx-auto">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+                <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
                             <img src="{{ asset('images/detech.png') }}"
                             class="w-10 h-10 object-contain scale-150 mb-1 "
                             alt="Detech Icon">
                         <span class="text-xl font-bold text-white">{{ $data['footer_company_name'] ?? 'Detech' }}</span>
                     </div>
-                    <p class="text-sm">{{ $data['footer_tagline'] ?? 'Revolutionize your business with platform-focused engineering.' }}</p>
+                    <p class="text-sm max-w-sm">{{ $data['footer_tagline'] ?? 'Revolutionize your business with platform-focused engineering.' }}</p>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Services</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Services
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">Platform Engineering</a></li>
                         <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">AI & Cloud Engineering</a></li>
                         <li><a href="https://www.detech.live#services" target="_blank" class="hover:text-white transition">Web & Mobile Development</a></li>
@@ -587,8 +592,11 @@
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Our Work</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Our Work
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">VolunTrack Nexus</a></li>
                         <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">Authentz</a></li>
                         <li><a href="https://www.detech.live#work" target="_blank" class="hover:text-white transition">Kunam Dry Fish</a></li>
@@ -597,8 +605,11 @@
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Get in Touch</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Get in Touch
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="mailto:kingshipmena@gmail.com" class="hover:text-white transition">kingshipmena@gmail.com</a></li>
                         <li><a href="https://www.detech.live#pricing" target="_blank" class="hover:text-white transition">Plans & Pricing</a></li>
                         <li><a href="https://www.detech.live#contact" target="_blank" class="hover:text-white transition">Schedule a Meeting</a></li>
@@ -645,6 +656,24 @@
         const firstAvailableTheme = Array.from(themeCards).find(card => !card.classList.contains('opacity-60'));
         if (firstAvailableTheme) {
             firstAvailableTheme.click();
+        }
+
+        // Footer Accordion
+        function toggleFooter(header) {
+            if (window.innerWidth >= 768) return; // Only work on mobile
+            
+            const ul = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            // Toggle visibility
+            ul.classList.toggle('hidden');
+            
+            // Rotate icon
+            if (ul.classList.contains('hidden')) {
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+            }
         }
 
         // Smooth scroll

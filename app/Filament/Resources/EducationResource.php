@@ -20,48 +20,63 @@ class EducationResource extends Resource
     public static function canViewAny(): bool
     {
         return !auth()->user()?->hasRole('super_admin');
+        
     }
 
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
-            Forms\Components\Hidden::make('user_id')
-                ->default(fn () => auth()->id()),
+            Forms\Components\Section::make('Education Details')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => auth()->id()),
 
-            Forms\Components\TextInput::make('institution')->required(),
-            Forms\Components\TextInput::make('degree')->required(),
-            Forms\Components\TextInput::make('year'),
-            Forms\Components\Textarea::make('details')
-                ->rows(2)
-                ->helperText('Maximum 12 words allowed.')
-                ->rule(function () {
-                    return function (string $attribute, $value, \Closure $fail) {
-                        if ($value) {
-                            $wordCount = str_word_count($value);
-                            if ($wordCount > 11) {
-                                $fail("The {$attribute} must not exceed 12 words. (Currently: {$wordCount})");
-                            }
-                        }
-                    };
-                }),
-            Forms\Components\TextInput::make('icon_url')
-                ->label('Icon URL')
-                ->url()
-                ->placeholder('https://example.com/icon.png')
-                ->helperText('Enter a URL for the education icon (e.g., from Icons8)'),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('institution')->required(),
+                            Forms\Components\TextInput::make('degree')->required(),
+                            Forms\Components\TextInput::make('year'),
+                            Forms\Components\TextInput::make('icon_url')
+                                ->label('Icon URL')
+                                ->url()
+                                ->placeholder('https://example.com/icon.png')
+                                ->helperText('Enter a URL for the education icon (e.g., from Icons8)'),
+                        ]),
+
+                    Forms\Components\Textarea::make('details')
+                        ->rows(2)
+                        ->helperText('Maximum 12 words allowed.')
+                        ->rule(function () {
+                            return function (string $attribute, $value, \Closure $fail) {
+                                if ($value) {
+                                    $wordCount = str_word_count($value);
+                                    if ($wordCount > 11) {
+                                        $fail("The {$attribute} must not exceed 12 words. (Currently: {$wordCount})");
+                                    }
+                                }
+                            };
+                        })
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('institution'),
-            Tables\Columns\TextColumn::make('degree'),
-            Tables\Columns\TextColumn::make('year'),
-            Tables\Columns\TextColumn::make('icon_url')->label('Icon URL'),
+            Tables\Columns\TextColumn::make('institution')->toggleable(),
+            Tables\Columns\TextColumn::make('degree')->toggleable(),
+            Tables\Columns\TextColumn::make('year')->toggleable()->visibleFrom('md'),
+            Tables\Columns\TextColumn::make('icon_url')->label('Icon URL')->toggleable(isToggledHiddenByDefault: true)->visibleFrom('lg'),
         ])->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ActionGroup::make([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ]),
         ])->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),

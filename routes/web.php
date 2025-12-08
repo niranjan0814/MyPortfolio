@@ -71,8 +71,9 @@ Route::post('/contact', [ContactController::class, 'store'])
 |--------------------------------------------------------------------------
 */
 // Now uses project ID + ensures it belongs to the correct user in controller
-Route::get('/project/{project}/overview', [PortfolioController::class, 'showProjectOverview'])
-    ->name('project.overview');
+Route::get('/portfolio/{user}/project/{project}/overview', [PortfolioController::class, 'showProjectOverview'])
+    ->name('project.overview')
+    ->where('user', '[A-Za-z0-9\-]+');
 
 /*
 |--------------------------------------------------------------------------

@@ -29,4 +29,13 @@ class CreateProject extends CreateRecord
                 ->modalCancelActionLabel('Close'),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Project updated successfully';
+    }
 }

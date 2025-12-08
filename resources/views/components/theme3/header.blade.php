@@ -153,18 +153,26 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: var(--t3-nav-bg);
-        backdrop-filter: blur(12px);
+        background: var(--t3-surface);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--t3-border);
-        padding: 1.5rem 2rem;
+        padding: 1.5rem;
         flex-direction: column;
-        gap: 1.5rem;
-        box-shadow: var(--t3-shadow);
+        gap: 0.5rem;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+    }
+
+    [data-theme="dark"] .t3-mobile-menu {
+        background: rgba(15, 23, 42, 0.98);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
     }
 
     .t3-mobile-menu.active {
         display: flex;
-        animation: t3SlideDown 0.3s ease-out forwards;
+        animation: t3SlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     @keyframes t3SlideDown {
@@ -173,12 +181,38 @@
     }
 
     .t3-mobile-link {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--t3-text);
         text-decoration: none;
         display: block;
-        padding: 0.5rem 0;
+        padding: 0.875rem 1.25rem;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .t3-mobile-link:hover {
+        background: rgba(0, 204, 122, 0.1);
+        color: var(--t3-primary);
+        padding-left: 1.75rem;
+    }
+
+    /* Theme Switcher Icon Constraint */
+    .t3-theme-btn svg {
+        width: 1.25rem; /* 20px */
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* Constrain Theme Toggle in Mobile Menu */
+    .t3-mobile-menu .theme-toggle-btn {
+        margin-top: 1rem;
+        width: 100%;
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+        padding: 0.75rem;
     }
 </style>
 

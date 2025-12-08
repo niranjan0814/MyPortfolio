@@ -463,6 +463,106 @@
         0% { transform: translate(0, 0) scale(1); }
         100% { transform: translate(40px, -40px) scale(1.1); }
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-project-page {
+            padding: 5rem 0 2rem;
+        }
+
+        .t1-project-container {
+            padding: 0 1rem;
+        }
+
+        .t1-project-title {
+            font-size: 1.75rem;
+        }
+
+        /* Convert Tabs to Vertical Stack */
+        .t1-tabs {
+            display: none;
+        }
+
+        .t1-content-section {
+            display: block !important; /* Override JS toggling */
+            margin-bottom: 2rem;
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+        
+        /* Hero Card Compact */
+        .t1-hero-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .t1-button-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .t1-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Content Card Compact */
+        .t1-content-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .t1-section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Horizontal Scroll Gallery (Theme 2 Style) */
+        .t1-gallery-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -0.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            grid-template-columns: none;
+        }
+        
+        .t1-gallery-grid::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .t1-gallery-grid::-webkit-scrollbar-thumb {
+            background: var(--t1-accent-primary);
+            border-radius: 4px;
+        }
+
+        .t1-gallery-item {
+            min-width: 250px;
+            width: 75%;
+            aspect-ratio: 16/9;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+
+        .t1-features-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .t1-tech-grid {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .t1-feature-card, .t1-tech-item {
+            padding: 1rem;
+        }
+    }
 </style>
 
 <div class="t1-project-page">

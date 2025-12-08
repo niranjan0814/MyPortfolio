@@ -95,18 +95,24 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: var(--bg-secondary);
+        background: rgba(255, 255, 255, 0.98); /* Improved opacity like Theme 2 */
         backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--border-color);
-        padding: 1.5rem 2rem;
+        padding: 1.5rem 2rem 2rem;
         flex-direction: column;
-        gap: 1.5rem;
-        box-shadow: var(--card-shadow);
+        gap: 0.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* Dark Mode Mobile Menu */
+    [data-theme="dark"] .t1-mobile-menu {
+        background: rgba(10, 10, 12, 0.98); /* Deep dark background */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .t1-mobile-menu.active {
         display: flex;
-        animation: slideDown 0.3s ease-out forwards;
+        animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     @keyframes slideDown {
@@ -117,7 +123,21 @@
     .t1-mobile-menu .t1-nav-link {
         font-size: 1.1rem;
         display: block;
-        padding: 0.5rem 0;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .t1-mobile-menu .t1-nav-link:hover {
+        background-color: var(--bg-secondary);
+        padding-left: 1.5rem; /* Slight slide effect */
+    }
+
+    /* Constrain Theme Toggle in Mobile Menu */
+    .t1-mobile-menu .theme-toggle-btn {
+        max-width: 200px;
+        margin: 1rem auto 0;
+        justify-content: center;
     }
 
     /* Theme Toggle Button (Glass) */

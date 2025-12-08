@@ -234,4 +234,13 @@ class EditTheme extends EditRecord
             }
         }
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Theme updated successfully';
+    }
 }

@@ -24,35 +24,52 @@ class SkillResource extends Resource
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
-            Forms\Components\Hidden::make('user_id')
-                ->default(fn () => auth()->id()),
+            Forms\Components\Section::make('Skill Details')
+                ->description('Add your technical skills')
+                ->icon('heroicon-o-light-bulb')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => auth()->id()),
 
-            Forms\Components\TextInput::make('name')
-                ->required()
-                ->label('Skill Name')
-                ->placeholder('e.g., React, Node.js, MongoDB'),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('name')
+                                ->required()
+                                ->label('Skill Name')
+                                ->placeholder('e.g., React')
+                                ->prefixIcon('heroicon-o-code-bracket'),
 
-            Forms\Components\TextInput::make('url')
-                ->label('Icon URL')
-                ->placeholder('e.g., https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg')
-                ->helperText('Enter the full URL to the skill icon image')
-                ->url(),
+                            Forms\Components\Select::make('category')
+                                ->required()
+                                ->options([
+                                    'frontend' => 'Frontend',
+                                    'backend' => 'Backend',
+                                    'database' => 'Database',
+                                    'tools' => 'Tools',
+                                ])
+                                ->default('frontend')
+                                ->label('Category')
+                                ->prefixIcon('heroicon-o-tag'),
+                        ]),
 
-            Forms\Components\Select::make('category')
-                ->required()
-                ->options([
-                    'frontend' => 'Frontend',
-                    'backend' => 'Backend',
-                    'database' => 'Database',
-                    'tools' => 'Tools',
-                ])
-                ->default('frontend')
-                ->label('Category')
-                ->helperText('Select the category this skill belongs to'),
+                    Forms\Components\TextInput::make('url')
+                        ->label('Icon URL')
+                        ->placeholder('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg')
+                        ->helperText('Enter the full URL to the skill icon image (SVG/PNG)')
+                        ->url()
+                        ->prefixIcon('heroicon-o-link')
+                        ->columnSpanFull(),
 
-            Forms\Components\TextInput::make('level')
-                ->label('Proficiency (e.g. 80%)')
-                ->placeholder('Optional: e.g., Expert, 90%, Advanced'),
+                    Forms\Components\TextInput::make('level')
+                        ->label('Proficiency')
+                        ->placeholder('e.g., Expert, 90%, Advanced')
+                        ->prefixIcon('heroicon-o-chart-bar')
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
@@ -60,23 +77,40 @@ class SkillResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('url')
+                    ->label('Icon')
+                    ->square()
+                    ->size(40)
+                    ->defaultImageUrl('https://placehold.co/40x40?text=?')
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
+
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->toggleable(),
 
-                Tables\Columns\BadgeColumn::make('category')
-                    ->colors([
-                        'primary' => 'frontend',
-                        'success' => 'backend',
-                        'warning' => 'database',
-                        'danger' => 'tools',
-                    ])
+                Tables\Columns\TextColumn::make('category')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'frontend' => 'info',
+                        'backend' => 'success',
+                        'database' => 'warning',
+                        'tools' => 'danger',
+                        default => 'gray',
+                    })
                     ->formatStateUsing(fn(string $state): string => ucfirst($state))
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('level')
-                    ->sortable(),
+                    ->label('Level')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
             ])
             ->defaultSort('category', 'asc')
             ->filters([
@@ -90,8 +124,10 @@ class SkillResource extends Resource
                     ->label('Filter by Category'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

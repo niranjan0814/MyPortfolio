@@ -1,4 +1,4 @@
-@props(['projects'])
+@props(['projects', 'user'])
 
 <style>
 
@@ -199,6 +199,57 @@
         bottom: -100px;
         left: -100px;
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t2-projects-section {
+            padding: 4rem 0;
+        }
+
+        .t2-container {
+            padding: 0 1rem;
+        }
+
+        .t2-title {
+            font-size: 2.5rem;
+        }
+
+        .t2-title-wrapper {
+            margin-bottom: 3rem;
+        }
+
+        .t2-projects-grid {
+            gap: 2rem;
+        }
+
+        /* Hide project description on mobile */
+        .t2-project-desc {
+            display: none;
+        }
+
+        .t2-project-card {
+            padding: 1.5rem;
+        }
+
+        .t2-project-title {
+            font-size: 1.25rem;
+        }
+
+        .t2-project-actions {
+            flex-direction: column;
+        }
+
+        .t2-project-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (min-width: 641px) and (max-width: 767px) {
+        .t2-title {
+            font-size: 2.75rem;
+        }
+    }
 </style>
 
 <section id="projects" class="t2-projects-section">
@@ -245,7 +296,7 @@
                             <div class="t2-project-actions">
 
                                 @if($project->overview)
-                                    <a href="{{ route('project.overview', $project) }}" class="t2-project-btn t2-project-btn-primary">
+                                    <a href="{{ route('project.overview', ['user' => $user->slug ?? $user->id, 'project' => $project->id]) }}" class="t2-project-btn t2-project-btn-primary">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>

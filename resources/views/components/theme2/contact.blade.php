@@ -168,6 +168,57 @@
             grid-template-columns: 1fr;
         }
     }
+
+    /* Mobile Optimizations */
+    @media (max-width: 640px) {
+        .t2-contact-section {
+            padding: 4rem 0;
+        }
+
+        .t2-container {
+            padding: 0 1rem;
+        }
+
+        /* Hide description and contact info on mobile */
+        .t2-contact-desc {
+            display: none;
+        }
+
+        .t2-contact-list {
+            display: none;
+        }
+
+        .t2-contact-heading {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .t2-contact-info {
+            padding-right: 0;
+        }
+
+        .t2-contact-grid {
+            gap: 2rem;
+        }
+
+        .t2-contact-form-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .t2-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .t2-form-input, .t2-form-textarea {
+            padding: 0.875rem;
+            font-size: 0.95rem;
+        }
+
+        .t2-submit-btn {
+            padding: 0.875rem;
+        }
+    }
 </style>
 
 <section id="contact" class="t2-contact-section">

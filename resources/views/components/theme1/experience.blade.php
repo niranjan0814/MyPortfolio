@@ -306,6 +306,47 @@
         0% { transform: translate(0, 0) scale(1); }
         100% { transform: translate(40px, -40px) scale(1.1); }
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-experience-section {
+            padding: 4rem 0;
+        }
+
+        .t1-experience-container {
+            padding: 0 1rem;
+        }
+
+        .t1-section-title {
+            font-size: 2.5rem;
+        }
+
+        .t1-timeline::before {
+            left: 20px;
+        }
+        
+        .t1-timeline-dot {
+            left: 11px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .t1-timeline-content {
+            margin-left: 50px;
+            padding: 1.5rem;
+        }
+
+        .t1-exp-role {
+            font-size: 1.25rem;
+        }
+
+        .t1-exp-company {
+            font-size: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+    }
 </style>
 
 <section id="experience" class="t1-experience-section">

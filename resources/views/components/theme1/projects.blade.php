@@ -1,4 +1,4 @@
-@props(['projects'])
+@props(['projects', 'user'])
 
 <style>
     /* ==========================================
@@ -292,12 +292,88 @@
         animation: t1-blob-float 12s infinite alternate;
     }
 
-    .t1-blob-1 { top: 10%; right: 10%; width: 400px; height: 400px; background: var(--t1-accent-glow); }
-    .t1-blob-2 { bottom: 10%; left: 10%; width: 350px; height: 350px; background: var(--t1-accent-secondary); animation-delay: -6s; }
+    .t1-blob-1 {
+        top: 10%;
+        right: 10%;
+        width: 400px;
+        height: 400px;
+        background: var(--t1-accent-glow);
+    }
+
+    .t1-blob-2 {
+        bottom: 10%;
+        left: 10%;
+        width: 350px;
+        height: 350px;
+        background: var(--t1-accent-secondary);
+        animation-delay: -6s;
+    }
 
     @keyframes t1-blob-float {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(30px, -30px) scale(1.1); }
+        0% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        100% {
+            transform: translate(30px, -30px) scale(1.1);
+        }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-projects-section {
+            padding: 4rem 0 3rem;
+        }
+
+        .t1-projects-container {
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .t1-section-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin-bottom: 2rem;
+        }
+
+        .t1-projects-grid {
+            gap: 2rem;
+        }
+
+        .t1-project-card {
+            padding: 1.5rem;
+        }
+
+        .t1-project-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Hide description on mobile */
+        .t1-project-description {
+            display: none;
+        }
+
+        .t1-project-tags {
+            margin-bottom: 1rem;
+        }
+
+        .t1-project-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+        }
+
+        .t1-project-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+            padding-top: 1rem;
+        }
+
+        .t1-project-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+        }
     }
 </style>
 
@@ -329,9 +405,8 @@
                         <!-- Image -->
                         @if($project->image)
                             <div class="t1-project-image-wrapper">
-                                <img src="{{ asset('storage/' . $project->image) }}" 
-                                     alt="{{ $project->title }}" 
-                                     class="t1-project-image">
+                                <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}"
+                                    class="t1-project-image">
                             </div>
                         @else
                             <div class="t1-project-image-wrapper">
@@ -344,7 +419,7 @@
                         <!-- Content -->
                         <div class="t1-project-content">
                             <h3 class="t1-project-title">{{ $project->title }}</h3>
-                            
+
                             <p class="t1-project-description">{{ $project->description }}</p>
 
                             <!-- Tags -->
@@ -359,7 +434,8 @@
                             <!-- Actions -->
                             <div class="t1-project-actions">
                                 @if($project->overview)
-                                    <a href="{{ route('project.overview', $project->id) }}" class="t1-project-btn t1-project-btn-primary">
+                                    <a href="{{ route('project.overview', ['user' => $user->slug ?? $user->id, 'project' => $project->id]) }}"
+                                        class="t1-project-btn t1-project-btn-primary">
                                         <i class="fas fa-book-open"></i>
                                         <span>Overview</span>
                                     </a>

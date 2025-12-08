@@ -25,4 +25,13 @@ class EditHeroContent extends EditRecord
                 ->modalCancelActionLabel('Close'),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Hero Content updated successfully';
+    }
 }

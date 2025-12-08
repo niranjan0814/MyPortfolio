@@ -132,6 +132,103 @@
         display: flex;
         gap: 1.5rem;
     }
+
+    /* Mobile Collapsible Sections */
+    .t2-footer-section {
+        padding-bottom: 1rem;
+    }
+
+    .t2-footer-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 1rem 0;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .t2-footer-toggle-icon {
+        transition: transform 0.3s ease;
+        color: var(--t2-accent);
+        font-size: 1.25rem;
+        font-weight: bold;
+        transform: rotate(90deg);
+    }
+
+    .t2-footer-toggle-icon.active {
+        transform: rotate(270deg);
+    }
+
+    .t2-footer-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .t2-footer-content.active {
+        max-height: 500px;
+        padding-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .t2-footer-section {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .t2-footer-toggle {
+            cursor: default;
+            padding: 0;
+        }
+
+        .t2-footer-toggle-icon {
+            display: none;
+        }
+
+        .t2-footer-content {
+            max-height: none;
+            overflow: visible;
+        }
+    }
+
+    /* Mobile Spacing Reduction */
+    @media (max-width: 767px) {
+        .t2-footer {
+            padding: 2rem 0 1.5rem;
+        }
+
+        .t2-footer-grid {
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .t2-footer-section {
+            padding-bottom: 0;
+        }
+
+        .t2-footer-toggle {
+            padding: 0.75rem 0;
+        }
+
+        .t2-footer-content.active {
+            padding-bottom: 0.5rem;
+        }
+
+        .t2-footer-links {
+            gap: 0.5rem;
+        }
+
+        .t2-footer-bottom {
+            padding-top: 1.5rem;
+        }
+
+        .t2-container {
+            padding: 0 1rem;
+        }
+    }
 </style>
 
 <footer class="t2-footer">
@@ -144,34 +241,44 @@
             </div>
 
             <!-- Navigate -->
-            <div>
-                <h4 class="t2-footer-heading">Navigate</h4>
-                <ul class="t2-footer-links">
-                    <li><a href="#about" class="t2-footer-link">About</a></li>
-                    <li><a href="#projects" class="t2-footer-link">Projects</a></li>
-                    <li><a href="#skills" class="t2-footer-link">Skills</a></li>
-                    <li><a href="#experience" class="t2-footer-link">Experience</a></li>
-                    <li><a href="#contact" class="t2-footer-link">Contact</a></li>
-                </ul>
+            <div class="t2-footer-section">
+                <button class="t2-footer-toggle" onclick="toggleFooterSection('navigate')">
+                    <h4 class="t2-footer-heading" style="margin-bottom: 0;">Navigate</h4>
+                    <span class="t2-footer-toggle-icon" id="navigate-icon">›</span>
+                </button>
+                <div class="t2-footer-content" id="navigate-content">
+                    <ul class="t2-footer-links">
+                        <li><a href="#about" class="t2-footer-link">About</a></li>
+                        <li><a href="#projects" class="t2-footer-link">Projects</a></li>
+                        <li><a href="#skills" class="t2-footer-link">Skills</a></li>
+                        <li><a href="#experience" class="t2-footer-link">Experience</a></li>
+                        <li><a href="#contact" class="t2-footer-link">Contact</a></li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Connect -->
-            <div>
-                <h4 class="t2-footer-heading">Connect</h4>
-                <ul class="t2-footer-links">
-                    @if($user->email ?? false)
-                        <li><a href="mailto:{{ $user->email }}" class="t2-footer-link">{{ $user->email }}</a></li>
-                    @endif
-                    @if($user->phone ?? false)
-                        <li><a href="tel:{{ $user->phone }}" class="t2-footer-link">{{ $user->phone }}</a></li>
-                    @endif
-                    @if($user->linkedin_url ?? false)
-                        <li><a href="{{ $user->linkedin_url }}" target="_blank" class="t2-footer-link">LinkedIn</a></li>
-                    @endif
-                    @if($user->github_url ?? false)
-                        <li><a href="{{ $user->github_url }}" target="_blank" class="t2-footer-link">GitHub</a></li>
-                    @endif
-                </ul>
+            <div class="t2-footer-section">
+                <button class="t2-footer-toggle" onclick="toggleFooterSection('connect')">
+                    <h4 class="t2-footer-heading" style="margin-bottom: 0;">Connect</h4>
+                    <span class="t2-footer-toggle-icon" id="connect-icon">›</span>
+                </button>
+                <div class="t2-footer-content" id="connect-content">
+                    <ul class="t2-footer-links">
+                        @if($user->email ?? false)
+                            <li><a href="mailto:{{ $user->email }}" class="t2-footer-link">{{ $user->email }}</a></li>
+                        @endif
+                        @if($user->phone ?? false)
+                            <li><a href="tel:{{ $user->phone }}" class="t2-footer-link">{{ $user->phone }}</a></li>
+                        @endif
+                        @if($user->linkedin_url ?? false)
+                            <li><a href="{{ $user->linkedin_url }}" target="_blank" class="t2-footer-link">LinkedIn</a></li>
+                        @endif
+                        @if($user->github_url ?? false)
+                            <li><a href="{{ $user->github_url }}" target="_blank" class="t2-footer-link">GitHub</a></li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -183,3 +290,32 @@
         </div>
     </div>
 </footer>
+<script>
+function toggleFooterSection(section) {
+    const content = document.getElementById(section + '-content');
+    const icon = document.getElementById(section + '-icon');
+    
+    content.classList.toggle('active');
+    icon.classList.toggle('active');
+}
+
+// Auto-expand on desktop
+function checkFooterExpansion() {
+    if (window.innerWidth >= 768) {
+        document.querySelectorAll('.t2-footer-content').forEach(content => {
+            content.classList.add('active');
+        });
+    } else {
+        document.querySelectorAll('.t2-footer-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.querySelectorAll('.t2-footer-toggle-icon').forEach(icon => {
+            icon.classList.remove('active');
+        });
+    }
+}
+
+// Run on load and resize
+window.addEventListener('load', checkFooterExpansion);
+window.addEventListener('resize', checkFooterExpansion);
+</script>

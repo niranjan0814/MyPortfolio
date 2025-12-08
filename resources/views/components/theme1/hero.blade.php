@@ -117,6 +117,8 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Typography */
@@ -394,6 +396,163 @@
     @keyframes t1-scroll-wheel {
         0% { opacity: 1; transform: translateX(-50%) translateY(0); }
         100% { opacity: 0; transform: translateX(-50%) translateY(15px); }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+        .t1-hero-section {
+            padding: 4rem 0 2rem;
+            min-height: 100vh;
+        }
+
+        .t1-hero-container {
+            padding: 0 1rem;
+        }
+
+        .t1-hero-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin: 2rem 0 1rem;
+            line-height: 1.2;
+            padding: 0 0.5rem;
+        }
+
+        .t1-hero-subtitle-wrapper {
+            font-size: clamp(1rem, 4vw, 1.1rem);
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .t1-hero-social {
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            padding: 0 0.5rem;
+        }
+
+        .t1-water-drop {
+            width: 48px;
+            height: 48px;
+            font-size: 1.125rem;
+        }
+
+        .t1-water-drop svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .t1-hero-actions {
+            flex-direction: column;
+            width: 100%;
+            gap: 0.75rem;
+            padding: 0 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .t1-btn {
+            width: 100%;
+            max-width: 100%;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .t1-tech-stack-container {
+            padding: 1rem 0;
+            border-radius: 1rem;
+            margin: 0 1rem;
+            max-width: calc(100% - 2rem);
+        }
+
+        .t1-tech-label {
+            font-size: 0.875rem;
+        }
+
+        .t1-tech-item {
+            width: 2.75rem;
+            height: 2.75rem;
+        }
+
+        .t1-tech-marquee {
+            gap: 1.5rem;
+        }
+
+        /* Adjust blob sizes for mobile */
+        .t1-hero-blob-1 {
+            width: 60vw;
+            height: 60vw;
+            top: -15%;
+            left: 10%;
+        }
+
+        .t1-hero-blob-2 {
+            width: 50vw;
+            height: 50vw;
+            bottom: -15%;
+            right: 5%;
+        }
+
+        /* Scroll indicator adjustments */
+        .t1-scroll-indicator {
+            bottom: 0.5rem;
+        }
+
+        .t1-mouse {
+            width: 22px;
+            height: 36px;
+        }
+
+        .t1-scroll-text {
+            font-size: 0.625rem;
+        }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 375px) {
+        .t1-hero-section {
+            padding: 3rem 0 1.5rem;
+        }
+
+        .t1-hero-container {
+            padding: 0 0.75rem;
+        }
+
+        .t1-hero-title {
+            font-size: 1.75rem;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .t1-hero-subtitle-wrapper {
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .t1-hero-social {
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .t1-water-drop {
+            width: 44px;
+            height: 44px;
+            font-size: 1rem;
+        }
+
+        .t1-water-drop svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .t1-btn {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.9375rem;
+        }
+
+        .t1-tech-item {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
     }
 </style>
 

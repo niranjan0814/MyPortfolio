@@ -24,43 +24,103 @@ class ProjectResource extends Resource
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
-            Forms\Components\Hidden::make('user_id')
-                ->default(fn () => auth()->id()),
+            Forms\Components\Section::make('Project Details')
+                ->description('Showcase your work')
+                ->icon('heroicon-o-briefcase')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => auth()->id()),
 
-            Forms\Components\TextInput::make('title')
-                ->required()
-                ->label('Project Title'),
-            
-            Forms\Components\Textarea::make('description')
-                ->rows(3)
-                ->label('Project Description'),
-            
-            Forms\Components\TextInput::make('link')
-                ->label('GitHub/Source URL')
-                ->url()
-                ->placeholder('https://github.com/username/project'),
-            
-            Forms\Components\TextInput::make('depurl')
-                ->label('Deployment URL (Live Demo)')
-                ->url()
-                ->placeholder('https://myproject.vercel.app')
-                ->helperText('Enter the live deployment URL if the project is deployed'),
-            
-            Forms\Components\FileUpload::make('image')
-                ->image()
-                ->label('Project Image'),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('title')
+                                ->required()
+                                ->label('Project Title')
+                                ->placeholder('e.g. E-commerce Platform'),
+                            
+                            Forms\Components\FileUpload::make('image')
+                                ->image()
+                                ->label('Project Thumbnail')
+                                ->directory('projects')
+                                ->imageResizeMode('cover')
+                                ->imageCropAspectRatio('16:9')
+                                ->imageResizeTargetWidth('1920')
+                                ->imageResizeTargetHeight('1080'),
+                        ]),
+                    
+                    Forms\Components\Textarea::make('description')
+                        ->rows(4)
+                        ->label('Project Description')
+                        ->columnSpanFull()
+                        ->placeholder('Describe the project, technologies used, and your role...'),
+
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('link')
+                                ->label('Source Code (GitHub)')
+                                ->url()
+                                ->prefixIcon('heroicon-o-code-bracket')
+                                ->placeholder('https://github.com/username/project'),
+                            
+                            Forms\Components\TextInput::make('depurl')
+                                ->label('Live Demo URL')
+                                ->url()
+                                ->prefixIcon('heroicon-o-globe-alt')
+                                ->placeholder('https://myproject.vercel.app')
+                                ->helperText('Enter the live deployment URL if available'),
+                        ]),
+                ]),
         ]);
     }
 
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('title')->sortable()->searchable(),
-            Tables\Columns\ImageColumn::make('image'),
-            Tables\Columns\TextColumn::make('link'),
+            Tables\Columns\ImageColumn::make('image')
+                ->label('Thumbnail')
+                ->square()
+                ->size(50)
+                ->toggleable()
+                ->visibleFrom('md'),  // Hide on mobile
+            
+            Tables\Columns\TextColumn::make('title')
+                ->sortable()
+                ->searchable()
+                ->weight('bold')
+                ->description(fn (Project $record): string => \Illuminate\Support\Str::limit($record->description, 50))
+                ->toggleable(),
+
+            Tables\Columns\TextColumn::make('link')
+                ->label('Source')
+                ->icon('heroicon-o-code-bracket')
+                ->color('gray')
+                ->limit(20)
+                ->url(fn ($record) => $record->link)
+                ->openUrlInNewTab()
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->visibleFrom('lg'),  // Hide on mobile and tablet
+
+            Tables\Columns\TextColumn::make('depurl')
+                ->label('Demo')
+                ->icon('heroicon-o-globe-alt')
+                ->color('success')
+                ->limit(20)
+                ->url(fn ($record) => $record->depurl)
+                ->openUrlInNewTab()
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->visibleFrom('lg'),  // Hide on mobile and tablet
         ])->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\ActionGroup::make([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
         ])->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),

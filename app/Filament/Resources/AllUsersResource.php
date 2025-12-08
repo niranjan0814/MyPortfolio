@@ -43,29 +43,36 @@ class AllUsersResource extends Resource
             ->schema([
                 // ✅ FIXED: Role Management Section
                 Forms\Components\Section::make('Role Management')
+                    ->collapsible()
                     ->schema([
-                        Forms\Components\Select::make('roles')
-                            ->label('User Role')
-                            ->relationship('roles', 'name')
-                            ->multiple()
-                            ->preload()
-                            ->required()
-                            ->helperText('⚠️ Assign free_user or premium_user role')
-                            // ✅ EXCLUDE super_admin from options
-                            ->options(function () {
-                                return \Spatie\Permission\Models\Role::where('name', '!=', 'super_admin')
-                                    ->pluck('name', 'id');
-                            }),
+                        Forms\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 2,
+                        ])
+                            ->schema([
+                                Forms\Components\Select::make('roles')
+                                    ->label('User Role')
+                                    ->relationship('roles', 'name')
+                                    ->multiple()
+                                    ->preload()
+                                    ->required()
+                                    ->helperText('⚠️ Assign free_user or premium_user role')
+                                    // ✅ EXCLUDE super_admin from options
+                                    ->options(function () {
+                                        return \Spatie\Permission\Models\Role::where('name', '!=', 'super_admin')
+                                            ->pluck('name', 'id');
+                                    }),
 
-                        Forms\Components\Select::make('active_theme')
-                            ->label('Active Theme')
-                            ->options(function () {
-                                return \App\Models\Theme::where('is_active', true)
-                                    ->pluck('name', 'slug');
-                            })
-                            ->default('theme1')
-                            ->helperText('Set user\'s current active theme'),
-                    ])->columns(2),
+                                Forms\Components\Select::make('active_theme')
+                                    ->label('Active Theme')
+                                    ->options(function () {
+                                        return \App\Models\Theme::where('is_active', true)
+                                            ->pluck('name', 'slug');
+                                    })
+                                    ->default('theme1')
+                                    ->helperText('Set user\'s current active theme'),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -76,12 +83,15 @@ class AllUsersResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable()
-                    ->copyable(),
+                    ->copyable()
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
 
                 Tables\Columns\BadgeColumn::make('roles.name')
                     ->label('Role')
@@ -89,31 +99,38 @@ class AllUsersResource extends Resource
                         'warning' => 'premium_user',
                         'success' => 'free_user',
                     ])
-                    ->formatStateUsing(fn ($state) => ucfirst(str_replace('_', ' ', $state))),
+                    ->formatStateUsing(fn ($state) => ucfirst(str_replace('_', ' ', $state)))
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('active_theme')
                     ->label('Theme')
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Joined')
                     ->dateTime('M j, Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
             ])
             ->actions([
-                // ✅ NOW WE HAVE EDIT ACTION
-                Tables\Actions\EditAction::make()
-                    ->icon('heroicon-o-pencil')
-                    ->color('warning'),
+                Tables\Actions\ActionGroup::make([
+                    // ✅ NOW WE HAVE EDIT ACTION
+                    Tables\Actions\EditAction::make()
+                        ->icon('heroicon-o-pencil')
+                        ->color('warning'),
 
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation()
-                    ->modalHeading('Delete User')
-                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
-                    ->successNotificationTitle('User deleted successfully')
-                    ->icon('heroicon-o-trash')
-                    ->color('danger'),
+                    Tables\Actions\DeleteAction::make()
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete User')
+                        ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                        ->successNotificationTitle('User deleted successfully')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

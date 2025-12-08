@@ -80,6 +80,8 @@
         padding: 0 2rem;
         position: relative;
         z-index: 10;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Header */
@@ -307,13 +309,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         transition: all 0.4s ease;
         position: relative;
         z-index: 1;
         border: 1px solid var(--t3-about-border);
     }
-    
+
     .t3-about-soft-card:hover .t3-about-soft-icon-wrapper {
         transform: scale(1.1) rotate(5deg);
         background: var(--t3-about-gradient);
@@ -435,7 +437,11 @@
         }
 
         .t3-stats-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .t3-about-container {
+            padding: 0 1.5rem;
         }
     }
 
@@ -444,26 +450,213 @@
             padding: 4rem 0;
         }
 
+        .t3-about-container {
+            padding: 0 1rem;
+        }
+
         .t3-about-header {
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
-        .t3-bio-card,
-        .t3-skills-section {
-            padding: 2rem;
+        .t3-about-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin-bottom: 0.75rem;
         }
 
-        .t3-skills-grid {
+        .t3-about-subtitle {
+            font-size: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .t3-about-grid {
+            gap: 1.5rem;
+        }
+
+        .t3-bio-card {
+            padding: 1.5rem;
+        }
+
+        .t3-bio-greeting {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .t3-bio-description {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .t3-stats-grid {
             grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .t3-stat-card {
+            padding: 1.25rem;
+            gap: 1rem;
+        }
+
+        .t3-stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.25rem;
+        }
+
+        .t3-stat-icon img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .t3-stat-number {
+            font-size: 1.75rem;
+        }
+
+        .t3-stat-label {
+            font-size: 0.875rem;
+        }
+
+        .t3-about-sub-section {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .t3-about-sub-header {
+            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+        }
+
+        .t3-about-sub-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.125rem;
+        }
+
+        .t3-about-sub-title {
+            font-size: 1.5rem;
+        }
+
+        .t3-about-soft-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .t3-about-soft-card {
+            padding: 1.25rem 0.75rem;
+            gap: 0.75rem;
+        }
+
+        .t3-about-soft-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+        }
+
+        .t3-about-soft-icon-wrapper img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .t3-about-soft-name {
+            font-size: 0.875rem;
+        }
+
+        .t3-tech-cloud {
+            gap: 0.5rem;
+        }
+
+        .t3-tech-tag {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
         }
 
         .t3-about-cta {
             flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
 
         .t3-cta-btn {
             width: 100%;
             justify-content: center;
+            padding: 0.875rem 1.5rem;
+            font-size: 0.9375rem;
+        }
+
+        /* Adjust background shapes for mobile */
+        .t3-about-shape-1 {
+            width: 250px;
+            height: 250px;
+            top: 5%;
+            left: -10%;
+        }
+
+        .t3-about-shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 5%;
+            right: -10%;
+        }
+    }
+
+    @media (max-width: 375px) {
+        .t3-about-section {
+            padding: 3rem 0;
+        }
+
+        .t3-about-container {
+            padding: 0 0.75rem;
+        }
+
+        .t3-about-title {
+            font-size: 1.75rem;
+        }
+
+        .t3-bio-card {
+            padding: 1.25rem;
+        }
+
+        .t3-bio-greeting {
+            font-size: 1.25rem;
+        }
+
+        .t3-bio-description {
+            font-size: 0.9375rem;
+        }
+
+        .t3-stat-card {
+            padding: 1rem;
+        }
+
+        .t3-stat-icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .t3-stat-number {
+            font-size: 1.5rem;
+        }
+
+        .t3-about-sub-section {
+            padding: 1.25rem;
+        }
+
+        .t3-about-sub-title {
+            font-size: 1.25rem;
+        }
+
+        .t3-about-soft-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .t3-about-soft-card {
+            padding: 1rem 0.75rem;
+        }
+
+        .t3-tech-tag {
+            padding: 0.4375rem 0.875rem;
+            font-size: 0.8125rem;
         }
     }
 </style>

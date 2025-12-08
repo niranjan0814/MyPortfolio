@@ -17,4 +17,25 @@ class EditUser extends EditRecord
         }
         return $data;
     }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Filament\Actions\Action::make('view_portfolio')
+                ->label('View Live Portfolio')
+                ->icon('heroicon-o-globe-alt')
+                ->url(fn() => route('portfolio.show', $this->record->slug))
+                ->openUrlInNewTab()
+                ->color('info'),
+        ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'User updated successfully';
+    }
 }

@@ -26,4 +26,13 @@ class CreateExperience extends CreateRecord
                 ->modalCancelActionLabel('Close'),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Experience updated successfully';
+    }
 }

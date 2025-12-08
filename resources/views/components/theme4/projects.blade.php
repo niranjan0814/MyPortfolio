@@ -1,4 +1,4 @@
-@props(['projects'])
+@props(['projects', 'user'])
 
 <style>
 
@@ -245,7 +245,7 @@
                             <div class="t2-project-actions">
 
                                 @if($project->overview)
-                                    <a href="{{ route('project.overview', $project) }}" class="t2-project-btn t2-project-btn-primary">
+                                    <a href="{{ route('project.overview', ['user' => $user->slug ?? $user->id, 'project' => $project->id]) }}" class="t2-project-btn t2-project-btn-primary">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>

@@ -158,8 +158,8 @@
             <div class="flex items-center gap-3">
                 @auth
                     <a href="/admin"
-                        class="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2">
-                        <i class="fas fa-th-large"></i>
+                        class="hidden md:flex px-4 py-2 md:px-6 md:py-2.5 text-sm md:text-base bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md hover:shadow-lg items-center gap-2">
+                        <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
 
@@ -193,13 +193,13 @@
                         <div
                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <div class="py-2">
+                                <a href="/admin" 
+                                   class="block md:hidden px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
+                                    <i class="fas fa-home mr-2"></i> Dashboard
+                                </a>
                                 <a href="{{ route('portfolio.show', auth()->user()->slug) }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
                                     <i class="fas fa-user mr-2"></i> My Portfolio
-                                </a>
-                                <a href="/admin"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition">
-                                    <i class="fas fa-cog mr-2"></i> Settings
                                 </a>
                                 <hr class="my-2 border-gray-200">
                                 <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
@@ -908,24 +908,44 @@
                 });
             }, 5000);
         });
+        // Footer Accordion
+        function toggleFooter(header) {
+            if (window.innerWidth >= 768) return; // Only work on mobile
+            
+            const ul = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            // Toggle visibility
+            ul.classList.toggle('hidden');
+            
+            // Rotate icon
+            if (ul.classList.contains('hidden')) {
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
     </script>
 
     <!-- ✅ LANDING PAGE FOOTER -->
-    <footer class="bg-gray-900 text-gray-400 py-12 px-4 mt-16">
+    <footer class="bg-gray-900 text-gray-400 py-8 md:py-12 px-6 md:px-12 mt-16">
         <div class="container mx-auto">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+                <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
                         <img src="{{ asset('images/detech.png') }}" class="w-10 h-10 object-contain scale-150 mb-1"
                             alt="Detech Icon">
                         <span class="text-xl font-bold text-white">Detech</span>
                     </div>
-                    <p class="text-sm">Build stunning portfolios effortlessly.</p>
+                    <p class="text-sm max-w-sm">Build stunning portfolios effortlessly.</p>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Services</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Services
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="https://www.detech.live#services" target="_blank"
                                 class="hover:text-white transition">Platform Engineering</a></li>
                         <li><a href="https://www.detech.live#services" target="_blank"
@@ -938,8 +958,11 @@
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Our Work</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Our Work
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="https://www.detech.live#work" target="_blank"
                                 class="hover:text-white transition">VolunTrack Nexus</a></li>
                         <li><a href="https://www.detech.live#work" target="_blank"
@@ -952,8 +975,11 @@
                 </div>
 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Get in Touch</h4>
-                    <ul class="space-y-2 text-sm">
+                    <h4 class="text-white font-semibold mb-4 flex justify-between items-center cursor-pointer md:cursor-default" onclick="toggleFooter(this)">
+                        Get in Touch
+                        <i class="fas fa-chevron-down md:hidden transition-transform duration-300"></i>
+                    </h4>
+                    <ul class="space-y-2 text-sm hidden md:block">
                         <li><a href="mailto:kingshipmena@gmail.com"
                                 class="hover:text-white transition">kingshipmena@gmail.com</a></li>
                         <li><a href="https://www.detech.live#pricing" target="_blank"

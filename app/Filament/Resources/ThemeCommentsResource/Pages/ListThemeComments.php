@@ -60,4 +60,5 @@ class ViewThemeComment extends ViewRecord
                 ->successRedirectUrl(route('filament.admin.resources.theme-comments.index')),
         ];
     }
+
 }

@@ -5,7 +5,7 @@
        THEME 3 SKILLS - ENHANCED MODERN DESIGN
        Matching Hero & About Aesthetic
        ============================================ */
-    
+
     :root {
         --t3-skills-bg: #f8fafc;
         --t3-skills-surface: #ffffff;
@@ -32,7 +32,7 @@
         --t3-skills-glow: rgba(0, 255, 157, 0.25);
     }
 
-    
+
     /* Section */
     .t3-skills-section {
         background: var(--t3-skills-bg);
@@ -76,9 +76,19 @@
     }
 
     @keyframes t3SkillsFloat {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(60px, -60px) scale(1.15); }
-        66% { transform: translate(-60px, 60px) scale(0.85); }
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        33% {
+            transform: translate(60px, -60px) scale(1.15);
+        }
+
+        66% {
+            transform: translate(-60px, 60px) scale(0.85);
+        }
     }
 
     /* Container */
@@ -87,6 +97,8 @@
         margin: 0 auto;
         padding: 0 2rem;
         position: relative;
+        width: 100%;
+        box-sizing: border-box;
         z-index: 10;
     }
 
@@ -332,15 +344,25 @@
 
     @media (max-width: 768px) {
         .t3-skills-section {
-            padding: 4rem 0;
+            padding: 4rem 0 3rem;
+        }
+
+        .t3-skills-container {
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .t3-skills-header {
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .t3-skills-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
         }
 
         .t3-category-section {
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .t3-category-header {
@@ -356,23 +378,135 @@
 
         .t3-skills-stats {
             grid-template-columns: 1fr;
-            margin-top: 3rem;
+            margin-top: 2.5rem;
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
+        .t3-skills-section {
+            padding: 3rem 0 2.5rem;
+        }
+
+        .t3-skills-container {
+            padding: 0 1rem;
+        }
+
+        .t3-skills-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .t3-skills-title {
+            font-size: clamp(1.75rem, 7vw, 2.25rem);
+            margin-bottom: 1rem;
+        }
+
+        .t3-skills-subtitle {
+            font-size: 0.9375rem;
+            padding: 0 0.5rem;
+            line-height: 1.6;
+        }
+
+        .t3-category-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .t3-category-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .t3-category-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+        }
+
+        .t3-category-icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .t3-category-info h3 {
+            font-size: 1.5rem;
+        }
+
+        .t3-category-count {
+            font-size: 0.875rem;
+        }
+
         .t3-skills-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
         }
 
         .t3-skill-card {
             padding: 1.5rem 1rem;
+            border-radius: 16px;
         }
 
         .t3-skill-icon,
         .t3-skill-fallback {
             width: 48px;
             height: 48px;
+        }
+
+        .t3-skill-fallback {
+            font-size: 1.25rem;
+        }
+
+        .t3-skill-name {
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .t3-skills-stats {
+            margin-top: 3rem;
+            gap: 1.5rem;
+        }
+
+        .t3-stat-card {
+            padding: 2rem 1.5rem;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .t3-stat-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .t3-stat-value {
+            font-size: 2.25rem;
+        }
+
+        .t3-stat-label {
+            font-size: 0.9375rem;
+        }
+    }
+
+    @media (max-width: 375px) {
+        .t3-skills-section {
+            padding: 3rem 0 2rem;
+        }
+
+        .t3-skills-container {
+            padding: 0 0.75rem;
+        }
+
+        .t3-skills-grid {
+            gap: 0.75rem;
+        }
+
+        .t3-skill-card {
+            padding: 1rem 0.75rem;
+        }
+
+        .t3-skill-icon,
+        .t3-skill-fallback {
+            width: 40px;
+            height: 40px;
         }
     }
 </style>
@@ -439,7 +573,8 @@
                             <div class="t3-category-info">
                                 <h3>{{ $categoryData['title'] }}</h3>
                                 <p class="t3-category-count">
-                                    {{ $groupedSkills[$categoryKey]->count() }} {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
+                                    {{ $groupedSkills[$categoryKey]->count() }}
+                                    {{ Str::plural('skill', $groupedSkills[$categoryKey]->count()) }}
                                 </p>
                             </div>
                         </div>
@@ -474,7 +609,12 @@
             <div class="t3-skills-stats">
                 <div class="t3-stat-card">
                     <div class="t3-stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
                     </div>
                     <div class="t3-stat-info">
                         <div class="t3-stat-value">{{ $skills->count() }}+</div>
@@ -484,7 +624,14 @@
 
                 <div class="t3-stat-card">
                     <div class="t3-stat-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 15v4"></path><path d="M12 5v4"></path><path d="M5 12h4"></path><path d="M15 12h4"></path></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 15v4"></path>
+                            <path d="M12 5v4"></path>
+                            <path d="M5 12h4"></path>
+                            <path d="M15 12h4"></path>
+                        </svg>
                     </div>
                     <div class="t3-stat-info">
                         <div class="t3-stat-value">{{ $groupedSkills->count() }}</div>

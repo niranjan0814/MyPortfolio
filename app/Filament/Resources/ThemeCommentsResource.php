@@ -31,38 +31,46 @@ class ThemeCommentsResource extends Resource
         return $infolist
             ->schema([
                 Infolists\Components\Section::make('Review Details')
+                    ->collapsible()
                     ->schema([
-                        Infolists\Components\TextEntry::make('theme.name')
-                            ->label('Theme')
-                            ->icon('heroicon-o-paint-brush')
-                            ->badge()
-                            ->color('info'),
+                        Infolists\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 2,
+                        ])
+                            ->schema([
+                                Infolists\Components\TextEntry::make('theme.name')
+                                    ->label('Theme')
+                                    ->icon('heroicon-o-paint-brush')
+                                    ->badge()
+                                    ->color('info'),
 
-                        Infolists\Components\TextEntry::make('user.name')
-                            ->label('User')
-                            ->icon('heroicon-o-user')
-                            ->badge()
-                            ->color('success'),
+                                Infolists\Components\TextEntry::make('user.name')
+                                    ->label('User')
+                                    ->icon('heroicon-o-user')
+                                    ->badge()
+                                    ->color('success'),
 
-                        Infolists\Components\TextEntry::make('rating')
-                            ->label('Rating')
-                            ->icon('heroicon-o-star')
-                            ->badge()
-                            ->color(fn ($state) => match(true) {
-                                $state >= 4 => 'success',
-                                $state >= 3 => 'warning',
-                                default => 'danger',
-                            })
-                            ->formatStateUsing(fn ($state) => $state ? $state . ' / 5 ⭐' : 'Reply (No Rating)'),
+                                Infolists\Components\TextEntry::make('rating')
+                                    ->label('Rating')
+                                    ->icon('heroicon-o-star')
+                                    ->badge()
+                                    ->color(fn ($state) => match(true) {
+                                        $state >= 4 => 'success',
+                                        $state >= 3 => 'warning',
+                                        default => 'danger',
+                                    })
+                                    ->formatStateUsing(fn ($state) => $state ? $state . ' / 5 ⭐' : 'Reply (No Rating)'),
 
-                        Infolists\Components\TextEntry::make('parent.comment')
-                            ->label('Reply To')
-                            ->icon('heroicon-o-arrow-uturn-left')
-                            ->visible(fn ($record) => $record->parent_id !== null)
-                            ->limit(50),
-                    ])->columns(2),
-
+                                Infolists\Components\TextEntry::make('parent.comment')
+                                    ->label('Reply To')
+                                    ->icon('heroicon-o-arrow-uturn-left')
+                                    ->visible(fn ($record) => $record->parent_id !== null)
+                                    ->limit(50),
+                            ]),
+                    ]),
+            
                 Infolists\Components\Section::make('Comment Content')
+                    ->collapsible()
                     ->schema([
                         Infolists\Components\TextEntry::make('comment')
                             ->label('')
@@ -70,22 +78,29 @@ class ThemeCommentsResource extends Resource
                     ]),
 
                 Infolists\Components\Section::make('Metadata')
+                    ->collapsible()
                     ->schema([
-                        Infolists\Components\TextEntry::make('category')
-                            ->badge()
-                            ->color('info'),
+                        Infolists\Components\Grid::make([
+                            'default' => 1,
+                            'sm' => 3,
+                        ])
+                            ->schema([
+                                Infolists\Components\TextEntry::make('category')
+                                    ->badge()
+                                    ->color('info'),
 
-                        Infolists\Components\TextEntry::make('is_approved')
-                            ->label('Status')
-                            ->badge()
-                            ->color(fn ($state) => $state ? 'success' : 'danger')
-                            ->formatStateUsing(fn ($state) => $state ? 'Approved' : 'Pending'),
+                                Infolists\Components\TextEntry::make('is_approved')
+                                    ->label('Status')
+                                    ->badge()
+                                    ->color(fn ($state) => $state ? 'success' : 'danger')
+                                    ->formatStateUsing(fn ($state) => $state ? 'Approved' : 'Pending'),
 
-                        Infolists\Components\TextEntry::make('created_at')
-                            ->label('Posted')
-                            ->dateTime('F j, Y \a\t g:i A')
-                            ->icon('heroicon-o-clock'),
-                    ])->columns(3),
+                                Infolists\Components\TextEntry::make('created_at')
+                                    ->label('Posted')
+                                    ->dateTime('F j, Y \a\t g:i A')
+                                    ->icon('heroicon-o-clock'),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -99,13 +114,17 @@ class ThemeCommentsResource extends Resource
                     ->sortable()
                     ->badge()
                     ->color('info')
-                    ->icon('heroicon-o-paint-brush'),
+                    ->icon('heroicon-o-paint-brush')
+                    ->toggleable()
+                    ->visibleFrom('md'),
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
                     ->searchable()
                     ->sortable()
-                    ->weight('medium'),
+                    ->weight('medium')
+                    ->toggleable()
+                    ->visibleFrom('md'),
 
                 Tables\Columns\TextColumn::make('comment')
                     ->limit(50)
@@ -113,7 +132,8 @@ class ThemeCommentsResource extends Resource
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
                         return strlen($state) > 50 ? $state : null;
-                    }),
+                    })
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('rating')
                     ->label('Rating')
@@ -125,7 +145,8 @@ class ThemeCommentsResource extends Resource
                         default => 'danger',
                     })
                     ->formatStateUsing(fn ($state) => $state ? $state . ' ⭐' : 'Reply')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('is_approved')
                     ->label('Approved')
@@ -134,20 +155,25 @@ class ThemeCommentsResource extends Resource
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable()
+                    ->visibleFrom('md'),
 
                 Tables\Columns\TextColumn::make('parent_id')
                     ->label('Type')
                     ->badge()
                     ->color(fn ($state) => $state ? 'warning' : 'success')
                     ->formatStateUsing(fn ($state) => $state ? 'Reply' : 'Review')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Posted')
                     ->dateTime('M j, Y')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
@@ -179,27 +205,29 @@ class ThemeCommentsResource extends Resource
                     ->query(fn ($query) => $query->whereNotNull('parent_id')),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->icon('heroicon-o-eye'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->icon('heroicon-o-eye'),
 
-                Tables\Actions\Action::make('toggle_approval')
-                    ->label(fn ($record) => $record->is_approved ? 'Unapprove' : 'Approve')
-                    ->icon(fn ($record) => $record->is_approved ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
-                    ->color(fn ($record) => $record->is_approved ? 'danger' : 'success')
-                    ->requiresConfirmation()
-                    ->action(function ($record) {
-                        $record->update(['is_approved' => !$record->is_approved]);
-                    })
-                    ->successNotificationTitle(fn ($record) => 
-                        $record->is_approved ? 'Comment approved' : 'Comment unapproved'
-                    ),
+                    Tables\Actions\Action::make('toggle_approval')
+                        ->label(fn ($record) => $record->is_approved ? 'Unapprove' : 'Approve')
+                        ->icon(fn ($record) => $record->is_approved ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                        ->color(fn ($record) => $record->is_approved ? 'danger' : 'success')
+                        ->requiresConfirmation()
+                        ->action(function ($record) {
+                            $record->update(['is_approved' => !$record->is_approved]);
+                        })
+                        ->successNotificationTitle(fn ($record) => 
+                            $record->is_approved ? 'Comment approved' : 'Comment unapproved'
+                        ),
 
-                Tables\Actions\DeleteAction::make()
-                    ->icon('heroicon-o-trash')
-                    ->requiresConfirmation()
-                    ->modalHeading('Delete Comment')
-                    ->modalDescription('This will also delete all replies to this comment.')
-                    ->successNotificationTitle('Comment deleted'),
+                    Tables\Actions\DeleteAction::make()
+                        ->icon('heroicon-o-trash')
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete Comment')
+                        ->modalDescription('This will also delete all replies to this comment.')
+                        ->successNotificationTitle('Comment deleted'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

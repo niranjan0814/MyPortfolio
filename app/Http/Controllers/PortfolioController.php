@@ -118,13 +118,10 @@ public function show(User $user)
      * Project detail page: /project/5/overview
      * Must belong to the current portfolio owner (security check)
      */
-    public function showProjectOverview(Project $project)
+    public function showProjectOverview(User $user, Project $project)
     {
         // Security: Ensure project belongs to the intended portfolio owner
-        $currentUser = request()->route('user'); // from /portfolio/{user}
-        if (!$currentUser instanceof User) {
-            $currentUser = Auth::user() ?? User::first();
-        }
+        $currentUser = $user;
 
         if ($project->user_id !== $currentUser->id) {
             abort(404);

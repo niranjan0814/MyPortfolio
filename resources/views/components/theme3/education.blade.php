@@ -82,6 +82,8 @@
         padding: 0 2rem;
         position: relative;
         z-index: 10;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Header */
@@ -227,9 +229,10 @@
         height: 60px;
         background: white;
         border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
         box-shadow: 0 6px 20px rgba(0, 204, 122, 0.25);
     }
 
@@ -242,6 +245,7 @@
         width: 40px;
         height: 40px;
         object-fit: contain;
+        display: block;
         /* Show original icon colors - no filter */
     }
 
@@ -257,6 +261,8 @@
         color: var(--t3-edu-accent);
         width: 32px;
         height: 32px;
+        display: block;
+        margin: 0;
     }
 
     .t3-edu-degree {
@@ -365,6 +371,21 @@
         50% { transform: translateX(-50%) translateY(-5px); }
     }
 
+    /* Hint text visibility */
+    .t3-hint-mobile {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+        .t3-hint-desktop {
+            display: none;
+        }
+
+        .t3-hint-mobile {
+            display: inline;
+        }
+    }
+
     /* Empty State */
     .t3-empty-state {
         text-align: center;
@@ -408,44 +429,155 @@
     /* Responsive */
     @media (max-width: 768px) {
         .t3-edu-section {
-            padding: 4rem 0;
+            padding: 4rem 0 3rem;
+        }
+
+        .t3-edu-container {
+            padding: 0 1rem;
         }
 
         .t3-edu-header {
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .t3-edu-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
         }
 
         .t3-edu-grid {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .t3-edu-card-container {
-            height: 420px;
+            height: 380px;
         }
 
         .t3-edu-card-front,
         .t3-edu-card-back {
-            padding: 2rem;
+            padding: 1.5rem;
         }
     }
 
-    @media (max-width: 480px) {
-        .t3-edu-card-container {
-            height: 400px;
+    @media (max-width: 640px) {
+        .t3-edu-section {
+            padding: 4rem 0 3rem;
         }
 
-        .t3-edu-degree {
-            font-size: 1.25rem;
+        .t3-edu-container {
+            padding: 0 1rem;
         }
 
-        .t3-edu-institution {
+        .t3-edu-header {
+            margin-bottom: 2rem;
+        }
+
+        .t3-edu-title {
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .t3-edu-subtitle {
             font-size: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .t3-edu-grid {
+            gap: 1.5rem;
+        }
+
+        .t3-edu-card-container {
+            height: 360px;
+        }
+
+        /* Enable tap to flip on mobile */
+        .t3-edu-card-container {
+            cursor: pointer;
+        }
+
+        .t3-edu-card-container.flipped .t3-edu-flip-card {
+            transform: rotateY(180deg);
+        }
+
+        .t3-edu-card-front,
+        .t3-edu-card-back {
+            padding: 1.25rem;
         }
 
         .t3-edu-progress-ring {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1.25rem;
+        }
+
+        .t3-progress-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .t3-progress-icon img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .t3-progress-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .t3-edu-degree {
+            font-size: 1.125rem;
+        }
+
+        .t3-edu-institution {
+            font-size: 0.9375rem;
+        }
+
+        .t3-edu-year-badge {
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+        }
+
+        .t3-edu-back-title {
+            font-size: 1.5rem;
+        }
+
+        .t3-edu-back-details {
+            display: none;
+        }
+
+        .t3-flip-hint {
+            font-size: 0.6875rem;
+            bottom: 1rem;
+        }
+    }
+
+    @media (max-width: 375px) {
+        .t3-edu-section {
+            padding: 3rem 0 2rem;
+        }
+
+        .t3-edu-container {
+            padding: 0 0.75rem;
+        }
+
+        .t3-edu-card-container {
+            height: 340px;
+        }
+
+        .t3-edu-card-front,
+        .t3-edu-card-back {
+            padding: 1rem;
+        }
+
+        .t3-edu-progress-ring {
+            width: 90px;
+            height: 90px;
+        }
+
+        .t3-progress-icon {
+            width: 44px;
+            height: 44px;
         }
     }
 
@@ -502,7 +634,7 @@
                             <div class="t3-edu-card-front">
                                 <!-- Progress Ring -->
                                 <div class="t3-edu-progress-ring">
-                                    <svg class="t3-progress-circle" width="110" height="110">
+                                    <svg class="t3-progress-circle" viewBox="0 0 110 110" width="100%" height="100%" style="overflow: visible;">
                                         <circle class="t3-progress-bg" cx="55" cy="55" r="47"/>
                                         <circle class="t3-progress-bar" cx="55" cy="55" r="47"/>
                                     </svg>
@@ -528,7 +660,8 @@
                                 <!-- Flip Hint -->
                                 <div class="t3-flip-hint">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                                    Hover to see details
+                                    <span class="t3-hint-desktop">Hover to see details</span>
+                                    <span class="t3-hint-mobile">Tap to see details</span>
                                 </div>
                             </div>
 
@@ -624,6 +757,47 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const cardContainers = document.querySelectorAll('.t3-edu-card-container');
+        
+        // Function to handle card flipping
+        function setupCardFlip() {
+            const isMobile = window.innerWidth <= 640;
+            
+            cardContainers.forEach(container => {
+                // Remove existing listeners
+                const newContainer = container.cloneNode(true);
+                container.parentNode.replaceChild(newContainer, container);
+            });
+            
+            // Re-select containers after cloning
+            const freshContainers = document.querySelectorAll('.t3-edu-card-container');
+            
+            if (isMobile) {
+                freshContainers.forEach(container => {
+                    container.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        this.classList.toggle('flipped');
+                    });
+                    
+                    // Add touch event for better mobile support
+                    container.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        this.classList.toggle('flipped');
+                    });
+                });
+            }
+        }
+        
+        // Initial setup
+        setupCardFlip();
+        
+        // Re-setup on window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(setupCardFlip, 250);
+        });
+
         // Animate cards on scroll
         const cards = document.querySelectorAll('.t3-edu-card-container');
         const observer = new IntersectionObserver((entries) => {

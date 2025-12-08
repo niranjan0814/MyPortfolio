@@ -49,20 +49,28 @@ class BlogResource extends Resource
                 ->default(fn() => auth()->id()),
 
             Forms\Components\Section::make('Post Details')
+                ->collapsible()
                 ->schema([
-                    Forms\Components\TextInput::make('title')
-                        ->required()
-                        ->maxLength(255),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\TextInput::make('title')
+                                ->required()
+                                ->maxLength(255),
 
-                    Forms\Components\TextInput::make('slug')
-                        ->disabled()
-                        ->dehydrated(false)
-                        ->helperText('Slug is generated automatically from the title'),
+                            Forms\Components\TextInput::make('slug')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->helperText('Slug is generated automatically from the title'),
+                        ]),
 
                     Forms\Components\Textarea::make('excerpt')
                         ->rows(3)
                         ->maxLength(500)
-                        ->helperText('Short summary shown in blog lists.'),
+                        ->helperText('Short summary shown in blog lists.')
+                        ->columnSpanFull(),
 
                     Forms\Components\RichEditor::make('content')
                         ->required()
@@ -78,38 +86,46 @@ class BlogResource extends Resource
                             'blockquote',
                         ])
                         ->columnSpanFull(),
-                ])->columns(2),
+                ]),
 
             Forms\Components\Section::make('Publish Settings')
+                ->collapsible()
                 ->schema([
-                    Forms\Components\Toggle::make('is_published')
-                        ->label('Published')
-                        ->default(false)
-                        ->live()
-                        ->afterStateUpdated(function ($state, callable $set, $get) {
-                            // Auto-set published_at to now when toggled to published (if empty)
-                            if ($state && !$get('published_at')) {
-                                $set('published_at', now());
-                            }
-                        }),
+                    Forms\Components\Grid::make([
+                        'default' => 1,
+                        'sm' => 2,
+                    ])
+                        ->schema([
+                            Forms\Components\Toggle::make('is_published')
+                                ->label('Published')
+                                ->default(false)
+                                ->live()
+                                ->afterStateUpdated(function ($state, callable $set, $get) {
+                                    // Auto-set published_at to now when toggled to published (if empty)
+                                    if ($state && !$get('published_at')) {
+                                        $set('published_at', now());
+                                    }
+                                }),
 
-                    Forms\Components\DateTimePicker::make('published_at')
-                        ->label('Published At')
-                        ->helperText('Leave empty to publish immediately. Timezone: ' . config('app.timezone'))
-                        ->seconds(false)
-                        ->default(now())
-                        ->native(false)
-                        ->displayFormat('M d, Y H:i')
-                        ->maxDate(now()->addYears(1))
-                        ->minDate(now()->subYears(1)),
+                            Forms\Components\DateTimePicker::make('published_at')
+                                ->label('Published At')
+                                ->helperText('Leave empty to publish immediately. Timezone: ' . config('app.timezone'))
+                                ->seconds(false)
+                                ->default(now())
+                                ->native(false)
+                                ->displayFormat('M d, Y H:i')
+                                ->maxDate(now()->addYears(1))
+                                ->minDate(now()->subYears(1)),
+                        ]),
 
                     Forms\Components\FileUpload::make('hero_image_path')
                         ->label('Hero Image')
                         ->image()
                         ->directory('blog-hero-images')
                         ->imagePreviewHeight('150')
-                        ->maxSize(2048),
-                ])->columns(2),
+                        ->maxSize(2048)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
@@ -121,7 +137,8 @@ class BlogResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->wrap()
-                    ->limit(60),
+                    ->limit(60)
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('is_published')
                     ->label('Status')
@@ -129,22 +146,29 @@ class BlogResource extends Resource
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
-                    ->falseColor('gray'),
+                    ->falseColor('gray')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('published_at')
                     ->label('Published At')
                     ->dateTime('M j, Y H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable()
+                    ->visibleFrom('md'),  // Hide on mobile
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
                     ->since()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),  // Hide on mobile and tablet
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

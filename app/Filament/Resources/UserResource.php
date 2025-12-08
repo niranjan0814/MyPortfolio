@@ -342,22 +342,36 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('profile_image')
+                    ->label('Avatar')
+                    ->circular()
+                    ->defaultImageUrl(fn($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF'),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Username')
                     ->searchable()
                     ->sortable()
-                    ->weight('medium'),
-
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable()
-                    ->sortable()
-                    ->icon('heroicon-o-envelope'),
+                    ->weight('bold')
+                    ->description(fn (User $record): string => $record->email),
 
                 Tables\Columns\TextColumn::make('full_name')
                     ->label('Full Name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
+                Tables\Columns\TextColumn::make('active_theme')
+                    ->label('Theme')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'theme1' => 'info',
+                        'theme2' => 'success',
+                        'theme3' => 'warning',
+                        'theme4' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->sortable(),
 
                 Tables\Columns\IconColumn::make('cv_uploaded')
                     ->label('CV')
@@ -370,18 +384,27 @@ class UserResource extends Resource
                     ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
             ])
             ->actions([
-                Tables\Actions\Action::make('download_cv')
-                    ->label('Download CV')
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success')
-                    ->visible(fn($record) => $record->hasCv())
-                    ->url(fn($record) => route('cv.download', $record->id))
-                    ->openUrlInNewTab()
-                    ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('view_portfolio')
+                        ->label('View Portfolio')
+                        ->icon('heroicon-o-globe-alt')
+                        ->color('info')
+                        ->url(fn($record) => route('portfolio.show', $record->slug))
+                        ->openUrlInNewTab(),
 
-                Tables\Actions\EditAction::make()
-                    ->icon('heroicon-o-pencil')
-                    ->button(),
+                    Tables\Actions\Action::make('download_cv')
+                        ->label('Download CV')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->color('success')
+                        ->visible(fn($record) => $record->hasCv())
+                        ->url(fn($record) => route('cv.download', $record->id))
+                        ->openUrlInNewTab()
+                        ->hidden(fn() => auth()->user()?->hasRole('super_admin')),
+
+                    Tables\Actions\EditAction::make()
+                        ->icon('heroicon-o-pencil')
+                        ->color('warning'),
+                ])
             ])
             ->bulkActions([]) // Disable bulk actions for security
             ->defaultSort('created_at', 'desc');

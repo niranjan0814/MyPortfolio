@@ -519,19 +519,49 @@
     }
 
     @media (max-width: 640px) {
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-content-left {
+            order: 1;
+            width: 100%;
+        }
+
+        .hero-content-right {
+            order: 2;
+            width: 100%;
+            max-width: 350px;
+            margin: 2rem auto 0;
+        }
+
+        .hero-greeting {
+            order: 1;
+        }
+
         .hero-title {
             font-size: 2.5rem;
+            order: 2;
         }
 
         .hero-typing-wrapper {
             font-size: 1.25rem;
             flex-direction: column;
             gap: 0;
+            order: 3;
+        }
+
+        /* Hide description on mobile to reduce overwhelming content */
+        .hero-description {
+            display: none;
         }
 
         .hero-actions {
             flex-direction: column;
             width: 100%;
+            order: 5;
+            margin-top: 2rem;
         }
 
         .hero-btn {
@@ -541,6 +571,14 @@
         
         .hero-tech-grid {
             gap: 0.75rem;
+        }
+
+        .hero-social {
+            order: 6;
+        }
+
+        .hero-image-container {
+            max-width: 350px;
         }
     }
 </style>
@@ -568,7 +606,7 @@
 
             <!-- Typing Animation -->
             <div class="hero-typing-wrapper">
-                <span>I am a</span>
+                
                 <span class="hero-typing-text">
                     <span id="typingContent"></span><span class="hero-cursor"></span>
                 </span>
@@ -645,6 +683,37 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Mobile and Tablet image repositioning
+        function repositionImageOnMobile() {
+            const isMobileOrTablet = window.innerWidth <= 1024;
+            const imageContainer = document.querySelector('.hero-content-right');
+            const typingWrapper = document.querySelector('.hero-typing-wrapper');
+            const heroActions = document.querySelector('.hero-actions');
+            
+            if (isMobileOrTablet && imageContainer && typingWrapper) {
+                // Insert image after typing animation
+                typingWrapper.parentNode.insertBefore(imageContainer, heroActions);
+            } else if (!isMobileOrTablet && imageContainer) {
+                // Move it back to original position (after hero-content-left)
+                const heroContainer = document.querySelector('.hero-container');
+                const heroContentLeft = document.querySelector('.hero-content-left');
+                if (heroContainer && heroContentLeft && !heroContentLeft.nextElementSibling?.classList.contains('hero-content-right')) {
+                    heroContainer.appendChild(imageContainer);
+                }
+            }
+        }
+
+        // Run on load
+        repositionImageOnMobile();
+
+        // Run on resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(repositionImageOnMobile, 250);
+        });
+
+        // Typing animation
         const typingTexts = @json($heroContent['typing_texts'] ?? [['text' => 'Developer'], ['text' => 'Designer'], ['text' => 'Freelancer']]);
         const typingElement = document.getElementById('typingContent');
         

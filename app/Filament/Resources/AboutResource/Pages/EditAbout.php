@@ -35,4 +35,13 @@ class EditAbout extends EditRecord
                 ->modalCancelActionLabel('Close'),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return ' updated successfully';
+    }
 }
