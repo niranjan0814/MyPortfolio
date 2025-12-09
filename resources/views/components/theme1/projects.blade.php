@@ -434,7 +434,13 @@
                             <!-- Actions -->
                             <div class="t1-project-actions">
                                 @if($project->overview)
-                                    <a href="{{ route('project.overview', ['user' => $user->slug ?? $user->id, 'project' => $project->id]) }}"
+                                    @php
+                                        $routeParams = ['user' => $user->slug ?? $user->id, 'project' => $project->id];
+                                        if (request()->query('preview')) {
+                                            $routeParams['preview'] = true;
+                                        }
+                                    @endphp
+                                    <a href="{{ route('project.overview', $routeParams) }}"
                                         class="t1-project-btn t1-project-btn-primary">
                                         <i class="fas fa-book-open"></i>
                                         <span>Overview</span>
@@ -442,14 +448,14 @@
                                 @endif
 
                                 @if($project->depurl)
-                                    <a href="{{ $project->depurl }}" target="_blank" class="t1-project-btn t1-project-btn-outline">
+                                    <a href="{{ $project->depurl }}" target="{{ request()->query('preview') ? '_self' : '_blank' }}" class="t1-project-btn t1-project-btn-outline">
                                         <i class="fas fa-external-link-alt"></i>
                                         <span>Live Demo</span>
                                     </a>
                                 @endif
 
                                 @if($project->link)
-                                    <a href="{{ $project->link }}" target="_blank" class="t1-project-btn t1-project-btn-outline">
+                                    <a href="{{ $project->link }}" target="{{ request()->query('preview') ? '_self' : '_blank' }}" class="t1-project-btn t1-project-btn-outline">
                                         <i class="fab fa-github"></i>
                                         <span>GitHub</span>
                                     </a>

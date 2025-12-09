@@ -44,13 +44,15 @@ class HeroContentResource extends Resource
                             Forms\Components\TextInput::make('greeting')
                                 ->label('Greeting')
                                 ->default("Hi, I'm")
-                                ->placeholder("Hi, I'm"),
+                                ->placeholder("Hi, I'm")
+                                ->helperText(self::getThemeUsage('greeting')),
                         ]),
 
 
 Forms\Components\RichEditor::make('description')
     ->label('Description')
     ->toolbarButtons(['bold', 'italic', 'link', 'bulletList'])
+    ->helperText(self::getThemeUsage('description'))
     ->default("I'm {$user->name}, a passionate developer.")
     ->placeholder('Transforming ideas into elegant, scalable digital solutions...')
     ->rule(function () {
@@ -205,5 +207,40 @@ Forms\Components\RichEditor::make('description')
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()->where('user_id', auth()->id());
+    }
+
+    public static function getThemeUsage(string $field): string
+    {
+        $themes = [];
+        $path = resource_path('views/components');
+        
+        // Find all directories matching theme*
+        $dirs = glob($path . '/theme*');
+        
+        if (!$dirs) {
+             return "No themes found.";
+        }
+
+        foreach ($dirs as $dir) {
+            $theme = basename($dir); // theme1, theme2
+            $heroFile = $dir . '/hero.blade.php';
+            
+            if (file_exists($heroFile)) {
+                $content = file_get_contents($heroFile);
+                // Check specifically for usage in heroContent variable to be safe
+                // Patterns: $heroContent['field'], $heroContent->field
+                if (preg_match("/['\"]" . preg_quote($field, '/') . "['\"]|->" . preg_quote($field, '/') . "/", $content)) {
+                    // Convert theme1 -> Theme 1
+                    $formattedName = ucfirst(preg_replace('/(\D+)(\d+)/', '$1 $2', $theme));
+                    $themes[] = $formattedName;
+                }
+            }
+        }
+        
+        if (empty($themes)) {
+            return "This field is currently unused in recognized themes.";
+        }
+        
+        return "Used in: " . implode(', ', $themes) . ".";
     }
 }

@@ -37,7 +37,22 @@ class EducationResource extends Resource
                         'sm' => 2,
                     ])
                         ->schema([
-                            Forms\Components\TextInput::make('institution')->required(),
+                            Forms\Components\TextInput::make('institution')
+                                ->required()
+                                ->rules([
+                                    fn (\Filament\Forms\Get $get, $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                        $exists = \App\Models\Education::where('user_id', auth()->id())
+                                            ->where('institution', $value)
+                                            ->where('degree', $get('degree'))
+                                            ->where('year', $get('year'))
+                                            ->when($record, fn ($q) => $q->where('id', '!=', $record->id))
+                                            ->exists();
+
+                                        if ($exists) {
+                                            $fail('You already have an identical education entry (same institution, degree, and year).');
+                                        }
+                                    },
+                                ]),
                             Forms\Components\TextInput::make('degree')->required(),
                             Forms\Components\TextInput::make('year'),
                             Forms\Components\TextInput::make('icon_url')
@@ -67,7 +82,9 @@ class EducationResource extends Resource
 
     public static function table(Tables\Table $table): Tables\Table
     {
-        return $table->columns([
+         
+        return $table->recordUrl(null)
+        ->columns([
             Tables\Columns\TextColumn::make('institution')->toggleable(),
             Tables\Columns\TextColumn::make('degree')->toggleable(),
             Tables\Columns\TextColumn::make('year')->toggleable()->visibleFrom('md'),

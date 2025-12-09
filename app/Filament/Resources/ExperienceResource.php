@@ -37,7 +37,22 @@ class ExperienceResource extends Resource
                         ->schema([
                             Forms\Components\TextInput::make('role')
                                 ->required()
-                                ->maxLength(52),
+                                ->maxLength(52)
+                                ->rules([
+                                    fn (\Filament\Forms\Get $get, $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                        $exists = \App\Models\Experience::where('user_id', auth()->id())
+                                            ->where('role', $value)
+                                            ->where('company', $get('company'))
+                                            ->where('duration', $get('duration'))
+                                            ->when($record, fn ($q) => $q->where('id', '!=', $record->id))
+                                            ->exists();
+
+                                        if ($exists) {
+                                            $fail('You already have an identical experience (same role, company, and duration).');
+                                        }
+                                    },
+                                ]),
+
                             Forms\Components\TextInput::make('company')
                                 ->required()
                                 ->maxLength(52),

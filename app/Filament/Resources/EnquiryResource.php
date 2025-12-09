@@ -64,7 +64,7 @@ class EnquiryResource extends Resource
 
     public static function table(Tables\Table $table): Tables\Table
     {
-        return $table
+        return $table->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()

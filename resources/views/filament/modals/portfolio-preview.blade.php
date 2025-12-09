@@ -13,10 +13,10 @@
 
     <!-- Preview Iframe -->
     <iframe 
-        src="{{ url('/portfolio/' . auth()->user()->slug) }}"
+        src="{{ url('/portfolio/' . auth()->user()->slug) }}?preview=true"
         class="w-full border-0"
         style="height: 70vh;"
-        sandbox="allow-same-origin allow-scripts allow-forms"
+        sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
     ></iframe>
 
 </div>

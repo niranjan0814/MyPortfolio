@@ -131,7 +131,7 @@ class BlogResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+        return $table->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()
